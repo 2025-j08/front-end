@@ -5,17 +5,16 @@ import { defineConfig } from "eslint/config";
 import prettierConfig from "eslint-config-prettier";
 
 export default defineConfig([
-  // Next.js 公式の Flat Config を丸ごと採用
+  // ① Next.js の Flat Config
   ...nextConfig,
 
-  // 自作ルール、追加プラグイン
+  // ② import 順序など、自分の追加ルール
   {
     plugins: {
       import: importPlugin,
     },
 
     rules: {
-      // import 順
       "import/order": [
         "warn",
         {
@@ -31,10 +30,10 @@ export default defineConfig([
     },
   },
 
-  // prettier を一番最後に当てる（競合回避）
+  // ③ Prettier 
   prettierConfig,
 
-  // 無視パターン
+  // ④ ignores
   {
     ignores: [
       ".next/**",
