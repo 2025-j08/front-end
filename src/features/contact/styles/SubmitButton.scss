@@ -1,0 +1,31 @@
+/**
+ * SubmitButton コンポーネント用スタイル
+ * 送信ボタンのスタイルと、ホバー時の動作定義
+ */
+@use '../contact.variables' as *;
+
+.contact-form {
+  // 送信ボタンコンテナ
+  .button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+
+    // 送信ボタン
+    .submit-button {
+      background-color: $border-green; // 背景色は変数の緑
+      color: #fff;
+      font-size: 1.2rem;
+      font-weight: bold;
+      border: 1px solid #333;
+      padding: 10px 60px;
+      cursor: pointer;
+      transition: opacity 0.2s; // ホバー効果のための遷移
+
+      // ホバー時の効果
+      &:hover {
+        opacity: 0.8; // 透明度を下げて効果を演出
+      }
+    }
+  }
+}
