@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/SubmitButton.scss';
+import '../styles/submitButton.scss';
 
 /**
  * SubmitButton コンポーネント
