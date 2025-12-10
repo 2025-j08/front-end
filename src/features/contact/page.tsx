@@ -23,7 +23,6 @@ const ContactForm: React.FC = () => {
       <h2 className="form-title">お問い合わせ</h2>
       <form className="contact-form" onSubmit={handleSubmit}>
         <FormField label="名前" type="text" id="name" name="name" placeholder="XXXXXXXX......" />
-        <FormField label="名前" type="text" id="name" name="name" placeholder="XXXXXXXX......" />
 
         <FormField
           label="メールアドレス"
