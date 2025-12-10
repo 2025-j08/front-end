@@ -1,0 +1,63 @@
+.footer {
+  width: 100%;
+  background-color: #4da6ff;
+  color: #fff;
+  padding: 40px 0;
+  margin-top: auto;
+}
+
+.container {
+  //width: 100%; // 追加: 画面幅いっぱいに広げる
+  padding: 0 40px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+/* 左側の情報エリア */
+.infoArea {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.siteName {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.addressInfo {
+  font-size: 14px;
+  line-height: 1.6;
+
+  p {
+    margin: 0;
+  }
+}
+
+/* 右側のナビゲーションエリア */
+.nav {
+  display: flex;
+  gap: 60px; // リンク間の余白
+  padding-top: 10px; // サイト名とのバランス調整
+
+  // スマホ対応
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
+
+.navLink {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 16px;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
