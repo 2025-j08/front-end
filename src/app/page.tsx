@@ -1,8 +1,10 @@
-import FacilityBox from '@/components/FacilityBoxFixed';
+import FacilityBox from '@/components/FacilityBox';
+
+import styles from './page.module.scss';
 
 export default function TestPage() {
   return (
-    <div style={{ padding: '40px' }}>
+    <div className={styles.container}>
       <h2>施設カードテスト</h2>
 
       <FacilityBox

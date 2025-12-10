@@ -1,17 +1,16 @@
-:root {
-  --facility-border: #9ae5a6;
-  --facility-bg: #eaffea;
-  --facility-radius: 12px;
-  --facility-padding: 20px;
-  --placeholder-bg: #cccccc;
-  --text-color: #111;
-}
+// Local SCSS variables (scoped to this module, not global)
+$facility-border: #9ae5a6;
+$facility-bg: #eaffea;
+$facility-radius: 12px;
+$facility-padding: 20px;
+$placeholder-bg: #cccccc;
+$text-color: #111;
 
 .container {
-  border: 2px solid var(--facility-border);
-  background: var(--facility-bg);
-  border-radius: var(--facility-radius);
-  padding: var(--facility-padding);
+  border: 2px solid $facility-border;
+  background: $facility-bg;
+  border-radius: $facility-radius;
+  padding: $facility-padding;
   max-width: 520px;
   width: 100%;
   display: flex;
@@ -35,7 +34,7 @@
 .details {
   font-size: 15px;
   line-height: 1.6;
-  color: var(--text-color);
+  color: $text-color;
 }
 
 .imageWrapper {
@@ -50,7 +49,7 @@
 .placeholder {
   width: 100%;
   height: 100%;
-  background: var(--placeholder-bg);
+  background: $placeholder-bg;
   display: flex;
   align-items: center;
   justify-content: center;

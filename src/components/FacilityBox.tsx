@@ -10,6 +10,12 @@ type FacilityBoxProps = {
   tel: string;
 };
 
+/**
+ * 施設情報カードコンポーネント
+ * 施設の名前、郵便番号、住所、電話番号を表示する再利用可能なカード。
+ * 左側に情報、右側に画像プレースホルダを配置し、レスポンシブ対応。
+ * @param props - 施設情報のプロップス
+ */
 const FacilityBox: React.FC<FacilityBoxProps> = ({ name, postal, address1, address2, tel }) => {
   return (
     <div className={styles.container}>
@@ -27,7 +33,7 @@ const FacilityBox: React.FC<FacilityBoxProps> = ({ name, postal, address1, addre
       </div>
 
       {/* 右側（画像） */}
-      <figure className={styles.imageWrapper} aria-hidden={false}>
+      <figure className={styles.imageWrapper}>
         {/* Placeholder until real images are provided. Use role+aria-label for accessibility. */}
         <div className={styles.placeholder} role="img" aria-label={`${name} の画像プレースホルダ`}>
           image
