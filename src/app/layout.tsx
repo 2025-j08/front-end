@@ -32,7 +32,7 @@ export default function RootLayout({
         <Header />
 
         {/* メインコンテンツ */}
-        <main>{children}</main>
+        <main className="main-content">{children}</main>
 
         {/* フッター 一番下固定 */}
         <Footer />

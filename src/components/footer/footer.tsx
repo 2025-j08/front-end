@@ -8,11 +8,11 @@ export const Footer = () => {
       <div className={styles.container}>
         {/* 左側：サイト情報 */}
         <div className={styles.infoArea}>
-          <h2 className={styles.siteName}>サイト名前</h2>
+          <h2 className={styles.siteName}>近畿児童養護データベース</h2>
           <div className={styles.addressInfo}>
-            <p>〒xxx-xxxx</p>
-            <p>xx県xx市xx.....</p>
-            <p>TEL xxx-xxxx-xxxx</p>
+            <p>〒542-0065</p>
+            <p>大阪府大阪市中央区中寺1丁目1番54号 大阪社会福祉指導センター内</p>
+            <p>TEL 06-6762-9001</p>
           </div>
         </div>
 
