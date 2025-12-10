@@ -13,11 +13,16 @@ import SubmitButton from './components/SubmitButton';
 import './contact.scss';
 
 const ContactForm: React.FC = () => {
+  // Prevent default form submission behavior
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    // TODO: Add form submission logic here (e.g., send data to API)
+  };
   return (
     <div className="contact-form-container">
       <h2 className="form-title">お問い合わせ</h2>
-
-      <form className="contact-form">
+      <form className="contact-form" onSubmit={handleSubmit}>
+        <FormField label="名前" type="text" id="name" name="name" placeholder="XXXXXXXX......" />
         <FormField label="名前" type="text" id="name" name="name" placeholder="XXXXXXXX......" />
 
         <FormField

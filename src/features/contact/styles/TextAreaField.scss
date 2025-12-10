@@ -2,6 +2,7 @@
  * TextAreaField コンポーネント用スタイル
  * テキストエリア特有の調整（全幅配置・リサイズ・高さ指定）
  */
+@use './FormField.scss'; // form-group のベーススタイルを先に適用
 @use '../contact.variables' as *;
 
 .contact-form {
