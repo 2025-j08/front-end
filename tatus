@@ -1,0 +1,5 @@
+[33m04df956[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfujita0122-facility-detail[m[33m)[m feat: Add FacilityBox component with responsive design and accessibility improvements - Create reusable FacilityBox component with JSDoc documentation - Implement SCSS modules for styling consistency (replaces inline styles) - Update TypeScript path aliases from ./* to ./src/* in tsconfig.json - Add component documentation to components.md - Implement responsive design with mobile breakpoint (480px) - Add accessibility attributes (role, aria-label) - Remove redundant aria-hidden attribute for semantic HTML - Convert CSS variables to SCSS variables for proper module scoping - Create page.module.scss for test page styling
+[33m5482ce8[m[33m ([m[1;31morigin/fujita0122-facility-detail[m[33m)[m 施設カード一覧のコンポーネント修正
+[33mff23884[m your commit message
+[33m9a94f6f[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m Merge pull request #1 from 2025-j08/add_header
+[33m913f12b[m[33m ([m[1;31morigin/add_header[m[33m)[m header追加
