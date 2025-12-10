@@ -28,7 +28,7 @@ const TextAreaField: React.FC<TextAreaFieldProps> = ({
   return (
     <div className="form-group textarea-group">
       <label htmlFor={id}>{label}</label>
-      <textarea id={id} name={name} rows={rows} placeholder={placeholder} />
+      <textarea id={id} name={name} rows={rows} placeholder={placeholder} required />
     </div>
   );
 };

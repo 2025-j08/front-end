@@ -16,13 +16,21 @@ interface FormFieldProps {
   name: string;
   /** プレースホルダーテキスト */
   placeholder?: string;
+  /** 必須フィールドかどうか */
+  required?: boolean;
 }
-
-const FormField: React.FC<FormFieldProps> = ({ label, type = 'text', id, name, placeholder }) => {
+const FormField: React.FC<FormFieldProps> = ({
+  label,
+  type = 'text',
+  id,
+  name,
+  placeholder,
+  required,
+}) => {
   return (
     <div className="form-group">
       <label htmlFor={id}>{label}</label>
-      <input type={type} id={id} name={name} placeholder={placeholder} />
+      <input type={type} id={id} name={name} placeholder={placeholder} required={required} />
     </div>
   );
 };
