@@ -1,0 +1,22 @@
+.button {
+    padding: 8px 30px;
+    font-size: 1.2rem;
+    font-weight: bolder;
+    color: #FFFFFF;
+    background-color: #EB8B4F;
+
+    border: 3px solid #EB8B4F;
+    border-radius: 100;
+
+    cursor: pointer;
+
+    @media screen and (max-width: 768px) {
+        padding: 6px 20px;
+        font-size: 1rem;
+    }
+}
+
+.button:hover {
+    color: #EB8B4F;
+    background-color: #FFFFFF;
+}
