@@ -1,4 +1,4 @@
-import FacilityBox from '@/components/FacilityBox';
+import FacilityBox from '@/components/FacilityBoxFixed';
 
 export default function TestPage() {
   return (
