@@ -1,0 +1,60 @@
+/**
+ * Contact フォーム共通スタイル
+ * .form-group は複数のコンポーネント（FormField、TextAreaField）で共有するため
+ * 共通スタイルを分離して管理します
+ */
+@use '../contact.variables' as *;
+
+.contact-form {
+  // フォームフィールド共通スタイル
+  .form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+
+    // ラベル（固定幅）
+    label {
+      width: 180px;
+      font-size: 1rem;
+      color: #000;
+      flex-shrink: 0;
+    }
+
+    // input・textarea 共通スタイル
+    input,
+    textarea {
+      flex-grow: 1;
+      padding: 8px;
+      border: 1px solid $input-border;
+      background-color: $input-bg;
+      font-size: 1rem;
+      color: $text-color;
+
+      // プレースホルダーのスタイル
+      &::placeholder {
+        color: $placeholder-color;
+        letter-spacing: 1px;
+      }
+    }
+  }
+}
+
+// モバイル対応: 600px 以下で縦並びに
+@media (max-width: 600px) {
+  .contact-form {
+    .form-group {
+      flex-direction: column;
+      align-items: flex-start;
+
+      label {
+        width: 100%;
+        margin-bottom: 8px;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+      }
+    }
+  }
+}
