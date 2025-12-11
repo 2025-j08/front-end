@@ -2,7 +2,7 @@
  * TextAreaField コンポーネント用スタイル
  * テキストエリア特有の調整（全幅配置・リサイズ・高さ指定）
  */
-@use '../../shared' as *;
+@use '../shared.scss' as *;
 
 .contact-form {
   // テキストエリア用の特殊スタイル（全幅＋縦並び）
