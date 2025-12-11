@@ -8,9 +8,9 @@
  */
 import React from 'react';
 
-import FormField from './components/formField';
-import TextAreaField from './components/textAreaField';
-import SubmitButton from './components/submitButton';
+import FormField from './formField/formField';
+import TextAreaField from './components/formArea/textAreaField';
+import SubmitButton from './button/submitButton';
 import './contact.scss';
 
 const ContactForm: React.FC = () => {
