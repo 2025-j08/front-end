@@ -16,7 +16,7 @@ interface TextAreaFieldProps extends BaseFieldProps, AccessibilityProps {
   onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
-const TextAreaField: React.FC<TextAreaFieldProps> = ({
+const TextAreaField = ({
   label,
   id,
   name,
@@ -29,7 +29,7 @@ const TextAreaField: React.FC<TextAreaFieldProps> = ({
   ariaInvalid,
   value,
   onChange,
-}) => {
+}: TextAreaFieldProps) => {
   return (
     <div className="form-group textarea-group">
       <label htmlFor={id}>{label}</label>
@@ -51,4 +51,4 @@ const TextAreaField: React.FC<TextAreaFieldProps> = ({
   );
 };
 
-export default TextAreaField;
+export { TextAreaField };
