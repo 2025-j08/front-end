@@ -1,4 +1,4 @@
-import FacilityBox from '@/components/FacilityBox';
+import FacilityBox from '@/components/facilityBox';
 
 import styles from './page.module.scss';
 
