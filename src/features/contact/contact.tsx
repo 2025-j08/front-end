@@ -9,7 +9,7 @@
 import React from 'react';
 
 import FormField from './formField/formField';
-import TextAreaField from './components/formArea/textAreaField';
+import TextAreaField from './formArea/textAreaField';
 import SubmitButton from './button/submitButton';
 import './contact.scss';
 
