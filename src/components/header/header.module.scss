@@ -51,16 +51,10 @@
   &:hover {
     opacity: 0.7;
   }
-
-  // アイコン画像（SVG）のサイズ調整
-  svg {
-    width: 35px;
-    height: 35px;
-    margin-bottom: 4px;
-    color: #333;
-  }
 }
 
 .icon {
-  flex-shrink: 0;
+  font-size: 35px !important;
+  margin-bottom: 4px;
+  color: #333;
 }
