@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { BaseFieldProps } from '../types/formTypes';
-import '../styles/formField.scss';
+import './formField.scss';
 
 /**
  * FormField コンポーネント
