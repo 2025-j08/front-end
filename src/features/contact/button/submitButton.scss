@@ -2,7 +2,7 @@
  * SubmitButton コンポーネント用スタイル
  * 送信ボタンのスタイルと、ホバー時の動作定義
  */
-@use '../contact.variables' as *;
+@use '../../../styles/contact.variables.scss' as *;
 
 .contact-form {
   // 送信ボタンコンテナ
