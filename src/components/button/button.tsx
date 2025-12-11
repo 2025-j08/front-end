@@ -2,7 +2,13 @@ import React, { MouseEventHandler, ReactNode } from "react";
 
 import styles from './button.module.scss';
 
-export default function Button(props: { children: ReactNode, onClick?: MouseEventHandler, type?: 'button' | 'submit' | 'reset' }) {
+type ButtonProps = {
+    children: ReactNode,
+    onClick?: MouseEventHandler,
+    type?: 'button' | 'submit' | 'reset'
+};
+
+export const Button = (props: ButtonProps) => {
     return (
         <button
             className={styles.button}
