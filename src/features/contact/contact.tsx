@@ -9,21 +9,29 @@
 import React from 'react';
 
 import FormField from './formField/formField';
-import TextAreaField from './formArea/textAreaField';
+import TextAreaField from './textArea/textAreaField';
 import SubmitButton from './button/submitButton';
+import { useContactForm } from './hooks/useContactForm';
 import './contact.scss';
 
 const ContactForm: React.FC = () => {
-  // Prevent default form submission behavior
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    // TODO: Add form submission logic here (e.g., send data to API)
-  };
+  const { formData, handleChange, handleSubmit } = useContactForm();
+
   return (
     <div className="contact-form-container">
       <h2 className="form-title">お問い合わせ</h2>
       <form className="contact-form" onSubmit={handleSubmit}>
-        <FormField label="名前" type="text" id="name" name="name" placeholder="山田太郎" />
+        <FormField
+          label="名前"
+          type="text"
+          id="name"
+          name="name"
+          placeholder="山田太郎"
+          maxLength={20}
+          required
+          value={formData.name}
+          onChange={handleChange}
+        />
 
         <FormField
           label="メールアドレス"
@@ -31,6 +39,10 @@ const ContactForm: React.FC = () => {
           id="email"
           name="email"
           placeholder="example@email.com"
+          pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+          required
+          value={formData.email}
+          onChange={handleChange}
         />
 
         <TextAreaField
@@ -39,6 +51,11 @@ const ContactForm: React.FC = () => {
           name="message"
           rows={5}
           placeholder="お問い合わせ内容を入力してください"
+          minLength={10}
+          maxLength={1000}
+          required
+          value={formData.message}
+          onChange={handleChange}
         />
 
         <SubmitButton label="送信" />
