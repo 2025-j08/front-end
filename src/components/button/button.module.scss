@@ -1,11 +1,13 @@
+@import 'button.variables';
+
 .button {
     padding: 8px 30px;
     font-size: 1.2rem;
     font-weight: bolder;
-    color: #FFFFFF;
-    background-color: #EB8B4F;
+    color: $button-text-color;
+    background-color: $button-primary-color;
 
-    border: 3px solid #EB8B4F;
+    border: 3px solid $button-primary-color;
     border-radius: 100px;
 
     cursor: pointer;
@@ -17,11 +19,11 @@
 }
 
 .button:hover {
-    color: #EB8B4F;
-    background-color: #FFFFFF;
+    color: $button-primary-color;
+    background-color: $button-text-color;
 }
 
 .button:active {
-    color: #EB8B4F;
-    background-color: #E0E0E0;
+    color: $button-primary-color;
+    background-color: $button-active-bg;
 }
