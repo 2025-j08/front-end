@@ -39,7 +39,6 @@ const ContactForm = () => {
           id="email"
           name="email"
           placeholder="example@email.com"
-          pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
           required
           value={formData.email}
           onChange={handleChange}
