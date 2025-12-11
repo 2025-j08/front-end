@@ -1,3 +1,5 @@
-$button-primary-color: #EB8B4F;
-$button-text-color: #FFFFFF;
-$button-active-bg: #E0E0E0;
+@import '@/styles/colors';
+
+$button-primary-color: $primary-color;
+$button-text-color: $primary-text-color;
+$button-active-bg: $bg-active;
