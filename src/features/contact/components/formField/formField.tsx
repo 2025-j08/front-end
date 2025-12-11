@@ -15,7 +15,7 @@ interface FormFieldProps extends BaseFieldProps {
   /** 値変更時のハンドラ */
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
-const FormField: React.FC<FormFieldProps> = ({
+const FormField = ({
   label,
   type = 'text',
   id,
@@ -26,7 +26,7 @@ const FormField: React.FC<FormFieldProps> = ({
   pattern,
   value,
   onChange,
-}) => {
+}: FormFieldProps) => {
   return (
     <div className="form-group">
       <label htmlFor={id}>{label}</label>
@@ -40,9 +40,10 @@ const FormField: React.FC<FormFieldProps> = ({
         pattern={pattern}
         value={value}
         onChange={onChange}
+        aria-required={required}
       />
     </div>
   );
 };
 
-export default FormField;
+export { FormField };

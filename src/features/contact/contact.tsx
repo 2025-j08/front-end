@@ -8,13 +8,13 @@
  */
 import React from 'react';
 
-import FormField from './components/formField/formField';
-import TextAreaField from './components/textArea/textAreaField';
-import SubmitButton from './components/button/submitButton';
+import { FormField } from './components/formField/formField';
+import { TextAreaField } from './components/textArea/textAreaField';
+import { SubmitButton } from './components/button/submitButton';
 import { useContactForm } from './components/hooks/useContactForm';
 import './contact.scss';
 
-const ContactForm: React.FC = () => {
+const ContactForm = () => {
   const { formData, handleChange, handleSubmit } = useContactForm();
 
   return (
@@ -64,4 +64,4 @@ const ContactForm: React.FC = () => {
   );
 };
 
-export default ContactForm;
+export { ContactForm };

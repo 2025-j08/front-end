@@ -10,7 +10,7 @@ interface SubmitButtonProps {
   label?: string;
 }
 
-const SubmitButton: React.FC<SubmitButtonProps> = ({ label = '送信' }) => {
+const SubmitButton = ({ label = '送信' }: SubmitButtonProps) => {
   return (
     <div className="button-container">
       <button type="submit" className="submit-button">
@@ -20,4 +20,4 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({ label = '送信' }) => {
   );
 };
 
-export default SubmitButton;
+export { SubmitButton };
