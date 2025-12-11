@@ -17,7 +17,7 @@ export const Footer = () => {
         </div>
 
         {/* 右側：ナビゲーション */}
-        <nav className={styles.nav}>
+        <nav className={styles.nav} aria-label="Footer navigation">
           <Link href="/features/facilities/search" className={styles.navLink}>
             施設を探す
           </Link>
