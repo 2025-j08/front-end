@@ -3,7 +3,7 @@
  * .form-group は複数のコンポーネント（FormField、TextAreaField）で共有するため
  * 共通スタイルを分離して管理します
  */
-@use '../contact.variables' as *;
+@use '../../styles/contact.variables.scss' as *;
 
 .contact-form {
   // フォームフィールド共通スタイル
@@ -16,7 +16,7 @@
     label {
       width: 180px;
       font-size: 1rem;
-      color: $label-color;
+      color: $text-color;
       flex-shrink: 0;
     }
 
