@@ -12,6 +12,13 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+
+  //レスポンシブ: 小さい画面では子要素を垂直に積み重ねる
+  @media (max-width: 768px) {
+    flex-direction: column;
+
+    padding: 0 20px;
+  }
 }
 
 /* 左側の情報エリア */
