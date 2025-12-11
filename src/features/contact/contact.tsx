@@ -8,10 +8,10 @@
  */
 import React from 'react';
 
-import FormField from './formField/formField';
-import TextAreaField from './textArea/textAreaField';
-import SubmitButton from './button/submitButton';
-import { useContactForm } from './hooks/useContactForm';
+import FormField from './components/formField/formField';
+import TextAreaField from './components/textArea/textAreaField';
+import SubmitButton from './components/button/submitButton';
+import { useContactForm } from './components/hooks/useContactForm';
 import './contact.scss';
 
 const ContactForm: React.FC = () => {
