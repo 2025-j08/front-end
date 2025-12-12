@@ -4,3 +4,7 @@
  * レスポンシブ対応（モバイル時に縦並びに切り替え）
  */
 @use '../../shared' as *;
+
+.formGroup {
+  @extend .form-group;
+}
