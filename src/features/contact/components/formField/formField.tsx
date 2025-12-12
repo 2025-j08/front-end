@@ -1,13 +1,13 @@
 import React from 'react';
 
-import { BaseFieldProps } from '../types/formTypes';
-import './formField.scss';
+import { BaseFieldProps, AccessibilityProps } from '../types/formTypes';
+import styles from './formfield.module.scss';
 
 /**
  * FormField コンポーネント
  * テキスト入力とメールアドレス入力用のフォームフィールドを提供します。
  */
-interface FormFieldProps extends BaseFieldProps {
+interface FormFieldProps extends BaseFieldProps, AccessibilityProps {
   /** input 要素の type 属性（デフォルト: 'text'） */
   type?: string;
   /** バリデーション用の正規表現パターン */
@@ -26,9 +26,11 @@ const FormField = ({
   pattern,
   value,
   onChange,
+  ariaDescribedBy,
+  ariaInvalid,
 }: FormFieldProps) => {
   return (
-    <div className="form-group">
+    <div className={styles.formGroup}>
       <label htmlFor={id}>{label}</label>
       <input
         type={type}
@@ -41,6 +43,8 @@ const FormField = ({
         value={value}
         onChange={onChange}
         aria-required={required}
+        aria-describedby={ariaDescribedBy}
+        aria-invalid={ariaInvalid}
       />
     </div>
   );

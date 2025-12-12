@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { BaseFieldProps, AccessibilityProps } from '../types/formTypes';
-import './textAreaField.scss';
+import styles from './textareafield.module.scss';
 
 /**
  * TextAreaField コンポーネント
@@ -31,7 +31,7 @@ const TextAreaField = ({
   onChange,
 }: TextAreaFieldProps) => {
   return (
-    <div className="form-group textarea-group">
+    <div className={styles.textareaGroup}>
       <label htmlFor={id}>{label}</label>
       <textarea
         id={id}
