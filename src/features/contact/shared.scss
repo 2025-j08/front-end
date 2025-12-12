@@ -3,7 +3,7 @@
  * .form-group は複数のコンポーネント（FormField、TextAreaField）で共有するため
  * 共通スタイルを分離して管理します
  */
-@use '../../styles/contact.variables.scss' as *;
+@use '../../styles/contact.variables' as *;
 
 .contact-form {
   // フォームフィールド共通スタイル
