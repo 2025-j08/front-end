@@ -24,7 +24,33 @@ export const FacilitiesList = () => {
     setCurrentPage(page);
   };
 
-  const currentFacilities = data.pages[currentPage.toString()] || [];
+  const currentFacilities = data.pages[currentPage.toString()];
+
+  // データ不整合を検知してエラー表示
+  if (!currentFacilities) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.breadcrumb}>
+          <Link href="/">施設を探す</Link> &gt; <span>施設一覧</span>
+        </div>
+        <h1 className={styles.title}>施設一覧</h1>
+        <div style={{ padding: '2rem', textAlign: 'center', color: '#d32f2f' }}>
+          <p>データの読み込みに失敗しました。</p>
+          <p>ページ {currentPage} のデータが見つかりません。</p>
+          <button
+            onClick={() => setCurrentPage(1)}
+            style={{
+              marginTop: '1rem',
+              padding: '0.5rem 1rem',
+              cursor: 'pointer',
+            }}
+          >
+            最初のページに戻る
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>
