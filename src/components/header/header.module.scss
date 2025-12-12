@@ -1,22 +1,60 @@
 .header {
   width: 100%;
+}
+
+// 上部エリア（ロゴ・ナビ）
+.headerTop {
   background-color: #fff;
-  border-bottom: 1px solid #000; // ヘッダー下部の黒い線
+  border-bottom: 2px solid #000;
   padding: 10px 0;
+}
+
+// 下部エリア（画像エリア）
+.heroArea {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+
+  border: 1px solid #000;
+  box-sizing: border-box;
+
+  width: 80%;
+  height: 200px;
+  background-color: #dcdcdc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.noImageText {
+  font-size: 64px;
+  font-family: serif;
+  color: #000;
+}
+
+/* スマホ向けのレスポンシブ調整 */
+@media (max-width: 768px) {
+  .heroArea {
+    height: 200px;
+  }
+
+  .noImageText {
+    font-size: 32px;
+  }
 }
 
 .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1200px; // コンテンツ幅（必要に応じて調整してください）
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
 /* ロゴエリア */
 .logoWrapper {
-  // 画像にある緑色の枠のデザイン
   background-color: #99ff99;
   border: 1px solid #333;
   padding: 8px 30px;
@@ -27,7 +65,7 @@
     font-size: 24px;
     font-weight: normal;
     color: #000;
-    font-family: serif; // 画像のフォントの雰囲気に合わせる
+    font-family: serif;
     letter-spacing: 0.05em;
   }
 }
@@ -35,12 +73,12 @@
 /* 右側のナビゲーション */
 .nav {
   display: flex;
-  gap: 30px; // アイコン間の余白
+  gap: 30px;
 }
 
 .navItem {
   display: flex;
-  flex-direction: column; // アイコンとテキストを縦並び
+  flex-direction: column;
   align-items: center;
   text-decoration: none;
   color: #333;
