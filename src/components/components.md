@@ -2,6 +2,6 @@
 
 | componentファイルパス             | コンポーネントの概要                                                          |
 | --------------------------------- | ----------------------------------------------------------------------------- |
-| src/components/footer/footer.tsx  | サイト情報セクションとナビゲーション リンクを備えたフッター コンポーネント    |
-| src/components/header/header.tsx  | サイトロゴ、お問い合わせ、ログイン、image画像を出力するヘッターコンポーネント |
-| button/button.tsx                 | 任意のテキストと動作を指定できるオレンジ色のボタン                            |
+| src/components/footer/footer.tsx  | サイト情報セクションとナビゲーションリンクを備えたフッターコンポーネント      |
+| src/components/header/header.tsx  | サイトロゴ、お問い合わせ、ログイン、image画像を出力するヘッダーコンポーネント |
+| src/components/button/button.tsx  | 任意のテキストと動作を指定できるオレンジ色のボタン                            |
