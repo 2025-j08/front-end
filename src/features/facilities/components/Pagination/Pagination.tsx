@@ -1,6 +1,13 @@
 import styles from './Pagination.module.scss';
 
+// ページネーション表示設定
 const DEFAULT_MAX_VISIBLE_PAGES = 5;
+// 先頭・末尾付近と判定する境界値（この値以下/以上で省略表示が変わる）
+const EDGE_THRESHOLD = 3;
+// 先頭付近で表示する連続ページ数
+const PAGES_AT_START = 4;
+// 末尾付近で表示する連続ページ数
+const PAGES_AT_END = 4;
 
 type PaginationProps = {
   currentPage: number;
@@ -30,16 +37,16 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }: Pagination
         pages.push(i);
       }
     } else {
-      if (currentPage <= 3) {
-        for (let i = 1; i <= 4; i++) {
+      if (currentPage <= EDGE_THRESHOLD) {
+        for (let i = 1; i <= PAGES_AT_START; i++) {
           pages.push(i);
         }
         pages.push('...');
         pages.push(totalPages);
-      } else if (currentPage >= totalPages - 2) {
+      } else if (currentPage >= totalPages - (EDGE_THRESHOLD - 1)) {
         pages.push(1);
         pages.push('...');
-        for (let i = totalPages - 3; i <= totalPages; i++) {
+        for (let i = totalPages - (PAGES_AT_END - 1); i <= totalPages; i++) {
           pages.push(i);
         }
       } else {
