@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 
 import facilitiesData from '@/dummy_data/facilities_list.json';
 import { FacilitiesData } from '@/types/facility';
@@ -25,7 +26,7 @@ export const FacilitiesList = () => {
   return (
     <div className={styles.container}>
       <div className={styles.breadcrumb}>
-        <a href="/">施設を探す</a> &gt; <span>施設一覧</span>
+        <Link href="/">施設を探す</Link> &gt; <span>施設一覧</span>
       </div>
 
       <h1 className={styles.title}>施設一覧</h1>
