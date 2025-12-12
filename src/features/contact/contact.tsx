@@ -6,10 +6,8 @@
  * FormField、TextAreaField、SubmitButton を組み合わせて
  * ユーザーからのお問い合わせ入力を受け付けます。
  */
-import React from 'react';
-
-import { FormField } from './components/formField/formField';
-import { TextAreaField } from './components/textArea/textAreaField';
+import { FormField } from './components/formfield/formField';
+import { TextAreaField } from './components/textarea/textAreaField';
 import { SubmitButton } from './components/button/submitButton';
 import { useContactForm } from './components/hooks/useContactForm';
 import './contact.scss';

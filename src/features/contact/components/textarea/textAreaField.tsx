@@ -1,4 +1,4 @@
-import React from 'react';
+import type { ChangeEvent } from 'react';
 
 import { BaseFieldProps, AccessibilityProps } from '../types/formTypes';
 import styles from './textareafield.module.scss';
@@ -13,7 +13,7 @@ interface TextAreaFieldProps extends BaseFieldProps, AccessibilityProps {
   /** 入力の最小文字数 */
   minLength?: number;
   /** 値変更時のハンドラ */
-  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onChange?: (e: ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
 const TextAreaField = ({

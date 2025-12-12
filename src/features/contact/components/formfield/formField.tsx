@@ -1,4 +1,4 @@
-import React from 'react';
+import type { ChangeEvent } from 'react';
 
 import { BaseFieldProps, AccessibilityProps } from '../types/formTypes';
 import styles from './formfield.module.scss';
@@ -13,7 +13,7 @@ interface FormFieldProps extends BaseFieldProps, AccessibilityProps {
   /** バリデーション用の正規表現パターン */
   pattern?: string;
   /** 値変更時のハンドラ */
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 const FormField = ({
   label,
