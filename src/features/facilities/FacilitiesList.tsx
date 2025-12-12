@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 import facilitiesData from '@/dummy_data/facilities_list.json';
@@ -16,9 +16,14 @@ export const FacilitiesList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Object.keys(data.pages).length;
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [currentPage]);
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const currentFacilities = data.pages[currentPage.toString()] || [];
