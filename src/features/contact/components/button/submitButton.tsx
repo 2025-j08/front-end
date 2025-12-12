@@ -1,5 +1,6 @@
 import React from 'react';
-import './submitButton.scss';
+
+import styles from './submitbutton.module.scss';
 
 /**
  * SubmitButton コンポーネント
@@ -12,8 +13,8 @@ interface SubmitButtonProps {
 
 const SubmitButton = ({ label = '送信' }: SubmitButtonProps) => {
   return (
-    <div className="button-container">
-      <button type="submit" className="submit-button">
+    <div className={styles.buttonContainer}>
+      <button type="submit" className={styles.submitButton}>
         {label}
       </button>
     </div>
