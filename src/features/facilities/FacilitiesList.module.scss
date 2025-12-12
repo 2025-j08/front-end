@@ -61,4 +61,41 @@
     gap: 16px;
     margin-bottom: 24px;
   }
+
+  .errorContainer {
+    padding: 1.5rem;
+
+    p {
+      margin: 0.5rem 0;
+    }
+
+    .errorButton {
+      margin-top: 0.75rem;
+      padding: 0.4rem 0.8rem;
+    }
+  }
+}
+
+.errorContainer {
+  padding: 2rem;
+  text-align: center;
+  color: $error-color;
+
+  p {
+    margin: 0.5rem 0;
+  }
+
+  .errorButton {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    background-color: $bg-white;
+    border: 1px solid $border-gray;
+    border-radius: 4px;
+    color: $text-primary;
+
+    &:hover {
+      background-color: $bg-light-gray;
+    }
+  }
 }
