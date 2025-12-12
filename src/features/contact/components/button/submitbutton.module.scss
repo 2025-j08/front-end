@@ -12,10 +12,10 @@
 
 .submitButton {
   background-color: $border-green;
-  color: #fff;
+  color: $white;
   font-size: 1.2rem;
   font-weight: bold;
-  border: 1px solid #333;
+  border: 1px solid $dark-gray;
   padding: 10px 60px;
   cursor: pointer;
   transition: opacity 0.2s;
