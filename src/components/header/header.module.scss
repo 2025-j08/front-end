@@ -16,9 +16,6 @@
   margin: 0 auto;
   padding: 0 20px;
 
-  border: 1px solid #000;
-  box-sizing: border-box;
-
   aspect-ratio: 6 / 1;
   background-color: #dcdcdc;
   display: flex;
@@ -37,6 +34,7 @@
 @media (max-width: 768px) {
   .heroArea {
     height: 200px;
+    aspect-ratio: auto;
   }
 
   .noImageText {
