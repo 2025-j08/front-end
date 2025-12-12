@@ -65,14 +65,14 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }: Pagination
       {getPageNumbers().map((page, index) =>
         typeof page === 'number' ? (
           <button
-            key={index}
+            key={`page-${page}`}
             className={`${styles.pageButton} ${currentPage === page ? styles.active : ''}`}
             onClick={() => onPageChange(page)}
           >
             {page}
           </button>
         ) : (
-          <span key={index} className={styles.ellipsis}>
+          <span key={`ellipsis-${index}`} className={styles.ellipsis}>
             {page}
           </span>
         ),
