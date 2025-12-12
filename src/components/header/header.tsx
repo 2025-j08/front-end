@@ -33,16 +33,13 @@ export const Header = () => {
       </div>
       {/* 下部：画像エリア (no image) */}
       <div className={styles.heroArea}>
-        {/* 画像を配置する場合は、以下のコメントアウトを解除し、srcに画像パスを指定してください。
-          現在はレイアウト画像に合わせてグレー背景とテキストを表示しています。
-        */}
-        <Image
+        {/* <Image
           src="/images/hero.jpg"
           alt="メインビジュアル"
           fill
           style={{ objectFit: 'cover' }}
           priority
-        />
+        /> */}
 
         <span className={styles.noImageText}>no image</span>
       </div>

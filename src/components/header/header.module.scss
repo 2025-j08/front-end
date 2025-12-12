@@ -11,6 +11,7 @@
 
 // 下部エリア（画像エリア）
 .heroArea {
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
@@ -18,8 +19,7 @@
   border: 1px solid #000;
   box-sizing: border-box;
 
-  width: 80%;
-  height: 200px;
+  aspect-ratio: 6 / 1;
   background-color: #dcdcdc;
   display: flex;
   justify-content: center;
