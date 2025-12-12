@@ -14,7 +14,7 @@ export type Facility = {
 
 type Props = { facility: Facility };
 
-const FacilityCard: React.FC<Props> = ({ facility }) => {
+export const FacilityCard = ({ facility }: Props) => {
   return (
     <article className={styles.card} role="group" aria-label={facility.name}>
       <div className={styles.left}>
@@ -39,5 +39,3 @@ const FacilityCard: React.FC<Props> = ({ facility }) => {
     </article>
   );
 };
-
-export default FacilityCard;

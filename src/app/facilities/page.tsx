@@ -1,6 +1,6 @@
 import React from 'react';
 
-import FacilityCard, { Facility } from '../../components/facilitycard/facilitycard';
+import { FacilityCard, type Facility } from '../../components/facilitycard/facilitycard';
 
 const dummy: Facility[] = [
   {
