@@ -17,9 +17,7 @@ export const FacilitiesList = () => {
   const totalPages = Object.keys(data.pages).length;
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentPage]);
 
   const handlePageChange = (page: number) => {
