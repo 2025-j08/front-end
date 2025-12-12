@@ -1,5 +1,7 @@
 import styles from './Pagination.module.scss';
 
+const DEFAULT_MAX_VISIBLE_PAGES = 5;
+
 type PaginationProps = {
   currentPage: number;
   totalPages: number;
@@ -21,7 +23,7 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }: Pagination
 
   const getPageNumbers = () => {
     const pages: (number | string)[] = [];
-    const maxVisible = 5;
+    const maxVisible = DEFAULT_MAX_VISIBLE_PAGES;
 
     if (totalPages <= maxVisible) {
       for (let i = 1; i <= totalPages; i++) {
