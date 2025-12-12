@@ -60,6 +60,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.image {
+  object-fit: cover;
 }
 
 .imagePlaceholder {

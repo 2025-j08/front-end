@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 import { Facility } from '@/types/facility';
 
@@ -19,7 +20,17 @@ export const FacilityCard = ({ facility }: FacilityCardProps) => {
         <p className={styles.phone}>TEL {facility.phone}</p>
       </div>
       <div className={styles.imageWrapper}>
-        <div className={styles.imagePlaceholder}>image</div>
+        {facility.imagePath ? (
+          <Image
+            src={facility.imagePath}
+            alt={facility.name}
+            fill
+            className={styles.image}
+            sizes="(max-width: 768px) 100vw, 120px"
+          />
+        ) : (
+          <div className={styles.imagePlaceholder}>no image</div>
+        )}
       </div>
     </div>
   );
