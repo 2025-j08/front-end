@@ -10,15 +10,15 @@ import { FormField } from './components/formfield/formField';
 import { TextAreaField } from './components/textarea/textAreaField';
 import { SubmitButton } from './components/button/submitButton';
 import { useContactForm } from './components/hooks/useContactForm';
-import './contact.scss';
+import styles from './contact.module.scss';
 
 const ContactForm = () => {
   const { formData, handleChange, handleSubmit } = useContactForm();
 
   return (
-    <div className="contact-form-container">
-      <h2 className="form-title">お問い合わせ</h2>
-      <form className="contact-form" onSubmit={handleSubmit}>
+    <div className={styles['contact-form-container']}>
+      <h2 className={styles['form-title']}>お問い合わせ</h2>
+      <form onSubmit={handleSubmit}>
         <FormField
           label="名前"
           type="text"
