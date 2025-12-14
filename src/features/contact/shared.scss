@@ -1,14 +1,14 @@
 /**
  * Contact フォーム共通スタイル
- * .form-group は複数のコンポーネント（FormField、TextAreaField）で共有するため
+ * form-group mixin は複数のコンポーネント（FormField、TextAreaField）で共有するため
  * 共通スタイルを分離して管理します
  *
- * ※ CSS Modules の @extend で使用するため、トップレベルで定義
+ * ※ CSS Modules との互換性のため @mixin を使用
  */
 @use '../../styles/contact.variables' as *;
 
-// フォームフィールド共通スタイル（@extend用）
-.form-group {
+// フォームフィールド共通スタイル（@include で使用）
+@mixin form-group {
   display: flex;
   align-items: center;
   margin-bottom: 20px;

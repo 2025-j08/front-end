@@ -10,8 +10,8 @@ $dark-gray: #333;
 // フォーム枠線の緑色
 $border-green: #66ff66;
 
-// テキスト通常色
-$text-color: #333;
+// テキスト通常色（$dark-grayを参照、将来的に変更可能）
+$text-color: $dark-gray;
 
 // プレースホルダーテキスト色
 $placeholder-color: #999;
