@@ -13,10 +13,7 @@
   justify-content: space-between;
   align-items: flex-start;
 
-  //レスポンシブ: 小さい画面では子要素を垂直に積み重ねる
   @media (max-width: 768px) {
-    flex-direction: column;
-
     padding: 0 20px;
   }
 }
@@ -32,6 +29,11 @@
   font-size: 24px;
   font-weight: bold;
   margin: 0;
+  white-space: nowrap;
+
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
 }
 
 .addressInfo {
@@ -53,6 +55,7 @@
   @media (max-width: 768px) {
     flex-direction: column;
     gap: 15px;
+    padding-top: 0;
   }
 }
 
@@ -62,6 +65,7 @@
   font-weight: bold;
   font-size: 16px;
   transition: opacity 0.2s;
+  white-space: nowrap;
 
   &:hover {
     opacity: 0.8;
