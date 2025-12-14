@@ -1,7 +1,7 @@
 import type { ChangeEvent } from 'react';
 
 import { BaseFieldProps, AccessibilityProps } from '../types/formTypes';
-import styles from './formfield.module.scss';
+import styles from './formField.module.scss';
 
 /**
  * FormField コンポーネント
