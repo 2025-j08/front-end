@@ -14,6 +14,7 @@ interface LoginFieldProps {
   placeholder?: string;
   required?: boolean;
   value?: string;
+  autoComplete?: string;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -25,6 +26,7 @@ const LoginField = ({
   placeholder,
   required,
   value,
+  autoComplete,
   onChange,
 }: LoginFieldProps) => {
   return (
@@ -37,6 +39,7 @@ const LoginField = ({
         placeholder={placeholder}
         required={required}
         value={value}
+        autoComplete={autoComplete}
         onChange={onChange}
       />
     </div>

@@ -20,10 +20,11 @@ const LoginForm = () => {
       <form onSubmit={handleSubmit}>
         <LoginField
           label="ID"
-          type="email"
+          type="text"
           id="userid"
           name="userid"
-          placeholder="example@email.com"
+          placeholder="example_ID"
+          autoComplete="username"
           required
         />
 
@@ -32,7 +33,8 @@ const LoginForm = () => {
           type="password"
           id="password"
           name="password"
-          placeholder="8文字以上の半角英数字"
+          placeholder="パスワード"
+          autoComplete="current-password"
           required
         />
 
