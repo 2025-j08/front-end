@@ -2,7 +2,7 @@
  * Auth フォーム共通スタイル
  * contactのshared.scssと同じ構造でform-group mixinを提供
  */
-@use '../../styles/globals' as *;
+@use '../../styles/form.variables' as *;
 
 // フォームフィールド共通スタイル（@include で使用）
 @mixin form-group {
