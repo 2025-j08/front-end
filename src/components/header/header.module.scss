@@ -11,10 +11,9 @@
 
 // 下部エリア（画像エリア）
 .heroArea {
-  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 5%;
 
   aspect-ratio: 6 / 1;
   background-color: #dcdcdc;
@@ -32,13 +31,37 @@
 
 /* スマホ向けのレスポンシブ調整 */
 @media (max-width: 768px) {
-  .heroArea {
-    height: 200px;
-    aspect-ratio: auto;
-  }
-
   .noImageText {
     font-size: 32px;
+  }
+
+  // 追加: コンテナの余白を詰める
+  .container {
+    padding: 0 12px;
+  }
+
+  // 追加: ロゴを小さく
+  .logoWrapper {
+    padding: 6px 15px;
+
+    .logoText {
+      font-size: 20px;
+    }
+  }
+
+  // 追加: ナビの間隔を詰める
+  .nav {
+    gap: 15px;
+  }
+
+  // 追加: 文字とアイコンを小さく
+  .navItem {
+    font-size: 10px;
+  }
+
+  .icon {
+    font-size: 24px;
+    margin-bottom: 2px;
   }
 }
 
@@ -58,6 +81,8 @@
   padding: 8px 30px;
   text-decoration: none;
   display: inline-block;
+
+  flex-shrink: 0;
 
   .logoText {
     font-size: 24px;
@@ -87,6 +112,8 @@
   &:hover {
     opacity: 0.7;
   }
+
+  white-space: nowrap;
 }
 
 .icon {
