@@ -5,7 +5,7 @@
 @use '../../shared' as *;
 
 .textareaGroup {
-  @extend .form-group;
+  @include form-group;
   flex-direction: column;
   align-items: flex-start;
 

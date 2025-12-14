@@ -6,5 +6,5 @@
 @use '../../shared' as *;
 
 .formGroup {
-  @extend .form-group;
+  @include form-group;
 }
