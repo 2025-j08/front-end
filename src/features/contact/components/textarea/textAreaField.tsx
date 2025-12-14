@@ -41,7 +41,6 @@ const TextAreaField = ({
         required={required}
         maxLength={maxLength}
         minLength={minLength}
-        aria-required={required}
         aria-describedby={ariaDescribedBy}
         aria-invalid={ariaInvalid}
         value={value}

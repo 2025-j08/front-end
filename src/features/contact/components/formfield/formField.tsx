@@ -42,7 +42,6 @@ const FormField = ({
         pattern={pattern}
         value={value}
         onChange={onChange}
-        aria-required={required}
         aria-describedby={ariaDescribedBy}
         aria-invalid={ariaInvalid}
       />
