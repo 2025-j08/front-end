@@ -1,0 +1,9 @@
+/**
+ * /features/auth ルート
+ * ログインフォームを表示
+ */
+import LoginForm from '@/src/features/auth/loginForm';
+
+export default function FeaturesAuthPage() {
+  return <LoginForm />;
+}
