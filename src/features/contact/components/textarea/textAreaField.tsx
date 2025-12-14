@@ -1,7 +1,7 @@
 import type { ChangeEvent } from 'react';
 
 import { BaseFieldProps, AccessibilityProps } from '../types/formTypes';
-import styles from './textareafield.module.scss';
+import styles from './textAreaField.module.scss';
 
 /**
  * TextAreaField コンポーネント

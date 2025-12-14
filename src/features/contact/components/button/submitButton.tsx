@@ -1,4 +1,4 @@
-import styles from './submitbutton.module.scss';
+import styles from './submitButton.module.scss';
 
 /**
  * SubmitButton コンポーネント
