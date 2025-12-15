@@ -8,7 +8,7 @@ export const Login = () => {
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    console.log('ID:', id, 'パスワード:', password);
+    //console.log('ID:', id, 'パスワード:', password);
     // ここに実際のログイン処理を記述
   };
 
