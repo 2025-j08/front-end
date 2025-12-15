@@ -1,0 +1,73 @@
+.footer {
+  width: 100%;
+  background-color: #4da6ff;
+  color: #fff;
+  padding: 40px 0;
+  margin-top: auto;
+}
+
+.container {
+  padding: 0 40px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  @media (max-width: 768px) {
+    padding: 0 20px;
+  }
+}
+
+/* 左側の情報エリア */
+.infoArea {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.siteName {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+  white-space: nowrap;
+
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
+}
+
+.addressInfo {
+  font-size: 14px;
+  line-height: 1.6;
+
+  p {
+    margin: 0;
+  }
+}
+
+/* 右側のナビゲーションエリア */
+.nav {
+  display: flex;
+  gap: 32px; // リンク間の余白
+  padding-top: 10px; // サイト名とのバランス調整
+
+  // スマホ対応
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 15px;
+    padding-top: 0;
+  }
+}
+
+.navLink {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 16px;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
