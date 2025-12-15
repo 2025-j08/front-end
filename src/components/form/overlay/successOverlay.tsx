@@ -1,0 +1,23 @@
+/**
+ * SuccessOverlay 共通コンポーネント
+ * フォーム送信成功時のオーバーレイ
+ */
+import styles from './successOverlay.module.scss';
+
+interface SuccessOverlayProps {
+  text?: string;
+  isVisible: boolean;
+}
+
+const SuccessOverlay = ({ text = '送信が完了しました', isVisible }: SuccessOverlayProps) => {
+  if (!isVisible) return null;
+
+  return (
+    <div className={styles.overlay}>
+      <div className={styles.icon}>✓</div>
+      <span className={styles.text}>{text}</span>
+    </div>
+  );
+};
+
+export { SuccessOverlay };

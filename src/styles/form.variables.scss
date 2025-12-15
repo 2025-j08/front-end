@@ -18,3 +18,27 @@ $border-green: colors.$border-green;
 $placeholder-color: colors.$placeholder-color;
 $input-bg: colors.$input-bg;
 $input-border: colors.$input-border;
+
+// ====================================
+// 追加カラー（contact案2で必要な変数）
+// ====================================
+
+// メインアクセントカラー
+$primary-color: colors.$primary-color;
+$primary-light: lighten(colors.$primary-color, 15%);
+$primary-dark: darken(colors.$primary-color, 15%);
+
+// セカンダリカラー（ミント・クリーム系）
+$secondary-color: #e8f4ee;
+$secondary-light: #f5faf7;
+$secondary-dark: #d4e8dc;
+
+// 背景グラデーション用
+$bg-gradient-start: #fafcfb;
+$bg-gradient-end: #eef6f2;
+
+// ボタンシャドウ
+$button-shadow: rgba(colors.$primary-color, 0.3);
+
+// フォーカス時のグロー
+$focus-glow: rgba(colors.$primary-color, 0.2);

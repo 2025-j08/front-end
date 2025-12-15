@@ -1,0 +1,38 @@
+/**
+ * LoadingOverlay スタイル
+ */
+@use '../../../styles/form.variables' as *;
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.85);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  border-radius: 18px;
+  backdrop-filter: blur(2px);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.text {
+  margin-top: 16px;
+  color: $primary-dark;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
