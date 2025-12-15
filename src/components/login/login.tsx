@@ -37,7 +37,7 @@ export const Login = () => {
           />
         </div>
 
-        <button onClick={handleLogin} className={styles.button}>
+        <button type="button" onClick={handleLogin} className={styles.button}>
           ログイン
         </button>
       </div>
