@@ -8,7 +8,7 @@ import { LoginField } from './components/formfield/loginField';
 import { LoginButton } from './components/button/loginButton';
 import styles from './loginForm.module.scss';
 
-const LoginForm = () => {
+export const LoginForm = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log('Login form submitted');
@@ -43,5 +43,3 @@ const LoginForm = () => {
     </div>
   );
 };
-
-export default LoginForm;
