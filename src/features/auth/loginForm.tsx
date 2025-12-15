@@ -1,0 +1,45 @@
+'use client';
+
+/**
+ * LoginForm コンポーネント
+ * ログインフォームのメインページです。
+ */
+import { LoginField } from './components/formfield/loginField';
+import { LoginButton } from './components/button/loginButton';
+import styles from './loginForm.module.scss';
+
+export const LoginForm = () => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log('Login form submitted');
+  };
+
+  return (
+    <div className={styles['login-form-container']}>
+      <h2 className={styles['form-title']}>ログイン</h2>
+      <form onSubmit={handleSubmit}>
+        <LoginField
+          label="ID"
+          type="text"
+          id="userid"
+          name="userid"
+          placeholder="example_ID"
+          autoComplete="username"
+          required
+        />
+
+        <LoginField
+          label="パスワード"
+          type="password"
+          id="password"
+          name="password"
+          placeholder="パスワード"
+          autoComplete="current-password"
+          required
+        />
+
+        <LoginButton label="ログイン" />
+      </form>
+    </div>
+  );
+};

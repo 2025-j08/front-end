@@ -1,0 +1,28 @@
+/**
+ * LoginForm 全体のスタイル
+ * contactのスタイルと同じ変数を使用
+ */
+@use '../../styles/form.variables' as form;
+@use '../../styles/colors' as *;
+
+// フォーム全体のコンテナ（contactと同じスタイル）
+.login-form-container {
+  border: 2px solid $border-green;
+  border-radius: 15px;
+  padding: 30px 40px;
+  width: 100%;
+  max-width: 600px;
+  margin: 100px auto;
+  background-color: form.$white;
+  font-family: sans-serif;
+
+  // フォームタイトル
+  .form-title {
+    margin-top: 0;
+    margin-bottom: 30px;
+    font-size: 1.2rem;
+    font-weight: normal;
+    color: form.$black;
+    text-align: center;
+  }
+}

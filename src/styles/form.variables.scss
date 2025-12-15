@@ -1,0 +1,20 @@
+/**
+ * フォーム全体で共通利用する色・スタイル変数
+ * 色定義は colors.scss から取得し、DRY原則に従う
+ */
+@forward './colors';
+@use './colors' as colors;
+
+// 基本色エイリアス（colors.scssから継承）
+$white: colors.$bg-white;
+$black: colors.$border-black;
+$dark-gray: colors.$text-primary;
+
+// テキスト通常色
+$text-color: colors.$text-primary;
+
+// フォーム関連変数（colors.scssから再エクスポート）
+$border-green: colors.$border-green;
+$placeholder-color: colors.$placeholder-color;
+$input-bg: colors.$input-bg;
+$input-border: colors.$input-border;

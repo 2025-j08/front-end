@@ -1,0 +1,26 @@
+/**
+ * LoginButton コンポーネント用スタイル
+ */
+@use '../../../../styles/form.variables' as form;
+@use '../../../../styles/colors' as *;
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.loginButton {
+  background-color: $border-green;
+  color: form.$white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: 1px solid form.$dark-gray;
+  padding: 10px 60px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
