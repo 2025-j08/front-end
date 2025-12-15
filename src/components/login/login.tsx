@@ -18,6 +18,7 @@ export const Login = () => {
         <div className={styles.field}>
           <label className={styles.label}>ID</label>
           <input
+            id="id-input"
             type="text"
             placeholder="xxxxxxxx....."
             value={id}
@@ -29,6 +30,7 @@ export const Login = () => {
         <div className={styles.field}>
           <label className={styles.label}>パスワード</label>
           <input
+            id="password-input"
             type="password"
             placeholder="xxxxxxxx....."
             value={password}
