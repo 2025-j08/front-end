@@ -1,3 +1,6 @@
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+
 import styles from './Pagination.module.scss';
 
 // ページネーション表示設定
@@ -66,7 +69,7 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }: Pagination
   return (
     <div className={styles.pagination}>
       <button className={styles.arrow} onClick={handlePrev} disabled={currentPage === 1}>
-        &lt;
+        <ChevronLeftIcon />
       </button>
 
       {getPageNumbers().map((page, index) =>
@@ -86,7 +89,7 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }: Pagination
       )}
 
       <button className={styles.arrow} onClick={handleNext} disabled={currentPage === totalPages}>
-        &gt;
+        <ChevronRightIcon />
       </button>
     </div>
   );
