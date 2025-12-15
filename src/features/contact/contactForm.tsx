@@ -5,7 +5,7 @@
  * お問い合わせフォームのメインページです。
  * 共通コンポーネントとuseContactFormフックを使用
  */
-import { FormField, FormButton, LoadingOverlay, SuccessOverlay } from '@/src/components/form';
+import { FormField, FormButton, LoadingOverlay, SuccessOverlay } from '@/components/form';
 
 import styles from './contactForm.module.scss';
 import { useContactForm } from './components/hooks/useContactForm';
