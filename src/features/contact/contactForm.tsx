@@ -10,7 +10,7 @@ import { FormField, FormButton, LoadingOverlay, SuccessOverlay } from '@/compone
 import styles from './contactForm.module.scss';
 import { useContactForm } from './components/hooks/useContactForm';
 
-const ContactForm = () => {
+export const ContactForm = () => {
   const { formData, isLoading, isSuccess, handleChange, handleSubmit } = useContactForm();
 
   return (
@@ -83,5 +83,3 @@ const ContactForm = () => {
     </div>
   );
 };
-
-export default ContactForm;
