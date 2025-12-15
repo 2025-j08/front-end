@@ -1,0 +1,72 @@
+@import '@/styles/colors';
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 32px 0;
+  flex-wrap: wrap;
+}
+
+.arrow {
+  padding: 8px 12px;
+  border: 1px solid $border-dark;
+  background-color: $bg-white;
+  cursor: pointer;
+  font-size: 1rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+
+  &:hover:not(:disabled) {
+    background-color: $bg-light-gray;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+.pageButton {
+  padding: 8px 14px;
+  border: 1px solid $border-dark;
+  background-color: $bg-white;
+  cursor: pointer;
+  font-size: 1rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: $bg-light-gray;
+  }
+
+  &.active {
+    background-color: $primary-color;
+    color: $primary-text-color;
+    border-color: $primary-color;
+    font-weight: bold;
+  }
+}
+
+.ellipsis {
+  padding: 8px 4px;
+  color: $text-secondary;
+  user-select: none;
+}
+
+@media screen and (max-width: 768px) {
+  .pagination {
+    gap: 4px;
+  }
+
+  .arrow,
+  .pageButton {
+    padding: 6px 10px;
+    font-size: 0.9rem;
+  }
+
+  .ellipsis {
+    padding: 6px 2px;
+  }
+}

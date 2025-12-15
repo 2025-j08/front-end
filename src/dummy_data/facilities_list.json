@@ -1,0 +1,826 @@
+{
+  "totalCount": 100,
+  "limit": 10,
+  "pages": {
+    "1": [
+      {
+        "id": 1,
+        "name": "あおば児童養護施設",
+        "postalCode": "530-0001",
+        "address": "大阪府大阪市北区梅田1-1-1",
+        "phone": "06-0000-0001",
+        "imagePath": null
+      },
+      {
+        "id": 2,
+        "name": "さくら学園",
+        "postalCode": "530-0002",
+        "address": "兵庫県神戸市中央区2-2-2",
+        "phone": "078-0000-0002",
+        "imagePath": null
+      },
+      {
+        "id": 3,
+        "name": "みどりの里",
+        "postalCode": "630-0003",
+        "address": "奈良県奈良市登大路町3-3",
+        "phone": "0742-000-0003",
+        "imagePath": null
+      },
+      {
+        "id": 4,
+        "name": "つばさ福祉ホーム",
+        "postalCode": "520-0004",
+        "address": "滋賀県大津市京町4-4-4",
+        "phone": "077-000-0004",
+        "imagePath": null
+      },
+      {
+        "id": 5,
+        "name": "こども未来園",
+        "postalCode": "640-0005",
+        "address": "和歌山県和歌山市吹上5-5-5",
+        "phone": "073-000-0005",
+        "imagePath": null
+      },
+      {
+        "id": 6,
+        "name": "すみれハウス",
+        "postalCode": "530-0006",
+        "address": "大阪府大阪市北区中崎町6-6",
+        "phone": "06-0000-0006",
+        "imagePath": null
+      },
+      {
+        "id": 7,
+        "name": "なのはな学園",
+        "postalCode": "600-0007",
+        "address": "京都府京都市下京区烏丸通7-7",
+        "phone": "075-000-0007",
+        "imagePath": null
+      },
+      {
+        "id": 8,
+        "name": "まつば福祉センター",
+        "postalCode": "650-0008",
+        "address": "兵庫県神戸市中央区三宮町8-8",
+        "phone": "078-000-0008",
+        "imagePath": null
+      },
+      {
+        "id": 9,
+        "name": "ゆめの杜",
+        "postalCode": "630-0009",
+        "address": "奈良県奈良市高畑町9-9",
+        "phone": "0742-000-0009",
+        "imagePath": null
+      },
+      {
+        "id": 10,
+        "name": "ひまわりホーム",
+        "postalCode": "520-0010",
+        "address": "滋賀県大津市浜大津10-10",
+        "phone": "077-000-0010",
+        "imagePath": null
+      }
+    ],
+    "2": [
+      {
+        "id": 11,
+        "name": "たんぽぽ児童館",
+        "postalCode": "530-0011",
+        "address": "大阪府大阪市北区天神橋11-11",
+        "phone": "06-0000-0011",
+        "imagePath": null
+      },
+      {
+        "id": 12,
+        "name": "コスモス学園",
+        "postalCode": "650-0012",
+        "address": "兵庫県神戸市中央区北長狭通12-12",
+        "phone": "078-000-0012",
+        "imagePath": null
+      },
+      {
+        "id": 13,
+        "name": "あじさいハウス",
+        "postalCode": "630-0013",
+        "address": "奈良県奈良市三条本町13-13",
+        "phone": "0742-000-0013",
+        "imagePath": null
+      },
+      {
+        "id": 14,
+        "name": "すずらん福祉園",
+        "postalCode": "520-0014",
+        "address": "滋賀県大津市中央14-14",
+        "phone": "077-000-0014",
+        "imagePath": null
+      },
+      {
+        "id": 15,
+        "name": "ききょうの家",
+        "postalCode": "640-0015",
+        "address": "和歌山県和歌山市本町15-15",
+        "phone": "073-000-0015",
+        "imagePath": null
+      },
+      {
+        "id": 16,
+        "name": "ばら園児童ホーム",
+        "postalCode": "530-0016",
+        "address": "大阪府大阪市北区南扇町16-16",
+        "phone": "06-0000-0016",
+        "imagePath": null
+      },
+      {
+        "id": 17,
+        "name": "ゆり学園",
+        "postalCode": "600-0017",
+        "address": "京都府京都市下京区東洞院通17-17",
+        "phone": "075-000-0017",
+        "imagePath": null
+      },
+      {
+        "id": 18,
+        "name": "カトレア福祉館",
+        "postalCode": "650-0018",
+        "address": "兵庫県神戸市中央区栄町通18-18",
+        "phone": "078-000-0018",
+        "imagePath": null
+      },
+      {
+        "id": 19,
+        "name": "チューリップの里",
+        "postalCode": "630-0019",
+        "address": "奈良県奈良市手貝町19-19",
+        "phone": "0742-000-0019",
+        "imagePath": null
+      },
+      {
+        "id": 20,
+        "name": "ラベンダーハウス",
+        "postalCode": "520-0020",
+        "address": "滋賀県大津市御陵町20-20",
+        "phone": "077-000-0020",
+        "imagePath": null
+      }
+    ],
+    "3": [
+      {
+        "id": 21,
+        "name": "マーガレット学園",
+        "postalCode": "530-0021",
+        "address": "大阪府大阪市北区浮田21-21",
+        "phone": "06-0000-0021",
+        "imagePath": null
+      },
+      {
+        "id": 22,
+        "name": "フリージア児童園",
+        "postalCode": "650-0022",
+        "address": "兵庫県神戸市中央区元町通22-22",
+        "phone": "078-000-0022",
+        "imagePath": null
+      },
+      {
+        "id": 23,
+        "name": "クローバーホーム",
+        "postalCode": "630-0023",
+        "address": "奈良県奈良市油阪町23-23",
+        "phone": "0742-000-0023",
+        "imagePath": null
+      },
+      {
+        "id": 24,
+        "name": "パンジー福祉の家",
+        "postalCode": "520-0024",
+        "address": "滋賀県大津市松山町24-24",
+        "phone": "077-000-0024",
+        "imagePath": null
+      },
+      {
+        "id": 25,
+        "name": "プリムラ養護園",
+        "postalCode": "640-0025",
+        "address": "和歌山県和歌山市屋形町25-25",
+        "phone": "073-000-0025",
+        "imagePath": null
+      },
+      {
+        "id": 26,
+        "name": "デイジー児童館",
+        "postalCode": "530-0026",
+        "address": "大阪府大阪市北区神山町26-26",
+        "phone": "06-0000-0026",
+        "imagePath": null
+      },
+      {
+        "id": 27,
+        "name": "アイリス学園",
+        "postalCode": "600-0027",
+        "address": "京都府京都市下京区西洞院通27-27",
+        "phone": "075-000-0027",
+        "imagePath": null
+      },
+      {
+        "id": 28,
+        "name": "リリー福祉センター",
+        "postalCode": "650-0028",
+        "address": "兵庫県神戸市中央区雲井通28-28",
+        "phone": "078-000-0028",
+        "imagePath": null
+      },
+      {
+        "id": 29,
+        "name": "スイートピーの杜",
+        "postalCode": "630-0029",
+        "address": "奈良県奈良市杉ヶ町29-29",
+        "phone": "0742-000-0029",
+        "imagePath": null
+      },
+      {
+        "id": 30,
+        "name": "カーネーション園",
+        "postalCode": "520-0030",
+        "address": "滋賀県大津市琵琶湖30-30",
+        "phone": "077-000-0030",
+        "imagePath": null
+      }
+    ],
+    "4": [
+      {
+        "id": 31,
+        "name": "ポピー児童ホーム",
+        "postalCode": "530-0031",
+        "address": "大阪府大阪市北区本庄西31-31",
+        "phone": "06-0000-0031",
+        "imagePath": null
+      },
+      {
+        "id": 32,
+        "name": "ガーベラ学園",
+        "postalCode": "650-0032",
+        "address": "兵庫県神戸市中央区伊藤町32-32",
+        "phone": "078-000-0032",
+        "imagePath": null
+      },
+      {
+        "id": 33,
+        "name": "ダリアの里",
+        "postalCode": "630-0033",
+        "address": "奈良県奈良市あやめ池33-33",
+        "phone": "0742-000-0033",
+        "imagePath": null
+      },
+      {
+        "id": 34,
+        "name": "ベゴニア福祉ホーム",
+        "postalCode": "520-0034",
+        "address": "滋賀県大津市石場34-34",
+        "phone": "077-000-0034",
+        "imagePath": null
+      },
+      {
+        "id": 35,
+        "name": "ジニア未来園",
+        "postalCode": "640-0035",
+        "address": "和歌山県和歌山市片岡町35-35",
+        "phone": "073-000-0035",
+        "imagePath": null
+      },
+      {
+        "id": 36,
+        "name": "サルビアハウス",
+        "postalCode": "530-0036",
+        "address": "大阪府大阪市北区与力町36-36",
+        "phone": "06-0000-0036",
+        "imagePath": null
+      },
+      {
+        "id": 37,
+        "name": "ブルースター学園",
+        "postalCode": "600-0037",
+        "address": "京都府京都市下京区綾小路通37-37",
+        "phone": "075-000-0037",
+        "imagePath": null
+      },
+      {
+        "id": 38,
+        "name": "ペチュニア福祉館",
+        "postalCode": "650-0038",
+        "address": "兵庫県神戸市中央区西町38-38",
+        "phone": "078-000-0038",
+        "imagePath": null
+      },
+      {
+        "id": 39,
+        "name": "マリーゴールドの家",
+        "postalCode": "630-0039",
+        "address": "奈良県奈良市百楽園39-39",
+        "phone": "0742-000-0039",
+        "imagePath": null
+      },
+      {
+        "id": 40,
+        "name": "シクラメン園",
+        "postalCode": "520-0040",
+        "address": "滋賀県大津市本宮40-40",
+        "phone": "077-000-0040",
+        "imagePath": null
+      }
+    ],
+    "5": [
+      {
+        "id": 41,
+        "name": "ネモフィラ児童館",
+        "postalCode": "530-0041",
+        "address": "大阪府大阪市北区天神橋41-41",
+        "phone": "06-0000-0041",
+        "imagePath": null
+      },
+      {
+        "id": 42,
+        "name": "ルピナス学園",
+        "postalCode": "650-0042",
+        "address": "兵庫県神戸市中央区波止場町42-42",
+        "phone": "078-000-0042",
+        "imagePath": null
+      },
+      {
+        "id": 43,
+        "name": "アネモネハウス",
+        "postalCode": "630-0043",
+        "address": "奈良県奈良市六条町43-43",
+        "phone": "0742-000-0043",
+        "imagePath": null
+      },
+      {
+        "id": 44,
+        "name": "カスミソウ福祉園",
+        "postalCode": "520-0044",
+        "address": "滋賀県大津市札の辻44-44",
+        "phone": "077-000-0044",
+        "imagePath": null
+      },
+      {
+        "id": 45,
+        "name": "オダマキの家",
+        "postalCode": "640-0045",
+        "address": "和歌山県和歌山市堀止45-45",
+        "phone": "073-000-0045",
+        "imagePath": null
+      },
+      {
+        "id": 46,
+        "name": "ストック児童ホーム",
+        "postalCode": "530-0046",
+        "address": "大阪府大阪市北区菅原町46-46",
+        "phone": "06-0000-0046",
+        "imagePath": null
+      },
+      {
+        "id": 47,
+        "name": "スターチス学園",
+        "postalCode": "600-0047",
+        "address": "京都府京都市下京区新町通47-47",
+        "phone": "075-000-0047",
+        "imagePath": null
+      },
+      {
+        "id": 48,
+        "name": "リンドウ福祉センター",
+        "postalCode": "650-0048",
+        "address": "兵庫県神戸市中央区旭通48-48",
+        "phone": "078-000-0048",
+        "imagePath": null
+      },
+      {
+        "id": 49,
+        "name": "ワスレナグサの里",
+        "postalCode": "630-0049",
+        "address": "奈良県奈良市今辻子町49-49",
+        "phone": "0742-000-0049",
+        "imagePath": null
+      },
+      {
+        "id": 50,
+        "name": "ミモザハウス",
+        "postalCode": "520-0050",
+        "address": "滋賀県大津市打出浜50-50",
+        "phone": "077-000-0050",
+        "imagePath": null
+      }
+    ],
+    "6": [
+      {
+        "id": 51,
+        "name": "エーデルワイス学園",
+        "postalCode": "530-0051",
+        "address": "大阪府大阪市北区太融寺町51-51",
+        "phone": "06-0000-0051",
+        "imagePath": null
+      },
+      {
+        "id": 52,
+        "name": "トルコキキョウ児童園",
+        "postalCode": "650-0052",
+        "address": "兵庫県神戸市中央区下山手通52-52",
+        "phone": "078-000-0052",
+        "imagePath": null
+      },
+      {
+        "id": 53,
+        "name": "カンパニュラホーム",
+        "postalCode": "630-0053",
+        "address": "奈良県奈良市今御門町53-53",
+        "phone": "0742-000-0053",
+        "imagePath": null
+      },
+      {
+        "id": 54,
+        "name": "アルストロメリア福祉の家",
+        "postalCode": "520-0054",
+        "address": "滋賀県大津市逢坂54-54",
+        "phone": "077-000-0054",
+        "imagePath": null
+      },
+      {
+        "id": 55,
+        "name": "フクシア養護園",
+        "postalCode": "640-0055",
+        "address": "和歌山県和歌山市土入55-55",
+        "phone": "073-000-0055",
+        "imagePath": null
+      },
+      {
+        "id": 56,
+        "name": "グラジオラス児童館",
+        "postalCode": "530-0056",
+        "address": "大阪府大阪市北区兎我野町56-56",
+        "phone": "06-0000-0056",
+        "imagePath": null
+      },
+      {
+        "id": 57,
+        "name": "シャクヤク学園",
+        "postalCode": "600-0057",
+        "address": "京都府京都市下京区柳馬場通57-57",
+        "phone": "075-000-0057",
+        "imagePath": null
+      },
+      {
+        "id": 58,
+        "name": "スノーフレーク福祉センター",
+        "postalCode": "650-0058",
+        "address": "兵庫県神戸市中央区御幸通58-58",
+        "phone": "078-000-0058",
+        "imagePath": null
+      },
+      {
+        "id": 59,
+        "name": "ニゲラの杜",
+        "postalCode": "630-0059",
+        "address": "奈良県奈良市青野町59-59",
+        "phone": "0742-000-0059",
+        "imagePath": null
+      },
+      {
+        "id": 60,
+        "name": "ヒヤシンス園",
+        "postalCode": "520-0060",
+        "address": "滋賀県大津市膳所60-60",
+        "phone": "077-000-0060",
+        "imagePath": null
+      }
+    ],
+    "7": [
+      {
+        "id": 61,
+        "name": "クロッカス児童ホーム",
+        "postalCode": "530-0061",
+        "address": "大阪府大阪市北区長柄西61-61",
+        "phone": "06-0000-0061",
+        "imagePath": null
+      },
+      {
+        "id": 62,
+        "name": "スイセン学園",
+        "postalCode": "650-0062",
+        "address": "兵庫県神戸市中央区坂口通62-62",
+        "phone": "078-000-0062",
+        "imagePath": null
+      },
+      {
+        "id": 63,
+        "name": "サフランの里",
+        "postalCode": "630-0063",
+        "address": "奈良県奈良市帯解町63-63",
+        "phone": "0742-000-0063",
+        "imagePath": null
+      },
+      {
+        "id": 64,
+        "name": "ガザニア福祉ホーム",
+        "postalCode": "520-0064",
+        "address": "滋賀県大津市追分町64-64",
+        "phone": "077-000-0064",
+        "imagePath": null
+      },
+      {
+        "id": 65,
+        "name": "ダイアンサス未来園",
+        "postalCode": "640-0065",
+        "address": "和歌山県和歌山市北新65-65",
+        "phone": "073-000-0065",
+        "imagePath": null
+      },
+      {
+        "id": 66,
+        "name": "ラナンキュラスハウス",
+        "postalCode": "530-0066",
+        "address": "大阪府大阪市北区中津66-66",
+        "phone": "06-0000-0066",
+        "imagePath": null
+      },
+      {
+        "id": 67,
+        "name": "デルフィニウム学園",
+        "postalCode": "600-0067",
+        "address": "京都府京都市下京区富小路通67-67",
+        "phone": "075-000-0067",
+        "imagePath": null
+      },
+      {
+        "id": 68,
+        "name": "アゲラタム福祉館",
+        "postalCode": "650-0068",
+        "address": "兵庫県神戸市中央区江戸町68-68",
+        "phone": "078-000-0068",
+        "imagePath": null
+      },
+      {
+        "id": 69,
+        "name": "センニチコウの家",
+        "postalCode": "630-0069",
+        "address": "奈良県奈良市北京終町69-69",
+        "phone": "0742-000-0069",
+        "imagePath": null
+      },
+      {
+        "id": 70,
+        "name": "ベルフラワー園",
+        "postalCode": "520-0070",
+        "address": "滋賀県大津市柳が崎70-70",
+        "phone": "077-000-0070",
+        "imagePath": null
+      }
+    ],
+    "8": [
+      {
+        "id": 71,
+        "name": "ブーゲンビリア児童館",
+        "postalCode": "530-0071",
+        "address": "大阪府大阪市北区中之島71-71",
+        "phone": "06-0000-0071",
+        "imagePath": null
+      },
+      {
+        "id": 72,
+        "name": "ハイビスカス学園",
+        "postalCode": "650-0072",
+        "address": "兵庫県神戸市中央区脇浜町72-72",
+        "phone": "078-000-0072",
+        "imagePath": null
+      },
+      {
+        "id": 73,
+        "name": "ジャスミンハウス",
+        "postalCode": "630-0073",
+        "address": "奈良県奈良市南京終町73-73",
+        "phone": "0742-000-0073",
+        "imagePath": null
+      },
+      {
+        "id": 74,
+        "name": "バーベナ福祉園",
+        "postalCode": "520-0074",
+        "address": "滋賀県大津市唐橋町74-74",
+        "phone": "077-000-0074",
+        "imagePath": null
+      },
+      {
+        "id": 75,
+        "name": "ロベリアの家",
+        "postalCode": "640-0075",
+        "address": "和歌山県和歌山市吉田75-75",
+        "phone": "073-000-0075",
+        "imagePath": null
+      },
+      {
+        "id": 76,
+        "name": "ニチニチソウ児童ホーム",
+        "postalCode": "530-0076",
+        "address": "大阪府大阪市北区大淀中76-76",
+        "phone": "06-0000-0076",
+        "imagePath": null
+      },
+      {
+        "id": 77,
+        "name": "インパチェンス学園",
+        "postalCode": "600-0077",
+        "address": "京都府京都市下京区麩屋町通77-77",
+        "phone": "075-000-0077",
+        "imagePath": null
+      },
+      {
+        "id": 78,
+        "name": "ジニア福祉センター",
+        "postalCode": "650-0078",
+        "address": "兵庫県神戸市中央区港島78-78",
+        "phone": "078-000-0078",
+        "imagePath": null
+      },
+      {
+        "id": 79,
+        "name": "ケイトウの里",
+        "postalCode": "630-0079",
+        "address": "奈良県奈良市針ヶ別所町79-79",
+        "phone": "0742-000-0079",
+        "imagePath": null
+      },
+      {
+        "id": 80,
+        "name": "ホウセンカハウス",
+        "postalCode": "520-0080",
+        "address": "滋賀県大津市におの浜80-80",
+        "phone": "077-000-0080",
+        "imagePath": null
+      }
+    ],
+    "9": [
+      {
+        "id": 81,
+        "name": "サンビタリア学園",
+        "postalCode": "530-0081",
+        "address": "大阪府大阪市北区本庄東81-81",
+        "phone": "06-0000-0081",
+        "imagePath": null
+      },
+      {
+        "id": 82,
+        "name": "トレニア児童園",
+        "postalCode": "650-0082",
+        "address": "兵庫県神戸市中央区小野浜町82-82",
+        "phone": "078-000-0082",
+        "imagePath": null
+      },
+      {
+        "id": 83,
+        "name": "ペンタス児童ホーム",
+        "postalCode": "630-0083",
+        "address": "奈良県奈良市山陵町83-83",
+        "phone": "0742-000-0083",
+        "imagePath": null
+      },
+      {
+        "id": 84,
+        "name": "メランポジューム福祉の家",
+        "postalCode": "520-0084",
+        "address": "滋賀県大津市園城寺町84-84",
+        "phone": "077-000-0084",
+        "imagePath": null
+      },
+      {
+        "id": 85,
+        "name": "コリウス養護園",
+        "postalCode": "640-0085",
+        "address": "和歌山県和歌山市東田中85-85",
+        "phone": "073-000-0085",
+        "imagePath": null
+      },
+      {
+        "id": 86,
+        "name": "サルスベリ児童館",
+        "postalCode": "530-0086",
+        "address": "大阪府大阪市北区豊崎86-86",
+        "phone": "06-0000-0086",
+        "imagePath": null
+      },
+      {
+        "id": 87,
+        "name": "ムクゲ学園",
+        "postalCode": "600-0087",
+        "address": "京都府京都市下京区東洞院通87-87",
+        "phone": "075-000-0087",
+        "imagePath": null
+      },
+      {
+        "id": 88,
+        "name": "キョウチクトウ福祉センター",
+        "postalCode": "650-0088",
+        "address": "兵庫県神戸市中央区小野柄通88-88",
+        "phone": "078-000-0088",
+        "imagePath": null
+      },
+      {
+        "id": 89,
+        "name": "ハナミズキの杜",
+        "postalCode": "630-0089",
+        "address": "奈良県奈良市法蓮町89-89",
+        "phone": "0742-000-0089",
+        "imagePath": null
+      },
+      {
+        "id": 90,
+        "name": "サツキ園",
+        "postalCode": "520-0090",
+        "address": "滋賀県大津市三井寺町90-90",
+        "phone": "077-000-0090",
+        "imagePath": null
+      }
+    ],
+    "10": [
+      {
+        "id": 91,
+        "name": "ツツジ児童ホーム",
+        "postalCode": "530-0091",
+        "address": "大阪府大阪市北区山崎町91-91",
+        "phone": "06-0000-0091",
+        "imagePath": null
+      },
+      {
+        "id": 92,
+        "name": "シャクナゲ学園",
+        "postalCode": "650-0092",
+        "address": "兵庫県神戸市中央区生田町92-92",
+        "phone": "078-000-0092",
+        "imagePath": null
+      },
+      {
+        "id": 93,
+        "name": "ボタンの里",
+        "postalCode": "630-0093",
+        "address": "奈良県奈良市川上町93-93",
+        "phone": "0742-000-0093",
+        "imagePath": null
+      },
+      {
+        "id": 94,
+        "name": "フジ福祉ホーム",
+        "postalCode": "520-0094",
+        "address": "滋賀県大津市南志賀94-94",
+        "phone": "077-000-0094",
+        "imagePath": null
+      },
+      {
+        "id": 95,
+        "name": "スミレ未来園",
+        "postalCode": "640-0095",
+        "address": "和歌山県和歌山市雑賀崎95-95",
+        "phone": "073-000-0095",
+        "imagePath": null
+      },
+      {
+        "id": 96,
+        "name": "コブシハウス",
+        "postalCode": "530-0096",
+        "address": "大阪府大阪市北区天満96-96",
+        "phone": "06-0000-0096",
+        "imagePath": null
+      },
+      {
+        "id": 97,
+        "name": "モクレン学園",
+        "postalCode": "600-0097",
+        "address": "京都府京都市下京区高辻通97-97",
+        "phone": "075-000-0097",
+        "imagePath": null
+      },
+      {
+        "id": 98,
+        "name": "ハナショウブ福祉館",
+        "postalCode": "650-0098",
+        "address": "兵庫県神戸市中央区琴ノ緒町98-98",
+        "phone": "078-000-0098",
+        "imagePath": null
+      },
+      {
+        "id": 99,
+        "name": "カキツバタの家",
+        "postalCode": "630-0099",
+        "address": "奈良県奈良市四条大路99-99",
+        "phone": "0742-000-0099",
+        "imagePath": null
+      },
+      {
+        "id": 100,
+        "name": "アヤメ園",
+        "postalCode": "520-0100",
+        "address": "滋賀県大津市比叡平100-100",
+        "phone": "077-000-0100",
+        "imagePath": null
+      }
+    ]
+  }
+}

@@ -29,42 +29,6 @@
   color: #000;
 }
 
-/* スマホ向けのレスポンシブ調整 */
-@media (max-width: 768px) {
-  .noImageText {
-    font-size: 32px;
-  }
-
-  // 追加: コンテナの余白を詰める
-  .container {
-    padding: 0 12px;
-  }
-
-  // 追加: ロゴを小さく
-  .logoWrapper {
-    padding: 6px 15px;
-
-    .logoText {
-      font-size: 20px;
-    }
-  }
-
-  // 追加: ナビの間隔を詰める
-  .nav {
-    gap: 15px;
-  }
-
-  // 追加: 文字とアイコンを小さく
-  .navItem {
-    font-size: 10px;
-  }
-
-  .icon {
-    font-size: 24px;
-    margin-bottom: 2px;
-  }
-}
-
 .container {
   display: flex;
   justify-content: space-between;
@@ -81,7 +45,6 @@
   padding: 8px 30px;
   text-decoration: none;
   display: inline-block;
-
   flex-shrink: 0;
 
   .logoText {
@@ -108,16 +71,47 @@
   font-size: 15px;
   cursor: pointer;
   transition: opacity 0.2s;
+  white-space: nowrap;
 
   &:hover {
     opacity: 0.7;
   }
-
-  white-space: nowrap;
 }
 
 .icon {
   font-size: 35px;
   margin-bottom: 4px;
   color: #333;
+}
+
+/* スマホ向けのレスポンシブ調整 */
+@media (max-width: 768px) {
+  .noImageText {
+    font-size: 32px;
+  }
+
+  .container {
+    padding: 0 12px;
+  }
+
+  .logoWrapper {
+    padding: 6px 15px;
+
+    .logoText {
+      font-size: 20px;
+    }
+  }
+
+  .nav {
+    gap: 15px;
+  }
+
+  .navItem {
+    font-size: 10px;
+  }
+
+  .icon {
+    font-size: 24px;
+    margin-bottom: 2px;
+  }
 }
