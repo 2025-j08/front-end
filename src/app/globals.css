@@ -5,7 +5,9 @@
   --foreground: #171717;
 }
 
-@theme inline {
+/* Replace unsupported @theme at-rule with :root variables.
+   If theme scoping is needed, switch to a class like `.theme-inline` */
+:root {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);

@@ -1,0 +1,48 @@
+/* LoginBox.module.css */
+.container {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 28px 40px;
+  background: #ffffff;
+  border: 2px solid #7ee787;
+  border-radius: 18px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  align-items: center;
+  gap: 40px;
+  padding: 28px 0;
+}
+
+.label {
+  font-size: 36px;
+  font-weight: 400;
+  text-align: right;
+  padding-right: 20px;
+}
+
+.input {
+  width: 360px;
+  border: 1px solid #999;
+  padding: 10px 12px;
+  border-radius: 2px;
+  background: #fff;
+}
+
+.buttonWrap {
+  display: flex;
+  justify-content: center;
+  padding-top: 28px;
+}
+
+.button {
+  background: #39d05b;
+  color: #fff;
+  font-weight: 800;
+  font-size: 20px;
+  padding: 10px 28px;
+  border: 2px solid rgba(0, 0, 0, 0.18);
+  border-radius: 4px;
+}
