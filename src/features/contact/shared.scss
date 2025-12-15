@@ -5,7 +5,7 @@
  *
  * ※ CSS Modules との互換性のため @mixin を使用
  */
-@use '../../styles/contact.variables' as *;
+@use '../../styles/form.variables' as *;
 
 // フォームフィールド共通スタイル（@include で使用）
 @mixin form-group {
