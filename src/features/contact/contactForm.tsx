@@ -1,34 +1,17 @@
 'use client';
 
-import { useState } from 'react';
-
 /**
  * ContactForm コンポーネント
  * お問い合わせフォームのメインページです。
- * 共通コンポーネントを使用したリファクタリング版
+ * 共通コンポーネントとuseContactFormフックを使用
  */
-import styles from './contactForm.module.scss';
-
 import { FormField, FormButton, LoadingOverlay, SuccessOverlay } from '@/src/components/form';
 
+import styles from './contactForm.module.scss';
+import { useContactForm } from './components/hooks/useContactForm';
+
 const ContactForm = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsLoading(true);
-
-    // デモ用：2秒後にローディング終了
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    console.log('Contact form submitted');
-    setIsLoading(false);
-    setIsSuccess(true);
-
-    // 3秒後に成功メッセージをリセット
-    setTimeout(() => setIsSuccess(false), 3000);
-  };
+  const { formData, isLoading, isSuccess, handleChange, handleSubmit } = useContactForm();
 
   return (
     <div className={styles['contact-form-container']}>
@@ -48,6 +31,8 @@ const ContactForm = () => {
           name="name"
           placeholder="山田 太郎"
           required
+          value={formData.name}
+          onChange={handleChange}
         />
 
         <FormField
@@ -57,6 +42,8 @@ const ContactForm = () => {
           name="email"
           placeholder="example@email.com"
           required
+          value={formData.email}
+          onChange={handleChange}
         />
 
         <FormField
@@ -65,6 +52,8 @@ const ContactForm = () => {
           id="phone"
           name="phone"
           placeholder="090-1234-5678"
+          value={formData.phone}
+          onChange={handleChange}
         />
 
         <FormField
@@ -73,6 +62,8 @@ const ContactForm = () => {
           name="subject"
           placeholder="お問い合わせ内容の件名"
           required
+          value={formData.subject}
+          onChange={handleChange}
         />
 
         <FormField
@@ -83,6 +74,8 @@ const ContactForm = () => {
           required
           isTextarea
           rows={6}
+          value={formData.message}
+          onChange={handleChange}
         />
 
         <FormButton label="送信する" loadingLabel="送信中..." isLoading={isLoading} />
