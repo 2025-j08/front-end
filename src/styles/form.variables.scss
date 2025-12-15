@@ -1,36 +1,38 @@
 /**
  * フォーム全体で共通利用する色・スタイル変数
- * ナチュラルグリーン系パレット - 児童養護施設向け温かみのあるデザイン
+ * colors.scss から色を参照し、フォーム用のエイリアスを提供
  */
 
-// 基本色
-$white: #fff;
-$black: #000;
-$dark-gray: #333;
+@use 'colors' as colors;
 
 // ====================================
-// ナチュラルグリーン系カラーパレット
+// colors.scss からの色変数エイリアス
 // ====================================
+
+// 基本色
+$white: colors.$white;
+$black: colors.$black;
+$dark-gray: colors.$dark-gray;
 
 // メインアクセントカラー（落ち着いた森のグリーン）
-$primary-color: #4a9f7e;
-$primary-light: #6db899;
-$primary-dark: #357a5e;
+$primary-color: colors.$form-primary;
+$primary-light: colors.$form-primary-light;
+$primary-dark: colors.$form-primary-dark;
 
 // セカンダリカラー（ミント・クリーム系）
-$secondary-color: #e8f4ee;
-$secondary-light: #f5faf7;
-$secondary-dark: #d4e8dc;
+$secondary-color: colors.$form-secondary;
+$secondary-light: colors.$form-secondary-light;
+$secondary-dark: colors.$form-secondary-dark;
 
 // 背景グラデーション用
-$bg-gradient-start: #fafcfb;
-$bg-gradient-end: #eef6f2;
+$bg-gradient-start: colors.$form-bg-gradient-start;
+$bg-gradient-end: colors.$form-bg-gradient-end;
 
 // ボタンシャドウ
-$button-shadow: rgba(74, 159, 126, 0.3);
+$button-shadow: colors.$form-button-shadow;
 
 // フォーカス時のグロー
-$focus-glow: rgba(74, 159, 126, 0.2);
+$focus-glow: colors.$form-focus-glow;
 
 // ====================================
 // レガシー互換（段階的に移行）
@@ -41,10 +43,10 @@ $border-green: $primary-color;
 $text-color: $dark-gray;
 
 // プレースホルダーテキスト色
-$placeholder-color: #999;
+$placeholder-color: colors.$form-placeholder;
 
 // 入力フィールド背景色
-$input-bg: $secondary-light;
+$input-bg: colors.$form-input-bg;
 
 // 入力フィールド枠線色
-$input-border: #b8d4c4;
+$input-border: colors.$form-input-border;
