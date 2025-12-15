@@ -1,24 +1,37 @@
 'use client';
 
+import { useState } from 'react';
+
 /**
  * LoginForm コンポーネント
  * ログインフォームのメインページです。
+ * 共通コンポーネントを使用したリファクタリング版
  */
-import { LoginField } from './components/formfield/loginField';
-import { LoginButton } from './components/button/loginButton';
 import styles from './loginForm.module.scss';
 
+import { FormField, FormButton, LoadingOverlay } from '@/src/components/form';
+
 const LoginForm = () => {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsLoading(true);
+
+    // デモ用：2秒後にローディング終了
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     console.log('Login form submitted');
+    setIsLoading(false);
   };
 
   return (
     <div className={styles['login-form-container']}>
+      <LoadingOverlay isVisible={isLoading} text="ログイン中..." />
+
       <h2 className={styles['form-title']}>ログイン</h2>
       <form onSubmit={handleSubmit}>
-        <LoginField
+        <FormField
           label="ID"
           type="text"
           id="userid"
@@ -28,7 +41,7 @@ const LoginForm = () => {
           required
         />
 
-        <LoginField
+        <FormField
           label="パスワード"
           type="password"
           id="password"
@@ -38,7 +51,7 @@ const LoginForm = () => {
           required
         />
 
-        <LoginButton label="ログイン" />
+        <FormButton label="ログイン" isLoading={isLoading} />
       </form>
     </div>
   );
