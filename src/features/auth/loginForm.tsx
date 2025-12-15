@@ -7,9 +7,9 @@ import { useState } from 'react';
  * ログインフォームのメインページです。
  * 共通コンポーネントを使用したリファクタリング版
  */
-import styles from './loginForm.module.scss';
+import { FormField, FormButton, LoadingOverlay } from '@/components/form';
 
-import { FormField, FormButton, LoadingOverlay } from '@/src/components/form';
+import styles from './loginForm.module.scss';
 
 const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
