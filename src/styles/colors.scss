@@ -29,3 +29,73 @@ $border-green: #66ff66;
 $placeholder-color: #999;
 $input-bg: #f9f9f9;
 $input-border: #888;
+// カラー変数定義
+
+// ====================================
+// 基本色
+// ====================================
+$white: #fff;
+$black: #000;
+$dark-gray: #333;
+
+// ====================================
+// プライマリカラー（オレンジ系 - サイト全体）
+// ====================================
+$primary-color: #eb8b4f;
+$primary-text-color: #ffffff;
+
+// ====================================
+// ナチュラルグリーン系カラーパレット（フォーム用）
+// 児童養護施設向け温かみのあるデザイン
+// ====================================
+
+// メインアクセントカラー（落ち着いた森のグリーン）
+$form-primary: #4a9f7e;
+$form-primary-light: #6db899;
+$form-primary-dark: #357a5e;
+
+// セカンダリカラー（ミント・クリーム系）
+$form-secondary: #e8f4ee;
+$form-secondary-light: #f5faf7;
+$form-secondary-dark: #d4e8dc;
+
+// 背景グラデーション用
+$form-bg-gradient-start: #fafcfb;
+$form-bg-gradient-end: #eef6f2;
+
+// ボタンシャドウ・フォーカス
+$form-button-shadow: rgba(74, 159, 126, 0.3);
+$form-focus-glow: rgba(74, 159, 126, 0.2);
+
+// 入力フィールド
+$form-input-bg: $form-secondary-light;
+$form-input-border: #b8d4c4;
+$form-placeholder: #999;
+
+// ====================================
+// テキストカラー
+// ====================================
+$text-primary: #333;
+$text-secondary: #666;
+$text-link: #007bff;
+
+// ====================================
+// 背景カラー
+// ====================================
+$bg-white: #ffffff;
+$bg-light-green: #e8f5e9;
+$bg-light-gray: #f0f0f0;
+$bg-gray: #d3d3d3;
+$bg-active: #e0e0e0;
+
+// ====================================
+// ボーダーカラー
+// ====================================
+$border-dark: #333;
+$border-gray: #999;
+$border-black: #000;
+
+// ====================================
+// ステータスカラー
+// ====================================
+$error-color: #d32f2f;
