@@ -1,23 +1,20 @@
 /**
  * フォーム全体で共通利用する色・スタイル変数
+ * 色定義は colors.scss から取得し、DRY原則に従う
  */
+@forward './colors';
+@use './colors' as colors;
 
-// 基本色
-$white: #fff;
-$black: #000;
-$dark-gray: #333;
+// 基本色エイリアス（colors.scssから継承）
+$white: colors.$bg-white;
+$black: colors.$border-black;
+$dark-gray: colors.$text-primary;
 
-// フォーム枠線の緑色
-$border-green: #66ff66;
+// テキスト通常色
+$text-color: colors.$text-primary;
 
-// テキスト通常色（$dark-grayを参照、将来的に変更可能）
-$text-color: $dark-gray;
-
-// プレースホルダーテキスト色
-$placeholder-color: #999;
-
-// 入力フィールド背景色
-$input-bg: #f9f9f9;
-
-// 入力フィールド枠線色
-$input-border: #888;
+// フォーム関連変数（colors.scssから再エクスポート）
+$border-green: colors.$border-green;
+$placeholder-color: colors.$placeholder-color;
+$input-bg: colors.$input-bg;
+$input-border: colors.$input-border;

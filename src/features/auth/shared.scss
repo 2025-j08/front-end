@@ -2,7 +2,8 @@
  * Auth フォーム共通スタイル
  * contactのshared.scssと同じ構造でform-group mixinを提供
  */
-@use '../../styles/form.variables' as *;
+@use '../../styles/form.variables' as form;
+@use '../../styles/colors' as *;
 
 // フォームフィールド共通スタイル（@include で使用）
 @mixin form-group {
@@ -14,7 +15,7 @@
   label {
     width: 180px;
     font-size: 1rem;
-    color: $text-color;
+    color: form.$text-color;
     flex-shrink: 0;
   }
 
@@ -26,7 +27,7 @@
     border: 1px solid $input-border;
     background-color: $input-bg;
     font-size: 1rem;
-    color: $text-color;
+    color: form.$text-color;
 
     &::placeholder {
       color: $placeholder-color;
