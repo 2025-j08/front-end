@@ -24,6 +24,8 @@ const LoadingSpinner = ({ size = 'medium', color = '#4a9f7e' }: LoadingSpinnerPr
       viewBox="0 0 48 48"
       xmlns="http://www.w3.org/2000/svg"
       className={styles.spinner}
+      role="status"
+      aria-label="読み込み中"
     >
       <circle
         cx="24"
