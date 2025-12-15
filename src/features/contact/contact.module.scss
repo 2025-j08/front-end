@@ -1,0 +1,26 @@
+/**
+ * Contact フォーム全体のスタイル
+ * 共通変数をインポート、フォームコンテナのレイアウト・装飾を定義
+ */
+@use '../../styles/form.variables' as *;
+
+// フォーム全体のコンテナ
+.contact-form-container {
+  border: 2px solid $border-green;
+  border-radius: 15px;
+  padding: 30px 40px;
+  width: 100%;
+  max-width: 800px;
+  margin: 100px auto;
+  background-color: $white;
+  font-family: sans-serif;
+
+  // フォームタイトル
+  .form-title {
+    margin-top: 0;
+    margin-bottom: 30px;
+    font-size: 1.2rem;
+    font-weight: normal;
+    color: $black;
+  }
+}
