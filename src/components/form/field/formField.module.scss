@@ -1,0 +1,71 @@
+/**
+ * FormField 共通スタイル
+ */
+@use '../../../styles/form.variables' as *;
+
+.formGroup {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 22px;
+
+  label {
+    width: 150px;
+    font-size: 0.95rem;
+    color: $text-color;
+    flex-shrink: 0;
+    font-weight: 500;
+    padding-top: 10px;
+  }
+
+  input,
+  textarea {
+    flex-grow: 1;
+    padding: 12px 14px;
+    border: 1.5px solid $input-border;
+    border-radius: 8px;
+    background-color: $input-bg;
+    font-size: 1rem;
+    color: $text-color;
+    transition:
+      border-color 0.3s ease,
+      box-shadow 0.3s ease,
+      transform 0.2s ease;
+    font-family: inherit;
+
+    &::placeholder {
+      color: $placeholder-color;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+      box-shadow: 0 0 0 4px $focus-glow;
+      transform: translateY(-1px);
+    }
+
+    &:hover:not(:focus) {
+      border-color: $primary-light;
+    }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: flex-start;
+
+    label {
+      width: 100%;
+      margin-bottom: 8px;
+      padding-top: 0;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+    }
+  }
+}

@@ -1,0 +1,50 @@
+/**
+ * フォーム全体で共通利用する色・スタイル変数
+ * ナチュラルグリーン系パレット - 児童養護施設向け温かみのあるデザイン
+ */
+
+// 基本色
+$white: #fff;
+$black: #000;
+$dark-gray: #333;
+
+// ====================================
+// ナチュラルグリーン系カラーパレット
+// ====================================
+
+// メインアクセントカラー（落ち着いた森のグリーン）
+$primary-color: #4a9f7e;
+$primary-light: #6db899;
+$primary-dark: #357a5e;
+
+// セカンダリカラー（ミント・クリーム系）
+$secondary-color: #e8f4ee;
+$secondary-light: #f5faf7;
+$secondary-dark: #d4e8dc;
+
+// 背景グラデーション用
+$bg-gradient-start: #fafcfb;
+$bg-gradient-end: #eef6f2;
+
+// ボタンシャドウ
+$button-shadow: rgba(74, 159, 126, 0.3);
+
+// フォーカス時のグロー
+$focus-glow: rgba(74, 159, 126, 0.2);
+
+// ====================================
+// レガシー互換（段階的に移行）
+// ====================================
+$border-green: $primary-color;
+
+// テキスト通常色
+$text-color: $dark-gray;
+
+// プレースホルダーテキスト色
+$placeholder-color: #999;
+
+// 入力フィールド背景色
+$input-bg: $secondary-light;
+
+// 入力フィールド枠線色
+$input-border: #b8d4c4;
