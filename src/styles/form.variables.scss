@@ -34,10 +34,8 @@ $button-shadow: colors.$form-button-shadow;
 // フォーカス時のグロー
 $focus-glow: colors.$form-focus-glow;
 
-// ====================================
-// レガシー互換（段階的に移行）
-// ====================================
-$border-green: $primary-color;
+// コンテナシャドウ
+$container-shadow: colors.$form-container-shadow;
 
 // テキスト通常色
 $text-color: $dark-gray;

@@ -15,7 +15,7 @@
   background: linear-gradient(135deg, $bg-gradient-start 0%, $bg-gradient-end 100%);
   font-family: 'Geist', sans-serif;
   box-shadow:
-    0 12px 40px rgba(74, 159, 126, 0.15),
+    0 12px 40px $container-shadow,
     0 4px 12px rgba(0, 0, 0, 0.05);
   position: relative;
   overflow: hidden;
