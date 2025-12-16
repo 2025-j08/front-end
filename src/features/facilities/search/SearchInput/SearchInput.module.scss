@@ -1,3 +1,5 @@
+@use '../../../../styles/colors' as *;
+
 .container {
   width: 100%;
   display: flex;
@@ -8,9 +10,9 @@
 .inputWrapper {
   display: flex;
   align-items: center;
-  border: 2px solid #333;
+  border: 2px solid $border-dark;
   border-radius: 50px;
-  background-color: #fff;
+  background-color: $bg-white;
   padding: 5px;
   width: 100%;
   max-width: 600px;
@@ -24,17 +26,17 @@
   font-size: 16px;
   padding: 10px 20px;
   border-radius: 50px 0 0 50px;
-  color: #666;
+  color: $text-secondary;
 
   &::placeholder {
-    color: #999;
+    color: $placeholder-color;
   }
 }
 
 .searchButton {
   background-color: #008cba;
   /* 画像の青色 */
-  color: #fff;
+  color: $primary-text-color;
   border: none;
   border-radius: 30px;
   padding: 10px 30px;
