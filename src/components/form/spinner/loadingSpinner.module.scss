@@ -1,8 +1,13 @@
 /**
  * LoadingSpinner スタイル
  */
+@use '../../../styles/form.variables' as form;
 @use '../../../styles/animations';
 
 .spinner {
   @include animations.animation-spin(1s);
+
+  circle {
+    stroke: form.$primary-color;
+  }
 }

@@ -4,15 +4,11 @@
  */
 import styles from './loadingSpinner.module.scss';
 
-/** colors.scss の $form-primary に対応 */
-const FORM_PRIMARY_COLOR = '#4a9f7e';
-
 interface LoadingSpinnerProps {
   size?: 'small' | 'medium' | 'large';
-  color?: string;
 }
 
-const LoadingSpinner = ({ size = 'medium', color = FORM_PRIMARY_COLOR }: LoadingSpinnerProps) => {
+const LoadingSpinner = ({ size = 'medium' }: LoadingSpinnerProps) => {
   const sizeMap = {
     small: 24,
     medium: 48,
@@ -35,7 +31,6 @@ const LoadingSpinner = ({ size = 'medium', color = FORM_PRIMARY_COLOR }: Loading
         cy="24"
         r="20"
         fill="none"
-        stroke={color}
         strokeWidth="4"
         strokeLinecap="round"
         strokeDasharray="100"
