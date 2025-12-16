@@ -3,17 +3,6 @@
  * フォームコンポーネント全体で使用するキーフレームアニメーション
  */
 
-// フェードイン
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
 // スピン（ローディング用）
 @keyframes spin {
   to {
@@ -39,10 +28,6 @@
 }
 
 // ミックスインとしても使用可能
-@mixin animation-fade-in($duration: 0.3s) {
-  animation: fadeIn $duration ease;
-}
-
 @mixin animation-spin($duration: 1s) {
   animation: spin $duration linear infinite;
 }
