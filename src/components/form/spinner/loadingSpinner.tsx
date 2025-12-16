@@ -6,10 +6,9 @@ import styles from './loadingSpinner.module.scss';
 
 interface LoadingSpinnerProps {
   size?: 'small' | 'medium' | 'large';
-  color?: string;
 }
 
-const LoadingSpinner = ({ size = 'medium', color = '#4a9f7e' }: LoadingSpinnerProps) => {
+const LoadingSpinner = ({ size = 'medium' }: LoadingSpinnerProps) => {
   const sizeMap = {
     small: 24,
     medium: 48,
@@ -32,7 +31,6 @@ const LoadingSpinner = ({ size = 'medium', color = '#4a9f7e' }: LoadingSpinnerPr
         cy="24"
         r="20"
         fill="none"
-        stroke={color}
         strokeWidth="4"
         strokeLinecap="round"
         strokeDasharray="100"

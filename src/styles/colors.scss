@@ -34,7 +34,15 @@ $form-bg-gradient-end: #eef6f2;
 
 // ボタンシャドウ・フォーカス
 $form-button-shadow: rgba(74, 159, 126, 0.3);
+$form-button-shadow-hover: rgba(74, 159, 126, 0.4);
 $form-focus-glow: rgba(74, 159, 126, 0.2);
+
+// オーバーレイ背景
+$overlay-bg: rgba(255, 255, 255, 0.85);
+$overlay-bg-solid: rgba(255, 255, 255, 0.95);
+
+// スピナー
+$spinner-border-light: rgba(255, 255, 255, 0.3);
 
 // 入力フィールド
 $form-input-bg: $form-secondary-light;
