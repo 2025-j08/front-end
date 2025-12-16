@@ -15,7 +15,17 @@ export const ConditionSearch = () => {
   ];
 
   // 絞り込み条件データ（モック）
-  const conditions = Array(8).fill('xxxxx....');
+  const conditions = [
+    '定員数',
+    '現在の生徒数',
+    '教員の定員数',
+    '教員の人数',
+    '少人数制',
+    'グループ制',
+    '給料',
+    '雇用形態',
+    '資格条件',
+  ];
 
   return (
     <div className={styles.container}>
