@@ -35,7 +35,7 @@ export const useLoginForm = () => {
   /**
    * 入力フィールドの値が変更されたときの処理
    */
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,

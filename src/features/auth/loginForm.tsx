@@ -11,7 +11,7 @@ import styles from './loginForm.module.scss';
 import { useLoginForm } from './hooks/useLoginForm';
 
 export const LoginForm = () => {
-  const { isLoading, handleSubmit } = useLoginForm();
+  const { formData, isLoading, handleChange, handleSubmit } = useLoginForm();
 
   return (
     <div className={styles['login-form-container']}>
@@ -27,6 +27,8 @@ export const LoginForm = () => {
           placeholder="example_ID"
           autoComplete="username"
           required
+          value={formData.userid}
+          onChange={handleChange}
         />
 
         <FormField
@@ -37,6 +39,8 @@ export const LoginForm = () => {
           placeholder="パスワード"
           autoComplete="current-password"
           required
+          value={formData.password}
+          onChange={handleChange}
         />
 
         <FormButton label="ログイン" isLoading={isLoading} />
