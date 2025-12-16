@@ -2,7 +2,6 @@
  * LoginButton コンポーネント用スタイル
  */
 @use '../../../../styles/form.variables' as form;
-@use '../../../../styles/colors' as *;
 
 .buttonContainer {
   display: flex;
@@ -11,7 +10,7 @@
 }
 
 .loginButton {
-  background-color: $border-green;
+  background-color: form.$border-green;
   color: form.$white;
   font-size: 1.2rem;
   font-weight: bold;

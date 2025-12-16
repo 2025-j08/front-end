@@ -1,0 +1,37 @@
+/**
+ * 共通アニメーション定義
+ * フォームコンポーネント全体で使用するキーフレームアニメーション
+ */
+
+// スピン（ローディング用）
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// ポップイン（サクセスアイコン用）
+@keyframes popIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+// ミックスインとしても使用可能
+@mixin animation-spin($duration: 1s) {
+  animation: spin $duration linear infinite;
+}
+
+@mixin animation-pop-in($duration: 0.5s) {
+  animation: popIn $duration ease;
+}
