@@ -27,8 +27,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <script src="./searchmap.js"></script>
-      <script src="https://maps.googleapis.com/maps/api/js?callback=initMap"></script>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         {/* ヘッダー 一番上固定 */}
         <Header />
