@@ -4,19 +4,6 @@
  */
 @use '../../styles/form.variables' as *;
 
-// フェードインアニメーション
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 // フォーム全体のコンテナ
 .login-form-container {
   border: 2px solid $primary-color;
