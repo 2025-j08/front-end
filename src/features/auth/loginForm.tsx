@@ -1,29 +1,17 @@
 'use client';
 
-import { useState } from 'react';
-
 /**
  * LoginForm コンポーネント
  * ログインフォームのメインページです。
- * 共通コンポーネントを使用したリファクタリング版
+ * ロジックはuseLoginFormフックに分離
  */
 import { FormField, FormButton, LoadingOverlay } from '@/components/form';
 
 import styles from './loginForm.module.scss';
+import { useLoginForm } from './hooks/useLoginForm';
 
-const LoginForm = () => {
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsLoading(true);
-
-    // デモ用：2秒後にローディング終了
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    console.log('Login form submitted');
-    setIsLoading(false);
-  };
+export const LoginForm = () => {
+  const { isLoading, handleSubmit } = useLoginForm();
 
   return (
     <div className={styles['login-form-container']}>
@@ -56,5 +44,3 @@ const LoginForm = () => {
     </div>
   );
 };
-
-export default LoginForm;
