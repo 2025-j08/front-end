@@ -4,7 +4,7 @@ import { ConditionSearch } from './ConditionSearch/ConditionSearch';
 import { MapSearch } from './MapSearch/MapSearch';
 import styles from './search.module.scss';
 
-export default function Home() {
+export const Search = () => {
   return (
     <div className={styles.pageContainer}>
       {/* 1. キーワード入力エリア */}
@@ -25,4 +25,4 @@ export default function Home() {
       </section>
     </div>
   );
-}
+};
