@@ -1,4 +1,4 @@
-@import '@/styles/colors';
+@use '../../../../styles/colors' as *;
 
 .container {
   background-color: #e6ffe6;
@@ -39,6 +39,16 @@
 
   /* Leafletのレイヤー重なり順(z-index)対策 */
   z-index: 1;
+}
+
+.popupContent {
+  font-weight: bold;
+
+  /* 必要に応じてpタグの余白調整などもここに記述できます */
+  p {
+    margin: 0 0 8px 0;
+    line-height: 1.4;
+  }
 }
 
 .popupLink {
