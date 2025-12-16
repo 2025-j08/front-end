@@ -6,6 +6,12 @@ import searchMapData from '@/dummy_data/searchmap_data.json';
 
 import styles from './MapSearch.module.scss';
 
+declare global {
+  interface Window {
+    L: any;
+  }
+}
+
 // ▼ 全件データの入った配列を直接インポート
 
 export const MapSearch = () => {
@@ -16,7 +22,7 @@ export const MapSearch = () => {
     // 1. Leaflet読み込み
     const loadLeaflet = () => {
       return new Promise<void>((resolve, reject) => {
-        if ((window as any).L) {
+        if (window.L) {
           resolve();
           return;
         }
@@ -36,7 +42,7 @@ export const MapSearch = () => {
 
     // 2. 地図描画
     const initMap = () => {
-      const L = (window as any).L;
+      const L = window.L;
       if (!L || !mapRef.current) return;
       if (mapInstance.current) return;
 
@@ -62,7 +68,7 @@ export const MapSearch = () => {
           const detailUrl = `/facilities/${data.id}`;
 
           // ▼ styles.popupLink を使用してクラスを割り当て
-          L.marker([data.lat, data.lng]).addTo(map).bindPopup(`<div style="font-weight:bold;">
+          L.marker([data.lat, data.lng]).addTo(map).bindPopup(`<div class="${styles.popupContent}">
                             <p>${data.name}<br>
                             ${data.postalCode || ''}<br>
                             ${data.address || ''}<br>
