@@ -1,5 +1,5 @@
 import React from 'react';
-import SearchIcon from '@mui/icons-material/Search'; // 要MUIアイコン
+import SearchIcon from '@mui/icons-material/Search';
 
 import styles from './ConditionSearch.module.scss';
 
