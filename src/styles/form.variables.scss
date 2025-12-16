@@ -34,9 +34,14 @@ $button-shadow: colors.$form-button-shadow;
 // フォーカス時のグロー
 $focus-glow: colors.$form-focus-glow;
 
+// コンテナシャドウ
+$container-shadow: colors.$form-container-shadow;
+
 // ====================================
 // レガシー互換（段階的に移行）
 // ====================================
+// TODO: $border-green は $primary-color に移行予定。新規コードでは $primary-color を使用してください。
+// @deprecated Use $primary-color instead
 $border-green: $primary-color;
 
 // テキスト通常色
@@ -50,3 +55,7 @@ $input-bg: colors.$form-input-bg;
 
 // 入力フィールド枠線色
 $input-border: colors.$form-input-border;
+
+// ステータスカラー（colors.scssから）
+$success-color: colors.$success-color;
+$success-light: colors.$success-light;

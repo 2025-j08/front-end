@@ -1,36 +1,5 @@
 // カラー変数定義
 
-// プライマリカラー
-$primary-color: #eb8b4f;
-$primary-text-color: #ffffff;
-
-// テキストカラー
-$text-primary: #333;
-$text-secondary: #666;
-$text-link: #007bff;
-
-// 背景カラー
-$bg-white: #ffffff;
-$bg-light-green: #e8f5e9;
-$bg-light-gray: #f0f0f0;
-$bg-gray: #d3d3d3;
-$bg-active: #e0e0e0;
-
-// ボーダーカラー
-$border-dark: #333;
-$border-gray: #999;
-$border-black: #000;
-
-// ステータスカラー
-$error-color: #d32f2f;
-
-// フォーム関連カラー
-$border-green: #66ff66;
-$placeholder-color: #999;
-$input-bg: #f9f9f9;
-$input-border: #888;
-// カラー変数定義
-
 // ====================================
 // 基本色
 // ====================================
@@ -65,12 +34,20 @@ $form-bg-gradient-end: #eef6f2;
 
 // ボタンシャドウ・フォーカス
 $form-button-shadow: rgba(74, 159, 126, 0.3);
+$form-container-shadow: rgba(74, 159, 126, 0.15);
 $form-focus-glow: rgba(74, 159, 126, 0.2);
 
 // 入力フィールド
 $form-input-bg: $form-secondary-light;
 $form-input-border: #b8d4c4;
 $form-placeholder: #999;
+
+// ====================================
+// ステータスカラー
+// ====================================
+$error-color: #d32f2f;
+$success-color: #4caf50;
+$success-light: #66bb6a;
 
 // ====================================
 // テキストカラー
@@ -94,8 +71,3 @@ $bg-active: #e0e0e0;
 $border-dark: #333;
 $border-gray: #999;
 $border-black: #000;
-
-// ====================================
-// ステータスカラー
-// ====================================
-$error-color: #d32f2f;
