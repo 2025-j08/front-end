@@ -12,7 +12,15 @@ declare global {
   }
 }
 
-// ▼ 全件データの入った配列を直接インポート
+type FacilityLocation = {
+  id: number;
+  name: string;
+  postalCode: string;
+  address: string;
+  phone: string;
+  lat: number;
+  lng: number;
+};
 
 export const MapSearch = () => {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -46,7 +54,8 @@ export const MapSearch = () => {
       if (!L || !mapRef.current) return;
       if (mapInstance.current) return;
 
-      const markerData = searchMapData as any[];
+      const markerData = searchMapData as FacilityLocation[];
+
       if (!markerData || markerData.length === 0) return;
 
       // 中心座標の決定
