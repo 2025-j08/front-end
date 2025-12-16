@@ -13,8 +13,10 @@ const SuccessOverlay = ({ text = '送信が完了しました', isVisible }: Suc
   if (!isVisible) return null;
 
   return (
-    <div className={styles.overlay}>
-      <div className={styles.icon}>✓</div>
+    <div className={styles.overlay} role="status" aria-live="polite">
+      <div className={styles.icon} aria-hidden="true">
+        ✓
+      </div>
       <span className={styles.text}>{text}</span>
     </div>
   );

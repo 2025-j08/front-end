@@ -24,8 +24,8 @@ interface FormData {
  * @returns {FormData} formData - フォーム入力値の現在の状態
  * @returns {boolean} isLoading - 送信中かどうか
  * @returns {boolean} isSuccess - 送信成功かどうか
- * @returns {Function} handleChange - 入力フィールドの値が変更されたときのハンドラー
- * @returns {Function} handleSubmit - フォーム送信時のハンドラー
+ * @returns {(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void} handleChange - 入力フィールドの値が変更されたときのハンドラー
+ * @returns {(event: React.FormEvent<HTMLFormElement>) => Promise<void>} handleSubmit - フォーム送信時のハンドラー
  */
 export const useContactForm = () => {
   /**
