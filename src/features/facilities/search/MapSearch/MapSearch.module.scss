@@ -1,8 +1,8 @@
 @use '../../../../styles/colors' as *;
 
 .container {
-  background-color: #e6ffe6;
-  border: 2px solid #99ff99;
+  background-color: $condition-search-bg;
+  border: 2px solid $condition-search-border;
   border-radius: 20px;
   padding: 40px 20px 20px;
   position: relative;

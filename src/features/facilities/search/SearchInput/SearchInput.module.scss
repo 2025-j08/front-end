@@ -34,7 +34,7 @@
 }
 
 .searchButton {
-  background-color: #008cba;
+  background-color: $search-button-bg;
   /* 画像の青色 */
   color: $primary-text-color;
   border: none;

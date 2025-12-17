@@ -1,14 +1,12 @@
-@use '../../../../styles/colors' as *;
+@use '@/styles/colors' as *;
 
 .container {
-  background-color: #e6ffe6;
-  /* 薄い緑 */
-  border: 2px solid #99ff99;
+  background-color: $condition-search-bg;
+  border: 2px solid $condition-search-border;
   border-radius: 20px;
   padding: 40px 20px 20px;
   position: relative;
   height: 100%;
-  /* 高さ揃え用 */
   box-sizing: border-box;
 }
 
@@ -56,11 +54,37 @@
   cursor: pointer;
   box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
   transition: transform 0.1s;
+  color: $primary-text-color; // デフォルト文字色（白）
 
   &:active {
     transform: translate(2px, 2px);
     box-shadow: none;
   }
+}
+
+// 都道府県ごとの色定義
+.hyogo {
+  background-color: $pref-hyogo;
+}
+
+.kyoto {
+  background-color: $pref-kyoto;
+}
+
+.osaka {
+  background-color: $pref-osaka;
+}
+
+.wakayama {
+  background-color: $pref-wakayama;
+}
+
+.shiga {
+  background-color: $pref-shiga;
+}
+
+.nara {
+  background-color: $pref-nara;
 }
 
 /* 絞り込み条件グリッド */
@@ -100,7 +124,7 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  background-color: #ff9999;
+  background-color: $condition-search-button-bg;
   border: 2px solid $border-black;
   border-radius: 30px;
   padding: 8px 20px;
