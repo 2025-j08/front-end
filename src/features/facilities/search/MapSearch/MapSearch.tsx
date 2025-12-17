@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import searchMapData from '@/dummy_data/searchmap_data.json';
 
@@ -103,7 +103,12 @@ export const MapSearch = () => {
   return (
     <div className={styles.container}>
       <div className={styles.badge}>地図から探す</div>
-      <div className={styles.mapArea} ref={mapRef}></div>
+      <div
+        className={styles.mapArea}
+        ref={mapRef}
+        role="region"
+        aria-label="施設の位置を示す地図"
+      ></div>
     </div>
   );
 };
