@@ -63,6 +63,7 @@ export const DetailTabs = ({
         id={`tabpanel-${activeTab}`}
         role="tabpanel"
         aria-labelledby={`tab-${activeTab}`}
+        tabIndex={0}
         className={styles.tabContent}
       >
         {activeTab === 'access' && (

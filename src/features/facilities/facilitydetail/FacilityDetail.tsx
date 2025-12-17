@@ -23,6 +23,7 @@ export const FacilityDetail = () => {
         corporation={facilityData.corporation}
         address={facilityData.address}
         tel={facilityData.tel}
+        websiteUrl={facilityData.websiteUrl}
       />
 
       <BasicInfoSection
