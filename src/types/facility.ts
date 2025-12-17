@@ -17,7 +17,7 @@ export type FacilitiesData = {
 
 // 施設詳細ページ用の型定義
 export type AccessInfo = {
-  address: string;
+  locationAddress: string;
   station: string;
   description: string;
 };
@@ -25,8 +25,8 @@ export type AccessInfo = {
 export type FacilityDetail = {
   name: string;
   corporation: string;
-  address: string;
-  tel: string;
+  fullAddress: string;
+  phone: string;
   websiteUrl: string | null;
   facilityType: string;
   establishedYear: string;

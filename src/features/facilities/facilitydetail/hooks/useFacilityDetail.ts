@@ -1,14 +1,16 @@
 import { useState } from 'react';
 
-// タブの定義
-export type TabKey =
-  | 'access'
-  | 'philosophy'
-  | 'specialty'
-  | 'staff'
-  | 'education'
-  | 'advanced'
-  | 'other';
+export const TAB_KEYS = [
+  'access',
+  'philosophy',
+  'specialty',
+  'staff',
+  'education',
+  'advanced',
+  'other',
+] as const;
+
+export type TabKey = (typeof TAB_KEYS)[number];
 
 export type Tab = {
   key: TabKey;
@@ -25,9 +27,6 @@ export const TAB_LABELS: Record<TabKey, string> = {
   advanced: '高機能化',
   other: 'その他',
 };
-
-// タブキーの順序配列
-export const TAB_KEYS: TabKey[] = Object.keys(TAB_LABELS) as TabKey[];
 
 // 後方互換性のためのTABS配列（既存コード用）
 export const TABS: Tab[] = TAB_KEYS.map((key) => ({

@@ -5,28 +5,28 @@
  * 施設詳細ページのメインコンポーネントです。
  * ロジックは useFacilityDetail フックに分離
  */
-import { FacilityDetail as FacilityDetailType } from '@/types/facility';
-import facilityDataJson from '@/dummy_data/facilities_detail.json';
-
+import { useFacilityData } from './hooks/useFacilityData';
 import { useFacilityDetail } from './hooks/useFacilityDetail';
 import { FacilityHeader } from './components/FacilityHeader/FacilityHeader';
 import { BasicInfoSection } from './components/BasicInfoSection/BasicInfoSection';
 import { DetailTabs } from './components/DetailTabs/DetailTabs';
 import styles from './FacilityDetail.module.scss';
 
-// JSONデータに型を適用
-const facilityData = facilityDataJson as FacilityDetailType;
-
 export const FacilityDetail = () => {
+  const { data: facilityData, isLoading, error } = useFacilityData();
   const { activeTab, setActiveTab, tabs } = useFacilityDetail();
+
+  if (isLoading) return <div className={styles.container}>読み込み中...</div>;
+  if (error || !facilityData)
+    return <div className={styles.container}>データの取得に失敗しました</div>;
 
   return (
     <div className={styles.container}>
       <FacilityHeader
         name={facilityData.name}
         corporation={facilityData.corporation}
-        address={facilityData.address}
-        tel={facilityData.tel}
+        fullAddress={facilityData.fullAddress}
+        phone={facilityData.phone}
         websiteUrl={facilityData.websiteUrl}
       />
 

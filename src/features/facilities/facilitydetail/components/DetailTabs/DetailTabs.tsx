@@ -67,12 +67,12 @@ export const DetailTabs = ({
             {accessInfo ? (
               <>
                 <div className={styles.accessInfo}>
-                  <p className={styles.accessText}>{accessInfo.address}</p>
+                  <p className={styles.accessText}>{accessInfo.locationAddress}</p>
                   <p className={styles.accessText}>{accessInfo.station}</p>
                   <p className={styles.accessDescription}>{accessInfo.description}</p>
                 </div>
-                <div className={styles.mapPlaceholder} role="img" aria-label="地図プレースホルダー">
-                  <div className={styles.pin} aria-hidden="true"></div>
+                <div className={styles.mapPlaceholder} aria-hidden="true">
+                  <div className={styles.pin}></div>
                 </div>
               </>
             ) : (

@@ -3,8 +3,8 @@ import styles from './FacilityHeader.module.scss';
 type FacilityHeaderProps = {
   name: string;
   corporation: string;
-  address: string;
-  tel: string;
+  fullAddress: string;
+  phone: string;
   websiteUrl?: string | null;
 };
 
@@ -29,8 +29,8 @@ const isValidUrl = (url: string | null | undefined): boolean => {
 export const FacilityHeader = ({
   name,
   corporation,
-  address,
-  tel,
+  fullAddress,
+  phone,
   websiteUrl,
 }: FacilityHeaderProps) => {
   const hasValidWebsite = isValidUrl(websiteUrl);
@@ -41,8 +41,8 @@ export const FacilityHeader = ({
         <h1 className={styles.title}>
           {name} <span className={styles.corporation}>運営法人 {corporation}</span>
         </h1>
-        <p className={styles.address}>{address}</p>
-        <p className={styles.tel}>TEL {tel}</p>
+        <p className={styles.address}>{fullAddress}</p>
+        <p className={styles.tel}>TEL {phone}</p>
       </div>
       {hasValidWebsite && (
         <div className={styles.headerAction}>
