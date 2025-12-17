@@ -29,7 +29,13 @@ export const FacilityHeader = ({
         <p className={styles.tel}>TEL {tel}</p>
       </div>
       <div className={styles.headerAction}>
-        <a href={websiteUrl} className={styles.webButton}>
+        <a
+          href={websiteUrl}
+          className={styles.webButton}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="施設Webサイトを新しいタブで開く"
+        >
           施設Webサイト
         </a>
       </div>
