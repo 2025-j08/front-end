@@ -4,6 +4,18 @@ import { PREFECTURES, SEARCH_CONDITIONS } from '@/const/searchConditions';
 
 import styles from './ConditionSearch.module.scss';
 
+/**
+ * ConditionSearch コンポーネント
+ *
+ * 施設の絞り込み検索機能を提供するコンポーネントです。
+ * ユーザーは以下の条件を選択して検索を実行できます：
+ * 1. 都道府県（PREFECTURES定数に基づく：兵庫、京都、大阪など）
+ * 2. その他の詳細条件（SEARCH_CONDITIONS定数に基づく：定員数、雇用形態、資格条件など）
+ *
+ * 選択された条件に基づいて、より具体的なニーズに合った施設を探すことを目的としています。
+ *
+ * @returns {JSX.Element} 条件検索パネルを表示するJSX要素
+ */
 export const ConditionSearch = () => {
   return (
     <div className={styles.container}>
