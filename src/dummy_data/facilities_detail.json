@@ -3,7 +3,7 @@
   "corporation": "○○○○○○",
   "address": "〒000-0000 ○○県○○市○○町0-000-0",
   "tel": "000-000-0000",
-  "websiteUrl": null,
+  "websiteUrl": "https://example-facility.jp",
   "facilityType": "ファミリーホーム",
   "establishedYear": "2000年",
   "capacity": "20名",

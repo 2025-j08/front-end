@@ -6,7 +6,6 @@ type BasicInfoSectionProps = {
   capacity: string;
   hasAnnex: boolean;
   annexDetail?: string;
-  onHelpClick?: () => void;
 };
 
 /**
@@ -19,7 +18,6 @@ export const BasicInfoSection = ({
   capacity,
   hasAnnex,
   annexDetail,
-  onHelpClick,
 }: BasicInfoSectionProps) => {
   return (
     <section className={styles.basicInfoSection}>
@@ -46,17 +44,6 @@ export const BasicInfoSection = ({
           <span className={styles.statusValue}>{hasAnnex ? 'あり' : 'なし'}</span>
         </div>
         {hasAnnex && annexDetail && <div className={styles.annexDetail}>{annexDetail}</div>}
-      </div>
-
-      <div className={styles.helpLink}>
-        <button
-          type="button"
-          className={styles.helpButton}
-          onClick={onHelpClick}
-          aria-label="施設の種類についてのヘルプを表示"
-        >
-          ? 施設の種類について
-        </button>
       </div>
     </section>
   );

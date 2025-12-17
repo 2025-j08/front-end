@@ -5,14 +5,14 @@ type FacilityHeaderProps = {
   corporation: string;
   address: string;
   tel: string;
-  websiteUrl?: string | null;
+  websiteUrl?: string;
 };
 
 /**
  * URLが有効かどうかを検証する
  * http/https スキームのみ許可し、javascript: などの危険なスキームを拒否
  */
-const isValidUrl = (url: string | null | undefined): boolean => {
+const isValidUrl = (url: string | undefined): boolean => {
   if (!url || url === '#') return false;
   try {
     const parsed = new URL(url);
@@ -47,7 +47,7 @@ export const FacilityHeader = ({
       {hasValidWebsite && (
         <div className={styles.headerAction}>
           <a
-            href={websiteUrl ?? undefined}
+            href={websiteUrl}
             className={styles.webButton}
             target="_blank"
             rel="noopener noreferrer"
