@@ -12,13 +12,7 @@ const MapSearch = dynamic(() => import('./MapSearch/MapSearch').then((mod) => mo
   ssr: false,
   loading: () => (
     <div
-      style={{
-        height: '400px',
-        background: '#f0f0f0',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
+      className={styles.loadingMap}
       role="status"
       aria-live="polite"
       aria-busy="true"
