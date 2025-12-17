@@ -1,10 +1,12 @@
-/**
- * Auth フォーム共通スタイル
- * contactのshared.scssと同じ構造でform-group mixinを提供
- */
-@use '../../styles/form.variables' as form;
+@use './form.variables' as form;
 
-// フォームフィールド共通スタイル（@include で使用）
+/**
+ * 共通ミックスイン定義
+ * プロジェクト全体で再利用可能なスタイルロジック
+ */
+
+// フォームフィールド共通スタイル
+// ラベルと入力フィールドの配置、レスポンシブ対応を含む
 @mixin form-group {
   display: flex;
   align-items: center;
@@ -28,6 +30,7 @@
     font-size: 1rem;
     color: form.$text-color;
 
+    // プレースホルダーのスタイル
     &::placeholder {
       color: form.$placeholder-color;
       letter-spacing: 1px;

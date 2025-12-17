@@ -2,7 +2,8 @@
  * ContactForm 全体のスタイル
  * コンテナとタイトルのみ（コンポーネントは共通化済み）
  */
-@use '../../styles/form.variables' as *;
+@use '@/styles/form.variables' as *;
+@use '@/styles/mixins' as mixins;
 @use '../../styles/animations';
 
 // フォーム全体のコンテナ

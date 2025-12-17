@@ -2,7 +2,8 @@
  * LoginForm 全体のスタイル
  * コンテナとタイトルのみ（コンポーネントは共通化済み）
  */
-@use '../../styles/form.variables' as form;
+@use '@/styles/form.variables' as form;
+@use '@/styles/mixins' as mixins;
 
 // フォーム全体のコンテナ
 .login-form-container {
