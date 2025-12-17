@@ -93,3 +93,20 @@
     outline-offset: 2px;
   }
 }
+
+// レスポンシブ対応：768px以下で1カラム
+@media screen and (max-width: 768px) {
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .annexCard {
+    flex-direction: column;
+  }
+
+  .annexStatus {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid $color-border;
+  }
+}
