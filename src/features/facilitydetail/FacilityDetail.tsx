@@ -11,7 +11,7 @@ import { BasicInfoSection } from './components/BasicInfoSection/BasicInfoSection
 import { DetailTabs } from './components/DetailTabs/DetailTabs';
 import styles from './FacilityDetail.module.scss';
 
-const FacilityDetail = () => {
+export const FacilityDetail = () => {
   const { activeTab, setActiveTab, tabs } = useFacilityDetail();
 
   // ダミーデータ（将来的にはAPIから取得）
@@ -61,5 +61,3 @@ const FacilityDetail = () => {
     </div>
   );
 };
-
-export default FacilityDetail;

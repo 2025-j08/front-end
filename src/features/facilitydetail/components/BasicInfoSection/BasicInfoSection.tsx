@@ -6,6 +6,7 @@ type BasicInfoSectionProps = {
   capacity: string;
   hasAnnex: boolean;
   annexDetail?: string;
+  onHelpClick?: () => void;
 };
 
 /**
@@ -18,7 +19,17 @@ export const BasicInfoSection = ({
   capacity,
   hasAnnex,
   annexDetail,
+  onHelpClick,
 }: BasicInfoSectionProps) => {
+  const handleHelpClick = () => {
+    if (onHelpClick) {
+      onHelpClick();
+    } else {
+      // TODO: デフォルトのモーダル表示処理
+      console.log('施設の種類についてのヘルプを表示');
+    }
+  };
+
   return (
     <section className={styles.basicInfoSection}>
       {/* 上段 3カラム */}
@@ -47,7 +58,14 @@ export const BasicInfoSection = ({
       </div>
 
       <div className={styles.helpLink}>
-        <a href="#">? 施設の種類について</a>
+        <button
+          type="button"
+          className={styles.helpButton}
+          onClick={handleHelpClick}
+          aria-label="施設の種類についてのヘルプを表示"
+        >
+          ? 施設の種類について
+        </button>
       </div>
     </section>
   );
