@@ -1,8 +1,15 @@
-// 施設検索ページ
+'use client';
+
+import dynamic from 'next/dynamic';
+
 import { SearchInput } from './SearchInput/SearchInput';
 import { ConditionSearch } from './ConditionSearch/ConditionSearch';
-import { MapSearch } from './MapSearch/MapSearch';
 import styles from './search.module.scss';
+
+const MapSearch = dynamic(() => import('./MapSearch/MapSearch').then((mod) => mod.MapSearch), {
+  ssr: false,
+  loading: () => <div style={{ height: '400px', background: '#f0f0f0' }}>地図を読み込み中...</div>,
+});
 
 export const Search = () => {
   return (
