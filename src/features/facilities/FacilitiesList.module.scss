@@ -1,4 +1,4 @@
-@import '@/styles/colors';
+@use '@/styles/colors' as *;
 
 .container {
   max-width: 1200px;

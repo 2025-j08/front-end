@@ -1,6 +1,6 @@
 // FacilityDetail 共通スタイル変数
 // グローバル変数をインポートして使用
-@use '@/styles/colors.scss' as *;
+@use '@/styles/colors' as *;
 
 // グローバル変数のエイリアス（ローカル名との互換性維持）
 $color-primary: $primary-color;
