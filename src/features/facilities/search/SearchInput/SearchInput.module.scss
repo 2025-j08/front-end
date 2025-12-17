@@ -16,7 +16,6 @@
   padding: 5px;
   width: 100%;
   max-width: 600px;
-  /* 画像のバランスに合わせて調整 */
 }
 
 .input {
@@ -35,7 +34,6 @@
 
 .searchButton {
   background-color: $search-button-bg;
-  /* 画像の青色 */
   color: $primary-text-color;
   border: none;
   border-radius: 30px;

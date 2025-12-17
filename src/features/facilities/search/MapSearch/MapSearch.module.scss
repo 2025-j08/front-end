@@ -25,26 +25,22 @@
   font-size: 14px;
   box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
   z-index: 1000;
-  /* 地図のピンより手前に来るように */
 }
 
 .mapArea {
   width: 100%;
-  /* 重要: 高さを指定しないと地図は表示されません */
   height: 100%;
   min-height: 400px;
 
   border-radius: 10px;
   overflow: hidden;
 
-  /* Leafletのレイヤー重なり順(z-index)対策 */
   z-index: 1;
 }
 
 .popupContent {
   font-weight: bold;
 
-  /* 必要に応じてpタグの余白調整などもここに記述できます */
   p {
     margin: 0 0 8px 0;
     line-height: 1.4;

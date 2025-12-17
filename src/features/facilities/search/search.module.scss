@@ -11,13 +11,10 @@
 .panelGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  /* 2列 */
   gap: 40px;
 
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
-    /* スマホ・タブレットは1列 */
     gap: 60px;
-    /* 上下の余白を広めに */
   }
 }
