@@ -71,29 +71,6 @@
   font-size: 16px;
 }
 
-.helpLink {
-  margin-top: 10px;
-}
-
-.helpButton {
-  background: none;
-  border: none;
-  padding: 0;
-  font-size: 14px;
-  color: $color-text;
-  cursor: pointer;
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-  }
-
-  &:focus {
-    outline: 2px solid $color-primary;
-    outline-offset: 2px;
-  }
-}
-
 // レスポンシブ対応：768px以下で1カラム
 @media screen and (max-width: 768px) {
   .infoGrid {
