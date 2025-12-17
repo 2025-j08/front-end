@@ -1,4 +1,4 @@
-@use '../../shared.scss' as *;
+@use '@/styles/colors' as colors;
 
 .detailSection {
   .sectionTitle {
@@ -10,13 +10,13 @@
     font-size: 12px;
     text-align: right;
     margin-bottom: 16px;
-    color: $color-text-secondary;
+    color: colors.$text-secondary;
   }
 }
 
 .tabNav {
   display: flex;
-  border-bottom: 1px solid $color-border;
+  border-bottom: 1px solid colors.$border-gray;
   margin-bottom: 30px;
   overflow-x: auto;
 }
@@ -27,17 +27,17 @@
   padding: 12px 24px;
   font-size: 16px;
   cursor: pointer;
-  color: $color-text;
+  color: colors.$text-primary;
   white-space: nowrap;
   position: relative;
   font-weight: 500;
 
   &:hover {
-    background-color: $color-bg-hover-light;
+    background-color: colors.$bg-hover-light;
   }
 
   &[aria-selected='true'] {
-    color: $color-text;
+    color: colors.$text-primary;
 
     &::after {
       content: '';
@@ -46,7 +46,7 @@
       left: 0;
       width: 100%;
       height: 3px;
-      background-color: $color-primary;
+      background-color: colors.$primary-color;
     }
   }
 }
@@ -81,7 +81,7 @@
 .mapPlaceholder {
   flex: 1;
   height: 200px;
-  background-color: $color-bg-active;
+  background-color: colors.$bg-active;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -90,7 +90,7 @@
   .pin {
     width: 20px;
     height: 20px;
-    background-color: $color-text-secondary;
+    background-color: colors.$text-secondary;
     border-radius: 50% 50% 50% 0;
     transform: rotate(-45deg);
   }
@@ -99,14 +99,14 @@
 .placeholderContent {
   padding: 40px;
   text-align: center;
-  background-color: $color-bg-gray;
-  color: $color-text-secondary;
+  background-color: colors.$bg-light-gray;
+  color: colors.$text-secondary;
 }
 
 .relationSection {
   margin-top: 40px;
   padding-top: 30px;
-  border-top: 1px solid $color-border;
+  border-top: 1px solid colors.$border-gray;
 
   .subTitle {
     font-size: 18px;

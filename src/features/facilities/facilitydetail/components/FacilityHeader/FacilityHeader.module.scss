@@ -1,4 +1,4 @@
-@use '../../shared.scss' as *;
+@use '@/styles/colors' as colors;
 
 .header {
   display: flex;
@@ -35,8 +35,8 @@
 .headerAction {
   .webButton {
     display: inline-block;
-    background-color: $color-primary;
-    color: $color-white;
+    background-color: colors.$primary-color;
+    color: colors.$white;
     padding: 12px 32px;
     border-radius: 50px;
     text-decoration: none;

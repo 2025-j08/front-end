@@ -1,10 +1,10 @@
-@use './shared.scss' as *;
+@use '@/styles/colors' as colors;
 
 .container {
   max-width: 960px;
   margin: 0 auto;
   padding: 40px 20px;
-  font-family: $font-family-base;
-  color: $color-text;
-  background-color: #fff;
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+  color: colors.$text-primary;
+  background-color: colors.$white;
 }
