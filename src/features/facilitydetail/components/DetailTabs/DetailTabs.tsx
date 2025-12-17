@@ -16,6 +16,7 @@ type DetailTabsProps = {
 /**
  * 施設詳細ページのタブセクション
  * タブナビゲーションとタブコンテンツを表示
+ * ARIA属性によるアクセシビリティ対応済み
  */
 export const DetailTabs = ({
   tabs,
@@ -29,21 +30,30 @@ export const DetailTabs = ({
       <h2 className={styles.sectionTitle}>施設の詳細情報</h2>
       <p className={styles.tabInstruction}>各項目をクリックして切り替える</p>
 
-      {/* タブナビゲーション */}
-      <nav className={styles.tabNav}>
+      {/* タブナビゲーション - role="tablist" でアクセシビリティ対応 */}
+      <div role="tablist" className={styles.tabNav} aria-label="施設詳細タブ">
         {tabs.map((tab) => (
           <button
             key={tab.key}
-            className={`${styles.tabItem} ${activeTab === tab.key ? styles.active : ''}`}
+            id={`tab-${tab.key}`}
+            role="tab"
+            aria-selected={activeTab === tab.key}
+            aria-controls={`tabpanel-${tab.key}`}
+            className={styles.tabItem}
             onClick={() => onTabChange(tab.key)}
           >
             {tab.label}
           </button>
         ))}
-      </nav>
+      </div>
 
-      {/* タブコンテンツエリア */}
-      <div className={styles.tabContent}>
+      {/* タブコンテンツエリア - role="tabpanel" でアクセシビリティ対応 */}
+      <div
+        id={`tabpanel-${activeTab}`}
+        role="tabpanel"
+        aria-labelledby={`tab-${activeTab}`}
+        className={styles.tabContent}
+      >
         {activeTab === 'access' && accessInfo && (
           <div className={styles.accessContent}>
             <div className={styles.accessInfo}>
