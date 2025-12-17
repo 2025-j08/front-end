@@ -26,7 +26,7 @@
   .label {
     font-size: 14px;
     margin-bottom: 12px;
-    color: #666;
+    color: $color-text-secondary;
   }
 
   .value {
@@ -49,12 +49,12 @@
   align-items: center;
   justify-content: center;
   padding: 24px;
-  border-right: 1px solid #ddd;
+  border-right: 1px solid $color-border;
 
   .label {
     font-size: 14px;
     margin-bottom: 8px;
-    color: #666;
+    color: $color-text-secondary;
   }
 
   .statusValue {
@@ -73,14 +73,23 @@
 
 .helpLink {
   margin-top: 10px;
+}
 
-  a {
-    font-size: 14px;
-    color: $color-text;
-    text-decoration: none;
+.helpButton {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 14px;
+  color: $color-text;
+  cursor: pointer;
+  text-decoration: none;
 
-    &:hover {
-      text-decoration: underline;
-    }
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus {
+    outline: 2px solid $color-primary;
+    outline-offset: 2px;
   }
 }
