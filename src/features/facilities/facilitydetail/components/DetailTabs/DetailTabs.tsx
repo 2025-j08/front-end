@@ -1,3 +1,5 @@
+import { useTabKeyboardNav } from '@/hooks/useTabKeyboardNav';
+
 import { TabKey, Tab } from '../../hooks/useFacilityDetail';
 import styles from './DetailTabs.module.scss';
 
@@ -17,6 +19,7 @@ type DetailTabsProps = {
  * 施設詳細ページのタブセクション
  * タブナビゲーションとタブコンテンツを表示
  * ARIA属性によるアクセシビリティ対応済み
+ * 左右矢印キーでのタブ切り替えに対応
  */
 export const DetailTabs = ({
   tabs,
@@ -25,6 +28,12 @@ export const DetailTabs = ({
   accessInfo,
   relationInfo,
 }: DetailTabsProps) => {
+  // タブIDの配列を生成
+  const tabIds = tabs.map((tab) => tab.key);
+
+  // キーボードナビゲーションフックを使用
+  const { handleKeyDown } = useTabKeyboardNav(tabIds, onTabChange);
+
   return (
     <section className={styles.detailSection}>
       <h2 className={styles.sectionTitle}>施設の詳細情報</h2>
@@ -32,15 +41,17 @@ export const DetailTabs = ({
 
       {/* タブナビゲーション - role="tablist" でアクセシビリティ対応 */}
       <div role="tablist" className={styles.tabNav} aria-label="施設詳細タブ">
-        {tabs.map((tab) => (
+        {tabs.map((tab, index) => (
           <button
             key={tab.key}
             id={`tab-${tab.key}`}
             role="tab"
             aria-selected={activeTab === tab.key}
             aria-controls={`tabpanel-${tab.key}`}
+            tabIndex={activeTab === tab.key ? 0 : -1}
             className={styles.tabItem}
             onClick={() => onTabChange(tab.key)}
+            onKeyDown={(e) => handleKeyDown(e, index)}
           >
             {tab.label}
           </button>
@@ -54,16 +65,22 @@ export const DetailTabs = ({
         aria-labelledby={`tab-${activeTab}`}
         className={styles.tabContent}
       >
-        {activeTab === 'access' && accessInfo && (
+        {activeTab === 'access' && (
           <div className={styles.accessContent}>
-            <div className={styles.accessInfo}>
-              <p className={styles.accessText}>{accessInfo.address}</p>
-              <p className={styles.accessText}>{accessInfo.station}</p>
-              <p className={styles.accessDescription}>{accessInfo.description}</p>
-            </div>
-            <div className={styles.mapPlaceholder}>
-              <div className={styles.pin}></div>
-            </div>
+            {accessInfo ? (
+              <>
+                <div className={styles.accessInfo}>
+                  <p className={styles.accessText}>{accessInfo.address}</p>
+                  <p className={styles.accessText}>{accessInfo.station}</p>
+                  <p className={styles.accessDescription}>{accessInfo.description}</p>
+                </div>
+                <div className={styles.mapPlaceholder}>
+                  <div className={styles.pin}></div>
+                </div>
+              </>
+            ) : (
+              <div className={styles.placeholderContent}>アクセス情報がありません</div>
+            )}
           </div>
         )}
 

@@ -5,7 +5,7 @@ type FacilityHeaderProps = {
   corporation: string;
   address: string;
   tel: string;
-  websiteUrl?: string;
+  websiteUrl?: string | null;
 };
 
 /**
@@ -17,8 +17,11 @@ export const FacilityHeader = ({
   corporation,
   address,
   tel,
-  websiteUrl = '#',
+  websiteUrl,
 }: FacilityHeaderProps) => {
+  // websiteUrl が有効かどうかをチェック
+  const hasValidWebsite = websiteUrl && websiteUrl !== '#';
+
   return (
     <header className={styles.header}>
       <div className={styles.headerInfo}>
@@ -28,17 +31,19 @@ export const FacilityHeader = ({
         <p className={styles.address}>{address}</p>
         <p className={styles.tel}>TEL {tel}</p>
       </div>
-      <div className={styles.headerAction}>
-        <a
-          href={websiteUrl}
-          className={styles.webButton}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="施設Webサイトを新しいタブで開く"
-        >
-          施設Webサイト
-        </a>
-      </div>
+      {hasValidWebsite && (
+        <div className={styles.headerAction}>
+          <a
+            href={websiteUrl}
+            className={styles.webButton}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="施設Webサイトを新しいタブで開く"
+          >
+            施設Webサイト
+          </a>
+        </div>
+      )}
     </header>
   );
 };
