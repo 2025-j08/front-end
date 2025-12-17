@@ -1,4 +1,5 @@
 import { useTabKeyboardNav } from '@/hooks/useTabKeyboardNav';
+import { AccessInfo } from '@/types/facility';
 
 import { TabKey, Tab, TAB_LABELS } from '../../hooks/useFacilityDetail';
 import styles from './DetailTabs.module.scss';
@@ -7,11 +8,7 @@ type DetailTabsProps = {
   tabs: Tab[];
   activeTab: TabKey;
   onTabChange: (tab: TabKey) => void;
-  accessInfo?: {
-    address: string;
-    station: string;
-    description: string;
-  };
+  accessInfo?: AccessInfo;
   relationInfo?: string;
 };
 
