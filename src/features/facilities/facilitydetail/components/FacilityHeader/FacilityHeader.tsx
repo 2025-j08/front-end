@@ -9,6 +9,20 @@ type FacilityHeaderProps = {
 };
 
 /**
+ * URLが有効かどうかを検証する
+ * http/https スキームのみ許可し、javascript: などの危険なスキームを拒否
+ */
+const isValidUrl = (url: string | null | undefined): boolean => {
+  if (!url || url === '#') return false;
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch {
+    return false;
+  }
+};
+
+/**
  * 施設詳細ページのヘッダーセクション
  * 施設名、運営法人、住所、TEL、Webサイトボタンを表示
  */
@@ -19,8 +33,7 @@ export const FacilityHeader = ({
   tel,
   websiteUrl,
 }: FacilityHeaderProps) => {
-  // websiteUrl が有効かどうかをチェック
-  const hasValidWebsite = websiteUrl && websiteUrl !== '#';
+  const hasValidWebsite = isValidUrl(websiteUrl);
 
   return (
     <header className={styles.header}>
@@ -34,7 +47,7 @@ export const FacilityHeader = ({
       {hasValidWebsite && (
         <div className={styles.headerAction}>
           <a
-            href={websiteUrl}
+            href={websiteUrl ?? undefined}
             className={styles.webButton}
             target="_blank"
             rel="noopener noreferrer"

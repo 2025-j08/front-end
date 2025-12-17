@@ -1,6 +1,6 @@
 import { useTabKeyboardNav } from '@/hooks/useTabKeyboardNav';
 
-import { TabKey, Tab } from '../../hooks/useFacilityDetail';
+import { TabKey, Tab, TAB_LABELS } from '../../hooks/useFacilityDetail';
 import styles from './DetailTabs.module.scss';
 
 type DetailTabsProps = {
@@ -75,8 +75,8 @@ export const DetailTabs = ({
                   <p className={styles.accessText}>{accessInfo.station}</p>
                   <p className={styles.accessDescription}>{accessInfo.description}</p>
                 </div>
-                <div className={styles.mapPlaceholder}>
-                  <div className={styles.pin}></div>
+                <div className={styles.mapPlaceholder} role="img" aria-label="地図プレースホルダー">
+                  <div className={styles.pin} aria-hidden="true"></div>
                 </div>
               </>
             ) : (
@@ -87,7 +87,7 @@ export const DetailTabs = ({
 
         {activeTab !== 'access' && (
           <div className={styles.placeholderContent}>
-            {tabs.find((t) => t.key === activeTab)?.label}の情報がここに表示されます。
+            {TAB_LABELS[activeTab]}の情報がここに表示されます。
           </div>
         )}
       </div>

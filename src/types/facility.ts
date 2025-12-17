@@ -14,3 +14,25 @@ export type FacilitiesData = {
     [key: string]: Facility[];
   };
 };
+
+// 施設詳細ページ用の型定義
+export type AccessInfo = {
+  address: string;
+  station: string;
+  description: string;
+};
+
+export type FacilityDetail = {
+  name: string;
+  corporation: string;
+  address: string;
+  tel: string;
+  websiteUrl: string | null;
+  facilityType: string;
+  establishedYear: string;
+  capacity: string;
+  hasAnnex: boolean;
+  annexDetail?: string;
+  accessInfo: AccessInfo;
+  relationInfo: string;
+};
