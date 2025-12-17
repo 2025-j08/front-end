@@ -1,17 +1,18 @@
 // FacilityDetail 共通スタイル変数
 // グローバル変数をインポートして使用
-@use '@/styles/colors' as *;
+@use '@/styles/colors' as colors;
 
-// グローバル変数のエイリアス（ローカル名との互換性維持）
-$color-primary: $primary-color;
-$color-text: $text-primary;
-$color-text-secondary: $text-secondary;
-$color-bg-gray: $bg-light-gray;
-$color-bg-active: $bg-active;
-$color-border: $border-gray;
-$color-white: $white;
+// グローバル変数を直接エクスポート
+// 使用側で colors.$primary-color のように参照
+$color-primary: colors.$primary-color;
+$color-text: colors.$text-primary;
+$color-text-secondary: colors.$text-secondary;
+$color-bg-gray: colors.$bg-light-gray;
+$color-bg-active: colors.$bg-active;
+$color-border: colors.$border-gray;
+$color-white: colors.$white;
 $border-radius: 4px;
 
 // 共通フォント設定
 $font-family-base:
-  'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+  'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Meiryo', sans-serif;
