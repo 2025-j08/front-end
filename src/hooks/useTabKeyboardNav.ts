@@ -6,11 +6,13 @@ import { useCallback } from 'react';
  *
  * @param tabIds - タブのID配列（順序はDOM順と一致させる）
  * @param onTabChange - タブ変更時のコールバック
+ * @param idPrefix - タブ要素のID属性のプレフィックス（デフォルト: 'tab'）
  * @returns handleKeyDown - キーボードイベントハンドラ
  */
 export const useTabKeyboardNav = <T extends string>(
   tabIds: T[],
   onTabChange: (tabId: T) => void,
+  idPrefix = 'tab',
 ) => {
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent, currentIndex: number) => {
@@ -35,9 +37,9 @@ export const useTabKeyboardNav = <T extends string>(
 
       e.preventDefault();
       onTabChange(tabIds[nextIndex]);
-      document.getElementById(`tab-${tabIds[nextIndex]}`)?.focus();
+      document.getElementById(`${idPrefix}-${tabIds[nextIndex]}`)?.focus();
     },
-    [tabIds, onTabChange],
+    [tabIds, onTabChange, idPrefix],
   );
 
   return { handleKeyDown };

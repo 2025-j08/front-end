@@ -15,15 +15,25 @@ export type Tab = {
   label: string;
 };
 
-export const TABS: Tab[] = [
-  { key: 'access', label: '立地・アクセス' },
-  { key: 'philosophy', label: '理念' },
-  { key: 'specialty', label: '特化領域' },
-  { key: 'staff', label: '職員' },
-  { key: 'education', label: '教育・進路支援' },
-  { key: 'advanced', label: '高機能化' },
-  { key: 'other', label: 'その他' },
-];
+// O(1) でラベル取得するためのRecord構造
+export const TAB_LABELS: Record<TabKey, string> = {
+  access: '立地・アクセス',
+  philosophy: '理念',
+  specialty: '特化領域',
+  staff: '職員',
+  education: '教育・進路支援',
+  advanced: '高機能化',
+  other: 'その他',
+};
+
+// タブキーの順序配列
+export const TAB_KEYS: TabKey[] = Object.keys(TAB_LABELS) as TabKey[];
+
+// 後方互換性のためのTABS配列（既存コード用）
+export const TABS: Tab[] = TAB_KEYS.map((key) => ({
+  key,
+  label: TAB_LABELS[key],
+}));
 
 /**
  * useFacilityDetail
