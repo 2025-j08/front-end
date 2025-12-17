@@ -46,10 +46,25 @@
 src/features/
 ├── auth/           # ログイン関連
 ├── contact/        # お問い合わせ関連
-└── facilities/     # 施設一覧・詳細関連
+├── facilities/     # 施設一覧関連
+└── facilitydetail/ # 施設詳細関連
+    ├── components/ # 機能固有のコンポーネント
+    └── hooks/      # 機能固有のカスタムフック
 ```
 
-## 4. コーディング規約
+## 4. パスエイリアス
+
+`@/` を使用して `src/` からの絶対パスでインポートできます。
+
+```typescript
+// 推奨
+import { FormField } from '@/components/form';
+
+// 非推奨
+import { FormField } from '../../../components/form';
+```
+
+## 5. コーディング規約
 
 ### TypeScript
 
@@ -72,6 +87,16 @@ src/features/
 @use '../../styles/colors' as colors;
 ```
 
+#### カラー変数のカテゴリ
+
+| カテゴリ   | 変数例                             | 用途                   |
+| ---------- | ---------------------------------- | ---------------------- |
+| 基本色     | `$white`, `$black`                 | 汎用                   |
+| プライマリ | `$primary-color`                   | サイト全体のアクセント |
+| フォーム   | `$form-primary`, `$form-input-bg`  | フォーム要素専用       |
+| ステータス | `$error-color`, `$success-color`   | エラー・成功表示       |
+| テキスト   | `$text-primary`, `$text-secondary` | 文字色                 |
+
 ### コンポーネント設計 (React)
 
 - すべて関数コンポーネントで記述してください。
@@ -87,7 +112,7 @@ src/features/
   - `aria-label` (アイコンのみの要素)
 - 装飾的な要素には `aria-hidden="true"` を付与してください。
 
-## 5. Git コミット規約
+## 6. Git コミット規約
 
 ```
 <type>: <subject>
@@ -101,14 +126,18 @@ src/features/
 # chore: その他（ビルド設定、パッケージ更新等）
 ```
 
-## 6. 禁止事項
+> **注意**: コミット時に lint-staged が自動実行されます。ESLint エラーがあるとコミットがブロックされるため、事前に `npm run lint` で確認してください。
 
-- `@import` によるSCSSインポート（`@use` を使用すること）
-- `any` 型の使用
-- ハードコードされた色値（`colors.scss` の変数を使用すること）
-- Tailwind CSS の使用（SCSS Modules を使用すること）
+## 7. 禁止事項
 
-## 7. 開発コマンド
+| 禁止項目                       | 代替手段                   |
+| ------------------------------ | -------------------------- |
+| `@import` によるSCSSインポート | `@use` を使用              |
+| `any` 型の使用                 | 適切な型定義を行う         |
+| ハードコードされた色値         | `colors.scss` の変数を使用 |
+| Tailwind CSS の使用            | SCSS Modules を使用        |
+
+## 8. 開発コマンド
 
 ```bash
 npm run dev      # 開発サーバー起動
