@@ -14,7 +14,7 @@ export const useTabKeyboardNav = <T extends string>(
 ) => {
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent, currentIndex: number) => {
-      let nextIndex: number | null = null;
+      let nextIndex: number;
 
       switch (e.key) {
         case 'ArrowRight':

@@ -26,7 +26,13 @@ export const TABS: Tab[] = [
 ];
 
 /**
- * 施設詳細ページのタブ状態管理フック
+ * useFacilityDetail
+ * 施設詳細ページのタブ状態管理を提供するカスタムフック
+ *
+ * @returns {Object} タブの状態とハンドラー
+ * @returns {TabKey} activeTab - 現在アクティブなタブのキー
+ * @returns {(tab: TabKey) => void} setActiveTab - アクティブタブを変更するハンドラー
+ * @returns {Tab[]} tabs - 利用可能なタブの一覧
  */
 export const useFacilityDetail = () => {
   const [activeTab, setActiveTab] = useState<TabKey>('access');
