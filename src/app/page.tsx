@@ -1,3 +1,5 @@
-import page from '@/features/facilities/search/search';
+import { Search } from '@/features/facilities/search/search';
 
-export default page;
+export default function Home() {
+  return <Search />;
+}
