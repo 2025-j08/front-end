@@ -21,10 +21,10 @@ export type Tab = {
 export const TAB_LABELS: Record<TabKey, string> = {
   access: '立地・アクセス',
   philosophy: '理念',
-  specialty: '特化領域',
+  specialty: '生活環境',
   staff: '職員',
   education: '教育・進路支援',
-  advanced: '高機能化',
+  advanced: '特色',
   other: 'その他',
 };
 
