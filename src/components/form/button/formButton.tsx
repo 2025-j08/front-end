@@ -25,7 +25,7 @@ const FormButton = ({
         type={type}
         className={styles.formButton}
         disabled={isLoading || disabled}
-        aria-busy={isLoading || disabled}
+        aria-busy={isLoading}
       >
         <span className={styles.buttonContent}>
           {isLoading && <span className={styles.spinner} />}
