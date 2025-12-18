@@ -15,13 +15,14 @@ type FacilityDataResponse = {
  * 施設詳細データを取得するカスタムフック
  * 現在はダミーデータを非同期で返すように実装（API統合の準備）
  */
-export const useFacilityData = (): FacilityDataResponse => {
+export const useFacilityData = (id: string): FacilityDataResponse => {
   const [data, setData] = useState<FacilityDetail | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
+      // console.log('Fetching data for facility ID:', id); // デバッグ用
       try {
         // setIsLoading(true) は初期値でtrueなので削除
         // APIコールを模倣するための遅延
