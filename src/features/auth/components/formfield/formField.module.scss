@@ -1,0 +1,64 @@
+.formGroup {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+
+  // ラベル（固定幅）
+  label {
+    width: 180px;
+    font-size: 1rem;
+    color: #333; // text-primary
+    flex-shrink: 0;
+    margin-bottom: 0;
+    font-weight: normal;
+  }
+
+  // input・textarea 共通スタイル
+  input,
+  textarea {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #b8d4c4; // form-input-border
+    background-color: #f5faf7; // form-input-bg ($form-secondary-light)
+    border-radius: 0;
+    font-size: 1rem;
+    color: #333; // text-primary
+
+    // プレースホルダーのスタイル
+    &::placeholder {
+      color: #999; // form-placeholder
+      letter-spacing: 1px;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: #4a9f7e; // form-primary
+    }
+
+    &:disabled {
+      background-color: #eeeeee;
+      cursor: not-allowed;
+    }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  // モバイル対応: 600px 以下で縦並びに
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: flex-start;
+
+    label {
+      width: 100%;
+      margin-bottom: 8px;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+    }
+  }
+}
