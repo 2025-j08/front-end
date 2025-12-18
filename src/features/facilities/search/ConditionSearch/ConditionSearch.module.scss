@@ -60,6 +60,12 @@
     transform: translate(2px, 2px);
     box-shadow: none;
   }
+
+  &.selected {
+    border: 3px solid $border-black;
+    transform: scale(0.98);
+    box-shadow: none;
+  }
 }
 
 // 都道府県ごとの色定義
@@ -109,6 +115,12 @@
 
   &:hover {
     background-color: $bg-light-gray;
+  }
+
+  &.selected {
+    background-color: $dark-gray;
+    color: $white;
+    border-color: $dark-gray;
   }
 }
 
