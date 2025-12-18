@@ -1,20 +1,62 @@
 /**
  * フォーム全体で共通利用する色・スタイル変数
- * 色定義は colors.scss から取得し、DRY原則に従う
+ * colors.scss から色を参照し、フォーム用のエイリアスを提供
  */
-@forward './colors';
-@use './colors' as colors;
 
-// 基本色エイリアス（colors.scssから継承）
-$white: colors.$bg-white;
-$black: colors.$border-black;
-$dark-gray: colors.$text-primary;
+@use 'colors' as colors;
+
+// ====================================
+// colors.scss からの色変数エイリアス
+// ====================================
+
+// 基本色
+$white: colors.$white;
+$black: colors.$black;
+$dark-gray: colors.$dark-gray;
+
+// メインアクセントカラー（落ち着いた森のグリーン）
+$primary-color: colors.$form-primary;
+$primary-light: colors.$form-primary-light;
+$primary-dark: colors.$form-primary-dark;
+
+// セカンダリカラー（ミント・クリーム系）
+$secondary-color: colors.$form-secondary;
+$secondary-light: colors.$form-secondary-light;
+$secondary-dark: colors.$form-secondary-dark;
+
+// 背景グラデーション用
+$bg-gradient-start: colors.$form-bg-gradient-start;
+$bg-gradient-end: colors.$form-bg-gradient-end;
+
+// ボタンシャドウ
+$button-shadow: colors.$form-button-shadow;
+$button-shadow-hover: colors.$form-button-shadow-hover;
+
+// フォーカス時のグロー
+$focus-glow: colors.$form-focus-glow;
+
+// コンテナシャドウ
+$container-shadow: colors.$form-container-shadow;
+
+// ====================================
+// レガシー互換（段階的に移行）
+// ====================================
+// TODO: $border-green は $primary-color に移行予定。新規コードでは $primary-color を使用してください。
+// @deprecated Use $primary-color instead
+$border-green: $primary-color;
 
 // テキスト通常色
-$text-color: colors.$text-primary;
+$text-color: $dark-gray;
 
-// フォーム関連変数（colors.scssから再エクスポート）
-$border-green: colors.$border-green;
-$placeholder-color: colors.$placeholder-color;
-$input-bg: colors.$input-bg;
-$input-border: colors.$input-border;
+// プレースホルダーテキスト色
+$placeholder-color: colors.$form-placeholder;
+
+// 入力フィールド背景色
+$input-bg: colors.$form-input-bg;
+
+// 入力フィールド枠線色
+$input-border: colors.$form-input-border;
+
+// ステータスカラー（colors.scssから）
+$success-color: colors.$success-color;
+$success-light: colors.$success-light;

@@ -3,22 +3,23 @@
 /**
  * LoginForm コンポーネント
  * ログインフォームのメインページです。
+ * ロジックはuseLoginFormフックに分離
  */
-import { LoginField } from './components/formfield/loginField';
-import { LoginButton } from './components/button/loginButton';
+import { FormField, FormButton, LoadingOverlay } from '@/components/form';
+
 import styles from './loginForm.module.scss';
+import { useLoginForm } from './hooks/useLoginForm';
 
 export const LoginForm = () => {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    console.log('Login form submitted');
-  };
+  const { formData, isLoading, handleChange, handleSubmit } = useLoginForm();
 
   return (
     <div className={styles['login-form-container']}>
+      <LoadingOverlay isVisible={isLoading} text="ログイン中..." />
+
       <h2 className={styles['form-title']}>ログイン</h2>
       <form onSubmit={handleSubmit}>
-        <LoginField
+        <FormField
           label="ID"
           type="text"
           id="userid"
@@ -26,9 +27,11 @@ export const LoginForm = () => {
           placeholder="example_ID"
           autoComplete="username"
           required
+          value={formData.userid}
+          onChange={handleChange}
         />
 
-        <LoginField
+        <FormField
           label="パスワード"
           type="password"
           id="password"
@@ -36,9 +39,11 @@ export const LoginForm = () => {
           placeholder="パスワード"
           autoComplete="current-password"
           required
+          value={formData.password}
+          onChange={handleChange}
         />
 
-        <LoginButton label="ログイン" />
+        <FormButton label="ログイン" isLoading={isLoading} />
       </form>
     </div>
   );

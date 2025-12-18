@@ -1,8 +1,0 @@
-/**
- * LoginField コンポーネント用スタイル
- */
-@use '../../shared' as *;
-
-.formGroup {
-  @include form-group;
-}

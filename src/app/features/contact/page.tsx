@@ -1,8 +1,8 @@
 /**
  * /features/contact ルート
- * 既存のお問い合わせフォームを再利用
+ * 新しいcontactFormコンポーネントを使用
  */
-import { ContactForm } from '@/features/contact/contact';
+import { ContactForm } from '@/features/contact/contactForm';
 
 export default function FeaturesContactPage() {
   return <ContactForm />;

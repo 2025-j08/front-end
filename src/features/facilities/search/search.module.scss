@@ -1,3 +1,5 @@
+@use '../../../styles/colors' as *;
+
 .pageContainer {
   max-width: 1200px;
   margin: 0 auto;
@@ -17,4 +19,14 @@
     grid-template-columns: 1fr;
     gap: 60px;
   }
+}
+
+.loadingMap {
+  height: 400px;
+  background-color: $bg-light-gray;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  color: $text-secondary;
 }
