@@ -19,12 +19,18 @@
   border-bottom: 1px solid colors.$border-gray;
   margin-bottom: 30px;
   overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .tabItem {
   background: none;
   border: none;
-  padding: 12px 24px;
+  padding: 12px 35px;
   font-size: 16px;
   cursor: pointer;
   color: colors.$text-primary;
