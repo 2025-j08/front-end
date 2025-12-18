@@ -44,6 +44,13 @@ export const FacilityDetail = () => {
         onTabChange={setActiveTab}
         accessInfo={facilityData.accessInfo}
         relationInfo={facilityData.relationInfo}
+        facilityName={facilityData.name}
+        philosophyInfo={facilityData.philosophyInfo}
+        specialtyInfo={facilityData.specialtyInfo}
+        staffInfo={facilityData.staffInfo}
+        educationInfo={facilityData.educationInfo}
+        advancedInfo={facilityData.advancedInfo}
+        otherInfo={facilityData.otherInfo}
       />
     </div>
   );

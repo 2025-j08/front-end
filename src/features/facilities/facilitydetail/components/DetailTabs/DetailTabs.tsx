@@ -1,6 +1,20 @@
 import { useTabKeyboardNav } from '@/hooks/useTabKeyboardNav';
-import { AccessInfo } from '@/types/facility';
+import {
+  AccessInfo,
+  PhilosophyInfo,
+  SpecialtyInfo,
+  StaffInfo,
+  EducationInfo,
+  AdvancedInfo,
+} from '@/types/facility';
 
+import { AccessTab } from './contents/AccessTab';
+import { PhilosophyTab } from './contents/PhilosophyTab';
+import { SpecialtyTab } from './contents/SpecialtyTab';
+import { StaffTab } from './contents/StaffTab';
+import { EducationTab } from './contents/EducationTab';
+import { AdvancedTab } from './contents/AdvancedTab';
+import { OtherTab } from './contents/OtherTab';
 import { TabKey, Tab, TAB_LABELS } from '../../hooks/useFacilityDetail';
 import styles from './DetailTabs.module.scss';
 
@@ -10,6 +24,13 @@ type DetailTabsProps = {
   onTabChange: (tab: TabKey) => void;
   accessInfo?: AccessInfo;
   relationInfo?: string;
+  facilityName?: string; // マップ表示用に名前を受け取る
+  philosophyInfo?: PhilosophyInfo;
+  specialtyInfo?: SpecialtyInfo;
+  staffInfo?: StaffInfo;
+  educationInfo?: EducationInfo;
+  advancedInfo?: AdvancedInfo;
+  otherInfo?: string;
 };
 
 /**
@@ -24,6 +45,13 @@ export const DetailTabs = ({
   onTabChange,
   accessInfo,
   relationInfo,
+  facilityName = '',
+  philosophyInfo,
+  specialtyInfo,
+  staffInfo,
+  educationInfo,
+  advancedInfo,
+  otherInfo,
 }: DetailTabsProps) => {
   // タブIDの配列を生成
   const tabIds = tabs.map((tab) => tab.key);
@@ -62,39 +90,42 @@ export const DetailTabs = ({
         aria-labelledby={`tab-${activeTab}`}
         className={styles.tabContent}
       >
-        {activeTab === 'access' && (
-          <div className={styles.accessContent}>
-            {accessInfo ? (
-              <>
-                <div className={styles.accessInfo}>
-                  <p className={styles.accessText}>{accessInfo.locationAddress}</p>
-                  <p className={styles.accessText}>{accessInfo.station}</p>
-                  <p className={styles.accessDescription}>{accessInfo.description}</p>
-                </div>
-                <div className={styles.mapPlaceholder} aria-hidden="true">
-                  <div className={styles.pin}></div>
-                </div>
-              </>
-            ) : (
-              <div className={styles.placeholderContent}>アクセス情報がありません</div>
-            )}
-          </div>
+        {activeTab === 'access' && accessInfo && (
+          <AccessTab
+            accessInfo={accessInfo}
+            facilityName={facilityName || ''}
+            relationInfo={relationInfo}
+          />
         )}
 
         {activeTab !== 'access' && (
-          <div className={styles.placeholderContent}>
-            {TAB_LABELS[activeTab]}の情報がここに表示されます。
-          </div>
+          // すべてのタブコンテンツはコンポーネント化され、適切なレイアウトを持つためスタイルをラップしません
+          <>
+            {activeTab === 'philosophy' && philosophyInfo ? (
+              <PhilosophyTab philosophyInfo={philosophyInfo} />
+            ) : activeTab === 'specialty' && specialtyInfo ? (
+              <SpecialtyTab specialtyInfo={specialtyInfo} />
+            ) : activeTab === 'staff' && staffInfo ? (
+              <StaffTab staffInfo={staffInfo} />
+            ) : activeTab === 'education' && educationInfo ? (
+              <EducationTab educationInfo={educationInfo} />
+            ) : activeTab === 'advanced' && advancedInfo ? (
+              <AdvancedTab advancedInfo={advancedInfo} />
+            ) : activeTab === 'other' && otherInfo ? (
+              <OtherTab otherInfo={otherInfo} />
+            ) : (
+              <div
+                className={styles.placeholderContent}
+                style={{ textAlign: 'center', whiteSpace: 'normal' }}
+              >
+                {TAB_LABELS[activeTab]}の情報がここに表示されます。
+              </div>
+            )}
+          </>
         )}
       </div>
 
-      {/* 地域連携セクション */}
-      {relationInfo && (
-        <div className={styles.relationSection}>
-          <h3 className={styles.subTitle}>地域社会との関係や連携状況</h3>
-          <p className={styles.relationText}>{relationInfo}</p>
-        </div>
-      )}
+      {/* 地域連携セクション削除 (AccessTab内に移動) */}
     </section>
   );
 };

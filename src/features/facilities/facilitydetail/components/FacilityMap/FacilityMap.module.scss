@@ -1,0 +1,34 @@
+.container {
+  width: 100%;
+}
+
+.mapArea {
+  width: 100%;
+  height: 300px;
+  border-radius: 8px;
+  z-index: 1; // Leafletのz-index調整
+}
+
+.popupContent {
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+  min-width: 180px;
+
+  p {
+    margin: 0 0 8px 0;
+    font-weight: bold;
+  }
+}
+
+.googleMapLink {
+  display: inline-block;
+  color: #0066cc;
+  text-decoration: none;
+  font-weight: bold;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

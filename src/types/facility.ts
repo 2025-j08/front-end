@@ -20,6 +20,34 @@ export type AccessInfo = {
   locationAddress: string;
   station: string;
   description: string;
+  lat?: number;
+  lng?: number;
+};
+
+export type PhilosophyInfo = {
+  title: string;
+  description: string;
+};
+
+export type SpecialtyInfo = {
+  features: string[];
+};
+
+export type StaffInfo = {
+  message: string;
+  staffDetails: {
+    role: string;
+    description: string;
+  }[];
+};
+
+export type EducationInfo = {
+  policy: string;
+  afterCare: string;
+};
+
+export type AdvancedInfo = {
+  description: string;
 };
 
 export type FacilityDetail = {
@@ -35,4 +63,11 @@ export type FacilityDetail = {
   annexDetail?: string;
   accessInfo: AccessInfo;
   relationInfo: string;
+  // 新規追加
+  philosophyInfo?: PhilosophyInfo;
+  specialtyInfo?: SpecialtyInfo;
+  staffInfo?: StaffInfo;
+  educationInfo?: EducationInfo;
+  advancedInfo?: AdvancedInfo;
+  otherInfo?: string;
 };
