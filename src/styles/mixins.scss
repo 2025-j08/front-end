@@ -1,4 +1,4 @@
-@use './form.variables' as form;
+@use './colors' as colors;
 
 /**
  * 共通ミックスイン定義
@@ -16,7 +16,7 @@
   label {
     width: 180px;
     font-size: 1rem;
-    color: form.$text-color;
+    color: colors.$dark-gray;
     flex-shrink: 0;
   }
 
@@ -25,14 +25,14 @@
   textarea {
     flex-grow: 1;
     padding: 8px;
-    border: 1px solid form.$input-border;
-    background-color: form.$input-bg;
+    border: 1px solid colors.$form-input-border;
+    background-color: colors.$form-input-bg;
     font-size: 1rem;
-    color: form.$text-color;
+    color: colors.$dark-gray;
 
     // プレースホルダーのスタイル
     &::placeholder {
-      color: form.$placeholder-color;
+      color: colors.$form-placeholder;
       letter-spacing: 1px;
     }
   }
