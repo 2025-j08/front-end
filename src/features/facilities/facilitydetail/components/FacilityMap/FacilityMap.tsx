@@ -43,7 +43,7 @@ export const FacilityMap = ({ lat, lng, name, address }: FacilityMapProps) => {
     // L.Icon.Defaultを拡張してカスタムプロパティを追加
     interface ExtendedIconDefault extends L.Icon.Default {
       _isIconSet?: boolean;
-      _getIconUrl?: string; // Leaflet内部プロパティ
+      _getIconUrl?: string | (() => string); // Leaflet内部プロパティ
     }
 
     const iconPrototype = L.Icon.Default.prototype as unknown as ExtendedIconDefault;
