@@ -1,12 +1,12 @@
 @use '@/styles/colors' as colors;
 
 .container {
+  position: relative;
   max-width: 1200px;
   margin: 0 auto;
   padding: 24px 20px;
   font-family: 'Geist', sans-serif;
-  background-color: colors.$bg-white; // 明示的に白背景を指定
-  position: relative;
+  background-color: colors.$bg-white; // 指定通り明示的に白背景
 }
 
 .breadcrumb {

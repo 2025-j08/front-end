@@ -8,12 +8,10 @@
  */
 import Link from 'next/link';
 
-import { FormField, FormButton } from '@/components/form';
+import { FormField, FormButton, LoadingOverlay, SuccessOverlay } from '@/components/form';
 
-// import { useContactForm } from './components/hooks/useContactForm'; // Keep this local for now unless it's moved
 import { useContactForm } from './components/hooks/useContactForm';
 import styles from './contactForm.module.scss';
-// Remove use of contact.module.scss import if it was there
 
 export const ContactForm = () => {
   const { formData, isLoading, isSuccess, handleChange, handleSubmit } = useContactForm();
@@ -25,9 +23,8 @@ export const ContactForm = () => {
         <Link href="/">ホーム</Link> &gt; <span>お問い合わせ</span>
       </div>
 
-      {/* Local Stubs for Layout Compatibility */}
-      {isLoading && <div className={styles.overlay}>送信中...</div>}
-      {isSuccess && <div className={styles.overlay}>送信が完了しました</div>}
+      <LoadingOverlay isVisible={isLoading} text="送信中..." />
+      <SuccessOverlay isVisible={isSuccess} />
 
       <h1 className={styles.title}>お問い合わせ</h1>
 
@@ -80,7 +77,7 @@ export const ContactForm = () => {
           isTextarea
         />
 
-        <FormButton label="送信する" isLoading={isLoading} />
+        <FormButton label="送信する" isLoading={isLoading} loadingLabel="送信中..." />
       </form>
     </div>
   );
