@@ -1,8 +1,8 @@
 /**
  * SuccessOverlay スタイル
  */
-@use '../../../styles/colors' as colors;
-@use '../../../styles/animations';
+@use '@/styles/colors' as colors;
+@use '@/styles/animations';
 
 .overlay {
   position: absolute;
