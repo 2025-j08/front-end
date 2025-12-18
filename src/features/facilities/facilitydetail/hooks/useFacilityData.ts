@@ -23,14 +23,20 @@ export const useFacilityData = (): FacilityDataResponse => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setIsLoading(true);
+        // setIsLoading(true) は初期値でtrueなので削除
         // APIコールを模倣するための遅延
         await new Promise((resolve) => setTimeout(resolve, 800));
 
         // 型アサーションを使用してデータをセット
         // 注意: 実際のデータ構造が更新された後に正しく機能するように
         // JSONデータも更新する必要があります
-        setData(facilityDataJson as unknown as FacilityDetail);
+        // TODO: zodなどでランタイムバリデーションを行うことを推奨
+        // 現在は開発用ダミーデータのためアサーションを使用
+        if (facilityDataJson) {
+          setData(facilityDataJson as unknown as FacilityDetail);
+        } else {
+          throw new Error('データが見つかりません');
+        }
         setError(null);
       } catch (err) {
         setError(err instanceof Error ? err : new Error('データの取得に失敗しました'));
