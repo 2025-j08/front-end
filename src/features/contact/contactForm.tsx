@@ -59,17 +59,6 @@ export const ContactForm = () => {
         />
 
         <FormField
-          label="お電話番号"
-          type="tel"
-          id="phone"
-          name="phone"
-          placeholder="090-1234-5678"
-          // Note: Local FormField might not have 'value' typed for undefined if formData.phone is missing, checking typical usage
-          value={formData.phone}
-          onChange={handleChange}
-        />
-
-        <FormField
           label="ご用件"
           id="subject"
           name="subject"
