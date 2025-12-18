@@ -47,6 +47,7 @@ export type EducationInfo = {
 };
 
 export type AdvancedInfo = {
+  title: string;
   description: string;
 };
 
