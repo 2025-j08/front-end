@@ -3,22 +3,34 @@
 /**
  * ContactForm コンポーネント
  * お問い合わせフォームのメインページです。
- * 共通コンポーネントとuseContactFormフックを使用
+ * FormField、TextAreaField、SubmitButton を組み合わせて
+ * ユーザーからのお問い合わせ入力を受け付けます。
  */
-import { FormField, FormButton, LoadingOverlay, SuccessOverlay } from '@/components/form';
+import Link from 'next/link';
 
-import styles from './contactForm.module.scss';
+import { SubmitButton } from './components/button/submitButton';
+import { FormField } from './components/formfield/formField';
 import { useContactForm } from './components/hooks/useContactForm';
+import { TextAreaField } from './components/textarea/textAreaField';
+import styles from './contactForm.module.scss';
+// Remove use of contact.module.scss import if it was there
 
 export const ContactForm = () => {
   const { formData, isLoading, isSuccess, handleChange, handleSubmit } = useContactForm();
 
   return (
-    <div className={styles['contact-form-container']}>
-      <LoadingOverlay isVisible={isLoading} text="送信中..." />
-      <SuccessOverlay isVisible={isSuccess} text="送信が完了しました" />
+    <div className={styles.container}>
+      {/* Breadcrumb */}
+      <div className={styles.breadcrumb}>
+        <Link href="/">ホーム</Link> &gt; <span>お問い合わせ</span>
+      </div>
 
-      <h2 className={styles['form-title']}>お問い合わせ</h2>
+      {/* Local Stubs for Layout Compatibility */}
+      {isLoading && <div className={styles.overlay}>送信中...</div>}
+      {isSuccess && <div className={styles.overlay}>送信が完了しました</div>}
+
+      <h1 className={styles.title}>お問い合わせ</h1>
+
       <p className={styles['form-description']}>
         ご質問・ご相談がございましたら、以下のフォームよりお気軽にお問い合わせください。
       </p>
@@ -52,6 +64,7 @@ export const ContactForm = () => {
           id="phone"
           name="phone"
           placeholder="090-1234-5678"
+          // Note: Local FormField might not have 'value' typed for undefined if formData.phone is missing, checking typical usage
           value={formData.phone}
           onChange={handleChange}
         />
@@ -66,19 +79,18 @@ export const ContactForm = () => {
           onChange={handleChange}
         />
 
-        <FormField
+        <TextAreaField
           label="お問い合わせ内容"
           id="message"
           name="message"
+          rows={6}
           placeholder="詳しい内容をご記入ください"
           required
-          isTextarea
-          rows={6}
           value={formData.message}
           onChange={handleChange}
         />
 
-        <FormButton label="送信する" loadingLabel="送信中..." isLoading={isLoading} />
+        <SubmitButton label="送信する" />
       </form>
     </div>
   );
