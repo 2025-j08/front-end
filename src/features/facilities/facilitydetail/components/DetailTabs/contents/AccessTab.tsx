@@ -23,7 +23,7 @@ type AccessTabProps = {
 export const AccessTab = ({ accessInfo, facilityName, relationInfo }: AccessTabProps) => {
   return (
     <>
-      <div className={styles.accessContent}>
+      <div className={`${styles.tabContentWrapper} ${styles.accessContent}`}>
         {accessInfo ? (
           <>
             <div className={styles.accessInfo}>
@@ -31,7 +31,7 @@ export const AccessTab = ({ accessInfo, facilityName, relationInfo }: AccessTabP
               <p className={styles.accessText}>{accessInfo.station}</p>
               <p className={styles.accessDescription}>{accessInfo.description}</p>
             </div>
-            {accessInfo.lat && accessInfo.lng && (
+            {accessInfo.lat && accessInfo.lng ? (
               <div className={styles.mapWrapper}>
                 <FacilityMap
                   lat={accessInfo.lat}
@@ -40,8 +40,7 @@ export const AccessTab = ({ accessInfo, facilityName, relationInfo }: AccessTabP
                   address={accessInfo.locationAddress}
                 />
               </div>
-            )}
-            {!accessInfo.lat && (
+            ) : (
               <div className={styles.mapPlaceholder} aria-hidden="true">
                 <div className={styles.pin}></div>
               </div>

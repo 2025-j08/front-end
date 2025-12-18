@@ -21,11 +21,6 @@
   }
 }
 
-// AccessTab用の特定のスタイル (既存のaccessContent相当)
-.accessContent {
-  @extend .tabContentWrapper;
-}
-
 .accessInfo {
   flex: 1;
 
