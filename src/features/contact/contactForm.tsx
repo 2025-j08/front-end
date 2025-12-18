@@ -8,10 +8,10 @@
  */
 import Link from 'next/link';
 
-import { SubmitButton } from './components/button/submitButton';
-import { FormField } from './components/formfield/formField';
+import { FormField, FormButton } from '@/components/form';
+
+// import { useContactForm } from './components/hooks/useContactForm'; // Keep this local for now unless it's moved
 import { useContactForm } from './components/hooks/useContactForm';
-import { TextAreaField } from './components/textarea/textAreaField';
 import styles from './contactForm.module.scss';
 // Remove use of contact.module.scss import if it was there
 
@@ -68,7 +68,7 @@ export const ContactForm = () => {
           onChange={handleChange}
         />
 
-        <TextAreaField
+        <FormField
           label="お問い合わせ内容"
           id="message"
           name="message"
@@ -77,9 +77,10 @@ export const ContactForm = () => {
           required
           value={formData.message}
           onChange={handleChange}
+          isTextarea
         />
 
-        <SubmitButton label="送信する" />
+        <FormButton label="送信する" isLoading={isLoading} />
       </form>
     </div>
   );
