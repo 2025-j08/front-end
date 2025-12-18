@@ -42,7 +42,7 @@ $container-shadow: colors.$form-container-shadow;
 // レガシー互換（段階的に移行）
 // ====================================
 // TODO: $border-green は $primary-color に移行予定。新規コードでは $primary-color を使用してください。
-// @deprecated Use $primary-color instead
+// @deprecated 代わりに $primary-color を使用してください
 $border-green: $primary-color;
 
 // テキスト通常色

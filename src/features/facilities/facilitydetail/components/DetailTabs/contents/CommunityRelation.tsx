@@ -1,4 +1,4 @@
-import styles from './TabContent.module.scss'; // Reuse existing styles for now
+import styles from './TabContent.module.scss'; // 現時点では既存のスタイルを再利用します
 
 type CommunityRelationProps = {
   relationInfo: string;
