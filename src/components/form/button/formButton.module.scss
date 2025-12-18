@@ -21,15 +21,19 @@
   padding: 14px 70px;
   cursor: pointer;
   box-shadow: 0 6px 20px colors.$form-button-shadow;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
 
   &:hover:not(:disabled) {
-    opacity: 0.9;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px colors.$form-button-shadow-hover;
+    background: linear-gradient(135deg, colors.$form-primary-light 0%, colors.$form-primary 100%);
   }
 
   &:active:not(:disabled) {
-    opacity: 0.8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px colors.$form-button-shadow;
   }
 
   &:disabled {
