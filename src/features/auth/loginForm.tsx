@@ -8,6 +8,7 @@
  */
 import Link from 'next/link';
 
+import { LoadingOverlay } from '@/components/form/overlay';
 import { SubmitButton } from '@/features/auth/components/button/submitButton';
 import { FormField } from '@/features/auth/components/formfield/formField';
 import { useLoginForm } from '@/features/auth/components/hooks/useLoginForm';
@@ -19,13 +20,13 @@ export const LoginForm = () => {
 
   return (
     <div className={styles.container}>
-      {/* Breadcrumb */}
+      {/* パンくずリスト */}
       <div className={styles.breadcrumb}>
         <Link href="/">ホーム</Link> &gt; <span>ログイン</span>
       </div>
 
-      {/* Local Stubs for Layout Compatibility (Overlay) */}
-      {isLoading && <div className={styles.overlay}>ログイン中...</div>}
+      {/* ローディング中のオーバーレイ表示 */}
+      <LoadingOverlay isVisible={isLoading} text="ログイン中..." />
 
       <h1 className={styles.title}>ログイン</h1>
 
