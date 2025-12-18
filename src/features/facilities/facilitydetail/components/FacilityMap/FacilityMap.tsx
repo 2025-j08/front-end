@@ -39,43 +39,51 @@ export const FacilityMap = ({ lat, lng, name, address }: FacilityMapProps) => {
     // サーバーサイドでの実行ガード
     if (typeof window === 'undefined') return;
 
-    // 画像パスの取得: any を回避し、安全にプロパティへアクセスする
-    // インポートされた画像がオブジェクト({ src: string })か文字列パスか両方の可能性を考慮
-    const getIconSrc = (icon: unknown): string => {
-      // オブジェクトかつ src プロパティがある場合
-      if (typeof icon === 'object' && icon !== null && 'src' in icon) {
-        return (icon as { src: string }).src;
-      }
-      // 文字列の場合
-      if (typeof icon === 'string') {
-        return icon;
-      }
-      return '';
-    };
+    // Leafletのデフォルトアイコン設定を一度だけ実行するためのフラグを使用
+    // L.Icon.Defaultを拡張してカスタムプロパティを追加
+    interface ExtendedIconDefault extends L.Icon.Default {
+      _isIconSet?: boolean;
+      _getIconUrl?: string; // Leaflet内部プロパティ
+    }
 
-    const iconUrl = getIconSrc(markerIcon);
-    const iconRetinaUrl = getIconSrc(markerIcon2x);
-    const shadowUrl = getIconSrc(markerShadow);
+    const iconPrototype = L.Icon.Default.prototype as unknown as ExtendedIconDefault;
 
-    // Leafletのデフォルトアイコンパス解決ロジックを削除して、バンドルされた画像を使用するように設定
-    // _getIconUrl は型定義に含まれていないため、unknown 経由でキャストして削除
-    delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })._getIconUrl;
+    if (!iconPrototype._isIconSet) {
+      // 画像パスの取得: 型定義を行い、安全にプロパティへアクセスする
+      // インポートされた画像がオブジェクト({ src: string })か文字列パスか両方の可能性を考慮
+      type IconSource = string | { src: string };
 
-    L.Icon.Default.mergeOptions({
-      iconUrl,
-      iconRetinaUrl,
-      shadowUrl,
-    });
+      const getIconSrc = (icon: IconSource): string => {
+        if (typeof icon === 'object' && icon !== null && 'src' in icon) {
+          return icon.src;
+        }
+        if (typeof icon === 'string') {
+          return icon;
+        }
+        return '';
+      };
+
+      const iconUrl = getIconSrc(markerIcon as IconSource);
+      const iconRetinaUrl = getIconSrc(markerIcon2x as IconSource);
+      const shadowUrl = getIconSrc(markerShadow as IconSource);
+
+      delete iconPrototype._getIconUrl;
+
+      L.Icon.Default.mergeOptions({
+        iconUrl,
+        iconRetinaUrl,
+        shadowUrl,
+      });
+      iconPrototype._isIconSet = true;
+    }
 
     if (!mapRef.current) return;
 
-    // マップインスタンスが既に存在する場合は、ビューを更新して終了
+    // マップインスタンスが既に存在する場合は、マップを破棄して再作成する方針をとる
+    // シンプルかつ確実な更新のため
     if (mapInstance.current) {
-      mapInstance.current.setView([lat, lng], 15);
-      // 既存のマーカーを削除して新しいマーカーを追加するなどの処理が必要ならここで行う
-      // 今回はコンポーネントが再マウントされるケースが主と想定し、シンプルにクリーンアップ後に再生成する方針
-      // ただしuseEffectの依存配列により再生成される
-      return;
+      mapInstance.current.remove();
+      mapInstance.current = null;
     }
 
     const map = L.map(mapRef.current).setView([lat, lng], 15);
@@ -115,7 +123,7 @@ export const FacilityMap = ({ lat, lng, name, address }: FacilityMapProps) => {
         mapInstance.current = null;
       }
     };
-  }, [lat, lng, name, address]);
+  }, [lat, lng, name, address]); // 依存配列に変更があった場合は再実行され、マップも再作成される
 
   return (
     <div className={styles.container}>
