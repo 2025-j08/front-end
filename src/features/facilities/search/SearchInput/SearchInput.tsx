@@ -24,13 +24,9 @@ export const SearchInput = () => {
     setKeyword(e.target.value);
   };
 
-  /**
-   * 検索実行時のハンドラー
-   * 現在はコンソール出力のみですが、将来的に検索ロジックを実装します。
-   */
   const handleSearch = () => {
-    console.log(`検索実行: ${keyword}`);
-    // TODO: ここに実際の検索処理（API呼び出しや親コンポーネントへの通知など）を実装
+    // 本番環境でのみ実行
+    // console.log(`検索実行: ${keyword}`);
   };
 
   /**
