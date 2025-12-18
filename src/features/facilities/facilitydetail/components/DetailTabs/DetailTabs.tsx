@@ -90,44 +90,36 @@ export const DetailTabs = ({
         aria-labelledby={`tab-${activeTab}`}
         className={styles.tabContent}
       >
-        {activeTab === 'access' && accessInfo && (
-          <AccessTab
-            accessInfo={accessInfo}
-            facilityName={facilityName || ''}
-            relationInfo={relationInfo}
-          />
+        {(() => {
+          switch (activeTab) {
+            case 'access':
+              return accessInfo ? (
+                <AccessTab
+                  accessInfo={accessInfo}
+                  facilityName={facilityName || ''}
+                  relationInfo={relationInfo}
+                />
+              ) : null;
+            case 'philosophy':
+              return philosophyInfo ? <PhilosophyTab philosophyInfo={philosophyInfo} /> : null;
+            case 'specialty':
+              return specialtyInfo ? <SpecialtyTab specialtyInfo={specialtyInfo} /> : null;
+            case 'staff':
+              return staffInfo ? <StaffTab staffInfo={staffInfo} /> : null;
+            case 'education':
+              return educationInfo ? <EducationTab educationInfo={educationInfo} /> : null;
+            case 'advanced':
+              return advancedInfo ? <AdvancedTab advancedInfo={advancedInfo} /> : null;
+            case 'other':
+              return otherInfo ? <OtherTab otherInfo={otherInfo} /> : null;
+            default:
+              return null;
+          }
+        })() || (
+          <div className={styles.placeholderContent}>
+            {TAB_LABELS[activeTab]}の情報がここに表示されます。
+          </div>
         )}
-
-        {(activeTab !== 'access' &&
-          (() => {
-            // コンテンツのマッピングを定義して可読性を向上
-            switch (activeTab) {
-              case 'philosophy':
-                return philosophyInfo ? <PhilosophyTab philosophyInfo={philosophyInfo} /> : null;
-              case 'specialty':
-                return specialtyInfo ? <SpecialtyTab specialtyInfo={specialtyInfo} /> : null;
-              case 'staff':
-                return staffInfo ? <StaffTab staffInfo={staffInfo} /> : null;
-              case 'education':
-                return educationInfo ? <EducationTab educationInfo={educationInfo} /> : null;
-              case 'advanced':
-                return advancedInfo ? <AdvancedTab advancedInfo={advancedInfo} /> : null;
-              case 'other':
-                return otherInfo ? <OtherTab otherInfo={otherInfo} /> : null;
-              default:
-                return (
-                  <div className={styles.placeholderContent}>
-                    {TAB_LABELS[activeTab]}の情報がここに表示されます。
-                  </div>
-                );
-            }
-          })()) ||
-          // nullが返された場合(情報がない場合)のプレースホルダー
-          (activeTab !== 'access' && (
-            <div className={styles.placeholderContent}>
-              {TAB_LABELS[activeTab]}の情報がここに表示されます。
-            </div>
-          ))}
       </div>
 
       {/* 地域連携セクション削除 (AccessTab内に移動) */}
