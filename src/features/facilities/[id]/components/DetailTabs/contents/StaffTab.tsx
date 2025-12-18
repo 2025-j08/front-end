@@ -10,9 +10,7 @@ export const StaffTab = ({ staffInfo }: StaffTabProps) => {
   return (
     <div className={styles.tabContentWrapper}>
       <div className={styles.textSection}>
-        <p className={`${styles.simpleText} ${styles.marginBottom24}`}>
-          {staffInfo.message}
-        </p>
+        <p className={`${styles.simpleText} ${styles.marginBottom24}`}>{staffInfo.message}</p>
 
         <div className={styles.staffGrid}>
           {staffInfo.staffDetails.map((staff, index) => (
