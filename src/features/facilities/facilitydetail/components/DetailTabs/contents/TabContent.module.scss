@@ -4,6 +4,10 @@
 // 汎用的なタブ/コンテンツスタイル
 // -----------------------------------------------------------------------------
 
+.marginBottom24 {
+  margin-bottom: 24px;
+}
+
 // コンテンツのラッパー (Flexboxレイアウト)
 .tabContentWrapper {
   display: flex;
@@ -155,4 +159,5 @@
   text-align: center;
   background-color: colors.$bg-light-gray;
   color: colors.$text-secondary;
+  white-space: normal;
 }

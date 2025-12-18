@@ -11,7 +11,7 @@ export const EducationTab = ({ educationInfo }: EducationTabProps) => {
     <div className={styles.tabContentWrapper}>
       <div className={styles.textSection}>
         <h3 className={styles.contentTitle}>方針</h3>
-        <p className={styles.simpleText} style={{ marginBottom: '24px' }}>
+        <p className={`${styles.simpleText} ${styles.marginBottom24}`}>
           {educationInfo.policy}
         </p>
 

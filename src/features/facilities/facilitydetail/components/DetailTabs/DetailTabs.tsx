@@ -98,31 +98,36 @@ export const DetailTabs = ({
           />
         )}
 
-        {activeTab !== 'access' && (
-          // すべてのタブコンテンツはコンポーネント化され、適切なレイアウトを持つためスタイルをラップしません
-          <>
-            {activeTab === 'philosophy' && philosophyInfo ? (
-              <PhilosophyTab philosophyInfo={philosophyInfo} />
-            ) : activeTab === 'specialty' && specialtyInfo ? (
-              <SpecialtyTab specialtyInfo={specialtyInfo} />
-            ) : activeTab === 'staff' && staffInfo ? (
-              <StaffTab staffInfo={staffInfo} />
-            ) : activeTab === 'education' && educationInfo ? (
-              <EducationTab educationInfo={educationInfo} />
-            ) : activeTab === 'advanced' && advancedInfo ? (
-              <AdvancedTab advancedInfo={advancedInfo} />
-            ) : activeTab === 'other' && otherInfo ? (
-              <OtherTab otherInfo={otherInfo} />
-            ) : (
-              <div
-                className={styles.placeholderContent}
-                style={{ textAlign: 'center', whiteSpace: 'normal' }}
-              >
-                {TAB_LABELS[activeTab]}の情報がここに表示されます。
-              </div>
-            )}
-          </>
-        )}
+        {(activeTab !== 'access' &&
+          (() => {
+            // コンテンツのマッピングを定義して可読性を向上
+            switch (activeTab) {
+              case 'philosophy':
+                return philosophyInfo ? <PhilosophyTab philosophyInfo={philosophyInfo} /> : null;
+              case 'specialty':
+                return specialtyInfo ? <SpecialtyTab specialtyInfo={specialtyInfo} /> : null;
+              case 'staff':
+                return staffInfo ? <StaffTab staffInfo={staffInfo} /> : null;
+              case 'education':
+                return educationInfo ? <EducationTab educationInfo={educationInfo} /> : null;
+              case 'advanced':
+                return advancedInfo ? <AdvancedTab advancedInfo={advancedInfo} /> : null;
+              case 'other':
+                return otherInfo ? <OtherTab otherInfo={otherInfo} /> : null;
+              default:
+                return (
+                  <div className={styles.placeholderContent}>
+                    {TAB_LABELS[activeTab]}の情報がここに表示されます。
+                  </div>
+                );
+            }
+          })()) ||
+          // nullが返された場合(情報がない場合)のプレースホルダー
+          (activeTab !== 'access' && (
+            <div className={styles.placeholderContent}>
+              {TAB_LABELS[activeTab]}の情報がここに表示されます。
+            </div>
+          ))}
       </div>
 
       {/* 地域連携セクション削除 (AccessTab内に移動) */}

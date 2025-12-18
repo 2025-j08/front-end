@@ -11,8 +11,8 @@ export const SpecialtyTab = ({ specialtyInfo }: SpecialtyTabProps) => {
     <div className={styles.tabContentWrapper}>
       <div className={styles.textSection}>
         <ul className={styles.featureList}>
-          {specialtyInfo.features.map((feature, index) => (
-            <li key={index}>{feature}</li>
+          {specialtyInfo.features.map((feature) => (
+            <li key={feature}>{feature}</li>
           ))}
         </ul>
       </div>
