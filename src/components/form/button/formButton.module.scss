@@ -1,8 +1,8 @@
 /**
  * FormButton 共通スタイル
  */
-@use '../../../styles/colors' as colors;
-@use '../../../styles/animations';
+@use '@/styles/colors' as colors;
+@use '@/styles/animations';
 
 .buttonContainer {
   display: flex;
