@@ -89,9 +89,16 @@ export const FacilityMap = ({ lat, lng, name, address }: FacilityMapProps) => {
     const map = L.map(mapRef.current).setView([lat, lng], 15);
     mapInstance.current = map;
 
+    // ベースマップ（OpenStreetMap）
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map);
+
+    // 電車路線オーバーレイ（OpenRailwayMap）
+    L.tileLayer('https://{s}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openrailwaymap.org/">OpenRailwayMap</a>',
+      maxZoom: 19,
     }).addTo(map);
 
     // ポップアップの内容をDOM要素として作成
