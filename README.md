@@ -16,7 +16,7 @@
 1. ブラウザでローカルホストにアクセス
    - URLはサーバー起動時のログを参照
 
-## nodeが入ってない場合
+### nodeが入ってない場合
 
 1. `nvm -v`
    - node.jsのバージョン管理ツールであるnvmがインストール済みかチェック
@@ -32,6 +32,26 @@
 1. `node -v`と`npm -v`
    - nodeとnpmのインストール確認
    - 確認できたら`npm install`に進む
+
+## ローカルsupabase起動手順
+
+- ※dockerインストール&起動済み前提
+
+1. `cd /tmp`
+   - バイナリファイルをダウンロードするためtmpに移動
+1. `curl -L https://github.com/supabase/cli/releases/latest/download/supabase_linux_amd64.tar.gz \`
+   - curlでsupabaseCLIのバイナリファイルをダウンロード
+1. `sudo mv supabase /usr/local/bin/`
+   - ダウンロードしたファイルを再配置
+1. `supabase --version`
+   - 無事バージョン確認できたら`プロジェクトのルートディレクトリ`に戻る
+1. `supabase start`
+   - docker上でsupabaseを起動するコマンド
+   - 起動してるポート
+     1. http://127.0.0.1:54321
+        - DBへのアクセスポイント(機能実装する際はenbファイルに記述しておくこと)
+     1. http://127.0.0.1:54323
+        - GUIの管理ページ(テーブル状態等諸々確認できる)
 
 ## ディレクトリ解説
 
