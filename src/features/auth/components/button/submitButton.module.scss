@@ -1,3 +1,5 @@
+@use '@/styles/colors.scss' as colors;
+
 .buttonContainer {
   display: flex;
   justify-content: center;
@@ -7,29 +9,29 @@
 .submitButton {
   width: 300px;
   padding: 14px;
-  background-color: #4a9f7e; // form-primary
-  color: #fff; // white
+  background-color: colors.$form-primary;
+  color: colors.$white;
   border: none;
   border-radius: 8px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(74, 159, 126, 0.3); // form-button-shadow
+  box-shadow: 0 4px 6px colors.$form-button-shadow;
 
   &:hover {
-    background-color: #357a5e; // form-primary-dark
+    background-color: colors.$form-primary-dark;
     transform: translateY(-1px);
-    box-shadow: 0 6px 12px rgba(74, 159, 126, 0.4); // form-button-shadow-hover
+    box-shadow: 0 6px 12px colors.$form-button-shadow-hover;
   }
 
   &:active {
     transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(74, 159, 126, 0.3); // form-button-shadow
+    box-shadow: 0 2px 4px colors.$form-button-shadow;
   }
 
   &:disabled {
-    background-color: #d4e8dc; // form-secondary-dark
+    background-color: colors.$form-secondary-dark;
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
