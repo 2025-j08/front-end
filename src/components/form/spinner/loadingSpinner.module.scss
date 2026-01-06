@@ -1,8 +1,8 @@
 /**
  * LoadingSpinner スタイル
  */
-@use '../../../styles/colors' as colors;
-@use '../../../styles/animations';
+@use '@/styles/colors' as colors;
+@use '@/styles/animations';
 
 .spinner {
   @include animations.animation-spin(1s);

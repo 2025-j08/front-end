@@ -3,22 +3,31 @@
 /**
  * ContactForm コンポーネント
  * お問い合わせフォームのメインページです。
- * 共通コンポーネントとuseContactFormフックを使用
+ * FormField、TextAreaField、SubmitButton を組み合わせて
+ * ユーザーからのお問い合わせ入力を受け付けます。
  */
+import Link from 'next/link';
+
 import { FormField, FormButton, LoadingOverlay, SuccessOverlay } from '@/components/form';
 
-import styles from './contactForm.module.scss';
 import { useContactForm } from './components/hooks/useContactForm';
+import styles from './contactForm.module.scss';
 
 export const ContactForm = () => {
   const { formData, isLoading, isSuccess, handleChange, handleSubmit } = useContactForm();
 
   return (
-    <div className={styles['contact-form-container']}>
-      <LoadingOverlay isVisible={isLoading} text="送信中..." />
-      <SuccessOverlay isVisible={isSuccess} text="送信が完了しました" />
+    <div className={styles.container}>
+      {/* Breadcrumb */}
+      <div className={styles.breadcrumb}>
+        <Link href="/">ホーム</Link> &gt; <span>お問い合わせ</span>
+      </div>
 
-      <h2 className={styles['form-title']}>お問い合わせ</h2>
+      <LoadingOverlay isVisible={isLoading} text="送信中..." />
+      <SuccessOverlay isVisible={isSuccess} />
+
+      <h1 className={styles.title}>お問い合わせ</h1>
+
       <p className={styles['form-description']}>
         ご質問・ご相談がございましたら、以下のフォームよりお気軽にお問い合わせください。
       </p>
@@ -47,16 +56,6 @@ export const ContactForm = () => {
         />
 
         <FormField
-          label="お電話番号"
-          type="tel"
-          id="phone"
-          name="phone"
-          placeholder="090-1234-5678"
-          value={formData.phone}
-          onChange={handleChange}
-        />
-
-        <FormField
           label="ご用件"
           id="subject"
           name="subject"
@@ -70,15 +69,15 @@ export const ContactForm = () => {
           label="お問い合わせ内容"
           id="message"
           name="message"
+          rows={6}
           placeholder="詳しい内容をご記入ください"
           required
-          isTextarea
-          rows={6}
           value={formData.message}
           onChange={handleChange}
+          isTextarea
         />
 
-        <FormButton label="送信する" loadingLabel="送信中..." isLoading={isLoading} />
+        <FormButton label="送信する" isLoading={isLoading} loadingLabel="送信中..." />
       </form>
     </div>
   );

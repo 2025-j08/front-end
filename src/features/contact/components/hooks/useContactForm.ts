@@ -10,7 +10,7 @@ interface FormData {
   email: string;
   /** 電話番号 */
   phone: string;
-  /** ご用件 */
+  /** 件名 */
   subject: string;
   /** お問い合わせ内容 */
   message: string;
@@ -30,6 +30,7 @@ interface FormData {
 export const useContactForm = () => {
   /**
    * フォーム入力値の状態管理
+   * 初期値：すべて空文字列
    */
   const [formData, setFormData] = useState<FormData>({
     name: '',
@@ -66,7 +67,7 @@ export const useContactForm = () => {
     // デモ用：2秒後にローディング終了
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    console.log('Form submitted:', formData);
+    // console.log('Form submitted:', formData);
     setIsLoading(false);
     setIsSuccess(true);
 
