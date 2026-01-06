@@ -21,7 +21,7 @@ export const MapSearch = () => {
     if (typeof window === 'undefined') return;
 
     // ヘルパー関数: オブジェクト({src: string}) または 文字列の両方に対応
-    const getUrl = (asset: any): string => {
+    const getUrl = (asset: string | { src: string } | undefined): string => {
       if (typeof asset === 'string') return asset;
       return asset?.src || '';
     };
