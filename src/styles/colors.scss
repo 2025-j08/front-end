@@ -71,3 +71,29 @@ $bg-active: #e0e0e0;
 $border-dark: #333;
 $border-gray: #999;
 $border-black: #000;
+$border-green: #66ff66;
+$input-border: $form-input-border;
+
+// ====================================
+// リンク用カラー
+// ====================================
+$link-color: $text-link;
+$link-hover-color: darken($link-color, 10%);
+
+// フォーム関連カラー
+$placeholder-color: $form-placeholder;
+$input-bg: $form-input-bg;
+
+// 検索ボタンカラー
+$search-button-bg: #008cba;
+$condition-search-button-bg: #ff9999;
+$condition-search-bg: #e6ffe6;
+$condition-search-border: #99ff99;
+
+// 都道府県カラー
+$pref-hyogo: #ff3333;
+$pref-kyoto: #66cccc;
+$pref-osaka: #ffcc33;
+$pref-wakayama: #33ccff;
+$pref-shiga: #99cc33;
+$pref-nara: #663399;

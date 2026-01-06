@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v16-appRouter';
+
 import './globals.css';
 
 import { Header } from '@/components/header/header';
@@ -26,17 +28,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {/* ヘッダー 一番上固定 */}
-        <Header />
+    <AppRouterCacheProvider>
+      <html lang="en">
+        <body className={`${geistSans.variable} ${geistMono.variable}`}>
+          {/* ヘッダー 一番上固定 */}
+          <Header />
 
-        {/* メインコンテンツ */}
-        <main className="main-content">{children}</main>
+          {/* メインコンテンツ */}
+          <main className="main-content">{children}</main>
 
-        {/* フッター 一番下固定 */}
-        <Footer />
-      </body>
-    </html>
+          {/* フッター 一番下固定 */}
+          <Footer />
+        </body>
+      </html>
+    </AppRouterCacheProvider>
   );
 }

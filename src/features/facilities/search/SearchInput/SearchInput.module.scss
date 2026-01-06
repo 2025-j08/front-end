@@ -1,0 +1,50 @@
+@use '../../../../styles/colors' as *;
+
+.container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+}
+
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  border: 2px solid $border-dark;
+  border-radius: 50px;
+  background-color: $bg-white;
+  padding: 5px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 50px 0 0 50px;
+  color: $text-secondary;
+
+  &::placeholder {
+    color: $placeholder-color;
+  }
+}
+
+.searchButton {
+  background-color: $search-button-bg;
+  color: $primary-text-color;
+  border: none;
+  border-radius: 30px;
+  padding: 10px 30px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}

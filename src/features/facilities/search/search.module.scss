@@ -1,0 +1,32 @@
+@use '../../../styles/colors' as *;
+
+.pageContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+}
+
+.searchSection {
+  margin-bottom: 40px;
+}
+
+.panelGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+}
+
+.loadingMap {
+  height: 400px;
+  background-color: $bg-light-gray;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  color: $text-secondary;
+}
