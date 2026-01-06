@@ -57,7 +57,7 @@ export const MapSearch = () => {
 
     markerData.forEach((data) => {
       if (data.lat && data.lng) {
-        const detailUrl = `/facilities/${data.id}`;
+        const detailUrl = `/features/facilities/${data.id}`;
 
         const container = document.createElement('div');
         container.className = styles.popupContent;
