@@ -37,7 +37,8 @@ export const MapSearch = () => {
       shadowSize: [41, 41],
     });
 
-    if (!mapRef.current || mapInstance.current) return;
+    if (!mapRef.current) return;
+    if (mapInstance.current) return;
 
     const markerData = searchMapData as FacilityLocation[];
     if (!markerData || markerData.length === 0) return;
