@@ -3,33 +3,21 @@
 /**
  * LoginForm コンポーネント
  * ログインフォームのメインページです。
- * FormField、SubmitButton を組み合わせて
- * ユーザーからのログイン入力を受け付けます。
+ * ロジックはuseLoginFormフックに分離
  */
-import Link from 'next/link';
-
-import { LoadingOverlay } from '@/components/form/overlay';
-import { SubmitButton } from '@/features/auth/components/button/submitButton';
-import { FormField } from '@/features/auth/components/formfield/formField';
-import { useLoginForm } from '@/features/auth/components/hooks/useLoginForm';
+import { FormField, FormButton, LoadingOverlay } from '@/components/form';
 
 import styles from './loginForm.module.scss';
+import { useLoginForm } from './hooks/useLoginForm';
 
 export const LoginForm = () => {
   const { formData, isLoading, handleChange, handleSubmit } = useLoginForm();
 
   return (
-    <div className={styles.container}>
-      {/* パンくずリスト */}
-      <div className={styles.breadcrumb}>
-        <Link href="/">ホーム</Link> &gt; <span>ログイン</span>
-      </div>
-
-      {/* ローディング中のオーバーレイ表示 */}
+    <div className={styles['login-form-container']}>
       <LoadingOverlay isVisible={isLoading} text="ログイン中..." />
 
-      <h1 className={styles.title}>ログイン</h1>
-
+      <h2 className={styles['form-title']}>ログイン</h2>
       <form onSubmit={handleSubmit}>
         <FormField
           label="ID"
@@ -55,7 +43,7 @@ export const LoginForm = () => {
           onChange={handleChange}
         />
 
-        <SubmitButton label="ログイン" disabled={isLoading} />
+        <FormButton label="ログイン" isLoading={isLoading} />
       </form>
     </div>
   );
