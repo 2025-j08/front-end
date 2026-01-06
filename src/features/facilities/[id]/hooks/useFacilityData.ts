@@ -3,6 +3,9 @@ import { useState, useEffect } from 'react';
 import { FacilityDetail } from '@/types/facility';
 import facilityDataJson from '@/dummy_data/facilities_detail.json';
 
+// IDをキーにした辞書型
+type FacilityDataMap = Record<string, FacilityDetail>;
+
 // 将来的なAPIレスポンスの型定義
 type FacilityDataResponse = {
   data: FacilityDetail | null;
@@ -22,21 +25,18 @@ export const useFacilityData = (id: string): FacilityDataResponse => {
 
   useEffect(() => {
     const fetchData = async () => {
-      // console.log('Fetching data for facility ID:', id); // デバッグ用
       try {
-        // setIsLoading(true) は初期値でtrueなので削除
         // APIコールを模倣するための遅延
-        await new Promise((resolve) => setTimeout(resolve, 800));
+        await new Promise((resolve) => setTimeout(resolve, 300));
 
-        // 型アサーションを使用してデータをセット
-        // 注意: 実際のデータ構造が更新された後に正しく機能するように
-        // JSONデータも更新する必要があります
-        // TODO: zodなどでランタイムバリデーションを行うことを推奨
-        // 現在は開発用ダミーデータのためアサーションを使用
-        if (facilityDataJson) {
-          setData(facilityDataJson as unknown as FacilityDetail);
+        // IDをキーにしてデータを取得
+        const dataMap = facilityDataJson as unknown as FacilityDataMap;
+        const facilityData = dataMap[id];
+
+        if (facilityData) {
+          setData(facilityData);
         } else {
-          throw new Error('データが見つかりません');
+          throw new Error(`施設ID: ${id} のデータが見つかりません`);
         }
         setError(null);
       } catch (err) {
@@ -48,7 +48,7 @@ export const useFacilityData = (id: string): FacilityDataResponse => {
     };
 
     fetchData();
-  }, []);
+  }, [id]);
 
   return { data, isLoading, error };
 };
