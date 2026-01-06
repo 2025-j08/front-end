@@ -24,9 +24,14 @@ export const SearchInput = () => {
     setKeyword(e.target.value);
   };
 
+  /**
+   * 検索実行時のハンドラー
+   */
   const handleSearch = () => {
-    // 本番環境でのみ実行
-    // console.log(`検索実行: ${keyword}`);
+    // 実装完了までは開発環境でのみキーワードをログ出力しておく
+    if (process.env.NODE_ENV === 'development') {
+      console.log('キーワード検索実行:', { keyword });
+    }
   };
 
   /**

@@ -7,6 +7,12 @@ import { PREFECTURES, SEARCH_CONDITIONS } from '@/const/searchConditions';
 
 import styles from './ConditionSearch.module.scss';
 
+/**
+ * 条件検索用の UI コンポーネントです。
+ * 都道府県と絞り込み条件を複数選択できるインタラクティブなフィルターと、
+ * 選択された条件で検索を実行するためのアクションボタンを表示します。
+ * アクセシビリティのため、ボタンの選択状態を ARIA 属性で表現します。
+ */
 export const ConditionSearch = () => {
   // 都道府県の選択状態
   const [selectedPrefectures, setSelectedPrefectures] = useState<string[]>([]);
@@ -37,6 +43,7 @@ export const ConditionSearch = () => {
         <h3 className={styles.sectionTitle}>エリアから探す</h3>
         <div className={styles.prefGrid}>
           {PREFECTURES.map((pref) => {
+            // 正しいState変数名である selectedPrefectures に変更しました
             const isSelected = selectedPrefectures.includes(pref.id);
             return (
               <button
