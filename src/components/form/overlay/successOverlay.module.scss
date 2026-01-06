@@ -10,7 +10,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(colors.$white, 0.95);
+  background: rgba(255, 255, 255, 0.95);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -27,7 +27,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: colors.$white;
+  color: white;
   font-size: 32px;
   font-weight: bold;
   @include animations.animation-pop-in(0.5s);
