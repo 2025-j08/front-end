@@ -26,13 +26,11 @@
   overflow: hidden;
 
   &:hover:not(:disabled) {
-    transform: translateY(-3px);
     box-shadow: 0 10px 30px colors.$form-button-shadow-hover;
     background: linear-gradient(135deg, colors.$form-primary-light 0%, colors.$form-primary 100%);
   }
 
   &:active:not(:disabled) {
-    transform: translateY(-1px);
     box-shadow: 0 4px 15px colors.$form-button-shadow;
   }
 
