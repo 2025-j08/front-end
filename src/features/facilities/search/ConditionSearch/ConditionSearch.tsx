@@ -43,7 +43,6 @@ export const ConditionSearch = () => {
         <h3 className={styles.sectionTitle}>エリアから探す</h3>
         <div className={styles.prefGrid}>
           {PREFECTURES.map((pref) => {
-            // 正しいState変数名である selectedPrefectures に変更しました
             const isSelected = selectedPrefectures.includes(pref.id);
             return (
               <button
@@ -83,9 +82,9 @@ export const ConditionSearch = () => {
         </div>
       </div>
 
-      {/* 検索ボタンエリア（必要であれば） */}
+      {/* 検索ボタンエリア */}
       <div className={styles.searchAction}>
-        <button type="button" className={styles.submitButton}>
+        <button type="button" className={styles.submitButton} aria-label="選択した条件で検索を実行">
           <SearchIcon className={styles.icon} />
           <span>この条件で検索</span>
         </button>
