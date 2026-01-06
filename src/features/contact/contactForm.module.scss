@@ -2,21 +2,26 @@
  * ContactForm 全体のスタイル
  * コンテナとタイトルのみ（コンポーネントは共通化済み）
  */
-@use '../../styles/form.variables' as *;
-@use '../../styles/animations';
+@use '@/styles/colors' as colors;
+@use '@/styles/mixins' as mixins;
+@use '@/styles/animations';
 
 // フォーム全体のコンテナ
 .contact-form-container {
-  border: 2px solid $primary-color;
+  border: 2px solid colors.$form-primary;
   border-radius: 20px;
   padding: 40px 50px;
   width: 100%;
   max-width: 650px;
   margin: 60px auto;
-  background: linear-gradient(135deg, $bg-gradient-start 0%, $bg-gradient-end 100%);
+  background: linear-gradient(
+    135deg,
+    colors.$form-bg-gradient-start 0%,
+    colors.$form-bg-gradient-end 100%
+  );
   font-family: 'Geist', sans-serif;
   box-shadow:
-    0 12px 40px $container-shadow,
+    0 12px 40px colors.$form-container-shadow,
     0 4px 12px rgba(0, 0, 0, 0.05);
   position: relative;
   overflow: hidden;
@@ -27,7 +32,7 @@
     margin-bottom: 15px;
     font-size: 1.5rem;
     font-weight: 600;
-    color: $dark-gray;
+    color: colors.$dark-gray;
     text-align: center;
     letter-spacing: 0.5px;
   }
@@ -35,7 +40,7 @@
   // フォーム説明文
   .form-description {
     text-align: center;
-    color: #666;
+    color: colors.$text-secondary;
     font-size: 0.95rem;
     margin-bottom: 35px;
     line-height: 1.6;

@@ -1,4 +1,4 @@
-@import '@/styles/colors';
+@use '@/styles/colors' as colors;
 
 .container {
   max-width: 1200px;
@@ -8,11 +8,11 @@
 
 .breadcrumb {
   font-size: 0.9rem;
-  color: $text-secondary;
+  color: colors.$text-secondary;
   margin-bottom: 16px;
 
   a {
-    color: $text-link;
+    color: colors.$text-link;
     text-decoration: none;
 
     &:hover {
@@ -21,17 +21,17 @@
   }
 
   span {
-    color: $text-primary;
+    color: colors.$text-primary;
   }
 }
 
 .title {
   font-size: 1.8rem;
   font-weight: bold;
-  color: $text-primary;
+  color: colors.$text-primary;
   margin: 0 0 24px 0;
   padding-bottom: 8px;
-  border-bottom: 2px solid $border-dark;
+  border-bottom: 2px solid colors.$border-dark;
 }
 
 .facilitiesGrid {
@@ -75,7 +75,7 @@
 .errorContainer {
   padding: 2rem;
   text-align: center;
-  color: $error-color;
+  color: colors.$error-color;
 
   p {
     margin: 0.5rem 0;
@@ -85,13 +85,13 @@
     margin-top: 1rem;
     padding: 0.5rem 1rem;
     cursor: pointer;
-    background-color: $bg-white;
-    border: 1px solid $border-gray;
+    background-color: colors.$bg-white;
+    border: 1px solid colors.$border-gray;
     border-radius: 4px;
-    color: $text-primary;
+    color: colors.$text-primary;
 
     &:hover {
-      background-color: $bg-light-gray;
+      background-color: colors.$bg-light-gray;
     }
   }
 }

@@ -1,0 +1,156 @@
+@use '@/styles/colors' as colors;
+
+// -----------------------------------------------------------------------------
+// 汎用的なタブ/コンテンツスタイル
+// -----------------------------------------------------------------------------
+
+.marginBottom24 {
+  margin-bottom: 24px;
+}
+
+// コンテンツのラッパー (Flexboxレイアウト)
+.tabContentWrapper {
+  display: flex;
+  gap: 40px;
+  font-size: 16px;
+  color: colors.$text-primary;
+  line-height: 1.8;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+.accessInfo {
+  flex: 1;
+
+  .accessText {
+    margin-bottom: 16px;
+    font-size: 16px;
+  }
+
+  .accessDescription {
+    margin-top: 24px;
+    line-height: 1.6;
+  }
+}
+
+// テキストメインのセクション
+.textSection {
+  flex: 1;
+}
+
+// 見出し
+.contentTitle {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  color: colors.$text-primary;
+  border-left: 4px solid colors.$primary-color;
+  padding-left: 12px;
+}
+
+// リストスタイル (SpecialtyTab用)
+.featureList {
+  list-style: none;
+  padding: 0;
+
+  li {
+    position: relative;
+    padding-left: 24px;
+    margin-bottom: 12px;
+
+    &::before {
+      content: '✔';
+      position: absolute;
+      left: 0;
+      color: colors.$primary-color;
+      font-weight: bold;
+    }
+  }
+}
+
+// スタッフカードグリッド (StaffTab用)
+.staffGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.staffCard {
+  background-color: colors.$bg-light-gray;
+  padding: 24px;
+  border-radius: 8px;
+
+  .role {
+    display: inline-block;
+    background-color: colors.$primary-color;
+    color: white;
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+  }
+
+  .description {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+}
+
+// シンプルな説明文 (AdvancedTab, OtherTab用)
+.simpleText {
+  white-space: pre-wrap;
+  text-align: justify;
+}
+
+// CommunityRelation 用スタイル
+.relationSection {
+  margin-top: 24px;
+
+  .subTitle {
+    font-size: 18px;
+    margin-bottom: 16px;
+    font-weight: normal;
+  }
+
+  .relationText {
+    font-size: 14px;
+    line-height: 1.8;
+    text-align: justify;
+  }
+}
+
+// マップ表示用 (AccessTab)
+.mapWrapper {
+  flex: 1;
+  min-width: 0;
+}
+
+.mapPlaceholder {
+  flex: 1;
+  height: 200px;
+  background-color: colors.$bg-active;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  .pin {
+    width: 20px;
+    height: 20px;
+    background-color: colors.$text-secondary;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+  }
+}
+
+// プレースホルダー（読み込み中など）
+.placeholderContent {
+  padding: 40px;
+  text-align: center;
+  background-color: colors.$bg-light-gray;
+  color: colors.$text-secondary;
+  white-space: normal;
+}

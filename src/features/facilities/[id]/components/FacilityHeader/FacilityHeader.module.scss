@@ -1,0 +1,50 @@
+@use '@/styles/colors' as colors;
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.headerInfo {
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .corporation {
+    font-size: 16px;
+    font-weight: normal;
+  }
+
+  .address,
+  .tel {
+    font-size: 16px;
+    margin-bottom: 8px;
+    line-height: 1.5;
+  }
+}
+
+.headerAction {
+  .webButton {
+    display: inline-block;
+    background-color: colors.$primary-color;
+    color: colors.$white;
+    padding: 12px 32px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}

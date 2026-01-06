@@ -1,7 +1,7 @@
 /**
  * FormField 共通スタイル
  */
-@use '../../../styles/form.variables' as *;
+@use '../../../styles/colors' as colors;
 
 .formGroup {
   display: flex;
@@ -11,7 +11,7 @@
   label {
     width: 150px;
     font-size: 0.95rem;
-    color: $text-color;
+    color: colors.$dark-gray;
     flex-shrink: 0;
     font-weight: 500;
     padding-top: 10px;
@@ -21,11 +21,11 @@
   textarea {
     flex-grow: 1;
     padding: 12px 14px;
-    border: 1.5px solid $input-border;
+    border: 1.5px solid colors.$form-input-border;
     border-radius: 8px;
-    background-color: $input-bg;
+    background-color: colors.$form-input-bg;
     font-size: 1rem;
-    color: $text-color;
+    color: colors.$dark-gray;
     transition:
       border-color 0.3s ease,
       box-shadow 0.3s ease,
@@ -33,18 +33,18 @@
     font-family: inherit;
 
     &::placeholder {
-      color: $placeholder-color;
+      color: colors.$form-placeholder;
     }
 
     &:focus {
       outline: none;
-      border-color: $primary-color;
-      box-shadow: 0 0 0 4px $focus-glow;
+      border-color: colors.$form-primary;
+      box-shadow: 0 0 0 4px colors.$form-focus-glow;
       transform: translateY(-1px);
     }
 
     &:hover:not(:focus) {
-      border-color: $primary-light;
+      border-color: colors.$form-primary-light;
     }
   }
 

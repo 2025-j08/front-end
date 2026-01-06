@@ -21,7 +21,12 @@ const FormButton = ({
 }: FormButtonProps) => {
   return (
     <div className={styles.buttonContainer}>
-      <button type={type} className={styles.formButton} disabled={isLoading || disabled}>
+      <button
+        type={type}
+        className={styles.formButton}
+        disabled={isLoading || disabled}
+        aria-busy={isLoading}
+      >
         <span className={styles.buttonContent}>
           {isLoading && <span className={styles.spinner} />}
           {isLoading ? loadingLabel : label}

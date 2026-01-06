@@ -1,7 +1,7 @@
 /**
  * SuccessOverlay スタイル
  */
-@use '../../../styles/form.variables' as *;
+@use '../../../styles/colors' as colors;
 @use '../../../styles/animations';
 
 .overlay {
@@ -22,7 +22,7 @@
 .icon {
   width: 60px;
   height: 60px;
-  background: linear-gradient(135deg, $success-color, $success-light);
+  background: linear-gradient(135deg, colors.$success-color, colors.$success-light);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -35,7 +35,7 @@
 
 .text {
   margin-top: 16px;
-  color: $success-color;
+  color: colors.$success-color;
   font-size: 1.1rem;
   font-weight: 600;
 }
