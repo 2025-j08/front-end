@@ -77,10 +77,10 @@ export const UserIssuanceForm = () => {
 
       <h2 className={styles.title}>ユーザー発行</h2>
 
-      {/* 変更: ブラウザのデフォルト検証を無効化 (noValidate) */}
+      {/* ブラウザのデフォルト検証を無効化 (noValidate) */}
       <form onSubmit={handleSubmit} noValidate>
         {/* メールアドレス入力部分を変更 */}
-        <div style={{ marginBottom: '22px' }}>
+        <div className={styles.emailSection}>
           <FormField
             label="メールアドレス"
             type="email"
@@ -93,16 +93,8 @@ export const UserIssuanceForm = () => {
           />
           {/* エラーメッセージ表示 */}
           {errors.email && (
-            <p
-              style={{
-                color: '#d32f2f',
-                fontSize: '0.9rem',
-                marginTop: '-15px',
-                marginLeft: '150px',
-              }}
-            >
-              {errors.email}
-            </p>
+            /* クラス適用に変更 */
+            <p className={styles.errorMessage}>{errors.email}</p>
           )}
         </div>
 
@@ -144,23 +136,15 @@ export const UserIssuanceForm = () => {
                 )}
               </ul>
             )}
+
+            {/* 施設選択のエラーメッセージ表示 */}
+            {errors.facilityId && <p className={styles.facilityError}>{errors.facilityId}</p>}
           </div>
         </div>
 
         {/* 送信エラーメッセージの表示 */}
         {submitError && (
-          <div
-            role="alert"
-            style={{
-              color: '#d32f2f',
-              backgroundColor: '#fdecea',
-              padding: '10px',
-              borderRadius: '4px',
-              marginBottom: '20px',
-              textAlign: 'center',
-              fontWeight: 'bold',
-            }}
-          >
+          <div role="alert" className={styles.submitErrorMessage}>
             {submitError}
           </div>
         )}

@@ -117,6 +117,12 @@ export const useUserIssuanceForm = () => {
       isValid = false;
     }
 
+    // 施設IDのバリデーション
+    if (!formData.facilityId) {
+      newErrors.facilityId = '施設を選択してください。';
+      isValid = false;
+    }
+
     setErrors(newErrors);
     return isValid;
   };
@@ -136,14 +142,13 @@ export const useUserIssuanceForm = () => {
       // API送信のシミュレーション
       await new Promise((resolve) => setTimeout(resolve, SUBMIT_SIMULATION_DELAY));
 
-      setIsLoading(false);
       setIsSuccess(true);
     } catch (error) {
-      // 追加: エラー発生時の処理
+      //　エラー発生時の処理
       console.error('Submission failed:', error);
       setSubmitError('システムエラーが発生しました。しばらくしてから再度お試しください。');
     } finally {
-      // 追加: ローディング解除をfinallyで行う
+      // ローディング解除をfinallyで行う
       setIsLoading(false);
     }
   };
