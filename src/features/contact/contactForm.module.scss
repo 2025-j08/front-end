@@ -1,20 +1,21 @@
-@use '@/styles/colors' as *;
+@use '@/styles/colors' as colors;
 
 .container {
-  max-width: 800px;
-  margin: 60px auto;
-  padding: 0 20px;
-  background-color: transparent;
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 20px;
   font-family: 'Geist', sans-serif;
+  background-color: colors.$bg-white; // 指定通り明示的に白背景
 }
 
 .breadcrumb {
-  font-size: 1rem;
-  color: $text-secondary;
-  margin-bottom: 40px;
+  font-size: 0.9rem;
+  color: colors.$text-secondary;
+  margin-bottom: 16px;
 
   a {
-    color: $text-link;
+    color: colors.$text-link;
     text-decoration: none;
 
     &:hover {
@@ -23,24 +24,23 @@
   }
 
   span {
-    color: $text-primary;
+    color: colors.$text-primary;
   }
 }
 
 .title {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: bold;
-  color: $text-primary;
-  margin: 0 0 60px 0;
+  color: colors.$text-primary;
+  margin: 0 0 24px 0;
   padding-bottom: 8px;
-  border-bottom: 2px solid $border-dark;
-  text-align: left;
+  border-bottom: 2px solid colors.$border-dark;
 }
 
 // フォーム説明文
 .form-description {
   text-align: left;
-  color: $text-secondary;
+  color: colors.$text-secondary;
   font-size: 0.95rem;
   margin-bottom: 35px;
   line-height: 1.6;
@@ -59,22 +59,22 @@
   justify-content: center;
   font-size: 1.2rem;
   font-weight: bold;
-  color: $text-primary;
+  color: colors.$border-black;
   z-index: 10;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 768px) {
   .container {
-    margin: 30px auto;
-    padding: 0 20px;
+    padding: 16px 12px;
   }
 
   .breadcrumb {
-    margin-bottom: 24px;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
+    margin-bottom: 12px;
   }
 
   .title {
-    margin-bottom: 40px;
+    font-size: 1.4rem;
+    margin-bottom: 16px;
   }
 }
