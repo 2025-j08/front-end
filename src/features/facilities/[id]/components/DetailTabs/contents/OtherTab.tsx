@@ -1,12 +1,9 @@
+import { OtherInfo } from '@/types/facility';
+
 import styles from './TabContent.module.scss';
 
-type OtherInfo = {
-  title: string;
-  description: string;
-};
-
 type OtherTabProps = {
-  otherInfo: OtherInfo | string;
+  otherInfo: OtherInfo;
 };
 
 export const OtherTab = ({ otherInfo }: OtherTabProps) => {
