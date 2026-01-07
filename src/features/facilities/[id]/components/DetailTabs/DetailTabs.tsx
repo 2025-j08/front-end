@@ -23,7 +23,7 @@ type DetailTabsProps = {
   tabs: Tab[];
   activeTab: TabKey;
   onTabChange: (tab: TabKey) => void;
-  accessInfo: AccessInfo;
+  accessInfo?: AccessInfo;
   relationInfo?: string;
   facilityName?: string; // マップ表示用に名前を受け取る
   philosophyInfo?: PhilosophyInfo;
