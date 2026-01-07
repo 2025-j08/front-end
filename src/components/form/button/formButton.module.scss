@@ -23,6 +23,7 @@
   box-shadow: 0 6px 20px colors.$form-button-shadow;
   position: relative;
   overflow: hidden;
+  transition: opacity 0.2s ease;
 
   &:hover:not(:disabled) {
     opacity: 0.9;
