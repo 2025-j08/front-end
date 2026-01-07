@@ -16,6 +16,33 @@
   padding-bottom: 10px;
 }
 
+// メールアドレス入力欄のラッパー
+.emailSection {
+  margin-bottom: 22px;
+}
+
+// エラーメッセージ
+.errorMessage {
+  color: colors.$error-color;
+  font-size: 0.9rem;
+  margin-top: -10px; // FormFieldのmargin-bottom(22px)とのバランス調整。
+  margin-top: 0;
+  margin-left: 150px; // PC表示時のラベル幅に合わせる
+
+  // レスポンシブ対応：ラベルが上に来る場合はインデントを解除
+  @media (max-width: 600px) {
+    margin-left: 0;
+    margin-top: 4px;
+  }
+}
+
+// 施設選択用のエラーメッセージ
+.facilityError {
+  color: colors.$error-color;
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
 // フォーム行のラッパー
 .selectWrapper {
   display: flex;
@@ -102,6 +129,17 @@
   color: colors.$text-secondary;
   font-size: 0.9rem;
   text-align: center;
+}
+
+//　送信エラーメッセージ
+.submitErrorMessage {
+  color: colors.$error-color; // #d32f2f
+  background-color: rgba(colors.$error-color, 0.1); // #fdecea に近い色を $error-color から生成
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: bold;
 }
 
 // 登録ボタン
