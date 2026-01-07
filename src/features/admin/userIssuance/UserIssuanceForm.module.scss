@@ -1,0 +1,140 @@
+@use '@/styles/colors' as colors;
+
+.container {
+  max-width: 800px;
+  margin: 60px auto;
+  padding: 0 20px;
+  background-color: transparent;
+}
+
+.title {
+  text-align: left;
+  font-size: 1.8rem;
+  margin-bottom: 40px;
+  color: colors.$text-primary;
+  border-bottom: 2px solid colors.$border-black;
+  padding-bottom: 10px;
+}
+
+// フォーム行のラッパー
+.selectWrapper {
+  display: flex;
+  align-items: flex-start; // 検索リストが出てもレイアウト崩れを防ぐためtop合わせ
+  margin-bottom: 22px;
+  position: relative; // ドロップダウンの基準位置
+
+  label {
+    width: 150px;
+    font-size: 0.95rem;
+    color: colors.$dark-gray;
+    font-weight: 500;
+    flex-shrink: 0;
+    padding-top: 14px; // 入力欄の高さに合わせて調整
+  }
+}
+
+// コンボボックス（入力欄＋リスト）のコンテナ
+.comboboxContainer {
+  flex-grow: 1;
+  position: relative; // リストの絶対配置の基準
+}
+
+// 検索入力欄（既存のinputスタイルをベースに）
+.searchInput {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid colors.$form-input-border;
+  border-radius: 8px;
+  background-color: colors.$form-input-bg;
+  font-size: 1rem;
+  color: colors.$dark-gray;
+  box-sizing: border-box; // paddingを含めた幅計算
+
+  &:focus {
+    outline: none;
+    border-color: colors.$form-primary;
+    box-shadow: 0 0 0 4px colors.$form-focus-glow;
+  }
+
+  &::placeholder {
+    color: colors.$placeholder-color;
+  }
+}
+
+// ドロップダウンリスト
+.dropdownList {
+  position: absolute;
+  top: 100%; // 入力欄の真下
+  left: 0;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: colors.$white;
+  border: 1px solid colors.$form-input-border;
+  border-radius: 8px;
+  margin-top: 4px;
+  padding: 0;
+  list-style: none;
+  z-index: 100; // 他の要素より上に表示
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+// リスト項目
+.dropdownItem {
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 1rem;
+  color: colors.$text-primary;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: colors.$bg-light-green; // ホバー時に薄い緑色
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1px solid colors.$bg-light-gray;
+  }
+}
+
+// 検索結果なしの場合
+.noResult {
+  padding: 12px 14px;
+  color: colors.$text-secondary;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+// 登録ボタン
+.submitButton {
+  margin-top: 60px;
+
+  :global(.formButton) {
+    background: #66ff66 !important;
+    color: colors.$white !important;
+    border: 1px solid #5ce65c;
+    font-size: 1.4rem;
+    padding: 12px 100px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    margin: 30px auto;
+  }
+
+  .selectWrapper {
+    flex-direction: column;
+    align-items: flex-start;
+
+    label {
+      width: 100%;
+      margin-bottom: 8px;
+      padding-top: 0;
+    }
+  }
+}
