@@ -1,12 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // マジックナンバーを定数として定義
 const SUBMIT_SIMULATION_DELAY = 2000;
 const SUCCESS_MESSAGE_DURATION = 3000;
 
+// メールアドレスの正規表現パターン（HTML5標準より厳密なチェック）
+const EMAIL_REGEX = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+
 interface UserIssuanceFormData {
   email: string;
   facilityId: string;
+}
+
+// エラー情報の型定義
+interface FormErrors {
+  email?: string;
+  facilityId?: string;
 }
 
 /**
@@ -34,6 +43,26 @@ export const useUserIssuanceForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
+  const [errors, setErrors] = useState<FormErrors>({});
+
+  // 送信エラーメッセージ管理用ステート
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  // 成功メッセージの表示
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isSuccess) {
+      timer = setTimeout(() => {
+        setIsSuccess(false);
+      }, SUCCESS_MESSAGE_DURATION);
+    }
+
+    // クリーンアップ関数：コンポーネントのアンマウント時やisSuccessが変化した時にタイマーを解除
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, [isSuccess]);
+
   /**
    * 入力変更時のハンドラー
    * FormField(input/textarea) と select の両方に対応
@@ -46,6 +75,14 @@ export const useUserIssuanceForm = () => {
       ...prev,
       [name]: value,
     }));
+
+    //入力時にエラーをクリア
+    if (errors[name as keyof FormErrors]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: undefined,
+      }));
+    }
   };
 
   /**
@@ -57,23 +94,64 @@ export const useUserIssuanceForm = () => {
       ...prev,
       [name]: value,
     }));
+
+    // プログラム更新時もエラーをクリア
+    if (errors[name as keyof FormErrors]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: undefined,
+      }));
+    }
+  };
+
+  // バリデーション関数
+  const validate = (): boolean => {
+    const newErrors: FormErrors = {};
+    let isValid = true;
+
+    if (!formData.email) {
+      newErrors.email = 'メールアドレスを入力してください。';
+      isValid = false;
+    } else if (!EMAIL_REGEX.test(formData.email)) {
+      newErrors.email = '有効なメールアドレスの形式で入力してください。';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    // 送信前にバリデーション実行
+    if (!validate()) {
+      return;
+    }
+
     setIsLoading(true);
+    setSubmitError(null);
 
-    // API送信のシミュレーション
-    await new Promise((resolve) => setTimeout(resolve, SUBMIT_SIMULATION_DELAY));
+    try {
+      // API送信のシミュレーション
+      await new Promise((resolve) => setTimeout(resolve, SUBMIT_SIMULATION_DELAY));
 
-    setIsLoading(false);
-    setIsSuccess(true);
-
-    setTimeout(() => setIsSuccess(false), SUCCESS_MESSAGE_DURATION);
+      setIsLoading(false);
+      setIsSuccess(true);
+    } catch (error) {
+      // 追加: エラー発生時の処理
+      console.error('Submission failed:', error);
+      setSubmitError('システムエラーが発生しました。しばらくしてから再度お試しください。');
+    } finally {
+      // 追加: ローディング解除をfinallyで行う
+      setIsLoading(false);
+    }
   };
 
   return {
     formData,
+    errors,
+    submitError,
     isLoading,
     isSuccess,
     handleChange,
