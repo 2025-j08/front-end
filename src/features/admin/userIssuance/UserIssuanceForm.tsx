@@ -8,6 +8,25 @@ import searchMapData from '@/dummy_data/searchmap_data.json';
 import { useUserIssuanceForm } from './hooks/useUserIssuanceForm';
 import styles from './UserIssuanceForm.module.scss';
 
+/**
+ * 管理画面でユーザーを発行（作成）するためのフォームコンポーネントです。
+ *
+ * - 施設マスタ（`searchmap_data.json`）を元にした施設検索・絞り込み・選択機能を提供します。
+ * - `useUserIssuanceForm` フックを利用して、入力値の状態管理・バリデーション・送信処理を行います。
+ * - 送信中はローディングオーバーレイ、成功時はサクセスオーバーレイを表示します。
+ *
+ * 使用例:
+ * ```tsx
+ * import { UserIssuanceForm } from '@/features/admin/userIssuance/UserIssuanceForm';
+ *
+ * const Page = () => {
+ * return <UserIssuanceForm />;
+ * };
+ * ```
+ *
+ * @component
+ */
+
 export const UserIssuanceForm = () => {
   // updateFormData をフックから取得
   const {
