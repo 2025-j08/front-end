@@ -33,20 +33,14 @@ export const AccessTab = ({ accessInfo, facilityName, relationInfo }: AccessTabP
                 <p className={styles.accessDescription}>{accessInfo.description}</p>
               )}
             </div>
-            {accessInfo.lat && accessInfo.lng ? (
-              <div className={styles.mapWrapper}>
-                <FacilityMap
-                  lat={accessInfo.lat}
-                  lng={accessInfo.lng}
-                  name={facilityName}
-                  address={accessInfo.locationAddress}
-                />
-              </div>
-            ) : (
-              <div className={styles.mapPlaceholder} aria-hidden="true">
-                <div className={styles.pin}></div>
-              </div>
-            )}
+            <div className={styles.mapWrapper}>
+              <FacilityMap
+                lat={accessInfo.lat}
+                lng={accessInfo.lng}
+                name={facilityName}
+                address={accessInfo.locationAddress}
+              />
+            </div>
           </>
         ) : (
           <div className={styles.placeholderContent}>アクセス情報がありません</div>

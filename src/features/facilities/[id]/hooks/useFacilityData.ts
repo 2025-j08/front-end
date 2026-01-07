@@ -34,30 +34,26 @@ export const useFacilityData = (id: string): UseFacilityDataReturn => {
       setIsLoading(true);
       setError(null);
 
-      // データ取得（例外発生の可能性がある部分）
-      let dataMap: FacilityDataMap;
       try {
         // JSONデータをFacilityDataMap型として扱う
         // NOTE: 本番環境ではzod等でランタイムバリデーションを推奨
-        dataMap = facilitiesDetailData as unknown as FacilityDataMap;
+        const dataMap = facilitiesDetailData as unknown as FacilityDataMap;
+
+        // データ検索
+        const facilityData = dataMap[id];
+
+        if (!facilityData) {
+          setError(`施設ID: ${id} が見つかりません`);
+          setData(null);
+        } else {
+          setData(facilityData);
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'データの取得に失敗しました');
         setData(null);
+      } finally {
         setIsLoading(false);
-        return;
       }
-
-      // データ検索（正常なビジネスロジック）
-      const facilityData = dataMap[id];
-
-      if (!facilityData) {
-        setError(`施設ID: ${id} が見つかりません`);
-        setData(null);
-      } else {
-        setData(facilityData);
-      }
-
-      setIsLoading(false);
     };
 
     fetchData();
