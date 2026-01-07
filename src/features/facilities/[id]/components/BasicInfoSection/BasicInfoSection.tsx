@@ -1,49 +1,26 @@
 import styles from './BasicInfoSection.module.scss';
 
 type BasicInfoSectionProps = {
-  facilityType: string;
-  establishedYear: string;
-  capacity: string;
-  hasAnnex: boolean;
-  annexDetail?: string;
+  establishedYear?: string;
+  dormitoryType?: '大舎' | '中舎' | '小舎';
 };
 
 /**
  * 施設詳細ページの基本情報グリッドセクション
- * 施設種類、設立年、定員、併設施設を表示
+ * 設立年、舎の区分を表示
  */
-export const BasicInfoSection = ({
-  facilityType,
-  establishedYear,
-  capacity,
-  hasAnnex,
-  annexDetail,
-}: BasicInfoSectionProps) => {
+export const BasicInfoSection = ({ establishedYear, dormitoryType }: BasicInfoSectionProps) => {
   return (
     <section className={styles.basicInfoSection}>
-      {/* 上段 3カラム */}
       <div className={styles.infoGrid}>
         <div className={styles.infoCard}>
-          <span className={styles.label}>施設の種類</span>
-          <span className={styles.value}>{facilityType}</span>
-        </div>
-        <div className={styles.infoCard}>
           <span className={styles.label}>設立年</span>
-          <span className={styles.value}>{establishedYear}</span>
+          <span className={styles.value}>{establishedYear || '-'}</span>
         </div>
         <div className={styles.infoCard}>
-          <span className={styles.label}>施設定員</span>
-          <span className={styles.value}>{capacity}</span>
+          <span className={styles.label}>舎の区分</span>
+          <span className={styles.value}>{dormitoryType || '-'}</span>
         </div>
-      </div>
-
-      {/* 下段 併設施設 */}
-      <div className={styles.annexCard}>
-        <div className={styles.annexStatus}>
-          <span className={styles.label}>併設施設</span>
-          <span className={styles.statusValue}>{hasAnnex ? 'あり' : 'なし'}</span>
-        </div>
-        {hasAnnex && annexDetail && <div className={styles.annexDetail}>{annexDetail}</div>}
       </div>
     </section>
   );

@@ -35,11 +35,8 @@ export const FacilityDetail = ({ id }: Props) => {
       />
 
       <BasicInfoSection
-        facilityType={facilityData.facilityType}
         establishedYear={facilityData.establishedYear}
-        capacity={facilityData.capacity}
-        hasAnnex={facilityData.hasAnnex}
-        annexDetail={facilityData.annexDetail}
+        dormitoryType={facilityData.dormitoryType}
       />
 
       <DetailTabs

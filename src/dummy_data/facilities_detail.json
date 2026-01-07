@@ -5,7 +5,7 @@
     "corporation": "社会福祉法人 池島福祉会",
     "fullAddress": "〒552-0015 大阪府大阪市港区池島2丁目5-52",
     "phone": "06-6571-0200",
-    "facilityType": "児童養護施設",
+    "dormitoryType": "大舎",
     "targetAge": "概ね2歳〜18歳",
     "accessInfo": {
       "locationAddress": "大阪府大阪市港区池島2丁目5-52",
@@ -19,7 +19,7 @@
     "corporation": "尼崎市",
     "fullAddress": "〒651-1502 兵庫県神戸市北区道場町3083",
     "phone": "078-985-2133",
-    "facilityType": "児童養護施設",
+    "dormitoryType": "中舎",
     "targetAge": "概ね2歳〜18歳",
     "accessInfo": {
       "locationAddress": "兵庫県神戸市北区道場町3083",
@@ -32,7 +32,7 @@
     "name": "あおぞら",
     "fullAddress": "〒596-0808 大阪府岸和田市三田町614-1",
     "phone": "072-444-0100",
-    "facilityType": "児童養護施設",
+    "dormitoryType": "小舎",
     "targetAge": "概ね2歳〜18歳",
     "accessInfo": {
       "locationAddress": "大阪府岸和田市三田町614-1",
@@ -47,13 +47,10 @@
     "fullAddress": "〒657-0011 兵庫県神戸市灘区鶴甲1丁目5番1号",
     "phone": "078-841-2792",
     "websiteUrl": "https://kyowakai.main.jp/futaba/",
-    "facilityType": "児童養護施設",
     "establishedYear": "1946年（昭和21年）8月",
-    "capacity": "30名",
+    "dormitoryType": "小舎",
     "building": "鉄筋コンクリート造（2・3階建）、2019年内装リニューアル済み",
     "targetAge": "概ね2歳〜18歳",
-    "hasAnnex": false,
-    "annexDetail": "",
     "accessInfo": {
       "locationAddress": "兵庫県神戸市灘区鶴甲1丁目5番1号",
       "station": "JR「六甲道」駅または阪急「六甲」駅より神戸市バス16系統に乗車、「鶴甲南」バス停下車徒歩約2分",
@@ -114,7 +111,7 @@
     "name": "青葉学園",
     "fullAddress": "〒621-0031 京都府亀岡市稗田野町太田高星7",
     "phone": "0771-22-0651",
-    "facilityType": "児童養護施設",
+    "dormitoryType": "大舎",
     "targetAge": "概ね2歳〜18歳",
     "accessInfo": {
       "locationAddress": "京都府亀岡市稗田野町太田高星7",
@@ -127,7 +124,7 @@
     "name": "京都大和の家",
     "fullAddress": "〒619-0243 京都府相楽郡精華町南稲八妻笛竹37",
     "phone": "0774-98-3840",
-    "facilityType": "児童養護施設",
+    "dormitoryType": "小舎",
     "targetAge": "概ね2歳〜18歳",
     "accessInfo": {
       "locationAddress": "京都府相楽郡精華町南稲八妻笛竹37",
@@ -140,7 +137,7 @@
     "name": "旭学園",
     "fullAddress": "〒640-0332 和歌山県和歌山市冬野654番地9",
     "phone": "073-479-0080",
-    "facilityType": "児童養護施設",
+    "dormitoryType": "中舎",
     "targetAge": "概ね2歳〜18歳",
     "accessInfo": {
       "locationAddress": "和歌山県和歌山市冬野654番地9",
@@ -153,7 +150,7 @@
     "name": "紀南学園",
     "fullAddress": "〒647-0081 和歌山県新宮市新宮8018",
     "phone": "0735-22-3004",
-    "facilityType": "児童養護施設",
+    "dormitoryType": "大舎",
     "targetAge": "概ね2歳〜18歳",
     "accessInfo": {
       "locationAddress": "和歌山県新宮市新宮8018",
@@ -166,7 +163,7 @@
     "name": "守山学園",
     "fullAddress": "〒524-0004 滋賀県守山市笠原町1257-1",
     "phone": "077-582-2887",
-    "facilityType": "児童養護施設",
+    "dormitoryType": "中舎",
     "targetAge": "概ね2歳〜18歳",
     "accessInfo": {
       "locationAddress": "滋賀県守山市笠原町1257-1",
@@ -179,7 +176,7 @@
     "name": "鹿深の家",
     "fullAddress": "〒520-3402 滋賀県甲賀市甲賀町小佐治3571",
     "phone": "0748-88-2015",
-    "facilityType": "児童養護施設",
+    "dormitoryType": "小舎",
     "targetAge": "概ね2歳〜18歳",
     "accessInfo": {
       "locationAddress": "滋賀県甲賀市甲賀町小佐治3571",
@@ -192,7 +189,7 @@
     "name": "愛染寮",
     "fullAddress": "〒630-0257 奈良県生駒市元町2丁目14-8",
     "phone": "0743-74-1172",
-    "facilityType": "児童養護施設",
+    "dormitoryType": "大舎",
     "targetAge": "概ね2歳〜18歳",
     "accessInfo": {
       "locationAddress": "奈良県生駒市元町2丁目14-8",
@@ -205,7 +202,7 @@
     "name": "飛鳥学院",
     "fullAddress": "〒633-0053 奈良県桜井市谷480",
     "phone": "0744-42-2831",
-    "facilityType": "児童養護施設",
+    "dormitoryType": "中舎",
     "targetAge": "概ね2歳〜18歳",
     "accessInfo": {
       "locationAddress": "奈良県桜井市谷480",
