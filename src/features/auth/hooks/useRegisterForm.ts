@@ -26,16 +26,22 @@ export const useRegisterForm = () => {
     password: '',
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   /**
    * 入力値変更ハンドラ
    */
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
+    // 入力時にエラーをクリア
+    if (errorMessage) {
+      setErrorMessage(null);
+    }
   };
 
   /**
@@ -44,19 +50,25 @@ export const useRegisterForm = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
+    setErrorMessage(null);
 
     try {
       // TODO: 実際の登録API呼び出しを実装
-      console.log('登録データ:', formData);
+      // セキュリティのため、パスワードはログに出力しない
+      console.log('登録データ:', {
+        fullName: formData.fullName,
+        furigana: formData.furigana,
+        // password は意図的にログから除外
+      });
 
       // ダミーの遅延（API呼び出しをシミュレート）
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // 成功時の処理
-      alert('登録が完了しました');
+      setIsSuccess(true);
     } catch (error) {
       console.error('登録エラー:', error);
-      alert('登録に失敗しました');
+      setErrorMessage('登録に失敗しました。もう一度お試しください。');
     } finally {
       setIsLoading(false);
     }
@@ -65,6 +77,8 @@ export const useRegisterForm = () => {
   return {
     formData,
     isLoading,
+    isSuccess,
+    errorMessage,
     handleChange,
     handleSubmit,
   };
