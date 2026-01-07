@@ -3,15 +3,23 @@
 import { useState, useMemo } from 'react';
 
 import { FormField, FormButton, LoadingOverlay, SuccessOverlay } from '@/components/form';
-import searchMapData from '@/dummy_data/searchmap_data.json'; //
+import searchMapData from '@/dummy_data/searchmap_data.json';
 
 import { useUserIssuanceForm } from './hooks/useUserIssuanceForm';
 import styles from './UserIssuanceForm.module.scss';
 
 export const UserIssuanceForm = () => {
   // updateFormData をフックから取得
-  const { formData, isLoading, isSuccess, handleChange, updateFormData, handleSubmit } =
-    useUserIssuanceForm();
+  const {
+    formData,
+    errors,
+    submitError,
+    isLoading,
+    isSuccess,
+    handleChange,
+    updateFormData,
+    handleSubmit,
+  } = useUserIssuanceForm();
 
   // 検索・絞り込み用のローカルState
   const [searchTerm, setSearchTerm] = useState('');
@@ -25,9 +33,15 @@ export const UserIssuanceForm = () => {
     }));
   }, []);
 
-  // フィルタリングされた施設リスト
+  // 文字列正規化用ユーティリティ（大文字小文字や全角半角の揺らぎを吸収）
+  const normalizeText = (text: string): string => text.toLowerCase().normalize('NFKC');
+
+  // 正規化済みの検索ワード
+  const normalizedSearchTerm = useMemo(() => normalizeText(searchTerm), [searchTerm]);
+
+  // フィルタリングされた施設リスト（正規化済み文字列同士で部分一致判定）
   const filteredFacilities = facilitiesList.filter((facility) =>
-    facility.name.includes(searchTerm),
+    normalizeText(facility.name).includes(normalizedSearchTerm),
   );
 
   // テキスト入力時のハンドラー
@@ -63,18 +77,34 @@ export const UserIssuanceForm = () => {
 
       <h2 className={styles.title}>ユーザー発行</h2>
 
-      <form onSubmit={handleSubmit}>
-        {/* メールアドレス入力 */}
-        <FormField
-          label="メールアドレス"
-          type="email"
-          id="email"
-          name="email"
-          placeholder="example@email.com"
-          required
-          value={formData.email}
-          onChange={handleChange}
-        />
+      {/* 変更: ブラウザのデフォルト検証を無効化 (noValidate) */}
+      <form onSubmit={handleSubmit} noValidate>
+        {/* メールアドレス入力部分を変更 */}
+        <div style={{ marginBottom: '22px' }}>
+          <FormField
+            label="メールアドレス"
+            type="email"
+            id="email"
+            name="email"
+            placeholder="example@email.com"
+            required
+            value={formData.email}
+            onChange={handleChange}
+          />
+          {/* エラーメッセージ表示 */}
+          {errors.email && (
+            <p
+              style={{
+                color: '#d32f2f',
+                fontSize: '0.9rem',
+                marginTop: '-15px',
+                marginLeft: '150px',
+              }}
+            >
+              {errors.email}
+            </p>
+          )}
+        </div>
 
         {/* 施設選択（検索機能付き） */}
         <div className={styles.selectWrapper}>
@@ -116,6 +146,24 @@ export const UserIssuanceForm = () => {
             )}
           </div>
         </div>
+
+        {/* 送信エラーメッセージの表示 */}
+        {submitError && (
+          <div
+            role="alert"
+            style={{
+              color: '#d32f2f',
+              backgroundColor: '#fdecea',
+              padding: '10px',
+              borderRadius: '4px',
+              marginBottom: '20px',
+              textAlign: 'center',
+              fontWeight: 'bold',
+            }}
+          >
+            {submitError}
+          </div>
+        )}
 
         {/* 送信ボタン */}
         <div className={styles.submitButton}>
