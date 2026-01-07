@@ -1,0 +1,80 @@
+@use '@/styles/colors' as *;
+
+.container {
+  max-width: 800px;
+  margin: 60px auto;
+  padding: 0 20px;
+  background-color: transparent;
+}
+
+// ヘッダー部分
+.header {
+  margin-bottom: 60px;
+  border-bottom: 2px solid $border-dark;
+  padding-bottom: 8px;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: $text-primary;
+  margin: 0;
+  text-align: left;
+}
+
+// フォーム本体
+.formBody {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+// 登録ボタン（画像の緑塗りつぶし・白文字スタイル）
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 60px;
+}
+
+.registerButton {
+  width: 200px;
+  padding: 12px 0;
+  background-color: $form-primary;
+  color: $white;
+  border: 1px solid $dark-gray;
+  border-radius: 2px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &:active {
+    transform: translateY(1px);
+    box-shadow: none;
+  }
+
+  &:disabled {
+    background-color: $bg-gray;
+    border-color: $border-gray;
+    cursor: not-allowed;
+  }
+}
+
+// モバイル対応
+@media (max-width: 600px) {
+  .container {
+    margin: 30px auto;
+  }
+
+  .header {
+    margin-bottom: 40px;
+  }
+
+  .formBody {
+    padding: 0;
+  }
+}
