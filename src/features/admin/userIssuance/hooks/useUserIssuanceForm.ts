@@ -13,7 +13,7 @@ interface UserIssuanceFormData {
 }
 
 // エラー情報の型定義
-interface FormErrors {
+export interface FormErrors {
   email?: string;
   facilityId?: string;
 }
@@ -27,10 +27,14 @@ interface FormErrors {
  *
  * @returns {object} ユーザー発行フォームの状態および操作用ハンドラーをまとめたオブジェクト
  * @returns {UserIssuanceFormData} return.formData フォームの入力値（メールアドレス・施設ID）
+ * @returns {FormErrors} return.errors 各フィールドのバリデーションエラーメッセージを含むオブジェクト
+ * @returns {string | null} return.submitError フォーム送信時に発生したエラーメッセージ
  * @returns {boolean} return.isLoading フォーム送信処理中かどうかを示すフラグ
  * @returns {boolean} return.isSuccess フォーム送信が正常終了したかどうかを示すフラグ
  * @returns {(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void} return.handleChange
  * 入力値変更時に呼び出すハンドラー。name 属性を元に対応するフィールドの値を更新します。
+ * @returns {(name: keyof UserIssuanceFormData, value: string) => void} return.updateFormData
+ * 任意のフィールドの値をプログラムから更新するハンドラー。
  * @returns {(event: React.FormEvent<HTMLFormElement>) => Promise<void>} return.handleSubmit
  * フォーム送信時に呼び出す非同期ハンドラー。送信中フラグと成功フラグの制御を行います。
  */
