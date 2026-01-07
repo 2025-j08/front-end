@@ -9,8 +9,7 @@
 import Link from 'next/link';
 
 import { LoadingOverlay } from '@/components/form/overlay';
-import { SubmitButton } from '@/features/auth/components/button/submitButton';
-import { FormField } from '@/components/form';
+import { FormField, FormButton } from '@/components/form';
 import { useLoginForm } from '@/features/auth/components/hooks/useLoginForm';
 
 import styles from './loginForm.module.scss';
@@ -55,7 +54,7 @@ export const LoginForm = () => {
           onChange={handleChange}
         />
 
-        <SubmitButton label="ログイン" disabled={isLoading} />
+        <FormButton label="ログイン" isLoading={isLoading} />
       </form>
     </div>
   );
