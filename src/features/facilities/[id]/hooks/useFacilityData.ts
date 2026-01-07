@@ -1,46 +1,55 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 
-import { FacilityDetail } from '@/types/facility';
-import facilityDataJson from '@/dummy_data/facilities_detail.json';
+import facilitiesDetailData from '@/dummy_data/facilities_detail.json';
+import type { FacilityDetail, FacilityDataMap } from '@/types/facility';
 
-// 将来的なAPIレスポンスの型定義
-type FacilityDataResponse = {
+/**
+ * useFacilityData カスタムフックの戻り値型
+ */
+type UseFacilityDataReturn = {
   data: FacilityDetail | null;
   isLoading: boolean;
-  error: Error | null;
+  error: string | null;
 };
 
 /**
- * useFacilityData
- * 施設詳細データを取得するカスタムフック
- * 現在はダミーデータを非同期で返すように実装（API統合の準備）
+ * useFacilityData カスタムフック
+ * 施設IDに基づいて施設詳細データを取得します
+ *
+ * @param id - 施設ID（文字列形式）
+ * @returns オブジェクト { data, isLoading, error }
+ *
+ * @example
+ * const { data, isLoading, error } = useFacilityData('4');
  */
-export const useFacilityData = (id: string): FacilityDataResponse => {
+export const useFacilityData = (id: string): UseFacilityDataReturn => {
   const [data, setData] = useState<FacilityDetail | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      // console.log('Fetching data for facility ID:', id); // デバッグ用
-      try {
-        // setIsLoading(true) は初期値でtrueなので削除
-        // APIコールを模倣するための遅延
-        await new Promise((resolve) => setTimeout(resolve, 800));
+    const fetchData = () => {
+      setIsLoading(true);
+      setError(null);
 
-        // 型アサーションを使用してデータをセット
-        // 注意: 実際のデータ構造が更新された後に正しく機能するように
-        // JSONデータも更新する必要があります
-        // TODO: zodなどでランタイムバリデーションを行うことを推奨
-        // 現在は開発用ダミーデータのためアサーションを使用
-        if (facilityDataJson) {
-          setData(facilityDataJson as unknown as FacilityDetail);
+      try {
+        // JSONデータをFacilityDataMap型として扱う
+        // NOTE: 本番環境ではzod等でランタイムバリデーションを推奨
+        const dataMap = facilitiesDetailData as unknown as FacilityDataMap;
+
+        // データ検索
+        const facilityData = dataMap[id];
+
+        if (!facilityData) {
+          setError(`施設ID: ${id} が見つかりません`);
+          setData(null);
         } else {
-          throw new Error('データが見つかりません');
+          setData(facilityData);
         }
-        setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err : new Error('データの取得に失敗しました'));
+        setError(err instanceof Error ? err.message : 'データの取得に失敗しました');
         setData(null);
       } finally {
         setIsLoading(false);
@@ -48,7 +57,7 @@ export const useFacilityData = (id: string): FacilityDataResponse => {
     };
 
     fetchData();
-  }, []);
+  }, [id]);
 
   return { data, isLoading, error };
 };

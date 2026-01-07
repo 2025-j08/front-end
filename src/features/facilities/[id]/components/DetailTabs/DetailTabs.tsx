@@ -6,6 +6,7 @@ import {
   StaffInfo,
   EducationInfo,
   AdvancedInfo,
+  OtherInfo,
 } from '@/types/facility';
 
 import { AccessTab } from './contents/AccessTab';
@@ -30,7 +31,7 @@ type DetailTabsProps = {
   staffInfo?: StaffInfo;
   educationInfo?: EducationInfo;
   advancedInfo?: AdvancedInfo;
-  otherInfo?: string;
+  otherInfo?: OtherInfo;
 };
 
 /**

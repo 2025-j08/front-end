@@ -2,7 +2,7 @@ import styles from './FacilityHeader.module.scss';
 
 type FacilityHeaderProps = {
   name: string;
-  corporation: string;
+  corporation?: string;
   fullAddress: string;
   phone: string;
   websiteUrl?: string | null;
@@ -39,7 +39,8 @@ export const FacilityHeader = ({
     <header className={styles.header}>
       <div className={styles.headerInfo}>
         <h1 className={styles.title}>
-          {name} <span className={styles.corporation}>運営法人 {corporation}</span>
+          {name}
+          {corporation && <span className={styles.corporation}>運営法人 {corporation}</span>}
         </h1>
         <p className={styles.address}>{fullAddress}</p>
         <p className={styles.tel}>TEL {phone}</p>

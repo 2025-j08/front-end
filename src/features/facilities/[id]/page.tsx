@@ -21,8 +21,8 @@ export const FacilityDetail = ({ id }: Props) => {
   const { activeTab, setActiveTab, tabs } = useFacilityDetail();
 
   if (isLoading) return <div className={styles.container}>読み込み中...</div>;
-  if (error || !facilityData)
-    return <div className={styles.container}>データの取得に失敗しました</div>;
+  if (error) return <div className={styles.container}>{error}</div>;
+  if (!facilityData) return <div className={styles.container}>施設データが見つかりません</div>;
 
   return (
     <div className={styles.container}>
@@ -35,11 +35,8 @@ export const FacilityDetail = ({ id }: Props) => {
       />
 
       <BasicInfoSection
-        facilityType={facilityData.facilityType}
         establishedYear={facilityData.establishedYear}
-        capacity={facilityData.capacity}
-        hasAnnex={facilityData.hasAnnex}
-        annexDetail={facilityData.annexDetail}
+        dormitoryType={facilityData.dormitoryType}
       />
 
       <DetailTabs
