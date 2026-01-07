@@ -26,6 +26,8 @@ import styles from './UserIssuanceForm.module.scss';
  *
  * @component
  */
+// 文字列正規化用ユーティリティ（大文字小文字や全角半角の揺らぎを吸収）
+const normalizeText = (text: string): string => text.toLowerCase().normalize('NFKC');
 
 export const UserIssuanceForm = () => {
   // updateFormData をフックから取得
@@ -52,15 +54,16 @@ export const UserIssuanceForm = () => {
     }));
   }, []);
 
-  // 文字列正規化用ユーティリティ（大文字小文字や全角半角の揺らぎを吸収）
-  const normalizeText = (text: string): string => text.toLowerCase().normalize('NFKC');
-
   // 正規化済みの検索ワード
   const normalizedSearchTerm = useMemo(() => normalizeText(searchTerm), [searchTerm]);
 
   // フィルタリングされた施設リスト（正規化済み文字列同士で部分一致判定）
-  const filteredFacilities = facilitiesList.filter((facility) =>
-    normalizeText(facility.name).includes(normalizedSearchTerm),
+  const filteredFacilities = useMemo(
+    () =>
+      facilitiesList.filter((facility) =>
+        normalizeText(facility.name).includes(normalizedSearchTerm),
+      ),
+    [facilitiesList, normalizedSearchTerm],
   );
 
   // テキスト入力時のハンドラー
@@ -132,13 +135,19 @@ export const UserIssuanceForm = () => {
               onBlur={handleBlur}
               autoComplete="off"
               required={!formData.facilityId}
+              aria-describedby={errors.facilityId ? 'facilityId-error' : undefined}
+              aria-invalid={!!errors.facilityId}
+              role="combobox"
+              aria-autocomplete="list"
+              aria-expanded={isDropdownOpen}
+              aria-controls="facility-listbox"
             />
             {/* 隠しフィールド：実際のフォーム送信データ用 */}
             <input type="hidden" name="facilityId" value={formData.facilityId} />
 
             {/* 絞り込み結果リスト */}
             {isDropdownOpen && (
-              <ul className={styles.dropdownList}>
+              <ul className={styles.dropdownList} id="facility-listbox" role="listbox">
                 {filteredFacilities.length > 0 ? (
                   filteredFacilities.map((facility) => (
                     <li
@@ -146,18 +155,26 @@ export const UserIssuanceForm = () => {
                       className={styles.dropdownItem}
                       onClick={() => handleSelectFacility(facility)}
                       onMouseDown={(e) => e.preventDefault()}
+                      role="option"
+                      aria-selected={false}
                     >
                       {facility.name}
                     </li>
                   ))
                 ) : (
-                  <li className={styles.noResult}>一致する施設がありません</li>
+                  <li className={styles.noResult} role="option" aria-disabled="true">
+                    一致する施設がありません
+                  </li>
                 )}
               </ul>
             )}
 
             {/* 施設選択のエラーメッセージ表示 */}
-            {errors.facilityId && <p className={styles.facilityError}>{errors.facilityId}</p>}
+            {errors.facilityId && (
+              <p id="facilityId-error" className={styles.facilityError}>
+                {errors.facilityId}
+              </p>
+            )}
           </div>
         </div>
 
