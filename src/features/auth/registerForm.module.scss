@@ -1,15 +1,17 @@
 @use '@/styles/colors' as *;
 
 .container {
-  max-width: 800px;
-  margin: 60px auto;
-  padding: 0 20px;
-  background-color: transparent;
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 20px;
+  font-family: 'Geist', sans-serif;
+  background-color: $bg-white;
 }
 
 // ヘッダー部分
 .header {
-  margin-bottom: 60px;
+  margin-bottom: 24px;
   border-bottom: 2px solid $border-dark;
   padding-bottom: 8px;
 }
@@ -19,13 +21,12 @@
   font-weight: bold;
   color: $text-primary;
   margin: 0;
-  text-align: left;
 }
 
 // フォーム本体
 .formBody {
-  max-width: 600px;
-  margin: 0 auto;
+  max-width: 800px;
+  margin: 60px auto 0;
 }
 
 // 登録ボタン（画像の緑塗りつぶし・白文字スタイル）
@@ -65,16 +66,21 @@
 }
 
 // モバイル対応
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .container {
-    margin: 30px auto;
+    padding: 16px 12px;
   }
 
   .header {
-    margin-bottom: 40px;
+    margin-bottom: 16px;
+  }
+
+  .title {
+    font-size: 1.4rem;
   }
 
   .formBody {
+    margin-top: 30px;
     padding: 0;
   }
 }
