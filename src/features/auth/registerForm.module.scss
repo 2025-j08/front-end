@@ -29,6 +29,17 @@
   margin: 60px auto 0;
 }
 
+// エラーメッセージ
+.errorMessage {
+  background-color: rgba($error-color, 0.1);
+  border: 1px solid $error-color;
+  color: $error-color;
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 24px;
+  font-size: 0.95rem;
+}
+
 // 登録ボタン（画像の緑塗りつぶし・白文字スタイル）
 .buttonContainer {
   display: flex;
