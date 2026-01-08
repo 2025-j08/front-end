@@ -1,4 +1,5 @@
 // カラー変数定義
+// 未使用変数を整理済み (2026-01-08)
 
 // ====================================
 // 基本色
@@ -22,23 +23,17 @@ $form-primary: #80d5b5;
 $form-primary-light: #6db899;
 $form-primary-dark: #357a5e;
 
-// セカンダリカラー（ミント・クリーム系）
-$form-secondary: #e8f4ee;
-$form-secondary-light: #f5faf7;
-$form-secondary-dark: #d4e8dc;
-
-// 背景グラデーション用
-$form-bg-gradient-start: #fafcfb;
-$form-bg-gradient-end: #eef6f2;
+// 背景グラデーション用（将来用に保持）
+// $form-bg-gradient-start: #fafcfb;
+// $form-bg-gradient-end: #eef6f2;
 
 // ボタンシャドウ・フォーカス
 $form-button-shadow: rgba(74, 159, 126, 0.3);
 $form-button-shadow-hover: rgba(74, 159, 126, 0.4);
-$form-container-shadow: rgba(74, 159, 126, 0.15);
 $form-focus-glow: rgba(74, 159, 126, 0.2);
 
 // 入力フィールド
-$form-input-bg: $form-secondary-light;
+$form-input-bg: #f5faf7;
 $form-input-border: #b8d4c4;
 $form-placeholder: #999;
 
@@ -46,12 +41,12 @@ $form-placeholder: #999;
 // ステータスカラー
 // ====================================
 $error-color: #d32f2f;
-$error-bg-light: rgba(211, 47, 47, 0.1); // エラー背景用の薄い赤
+$error-bg-light: rgba(211, 47, 47, 0.1);
 $success-color: #4caf50;
 $success-light: #66bb6a;
-$warning-color: #856404; // 警告テキスト用の茶色
-$warning-bg: #fffbe6; // 警告背景用の薄い黄色
-$warning-border: #ffe58f; // 警告ボーダー用の黄色
+$warning-color: #856404;
+$warning-bg: #fffbe6;
+$warning-border: #ffe58f;
 
 // ====================================
 // テキストカラー
@@ -83,7 +78,6 @@ $border-dark: #333;
 $border-gray: #999;
 $border-black: #000;
 $border-green: #66ff66;
-$input-border: $form-input-border;
 
 // ====================================
 // リンク用カラー
@@ -91,17 +85,22 @@ $input-border: $form-input-border;
 $link-color: $text-link;
 $link-hover-color: darken($link-color, 10%);
 
-// フォーム関連カラー
+// エイリアス（互換性のため）
 $placeholder-color: $form-placeholder;
+$input-border: $form-input-border;
 $input-bg: $form-input-bg;
 
+// ====================================
 // 検索ボタンカラー
+// ====================================
 $search-button-bg: #008cba;
 $condition-search-button-bg: #ff9999;
 $condition-search-bg: #e6ffe6;
 $condition-search-border: #99ff99;
 
+// ====================================
 // 都道府県カラー
+// ====================================
 $pref-hyogo: #ff3333;
 $pref-kyoto: #66cccc;
 $pref-osaka: #ffcc33;

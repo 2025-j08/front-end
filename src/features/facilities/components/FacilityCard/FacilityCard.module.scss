@@ -1,10 +1,10 @@
-@use '@/styles/colors' as *;
+@use '@/styles/colors' as colors;
 
 .card {
   display: flex;
   flex-direction: column;
-  background-color: $bg-light-green;
-  border: 2px solid $border-dark;
+  background-color: colors.$bg-light-green;
+  border: 2px solid colors.$border-dark;
   border-radius: 12px;
   padding: 16px;
   gap: 12px;
@@ -30,33 +30,33 @@
   font-size: 1.1rem;
   font-weight: bold;
   margin: 0;
-  color: $text-primary;
-  border-bottom: 1px solid $border-dark;
+  color: colors.$text-primary;
+  border-bottom: 1px solid colors.$border-dark;
   padding-bottom: 8px;
 }
 
 .label {
   font-size: 0.85rem;
   margin: 0;
-  color: $text-secondary;
+  color: colors.$text-secondary;
 }
 
 .postalCode {
   font-size: 0.9rem;
   margin: 0;
-  color: $text-primary;
+  color: colors.$text-primary;
 }
 
 .address {
   font-size: 0.9rem;
   margin: 0;
-  color: $text-primary;
+  color: colors.$text-primary;
 }
 
 .phone {
   font-size: 0.9rem;
   margin: 0;
-  color: $text-primary;
+  color: colors.$text-primary;
 }
 
 .imageWrapper {
@@ -77,13 +77,13 @@
 .imagePlaceholder {
   width: 100%;
   height: 100%;
-  background-color: $bg-gray;
-  border: 1px solid $border-gray;
+  background-color: colors.$bg-gray;
+  border: 1px solid colors.$border-gray;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.9rem;
-  color: $text-secondary;
+  color: colors.$text-secondary;
 }
 
 @media screen and (max-width: 768px) {

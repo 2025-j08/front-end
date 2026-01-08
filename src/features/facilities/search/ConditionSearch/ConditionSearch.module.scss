@@ -1,8 +1,8 @@
-@use '../../../../styles/colors' as *;
+@use '@/styles/colors' as colors;
 
 .container {
-  background-color: $condition-search-bg;
-  border: 2px solid $condition-search-border;
+  background-color: colors.$condition-search-bg;
+  border: 2px solid colors.$condition-search-border;
   border-radius: 20px;
   padding: 40px 20px 20px;
   position: relative;
@@ -14,13 +14,13 @@
   position: absolute;
   top: -15px;
   left: 20px;
-  background-color: $border-green;
-  border: 2px solid $border-black;
+  background-color: colors.$border-green;
+  border: 2px solid colors.$border-black;
   border-radius: 20px;
   padding: 5px 20px;
   font-weight: bold;
   font-size: 14px;
-  box-shadow: 2px 2px 0px rgba($black, 0.2);
+  box-shadow: 2px 2px 0px rgba(colors.$black, 0.2);
 }
 
 .section {
@@ -46,15 +46,15 @@
 }
 
 .prefButton {
-  border: 2px solid $border-black;
+  border: 2px solid colors.$border-black;
   border-radius: 10px;
   padding: 10px;
   font-weight: bold;
   font-size: 16px;
   cursor: pointer;
-  box-shadow: 2px 2px 0px rgba($black, 0.2);
+  box-shadow: 2px 2px 0px rgba(colors.$black, 0.2);
   transition: transform 0.1s;
-  color: $primary-text-color;
+  color: colors.$primary-text-color;
 
   &:active {
     transform: translate(2px, 2px);
@@ -62,7 +62,7 @@
   }
 
   &.selected {
-    border: 3px solid $border-black;
+    border: 3px solid colors.$border-black;
     transform: scale(0.98);
     box-shadow: none;
   }
@@ -70,27 +70,27 @@
 
 // 都道府県ごとの色定義
 .hyogo {
-  background-color: $pref-hyogo;
+  background-color: colors.$pref-hyogo;
 }
 
 .kyoto {
-  background-color: $pref-kyoto;
+  background-color: colors.$pref-kyoto;
 }
 
 .osaka {
-  background-color: $pref-osaka;
+  background-color: colors.$pref-osaka;
 }
 
 .wakayama {
-  background-color: $pref-wakayama;
+  background-color: colors.$pref-wakayama;
 }
 
 .shiga {
-  background-color: $pref-shiga;
+  background-color: colors.$pref-shiga;
 }
 
 .nara {
-  background-color: $pref-nara;
+  background-color: colors.$pref-nara;
 }
 
 /* 絞り込み条件グリッド */
@@ -105,22 +105,22 @@
 }
 
 .conditionButton {
-  background-color: $bg-white;
-  border: 2px solid $border-black;
+  background-color: colors.$bg-white;
+  border: 2px solid colors.$border-black;
   border-radius: 30px;
   padding: 8px;
   font-size: 12px;
-  color: $text-secondary;
+  color: colors.$text-secondary;
   cursor: pointer;
 
   &:hover {
-    background-color: $bg-light-gray;
+    background-color: colors.$bg-light-gray;
   }
 
   &.selected {
-    background-color: $dark-gray;
-    color: $white;
-    border-color: $dark-gray;
+    background-color: colors.$dark-gray;
+    color: colors.$white;
+    border-color: colors.$dark-gray;
   }
 }
 
@@ -135,14 +135,14 @@
   display: flex;
   align-items: center;
   gap: 5px;
-  background-color: $condition-search-button-bg;
-  border: 2px solid $border-black;
+  background-color: colors.$condition-search-button-bg;
+  border: 2px solid colors.$border-black;
   border-radius: 30px;
   padding: 8px 20px;
   font-weight: bold;
   font-size: 14px;
   cursor: pointer;
-  box-shadow: 2px 2px 0px rgba($black, 0.2);
+  box-shadow: 2px 2px 0px rgba(colors.$black, 0.2);
 
   .icon {
     font-size: 20px;

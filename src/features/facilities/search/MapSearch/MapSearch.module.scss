@@ -1,8 +1,8 @@
-@use '../../../../styles/colors' as *;
+@use '@/styles/colors' as colors;
 
 .container {
-  background-color: $condition-search-bg;
-  border: 2px solid $condition-search-border;
+  background-color: colors.$condition-search-bg;
+  border: 2px solid colors.$condition-search-border;
   border-radius: 20px;
   padding: 40px 20px 20px;
   position: relative;
@@ -17,8 +17,8 @@
   position: absolute;
   top: -15px;
   left: 20px;
-  background-color: $border-green;
-  border: 2px solid $border-black;
+  background-color: colors.$border-green;
+  border: 2px solid colors.$border-black;
   border-radius: 20px;
   padding: 5px 20px;
   font-weight: bold;
@@ -48,11 +48,11 @@
 }
 
 .popupLink {
-  color: $link-color;
+  color: colors.$link-color;
   text-decoration: none;
 
   &:hover {
-    color: $link-hover-color;
+    color: colors.$link-hover-color;
     text-decoration: underline;
   }
 }
