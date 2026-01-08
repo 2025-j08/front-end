@@ -8,12 +8,8 @@
 export const PASSWORD_REQUIREMENTS = {
   /** 最小文字数 */
   MIN_LENGTH: 8,
-  /** 大文字を含む必要があるか */
-  REQUIRE_UPPERCASE: true,
-  /** 小文字を含む必要があるか */
-  REQUIRE_LOWERCASE: true,
-  /** 数字を含む必要があるか */
-  REQUIRE_NUMBER: true,
+  /** 必要な文字種の数（大文字・小文字・数字から） */
+  MIN_CHARACTER_TYPES: 2,
 } as const;
 
 /**
@@ -28,6 +24,7 @@ export interface PasswordValidationResult {
 
 /**
  * パスワードの詳細バリデーション（登録フォーム用）
+ * 8文字以上 + 大文字・小文字・数字から2種類以上を含む
  * @param password - 検証するパスワード
  * @returns バリデーション結果
  */
@@ -39,19 +36,14 @@ export const validatePassword = (password: string): PasswordValidationResult => 
     errors.push(`パスワードは${PASSWORD_REQUIREMENTS.MIN_LENGTH}文字以上で入力してください`);
   }
 
-  // 大文字チェック
-  if (PASSWORD_REQUIREMENTS.REQUIRE_UPPERCASE && !/[A-Z]/.test(password)) {
-    errors.push('大文字を1文字以上含めてください');
-  }
+  // 文字種のチェック（大文字・小文字・数字から2種類以上）
+  let characterTypeCount = 0;
+  if (/[A-Z]/.test(password)) characterTypeCount++;
+  if (/[a-z]/.test(password)) characterTypeCount++;
+  if (/\d/.test(password)) characterTypeCount++;
 
-  // 小文字チェック
-  if (PASSWORD_REQUIREMENTS.REQUIRE_LOWERCASE && !/[a-z]/.test(password)) {
-    errors.push('小文字を1文字以上含めてください');
-  }
-
-  // 数字チェック
-  if (PASSWORD_REQUIREMENTS.REQUIRE_NUMBER && !/\d/.test(password)) {
-    errors.push('数字を1文字以上含めてください');
+  if (characterTypeCount < PASSWORD_REQUIREMENTS.MIN_CHARACTER_TYPES) {
+    errors.push('大文字・小文字・数字から2種類以上を含めてください');
   }
 
   return {
@@ -65,23 +57,7 @@ export const validatePassword = (password: string): PasswordValidationResult => 
  * @returns 要件説明テキスト
  */
 export const getPasswordRequirementsText = (): string => {
-  const requirements: string[] = [];
-
-  requirements.push(`${PASSWORD_REQUIREMENTS.MIN_LENGTH}文字以上`);
-
-  if (PASSWORD_REQUIREMENTS.REQUIRE_UPPERCASE) {
-    requirements.push('大文字を1文字以上');
-  }
-
-  if (PASSWORD_REQUIREMENTS.REQUIRE_LOWERCASE) {
-    requirements.push('小文字を1文字以上');
-  }
-
-  if (PASSWORD_REQUIREMENTS.REQUIRE_NUMBER) {
-    requirements.push('数字を1文字以上');
-  }
-
-  return requirements.join('、');
+  return `${PASSWORD_REQUIREMENTS.MIN_LENGTH}文字以上、大文字・小文字・数字から2種類以上`;
 };
 
 /**
