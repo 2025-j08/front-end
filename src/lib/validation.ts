@@ -118,3 +118,48 @@ export const validateFurigana = (furigana: string): FuriganaValidationResult => 
 
   return { isValid: true };
 };
+
+/**
+ * 汎用バリデーション結果の型
+ */
+export interface ValidationResult {
+  /** バリデーションが成功したかどうか */
+  isValid: boolean;
+  /** エラーメッセージ */
+  error?: string;
+}
+
+/**
+ * 必須入力バリデーション
+ * @param value - 検証する値
+ * @param fieldName - フィールド名（エラーメッセージ用）
+ * @returns バリデーション結果
+ */
+export const validateRequired = (value: string, fieldName: string): ValidationResult => {
+  if (!value.trim()) {
+    return {
+      isValid: false,
+      error: `${fieldName}を入力してください`,
+    };
+  }
+  return { isValid: true };
+};
+
+/**
+ * パスワード一致バリデーション
+ * @param password - パスワード
+ * @param confirmPassword - 確認用パスワード
+ * @returns バリデーション結果
+ */
+export const validatePasswordMatch = (
+  password: string,
+  confirmPassword: string,
+): ValidationResult => {
+  if (password !== confirmPassword) {
+    return {
+      isValid: false,
+      error: 'パスワードが一致しません',
+    };
+  }
+  return { isValid: true };
+};
