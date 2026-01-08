@@ -1,0 +1,62 @@
+[
+  {
+    "id": "user-001",
+    "facilityName": "サニーサイドホーム",
+    "name": "山田 太郎",
+    "email": "yamada@example.com"
+  },
+  {
+    "id": "user-002",
+    "facilityName": "グリーンケアセンター",
+    "name": "佐藤 花子",
+    "email": "sato.hanako@example.com"
+  },
+  {
+    "id": "user-003",
+    "facilityName": "ハッピーライフ横浜",
+    "name": "鈴木 一郎",
+    "email": "suzuki.ichiro@example.com"
+  },
+  {
+    "id": "user-004",
+    "facilityName": "エバーグリーン川崎",
+    "name": "田中 美咲",
+    "email": "tanaka.misaki@example.com"
+  },
+  {
+    "id": "user-005",
+    "facilityName": "こもれびの里",
+    "name": "伊藤 健太",
+    "email": "ito.kenta@example.com"
+  },
+  {
+    "id": "user-006",
+    "facilityName": "ひまわり苑",
+    "name": "小林 由美",
+    "email": "kobayashi.yumi@example.com"
+  },
+  {
+    "id": "user-007",
+    "facilityName": "青空の家",
+    "name": "渡辺 大輔",
+    "email": "watanabe.daisuke@example.com"
+  },
+  {
+    "id": "user-008",
+    "facilityName": "さくらホーム",
+    "name": "加藤 里奈",
+    "email": "kato.rina@example.com"
+  },
+  {
+    "id": "user-009",
+    "facilityName": "みどりの丘",
+    "name": "吉田 翔太",
+    "email": "yoshida.shota@example.com"
+  },
+  {
+    "id": "user-010",
+    "facilityName": "あおぞらケアホーム",
+    "name": "松本 恵美",
+    "email": "matsumoto.emi@example.com"
+  }
+]
