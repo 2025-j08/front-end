@@ -1,6 +1,6 @@
 -- profiles テーブル
 CREATE TABLE public.profiles (
-    id uuid NOT NULL REFERENCES auth.users ON DELETE CASCADE,
+    id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
     role TEXT NOT NULL CHECK (role IN ('admin', 'staff')) DEFAULT 'staff',
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -21,7 +21,7 @@ CREATE POLICY "select_owner"
 CREATE POLICY "update_service_role"
     ON public.profiles
     FOR UPDATE
-    TO authenticated
+    TO service_role
     USING (auth.role() = 'service_role')
     WITH CHECK (auth.role() = 'service_role');
 
@@ -29,7 +29,7 @@ CREATE POLICY "update_service_role"
 CREATE POLICY "delete_service_role"
     ON public.profiles
     FOR DELETE
-    TO authenticated
+    TO service_role
     USING (auth.role() = 'service_role');
 
 -- 新規ユーザー作成時のプロフィール自動生成
@@ -44,7 +44,7 @@ BEGIN
     VALUES (
         new.id,
         COALESCE(new.raw_user_meta_data ->> 'name', 'Guest'),
-        COALESCE(new.raw_user_meta_data ->> 'role', 'staff')
+        'staff'
     );
     RETURN new;
 END;
