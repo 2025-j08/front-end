@@ -54,7 +54,7 @@ export const useUserIssuanceForm = () => {
 
   // 成功メッセージの表示
   useEffect(() => {
-    let timer: NodeJS.Timeout;
+    let timer: NodeJS.Timeout | undefined;
     if (isSuccess) {
       timer = setTimeout(() => {
         setIsSuccess(false);
@@ -80,7 +80,7 @@ export const useUserIssuanceForm = () => {
       [name]: value,
     }));
 
-    //入力時にエラーをクリア
+    // 入力時にエラーをクリア
     if (errors[name as keyof FormErrors]) {
       setErrors((prev) => ({
         ...prev,
@@ -148,7 +148,7 @@ export const useUserIssuanceForm = () => {
 
       setIsSuccess(true);
     } catch (error) {
-      //　エラー発生時の処理
+      // エラー発生時の処理
       console.error('Submission failed:', error);
       setSubmitError('システムエラーが発生しました。しばらくしてから再度お試しください。');
     } finally {
