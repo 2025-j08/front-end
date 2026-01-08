@@ -17,6 +17,12 @@ interface FormFieldProps {
   autoComplete?: string;
   rows?: number;
   isTextarea?: boolean;
+  /** 最小文字数 */
+  minLength?: number;
+  /** 最大文字数 */
+  maxLength?: number;
+  /** エラーメッセージ */
+  error?: string;
   onChange?: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 }
 
@@ -31,6 +37,9 @@ const FormField = ({
   autoComplete,
   rows = 5,
   isTextarea = false,
+  minLength,
+  maxLength,
+  error,
   onChange,
 }: FormFieldProps) => {
   return (
@@ -44,6 +53,11 @@ const FormField = ({
           required={required}
           value={value}
           rows={rows}
+          minLength={minLength}
+          maxLength={maxLength}
+          className={error ? styles.inputError : undefined}
+          aria-invalid={error ? 'true' : undefined}
+          aria-describedby={error ? `${id}-error` : undefined}
           onChange={onChange}
         />
       ) : (
@@ -55,8 +69,18 @@ const FormField = ({
           required={required}
           value={value}
           autoComplete={autoComplete}
+          minLength={minLength}
+          maxLength={maxLength}
+          className={error ? styles.inputError : undefined}
+          aria-invalid={error ? 'true' : undefined}
+          aria-describedby={error ? `${id}-error` : undefined}
           onChange={onChange}
         />
+      )}
+      {error && (
+        <p id={`${id}-error`} className={styles.errorMessage} role="alert">
+          {error}
+        </p>
       )}
     </div>
   );

@@ -10,7 +10,7 @@ import Link from 'next/link';
 
 import { LoadingOverlay } from '@/components/form/overlay';
 import { FormField, FormButton } from '@/components/form';
-import { useLoginForm } from '@/features/auth/components/hooks/useLoginForm';
+import { useLoginForm } from '@/features/auth/hooks/useLoginForm';
 
 import styles from './loginForm.module.scss';
 
