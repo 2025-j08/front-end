@@ -1,14 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 
 import {
   validatePassword,
   validateFurigana,
+  validateRequired,
+  validatePasswordMatch,
   PASSWORD_REQUIREMENTS,
   getPasswordRequirementsText,
 } from '@/lib/validation';
+import { VALIDATION_MESSAGES, API_MESSAGES } from '@/const/messages';
 
 /**
  * 初期登録フォームのデータ型
@@ -28,33 +31,56 @@ interface RegisterFormData {
  * フィールドエラーの型
  */
 interface FieldErrors {
+  fullName?: string;
   furigana?: string;
   password?: string;
   confirmPassword?: string;
 }
 
 /**
+ * useRegisterForm の戻り値型
+ */
+interface UseRegisterFormReturn {
+  /** フォーム入力値の現在の状態 */
+  formData: RegisterFormData;
+  /** 送信中かどうか */
+  isLoading: boolean;
+  /** 登録成功かどうか */
+  isSuccess: boolean;
+  /** 全体エラーメッセージ */
+  errorMessage: string | null;
+  /** 各フィールドのエラーメッセージ */
+  fieldErrors: FieldErrors;
+  /** パスワードの最小文字数 */
+  passwordMinLength: number;
+  /** パスワード要件の説明テキスト */
+  passwordRequirementsText: string;
+  /** 入力フィールドの値が変更されたときのハンドラー */
+  handleChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  /** フォーム送信時のハンドラー */
+  handleSubmit: (e: FormEvent<HTMLFormElement>) => Promise<void>;
+  /** フォームをリセットする */
+  resetForm: () => void;
+}
+
+/**
+ * 初期登録フォームの初期値
+ */
+const INITIAL_FORM_DATA: RegisterFormData = {
+  fullName: '',
+  furigana: '',
+  password: '',
+  confirmPassword: '',
+};
+
+/**
  * useRegisterForm
  * 初期登録フォームの状態管理と送信処理を提供するカスタムフック
  *
- * @returns {Object} フォームの状態とハンドラー
- * @returns {RegisterFormData} formData - フォーム入力値の現在の状態
- * @returns {boolean} isLoading - 送信中かどうか
- * @returns {boolean} isSuccess - 登録成功かどうか
- * @returns {string | null} errorMessage - 全体エラーメッセージ
- * @returns {FieldErrors} fieldErrors - 各フィールドのエラーメッセージ
- * @returns {number} passwordMinLength - パスワードの最小文字数
- * @returns {string} passwordRequirementsText - パスワード要件の説明テキスト
- * @returns {(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void} handleChange - 入力フィールドの値が変更されたときのハンドラー
- * @returns {(e: FormEvent<HTMLFormElement>) => Promise<void>} handleSubmit - フォーム送信時のハンドラー
+ * @returns フォームの状態とハンドラー
  */
-export const useRegisterForm = () => {
-  const [formData, setFormData] = useState<RegisterFormData>({
-    fullName: '',
-    furigana: '',
-    password: '',
-    confirmPassword: '',
-  });
+export const useRegisterForm = (): UseRegisterFormReturn => {
+  const [formData, setFormData] = useState<RegisterFormData>(INITIAL_FORM_DATA);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -63,106 +89,150 @@ export const useRegisterForm = () => {
   /**
    * 入力値変更ハンドラ
    */
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
-    // フリガナフィールドの場合、カタカナバリデーション
-    if (name === 'furigana') {
-      const validation = validateFurigana(value);
-      setFieldErrors((prev) => ({
+  const handleChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const { name, value } = e.target;
+      setFormData((prev) => ({
         ...prev,
-        furigana: validation.error,
+        [name]: value,
       }));
-    }
 
-    // パスワードフィールドの場合、リアルタイムバリデーション
-    if (name === 'password') {
-      const validation = validatePassword(value);
-      setFieldErrors((prev) => {
-        // パスワード確認との一致もチェック
-        const confirmError =
-          formData.confirmPassword && value !== formData.confirmPassword
-            ? 'パスワードが一致しません'
-            : undefined;
-        return {
+      // フリガナフィールドの場合、カタカナバリデーション
+      if (name === 'furigana') {
+        const validation = validateFurigana(value);
+        setFieldErrors((prev) => ({
           ...prev,
-          password: validation.isValid ? undefined : validation.errors[0],
-          confirmPassword: confirmError,
-        };
-      });
-    }
+          furigana: validation.error,
+        }));
+      }
 
-    // パスワード確認フィールドの場合、一致チェック
-    if (name === 'confirmPassword') {
-      setFieldErrors((prev) => ({
-        ...prev,
-        confirmPassword: value !== formData.password ? 'パスワードが一致しません' : undefined,
-      }));
-    }
+      // パスワードフィールドの場合、リアルタイムバリデーション
+      if (name === 'password') {
+        const validation = validatePassword(value);
+        setFieldErrors((prev) => {
+          // パスワード確認との一致もチェック
+          const matchValidation = validatePasswordMatch(
+            value,
+            prev.confirmPassword ? formData.confirmPassword : '',
+          );
+          const confirmError =
+            formData.confirmPassword && !matchValidation.isValid
+              ? matchValidation.error
+              : undefined;
+          return {
+            ...prev,
+            password: validation.isValid ? undefined : validation.errors[0],
+            confirmPassword: confirmError,
+          };
+        });
+      }
 
-    // 入力時に全体エラーをクリア
-    if (errorMessage) {
+      // パスワード確認フィールドの場合、一致チェック
+      if (name === 'confirmPassword') {
+        const matchValidation = validatePasswordMatch(formData.password, value);
+        setFieldErrors((prev) => ({
+          ...prev,
+          confirmPassword: matchValidation.isValid ? undefined : matchValidation.error,
+        }));
+      }
+
+      // 入力時に全体エラーをクリア
       setErrorMessage(null);
-    }
-  };
+    },
+    [formData.password, formData.confirmPassword],
+  );
 
   /**
    * フォーム送信ハンドラ
    */
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = useCallback(
+    async (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
 
-    // フリガナのバリデーション
-    const furiganaValidation = validateFurigana(formData.furigana);
-    if (!furiganaValidation.isValid) {
-      setFieldErrors((prev) => ({ ...prev, furigana: furiganaValidation.error }));
-      setErrorMessage('入力内容を確認してください');
-      return;
-    }
+      // エラーを蓄積するオブジェクト
+      const newFieldErrors: FieldErrors = {};
+      let hasError = false;
 
-    // 送信前にパスワードのバリデーションを実行
-    const passwordValidation = validatePassword(formData.password);
-    if (!passwordValidation.isValid) {
-      setFieldErrors({ password: passwordValidation.errors.join('、') });
-      setErrorMessage('入力内容を確認してください');
-      return;
-    }
+      // 氏名の必須チェック
+      const fullNameValidation = validateRequired(formData.fullName, '氏名');
+      if (!fullNameValidation.isValid) {
+        newFieldErrors.fullName = fullNameValidation.error;
+        hasError = true;
+      }
 
-    // パスワード確認の一致チェック
-    if (formData.password !== formData.confirmPassword) {
-      setFieldErrors({ confirmPassword: 'パスワードが一致しません' });
-      setErrorMessage('パスワードが一致しません');
-      return;
-    }
+      // フリガナのバリデーション（必須＋カタカナ）
+      const furiganaRequiredValidation = validateRequired(formData.furigana, 'フリガナ');
+      if (!furiganaRequiredValidation.isValid) {
+        newFieldErrors.furigana = furiganaRequiredValidation.error;
+        hasError = true;
+      } else {
+        const furiganaFormatValidation = validateFurigana(formData.furigana);
+        if (!furiganaFormatValidation.isValid) {
+          newFieldErrors.furigana = furiganaFormatValidation.error;
+          hasError = true;
+        }
+      }
 
-    setIsLoading(true);
+      // パスワードのバリデーション
+      const passwordValidation = validatePassword(formData.password);
+      if (!passwordValidation.isValid) {
+        newFieldErrors.password = passwordValidation.errors.join('、');
+        hasError = true;
+      }
+
+      // パスワード確認の一致チェック
+      const passwordMatchValidation = validatePasswordMatch(
+        formData.password,
+        formData.confirmPassword,
+      );
+      if (!passwordMatchValidation.isValid) {
+        newFieldErrors.confirmPassword = passwordMatchValidation.error;
+        hasError = true;
+      }
+
+      // エラーがある場合は送信を中断
+      if (hasError) {
+        setFieldErrors((prev) => ({ ...prev, ...newFieldErrors }));
+        setErrorMessage(VALIDATION_MESSAGES.INPUT_CHECK_REQUIRED);
+        return;
+      }
+
+      setIsLoading(true);
+      setErrorMessage(null);
+
+      try {
+        // TODO: 実際の登録API呼び出しを実装
+        // セキュリティのため、パスワードはログに出力しない
+        console.log('登録データ:', {
+          fullName: formData.fullName,
+          furigana: formData.furigana,
+          // password は意図的にログから除外
+        });
+
+        // ダミーの遅延（API呼び出しをシミュレート）
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        // 成功時の処理
+        setIsSuccess(true);
+      } catch (error) {
+        console.error('登録エラー:', error);
+        setErrorMessage(API_MESSAGES.REGISTRATION_FAILED);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [formData],
+  );
+
+  /**
+   * フォームリセット関数
+   */
+  const resetForm = useCallback(() => {
+    setFormData(INITIAL_FORM_DATA);
+    setFieldErrors({});
     setErrorMessage(null);
-
-    try {
-      // TODO: 実際の登録API呼び出しを実装
-      // セキュリティのため、パスワードはログに出力しない
-      console.log('登録データ:', {
-        fullName: formData.fullName,
-        furigana: formData.furigana,
-        // password は意図的にログから除外
-      });
-
-      // ダミーの遅延（API呼び出しをシミュレート）
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // 成功時の処理
-      setIsSuccess(true);
-    } catch (error) {
-      console.error('登録エラー:', error);
-      setErrorMessage('登録に失敗しました。もう一度お試しください。');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    setIsSuccess(false);
+  }, []);
 
   return {
     formData,
@@ -174,5 +244,6 @@ export const useRegisterForm = () => {
     passwordRequirementsText: getPasswordRequirementsText(),
     handleChange,
     handleSubmit,
+    resetForm,
   };
 };
