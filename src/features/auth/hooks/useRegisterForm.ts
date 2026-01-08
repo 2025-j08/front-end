@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
 
 import {
   validatePassword,
@@ -80,6 +81,7 @@ const INITIAL_FORM_DATA: RegisterFormData = {
  * @returns フォームの状態とハンドラー
  */
 export const useRegisterForm = (): UseRegisterFormReturn => {
+  const router = useRouter();
   const [formData, setFormData] = useState<RegisterFormData>(INITIAL_FORM_DATA);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -213,6 +215,11 @@ export const useRegisterForm = (): UseRegisterFormReturn => {
 
         // 成功時の処理
         setIsSuccess(true);
+
+        // 成功オーバーレイ表示後、ホーム画面に遷移
+        setTimeout(() => {
+          router.push('/');
+        }, 1500);
       } catch (error) {
         console.error('登録エラー:', error);
         setErrorMessage(API_MESSAGES.REGISTRATION_FAILED);
@@ -220,7 +227,7 @@ export const useRegisterForm = (): UseRegisterFormReturn => {
         setIsLoading(false);
       }
     },
-    [formData],
+    [formData, router],
   );
 
   /**
