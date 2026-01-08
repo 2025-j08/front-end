@@ -27,7 +27,7 @@ export const DeleteConfirmDialog = ({
   }
 
   return (
-    <div className={styles.dialogOverlay} role="presentation" onClick={onCancel}>
+    <div className={styles.dialogOverlay} onClick={onCancel}>
       <div
         className={styles.dialogBox}
         role="dialog"

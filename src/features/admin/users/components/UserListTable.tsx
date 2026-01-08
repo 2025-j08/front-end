@@ -36,7 +36,7 @@ export const UserListTable = ({ users, onDelete }: UserListTableProps) => {
           <th>施設名</th>
           <th>氏名</th>
           <th>メールアドレス</th>
-          <th aria-label="操作"></th>
+          <th>操作</th>
         </tr>
       </thead>
       <tbody>
