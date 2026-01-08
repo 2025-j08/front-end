@@ -68,6 +68,15 @@ export const useUserIssuanceForm = () => {
   }, [isSuccess]);
 
   /**
+   * 指定されたフィールドのエラーをクリアする共通関数
+   */
+  const clearError = (fieldName: keyof FormErrors) => {
+    if (errors[fieldName]) {
+      setErrors((prev) => ({ ...prev, [fieldName]: undefined }));
+    }
+  };
+
+  /**
    * 入力変更時のハンドラー
    * FormField(input/textarea) と select の両方に対応
    */
@@ -81,12 +90,7 @@ export const useUserIssuanceForm = () => {
     }));
 
     // 入力時にエラーをクリア
-    if (errors[name as keyof FormErrors]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: undefined,
-      }));
-    }
+    clearError(name as keyof FormErrors);
   };
 
   /**
@@ -100,12 +104,7 @@ export const useUserIssuanceForm = () => {
     }));
 
     // プログラム更新時もエラーをクリア
-    if (errors[name as keyof FormErrors]) {
-      setErrors((prev) => ({
-        ...prev,
-        [name]: undefined,
-      }));
-    }
+    clearError(name as keyof FormErrors);
   };
 
   // バリデーション関数
