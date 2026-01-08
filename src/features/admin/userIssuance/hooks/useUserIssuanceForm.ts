@@ -146,6 +146,8 @@ export const useUserIssuanceForm = () => {
       await new Promise((resolve) => setTimeout(resolve, SUBMIT_SIMULATION_DELAY));
 
       setIsSuccess(true);
+      // 成功時にフォームをリセット
+      setFormData({ email: '', facilityId: '' });
     } catch (error) {
       // エラー発生時の処理
       console.error('Submission failed:', error);
