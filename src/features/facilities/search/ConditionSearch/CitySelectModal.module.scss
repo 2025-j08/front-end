@@ -1,0 +1,130 @@
+@use '@/styles/colors' as colors;
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(colors.$black, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  opacity: 0;
+  animation: fadeIn 0.2s forwards;
+}
+
+.modal {
+  background-color: colors.$white;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(colors.$black, 0.2);
+  display: flex;
+  flex-direction: column;
+  transform: scale(0.95);
+  animation: scaleIn 0.2s forwards;
+}
+
+.header {
+  padding: 16px 20px;
+  border-bottom: 1px solid colors.$bg-gray;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: colors.$text-primary;
+  }
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: colors.$text-secondary;
+  padding: 0 8px;
+
+  &:hover {
+    color: colors.$text-primary;
+  }
+}
+
+.content {
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.cityGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.cityItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: colors.$bg-light-green;
+  }
+
+  input[type='checkbox'] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: colors.$form-primary;
+  }
+
+  span {
+    font-size: 0.95rem;
+    color: colors.$text-primary;
+  }
+}
+
+.footer {
+  padding: 16px 20px;
+  border-top: 1px solid colors.$bg-gray;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.actionButton {
+  padding: 8px 24px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+
+  &.confirm {
+    background-color: colors.$primary-color;
+    color: colors.$white;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  to {
+    transform: scale(1);
+  }
+}
