@@ -229,12 +229,7 @@ export const UserIssuanceForm = () => {
                     </li>
                   ))
                 ) : (
-                  <li
-                    className={styles.noResult}
-                    role="option"
-                    aria-disabled="true"
-                    aria-selected={false}
-                  >
+                  <li className={styles.noResult} role="status" aria-live="polite">
                     一致する施設がありません
                   </li>
                 )}
