@@ -17,7 +17,7 @@ export interface LoginFormData {
  * @returns {Object} フォームの状態とハンドラー
  * @returns {LoginFormData} formData - フォーム入力値の現在の状態
  * @returns {boolean} isLoading - 送信中かどうか
- * @returns {(e: React.ChangeEvent<HTMLInputElement>) => void} handleChange - 入力フィールドの値が変更されたときのハンドラー
+ * @returns {(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void} handleChange - 入力フィールドの値が変更されたときのハンドラー
  * @returns {(event: React.FormEvent<HTMLFormElement>) => Promise<void>} handleSubmit - フォーム送信時のハンドラー
  */
 export const useLoginForm = () => {
@@ -35,7 +35,7 @@ export const useLoginForm = () => {
   /**
    * 入力フィールドの値が変更されたときの処理
    */
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
