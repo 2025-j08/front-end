@@ -2,6 +2,7 @@ import Link from 'next/link';
 // import Image from 'next/image';
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
 import ContactSupportOutlinedIcon from '@mui/icons-material/ContactSupportOutlined';
+import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 
 import styles from './header.module.scss';
 
@@ -17,6 +18,11 @@ export const Header = () => {
 
           {/* 右側：ナビゲーション */}
           <nav className={styles.nav}>
+            {/* ユーザー発行画面へのリンク */}
+            <Link href="/admin/user-issuance" className={styles.navItem}>
+              <AdminPanelSettingsOutlinedIcon className={styles.icon} />
+              <span>ユーザー発行</span>
+            </Link>
             {/* ログイン */}
             <Link href="/features/auth" className={styles.navItem}>
               <LoginOutlinedIcon className={styles.icon} />
