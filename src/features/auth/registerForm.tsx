@@ -13,8 +13,17 @@ import { useRegisterForm } from '@/features/auth/hooks/useRegisterForm';
 import styles from './registerForm.module.scss';
 
 export const RegisterForm = () => {
-  const { formData, isLoading, isSuccess, errorMessage, handleChange, handleSubmit } =
-    useRegisterForm();
+  const {
+    formData,
+    isLoading,
+    isSuccess,
+    errorMessage,
+    fieldErrors,
+    passwordMinLength,
+    passwordRequirementsText,
+    handleChange,
+    handleSubmit,
+  } = useRegisterForm();
 
   return (
     <div className={styles.container}>
@@ -22,7 +31,7 @@ export const RegisterForm = () => {
       <LoadingOverlay isVisible={isLoading} text="登録中..." />
 
       {/* 成功時のオーバーレイ表示 */}
-      <SuccessOverlay isVisible={isSuccess} />
+      <SuccessOverlay isVisible={isSuccess} text="登録が完了しました" />
 
       {/* ヘッダー部分 */}
       <div className={styles.header}>
@@ -61,6 +70,7 @@ export const RegisterForm = () => {
             required
             value={formData.furigana}
             onChange={handleChange}
+            error={fieldErrors.furigana}
           />
 
           <FormField
@@ -71,8 +81,25 @@ export const RegisterForm = () => {
             placeholder="パスワードを入力"
             autoComplete="new-password"
             required
+            minLength={passwordMinLength}
             value={formData.password}
             onChange={handleChange}
+            error={fieldErrors.password}
+          />
+          <p className={styles.passwordHint}>※ {passwordRequirementsText}</p>
+
+          <FormField
+            label="パスワード（確認）"
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            placeholder="パスワードを再入力"
+            autoComplete="new-password"
+            required
+            minLength={passwordMinLength}
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            error={fieldErrors.confirmPassword}
           />
 
           {/* 登録ボタン */}
