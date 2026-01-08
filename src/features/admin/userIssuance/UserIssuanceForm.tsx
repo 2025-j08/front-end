@@ -76,13 +76,15 @@ export const UserIssuanceForm = () => {
   const normalizedSearchTerm = useMemo(() => normalizeText(searchTerm), [searchTerm]);
 
   // フィルタリングされた施設リスト（正規化済み文字列同士で部分一致判定）
-  const filteredFacilities = useMemo(
-    () =>
-      facilitiesList.filter((facility) =>
-        normalizeText(facility.name).includes(normalizedSearchTerm),
-      ),
-    [facilitiesList, normalizedSearchTerm],
-  );
+  const filteredFacilities = useMemo(() => {
+    // 検索ワードが空の場合は正規化処理をスキップして全施設を返す
+    if (normalizedSearchTerm === '') {
+      return facilitiesList;
+    }
+    return facilitiesList.filter((facility) =>
+      normalizeText(facility.name).includes(normalizedSearchTerm),
+    );
+  }, [facilitiesList, normalizedSearchTerm]);
 
   // フォーカスされた項目をスクロール表示
   useEffect(() => {
