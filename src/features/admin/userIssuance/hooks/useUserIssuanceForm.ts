@@ -22,6 +22,11 @@ export interface FormErrors {
   facilityId?: string;
 }
 
+interface UseUserIssuanceFormOptions {
+  /** フォーム送信成功時に呼び出されるコールバック関数 */
+  onSuccess?: () => void;
+}
+
 /**
  * 管理画面のユーザー発行フォームの状態管理および送信処理を行うカスタムフックです。
  *
@@ -29,6 +34,8 @@ export interface FormErrors {
  * 入力変更ハンドラー・フォーム送信ハンドラー・送信中/成功状態フラグを提供します。
  * 実際のAPI連携は行わず、現在はタイマーによる送信処理のシミュレーションを行います。
  *
+ * @param {UseUserIssuanceFormOptions} [options] - フックのオプション
+ * @param {() => void} [options.onSuccess] - フォーム送信成功時に呼び出されるコールバック関数
  * @returns {object} ユーザー発行フォームの状態および操作用ハンドラーをまとめたオブジェクト
  * @returns {UserIssuanceFormData} return.formData フォームの入力値（メールアドレス・施設ID）
  * @returns {FormErrors} return.errors 各フィールドのバリデーションエラーメッセージを含むオブジェクト
@@ -43,7 +50,7 @@ export interface FormErrors {
  * フォーム送信時に呼び出す非同期ハンドラー。送信中フラグと成功フラグの制御を行います。
  */
 
-export const useUserIssuanceForm = () => {
+export const useUserIssuanceForm = (options?: UseUserIssuanceFormOptions) => {
   const [formData, setFormData] = useState<UserIssuanceFormData>({
     email: '',
     facilityId: '',
@@ -153,6 +160,8 @@ export const useUserIssuanceForm = () => {
       setIsSuccess(true);
       // 成功時にフォームをリセット
       setFormData({ email: '', facilityId: '' });
+      // 成功時のコールバックを実行
+      options?.onSuccess?.();
     } catch (error: unknown) {
       // エラー発生時の処理
       // unknown型を使用して型安全性を確保

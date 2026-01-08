@@ -42,6 +42,13 @@ import styles from './UserIssuanceForm.module.scss';
 const normalizeText = (text: string): string => text.toLowerCase().normalize('NFKC');
 
 export const UserIssuanceForm = () => {
+  // 検索・絞り込み用のローカルState
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  // キーボードナビゲーション用のフォーカス管理
+  const [focusedIndex, setFocusedIndex] = useState<number>(-1);
+  const listItemRefs = useRef<(HTMLLIElement | null)[]>([]);
+
   // updateFormData をフックから取得
   const {
     formData,
@@ -52,14 +59,9 @@ export const UserIssuanceForm = () => {
     handleChange,
     updateFormData,
     handleSubmit,
-  } = useUserIssuanceForm();
-
-  // 検索・絞り込み用のローカルState
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  // キーボードナビゲーション用のフォーカス管理
-  const [focusedIndex, setFocusedIndex] = useState<number>(-1);
-  const listItemRefs = useRef<(HTMLLIElement | null)[]>([]);
+  } = useUserIssuanceForm({
+    onSuccess: () => setSearchTerm(''),
+  });
 
   // JSONデータから選択肢リストを生成（IDを文字列に変換）
   // 依存配列が空: searchMapDataは静的インポートされたJSONデータで変化しないため
