@@ -1,4 +1,4 @@
-@use '@/styles/colors' as *;
+@use '@/styles/colors' as colors;
 
 .container {
   position: relative;
@@ -6,20 +6,20 @@
   margin: 0 auto;
   padding: 24px 20px;
   font-family: 'Geist', sans-serif;
-  background-color: $bg-white;
+  background-color: colors.$bg-white;
 }
 
 // ヘッダー部分
 .header {
   margin-bottom: 24px;
-  border-bottom: 2px solid $border-dark;
+  border-bottom: 2px solid colors.$border-dark;
   padding-bottom: 8px;
 }
 
 .title {
   font-size: 1.5rem;
   font-weight: bold;
-  color: $text-primary;
+  color: colors.$text-primary;
   margin: 0;
 }
 
@@ -31,48 +31,24 @@
 
 // エラーメッセージ
 .errorMessage {
-  background-color: rgba($error-color, 0.1);
-  border: 1px solid $error-color;
-  color: $error-color;
+  background-color: rgba(colors.$error-color, 0.1);
+  border: 1px solid colors.$error-color;
+  color: colors.$error-color;
   padding: 12px 16px;
   border-radius: 4px;
   margin-bottom: 24px;
   font-size: 0.95rem;
 }
 
-// 登録ボタン（画像の緑塗りつぶし・白文字スタイル）
-.buttonContainer {
-  display: flex;
-  justify-content: center;
-  margin-top: 60px;
-}
+// パスワード要件ヒント
+.passwordHint {
+  margin: 4px 0 16px 150px;
+  font-size: 0.85rem;
+  color: colors.$text-secondary;
+  line-height: 1.4;
 
-.registerButton {
-  width: 200px;
-  padding: 12px 0;
-  background-color: $form-primary;
-  color: $white;
-  border: 1px solid $dark-gray;
-  border-radius: 2px;
-  font-size: 1.2rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-
-  &:hover {
-    opacity: 0.9;
-  }
-
-  &:active {
-    transform: translateY(1px);
-    box-shadow: none;
-  }
-
-  &:disabled {
-    background-color: $bg-gray;
-    border-color: $border-gray;
-    cursor: not-allowed;
+  @media (max-width: 600px) {
+    margin-left: 0;
   }
 }
 
