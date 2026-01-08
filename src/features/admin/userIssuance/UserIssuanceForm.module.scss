@@ -102,7 +102,7 @@
   padding: 0;
   list-style: none;
   z-index: 100; // 他の要素より上に表示
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px colors.$shadow-light;
 }
 
 // リスト項目
@@ -131,10 +131,10 @@
   text-align: center;
 }
 
-//　送信エラーメッセージ
+// 送信エラーメッセージ
 .submitErrorMessage {
-  color: colors.$error-color; // #d32f2f
-  background-color: rgba(colors.$error-color, 0.1); // #fdecea に近い色を $error-color から生成
+  color: colors.$error-color;
+  background-color: colors.$error-bg-light;
   padding: 10px;
   border-radius: 4px;
   margin-bottom: 20px;
@@ -152,7 +152,7 @@
     border: 1px solid colors.$border-green;
     font-size: 1.4rem;
     padding: 12px 100px;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    text-shadow: 0 1px 2px colors.$text-shadow-subtle;
 
     &:hover {
       opacity: 0.9;

@@ -46,6 +46,7 @@ $form-placeholder: #999;
 // ステータスカラー
 // ====================================
 $error-color: #d32f2f;
+$error-bg-light: rgba(211, 47, 47, 0.1); // エラー背景用の薄い赤
 $success-color: #4caf50;
 $success-light: #66bb6a;
 
@@ -65,6 +66,12 @@ $bg-light-gray: #f0f0f0;
 $bg-gray: #d3d3d3;
 $bg-active: #e0e0e0;
 $bg-hover-light: rgba(0, 0, 0, 0.02);
+
+// ====================================
+// シャドウ・エフェクト用カラー
+// ====================================
+$shadow-light: rgba(0, 0, 0, 0.1);
+$text-shadow-subtle: rgba(0, 0, 0, 0.1);
 
 // ====================================
 // ボーダーカラー
