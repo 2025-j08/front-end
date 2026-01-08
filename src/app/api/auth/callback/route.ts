@@ -1,69 +1,139 @@
 import { NextResponse } from 'next/server';
 import { type NextRequest } from 'next/server';
 
-import { createClient as createServerClient, createAdminClient } from '@/lib/supabase/server';
-
-/**
- * Admin用Supabaseクライアント（Service Role Key使用）
- *
- * RLSをバイパスして以下の操作を実行：
- * - invitationsテーブルから招待情報を検証（有効期限、使用済み判定）
- * - 管理者のみがアクセス可能な招待レコードの読み取り
- */
-const supabaseAdmin = createAdminClient();
+import { createClient as createServerClient } from '@/lib/supabase/server';
 
 export async function GET(request: NextRequest) {
-  // リクエストから認可コードを取得
-  const { searchParams, origin } = new URL(request.url);
-  const code = searchParams.get('code');
+  try {
+    // URL(auth/callback)から認可コードを取得
+    const { searchParams, origin } = new URL(request.url);
+    const code = searchParams.get('code');
 
-  // 招待コードをチェック
-  if (!code) {
-    return NextResponse.redirect(`${origin}/auth/signin?error=no_code`);
-  }
+    // 接続用クライアント（RLS有効）
+    const supabaseServer = await createServerClient();
 
-  const supabase = await createServerClient();
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.exchangeCodeForSession(code);
+    // 認可コードをチェック
+    if (!code) {
+      console.warn('認可コードが見つかりません', { timestamp: new Date().toISOString() });
+      return NextResponse.redirect(`${origin}/auth/signin?error=no_code`);
+    }
 
-  // 認証エラーハンドリング
-  if (error || !user) {
-    const errorUrl = new URL(`${origin}/auth/signin`);
-    errorUrl.searchParams.set('error', error?.message || 'Authentication failed');
-    return NextResponse.redirect(errorUrl);
-  }
+    // 認証情報を取得する
+    // Cookieセッションを復元している
+    const {
+      data: { user },
+      error: authError,
+    } = await supabaseServer.auth.exchangeCodeForSession(code);
 
-  // 3. 招待ユーザーかをセッション情報から確認
-  const { data: invitation } = await supabaseAdmin
-    .from('invitations')
-    .select('id,email,expires_at,used_at')
-    .eq('email', user.email)
-    .single();
+    // 認証エラーハンドリング（機密情報は露出しない）
+    if (authError || !user) {
+      console.error('認証エラー', {
+        errorCode: authError?.code,
+        errorMessage: authError?.message,
+        timestamp: new Date().toISOString(),
+      });
 
-  // 招待情報がない場合はエラー
-  if (!invitation) {
-    return NextResponse.redirect(`${origin}/auth/signin?error=no_invitation`);
-  }
+      const errorUrl = new URL(`${origin}/auth/signin`);
+      errorUrl.searchParams.set('error', 'auth_failed');
+      return NextResponse.redirect(errorUrl);
+    }
 
-  // 招待の期限切れチェック
-  if (invitation.expires_at) {
+    // 招待情報を取得
+    // RLS有効なクライアントを使用してセキュリティを確保
+    const { data: invitation, error: invitationError } = await supabaseServer
+      .from('invitations')
+      .select('*')
+      .eq('user_id', user.id)
+      .single();
+
+    // 招待情報がない場合のエラーハンドリング
+    if (invitationError || !invitation) {
+      console.error('招待情報が見つかりません', {
+        userId: user.id,
+        email: user.email,
+        error: invitationError?.message,
+        timestamp: new Date().toISOString(),
+      });
+
+      // セッションを破棄
+      // 不正なユーザーがセッションを保持しないようにする
+      await supabaseServer.auth.signOut();
+
+      return NextResponse.redirect(`${origin}/auth/signin?error=no_invitation`);
+    }
+
+    // 有効期限が設定されているか
+    if (!invitation.expires_at) {
+      console.error('招待情報に有効期限が設定されていません', {
+        userId: user.id,
+        facilityId: invitation.facility_id,
+        timestamp: new Date().toISOString(),
+      });
+
+      // セッションを破棄
+      await supabaseServer.auth.signOut();
+
+      return NextResponse.redirect(`${origin}/auth/signin?error=invalid_invitation`);
+    }
+
     const expiresAt = new Date(invitation.expires_at);
-    if (Number.isFinite(expiresAt.getTime()) && expiresAt < new Date()) {
+
+    // 有効な日付フォーマットであるか
+    if (!Number.isFinite(expiresAt.getTime())) {
+      console.error('無効な有効期限のフォーマットです', {
+        userId: user.id,
+        expiresAt: invitation.expires_at,
+        timestamp: new Date().toISOString(),
+      });
+
+      // セッションを破棄
+      await supabaseServer.auth.signOut();
+
+      return NextResponse.redirect(`${origin}/auth/signin?error=invalid_invitation`);
+    }
+
+    // 有効期限は切れているか
+    if (expiresAt < new Date()) {
+      console.info('招待情報が有効期限切れです', {
+        userId: user.id,
+        expiresAt: expiresAt.toISOString(),
+        timestamp: new Date().toISOString(),
+      });
+
+      // 期限切れの招待レコードを削除
+      const { error: deleteError } = await supabaseServer
+        .from('invitations')
+        .delete()
+        .eq('user_id', user.id);
+
+      if (deleteError) {
+        console.error('期限切れ招待の削除に失敗しました', {
+          userId: user.id,
+          error: deleteError.message,
+          timestamp: new Date().toISOString(),
+        });
+        // 削除失敗しても処理は継続
+        // セッション破棄とリダイレクトを行うため
+      }
+
+      // セッションを破棄
+      await supabaseServer.auth.signOut();
+
       return NextResponse.redirect(`${origin}/auth/signin?error=expired_invitation`);
     }
+
+    // セットアップ機能にリダイレクト
+    // セッション(Cookie)経由でuser_idが自動で渡される
+    return NextResponse.redirect(`${origin}/auth/setup`);
+  } catch (error) {
+    // 予期しないエラーのログ
+    console.error('予期しないエラーが発生しました', {
+      error: error instanceof Error ? error.message : error,
+      stack: error instanceof Error ? error.stack : undefined,
+      timestamp: new Date().toISOString(),
+    });
+
+    // 詳細なエラー情報は見せない
+    return new NextResponse('Internal server error', { status: 500 });
   }
-
-  // すでに使用済みの招待は無効
-  if (invitation.used_at) {
-    return NextResponse.redirect(`${origin}/auth/signin?error=used_invitation`);
-  }
-
-  // セットアップ機能にリダイレクト（招待情報をクエリパラメータで渡す）
-  const setupUrl = new URL(`${origin}/auth/setup`);
-  setupUrl.searchParams.set('invitation_id', invitation.id.toString());
-  setupUrl.searchParams.set('email', user.email!);
-
-  return NextResponse.redirect(setupUrl);
 }

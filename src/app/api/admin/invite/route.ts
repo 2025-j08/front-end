@@ -2,60 +2,148 @@ import { NextResponse } from 'next/server';
 
 import { createClient as createServerClient, createAdminClient } from '@/lib/supabase/server';
 
-/**
- * Admin用Supabaseクライアント（Service Role Key使用）
- *
- * RLSをバイパスして以下の操作を実行：
- * - invitationsテーブルへの招待情報の保存
- * - Supabase Auth APIを使った招待メールの送信
- */
-const supabaseAdmin = createAdminClient();
+// メール検証用の正規表現
+const EMAIL_REGEX = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,}$/;
+
+// リクエストボディのパラメータ
+type InviteRequestBody = {
+  email: string;
+  facilityId: number;
+};
+
+// 関数式を使用して変数のように関数を定義
+// 成功/失敗時の戻り値の種類を定義
+const parseRequestBody = (
+  body: unknown,
+): { success: true; data: InviteRequestBody } | { success: false; message: string } => {
+  // json形式になっているか(配列も含む)
+  if (typeof body !== 'object' || body === null) {
+    return { success: false, message: '不正なリクエスト形式です' };
+  }
+
+  // jsonのリクエストボディを代入
+  const { email, facilityId } = body as Record<string, unknown>;
+
+  // emailの型チェック
+  if (typeof email !== 'string' || !EMAIL_REGEX.test(email)) {
+    return { success: false, message: '有効なメールアドレスを指定してください' };
+  }
+
+  // facility_idの型チェック
+  const parsedFacilityId = Number(facilityId);
+  // 不適切な型だった
+  if (!Number.isInteger(parsedFacilityId) || parsedFacilityId <= 0) {
+    return { success: false, message: '有効な施設IDを指定してください' };
+  }
+
+  // 各値を返却する
+  return { success: true, data: { email, facilityId: parsedFacilityId } };
+};
 
 export async function POST(request: Request) {
-  const { email, role, facilityIds } = await request.json();
+  try {
+    // jsonリクエストボディを取得(エラーがあればnull)
+    const json = await request.json().catch(() => null);
 
-  // リクエスト元が管理者か確認
-  const supabase = await createServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+    // 各パラメータをバリデーションする
+    const parsed = parseRequestBody(json);
+    // 失敗時のエラーレスポンス
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.message }, { status: 400 });
+    }
 
-  if (!user) {
-    return NextResponse.json({ error: '認証が必要です' }, { status: 401 });
+    // バリデーション済みデータを代入
+    const { email, facilityId } = parsed.data;
+
+    // 環境変数が正しく設定できているか
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+    // 未設定のエラーレスポンス
+    if (!appUrl) {
+      console.error('NEXT_PUBLIC_APP_URL is not set');
+      return NextResponse.json({ error: '環境設定エラーが発生しました' }, { status: 500 });
+    }
+
+    // サーバ用クライアントと管理者用クライアントを作成
+    const supabaseServer = await createServerClient();
+    const supabaseAdmin = createAdminClient();
+
+    // cookiesからセッションを参照し認証済みユーザかどうか調べている
+    const {
+      data: { user },
+    } = await supabaseServer.auth.getUser();
+
+    // 未認証のエラーレスポンス
+    if (!user) {
+      return NextResponse.json({ error: '認証が必要です' }, { status: 401 });
+    }
+
+    // 管理者ユーザか確認する(役割を抽出)
+    // DBクライアントのセッション情報からuser_idを参照
+    const { data: profile } = await supabaseServer
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+
+    // 管理者ではなかったときのエラーレスポンス
+    if (profile?.role !== 'admin') {
+      return NextResponse.json({ error: '管理者権限が必要です' }, { status: 403 });
+    }
+
+    // リクエストボディのメールアドレス宛に招待メールを送信
+    // authモジュールの関数は管理者権限で実行する必要がある
+    // redirectTo: 招待ユーザが遷移する(リダイレクトされる)リンク
+    const { data, error: authError } = await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
+      redirectTo: `${appUrl}/auth/callback`,
+    });
+
+    // 招待ユーザのIDが取得できなかった or 招待メールの送信に失敗した
+    // 失敗時のエラーレスポンス
+    if (authError || !data?.user?.id) {
+      console.error('inviteUserByEmail failed', authError);
+      return NextResponse.json({ error: '招待メール送信に失敗しました' }, { status: 400 });
+    }
+
+    // 招待ユーザ用テーブルに招待対象ユーザのIDとユーザが担当する施設のIDを挿入する
+    const { error: insertError } = await supabaseServer.from('invitations').upsert({
+      user_id: data.user.id,
+      facility_id: facilityId,
+    });
+
+    // invitations挿入失敗時の補償処理（ユーザー作成を取り消す）
+    if (insertError) {
+      // エラーの構造化ログを出力
+      console.error('invitations upsert failed after user creation', {
+        userId: data.user.id,
+        email: email,
+        facilityId: facilityId,
+        error: insertError.message,
+        timestamp: new Date().toISOString(),
+      });
+
+      // 補償トランザクションにより作成された認証ユーザーを削除
+      try {
+        await supabaseAdmin.auth.admin.deleteUser(data.user.id);
+        console.log('Rollback successful', { userId: data.user.id, email: email });
+      } catch (rollbackError) {
+        // ロールバック失敗は手動対応が必要になる
+        console.error('FATAL: Rollback failed - manual cleanup required', {
+          userId: data.user.id,
+          email: email,
+          facilityId: facilityId,
+          originalError: insertError.message,
+          rollbackError: rollbackError instanceof Error ? rollbackError.message : rollbackError,
+        });
+      }
+
+      return NextResponse.json({ error: '招待情報の保存に失敗しました' }, { status: 500 });
+    }
+
+    // 成功レスポンス
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    // 処理中にエラーが発生した場合のレスポンス
+    console.error('Unexpected error in invite API', error);
+    return NextResponse.json({ error: 'サーバーエラーが発生しました' }, { status: 500 });
   }
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-
-  if (profile?.role !== 'admin') {
-    return NextResponse.json({ error: '管理者権限が必要です' }, { status: 403 });
-  }
-
-  // invitationsテーブルに保存
-  const { error: inviteError } = await supabaseAdmin.from('invitations').upsert({
-    email,
-    role,
-    facility_ids: facilityIds,
-    invited_by: user.id,
-  });
-
-  if (inviteError) {
-    return NextResponse.json({ error: inviteError.message }, { status: 400 });
-  }
-
-  // supabase authで招待メールを送信
-  const { error: authError } = await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
-    redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`,
-  });
-
-  if (authError) {
-    // 失敗したらinvitationsも削除する
-    await supabaseAdmin.from('invitations').delete().eq('email', email);
-    return NextResponse.json({ error: authError.message }, { status: 400 });
-  }
-
-  return NextResponse.json({ success: true });
 }
