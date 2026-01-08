@@ -1,4 +1,4 @@
-@use '@/styles/colors' as *;
+@use '@/styles/colors' as colors;
 
 .pagination {
   display: flex;
@@ -11,15 +11,15 @@
 
 .arrow {
   padding: 8px 12px;
-  border: 1px solid $border-dark;
-  background-color: $bg-white;
+  border: 1px solid colors.$border-dark;
+  background-color: colors.$bg-white;
   cursor: pointer;
   font-size: 1rem;
   border-radius: 4px;
   transition: background-color 0.2s;
 
   &:hover:not(:disabled) {
-    background-color: $bg-light-gray;
+    background-color: colors.$bg-light-gray;
   }
 
   &:disabled {
@@ -30,28 +30,28 @@
 
 .pageButton {
   padding: 8px 14px;
-  border: 1px solid $border-dark;
-  background-color: $bg-white;
+  border: 1px solid colors.$border-dark;
+  background-color: colors.$bg-white;
   cursor: pointer;
   font-size: 1rem;
   border-radius: 4px;
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: $bg-light-gray;
+    background-color: colors.$bg-light-gray;
   }
 
   &.active {
-    background-color: $primary-color;
-    color: $primary-text-color;
-    border-color: $primary-color;
+    background-color: colors.$primary-color;
+    color: colors.$primary-text-color;
+    border-color: colors.$primary-color;
     font-weight: bold;
   }
 }
 
 .ellipsis {
   padding: 8px 4px;
-  color: $text-secondary;
+  color: colors.$text-secondary;
   user-select: none;
 }
 

@@ -1,13 +1,13 @@
-@import '@/styles/colors';
+@use '@/styles/colors' as colors;
 
 .button {
   padding: 8px 30px;
   font-size: 1.2rem;
   font-weight: bolder;
-  color: $primary-text-color;
-  background-color: $primary-color;
+  color: colors.$primary-text-color;
+  background-color: colors.$primary-color;
 
-  border: 3px solid $primary-color;
+  border: 3px solid colors.$primary-color;
   border-radius: 100px;
 
   cursor: pointer;
@@ -19,11 +19,11 @@
 }
 
 .button:hover {
-  color: $primary-color;
-  background-color: $primary-text-color;
+  color: colors.$primary-color;
+  background-color: colors.$primary-text-color;
 }
 
 .button:active {
-  color: $primary-color;
-  background-color: $bg-active;
+  color: colors.$primary-color;
+  background-color: colors.$bg-active;
 }

@@ -1,4 +1,4 @@
-@use '../../../../styles/colors' as *;
+@use '@/styles/colors' as colors;
 
 .container {
   width: 100%;
@@ -10,9 +10,9 @@
 .inputWrapper {
   display: flex;
   align-items: center;
-  border: 2px solid $border-dark;
+  border: 2px solid colors.$border-dark;
   border-radius: 50px;
-  background-color: $bg-white;
+  background-color: colors.$bg-white;
   padding: 5px;
   width: 100%;
   max-width: 600px;
@@ -25,16 +25,16 @@
   font-size: 16px;
   padding: 10px 20px;
   border-radius: 50px 0 0 50px;
-  color: $text-secondary;
+  color: colors.$text-secondary;
 
   &::placeholder {
-    color: $placeholder-color;
+    color: colors.$placeholder-color;
   }
 }
 
 .searchButton {
-  background-color: $search-button-bg;
-  color: $primary-text-color;
+  background-color: colors.$search-button-bg;
+  color: colors.$primary-text-color;
   border: none;
   border-radius: 30px;
   padding: 10px 30px;
