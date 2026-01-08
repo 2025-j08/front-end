@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 
 import {
@@ -86,56 +86,60 @@ export const useRegisterForm = (): UseRegisterFormReturn => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
+  // 最新のformDataを参照するためのref（useCallback内で古い値を参照しないように）
+  const formDataRef = useRef(formData);
+  useEffect(() => {
+    formDataRef.current = formData;
+  }, [formData]);
+
   /**
    * 入力値変更ハンドラ
    */
-  const handleChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const { name, value } = e.target;
-      setFormData((prev) => ({
+  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    // フリガナフィールドの場合、カタカナバリデーション
+    if (name === 'furigana') {
+      const validation = validateFurigana(value);
+      setFieldErrors((prev) => ({
         ...prev,
-        [name]: value,
+        furigana: validation.error,
       }));
+    }
 
-      // フリガナフィールドの場合、カタカナバリデーション
-      if (name === 'furigana') {
-        const validation = validateFurigana(value);
-        setFieldErrors((prev) => ({
-          ...prev,
-          furigana: validation.error,
-        }));
-      }
+    // パスワードフィールドの場合、リアルタイムバリデーション
+    if (name === 'password') {
+      const validation = validatePassword(value);
+      // パスワード確認との一致もチェック（refから最新値を取得）
+      const confirmPasswordValue = formDataRef.current.confirmPassword;
+      const matchValidation = validatePasswordMatch(value, confirmPasswordValue);
+      const confirmError =
+        confirmPasswordValue && !matchValidation.isValid ? matchValidation.error : undefined;
 
-      // パスワードフィールドの場合、リアルタイムバリデーション
-      if (name === 'password') {
-        const validation = validatePassword(value);
-        // パスワード確認との一致もチェック（formData.confirmPassword は現在の値を使用）
-        const confirmPasswordValue = formData.confirmPassword;
-        const matchValidation = validatePasswordMatch(value, confirmPasswordValue);
-        const confirmError =
-          confirmPasswordValue && !matchValidation.isValid ? matchValidation.error : undefined;
+      setFieldErrors((prev) => ({
+        ...prev,
+        password: validation.isValid ? undefined : validation.errors[0],
+        confirmPassword: confirmError,
+      }));
+    }
 
-        setFieldErrors((prev) => ({
-          ...prev,
-          password: validation.isValid ? undefined : validation.errors[0],
-          confirmPassword: confirmError,
-        }));
-      }
+    // パスワード確認フィールドの場合、一致チェック
+    if (name === 'confirmPassword') {
+      // refから最新のパスワード値を取得
+      const matchValidation = validatePasswordMatch(formDataRef.current.password, value);
+      setFieldErrors((prev) => ({
+        ...prev,
+        confirmPassword: matchValidation.isValid ? undefined : matchValidation.error,
+      }));
+    }
 
-      // パスワード確認フィールドの場合、一致チェック
-      if (name === 'confirmPassword') {
-        const matchValidation = validatePasswordMatch(formData.password, value);
-        setFieldErrors((prev) => ({
-          ...prev,
-          confirmPassword: matchValidation.isValid ? undefined : matchValidation.error,
-        }));
-      }
-
-      // 入力時に全体エラーをクリア
-      setErrorMessage(null);
-    },
-    [formData.password, formData.confirmPassword],
-  );
+    // 入力時に全体エラーをクリア
+    setErrorMessage(null);
+  }, []);
 
   /**
    * フォーム送信ハンドラ
