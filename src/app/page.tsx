@@ -1,11 +1,3 @@
-/*
-import { Search } from '@/features/facilities/search/search';
-
-export default function Home() {
-  return <Search />;
-}
-*/
-
 import Link from 'next/link';
 
 import { Search } from '@/features/facilities/search/search';
