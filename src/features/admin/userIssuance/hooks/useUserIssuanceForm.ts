@@ -4,8 +4,12 @@ import { useState, useEffect } from 'react';
 const SUBMIT_SIMULATION_DELAY = 2000;
 const SUCCESS_MESSAGE_DURATION = 3000;
 
-// メールアドレスの正規表現パターン（HTML5標準より厳密なチェック）
-const EMAIL_REGEX = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+// メールアドレスの正規表現パターン（RFC準拠の厳密なチェック）
+// - ドメインの各ラベルは英数字で開始・終了（ハイフンは中間のみ）
+// - 連続するドットを禁止
+// - TLDは2文字以上の英字のみ
+const EMAIL_REGEX =
+  /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
 
 interface UserIssuanceFormData {
   email: string;
