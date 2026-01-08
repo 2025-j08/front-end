@@ -20,11 +20,12 @@
   background-color: colors.$border-green;
   border: 2px solid colors.$border-black;
   border-radius: 20px;
-  padding: 5px 20px;
+  padding: 8px 24px;
   font-weight: bold;
-  font-size: 14px;
-  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+  font-size: 16px;
+  box-shadow: 3px 3px 0px $border-black;
   z-index: 1000;
+  color: $black;
 }
 
 .mapArea {
