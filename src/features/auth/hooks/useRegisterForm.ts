@@ -109,22 +109,17 @@ export const useRegisterForm = (): UseRegisterFormReturn => {
       // パスワードフィールドの場合、リアルタイムバリデーション
       if (name === 'password') {
         const validation = validatePassword(value);
-        setFieldErrors((prev) => {
-          // パスワード確認との一致もチェック
-          const matchValidation = validatePasswordMatch(
-            value,
-            prev.confirmPassword ? formData.confirmPassword : '',
-          );
-          const confirmError =
-            formData.confirmPassword && !matchValidation.isValid
-              ? matchValidation.error
-              : undefined;
-          return {
-            ...prev,
-            password: validation.isValid ? undefined : validation.errors[0],
-            confirmPassword: confirmError,
-          };
-        });
+        // パスワード確認との一致もチェック（formData.confirmPassword は現在の値を使用）
+        const confirmPasswordValue = formData.confirmPassword;
+        const matchValidation = validatePasswordMatch(value, confirmPasswordValue);
+        const confirmError =
+          confirmPasswordValue && !matchValidation.isValid ? matchValidation.error : undefined;
+
+        setFieldErrors((prev) => ({
+          ...prev,
+          password: validation.isValid ? undefined : validation.errors[0],
+          confirmPassword: confirmError,
+        }));
       }
 
       // パスワード確認フィールドの場合、一致チェック
