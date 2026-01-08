@@ -6,6 +6,7 @@
 .formGroup {
   display: flex;
   align-items: flex-start;
+  flex-wrap: wrap;
   margin-bottom: 22px;
 
   label {
@@ -67,5 +68,28 @@
     textarea {
       width: 100%;
     }
+  }
+}
+
+// エラー状態の入力フィールド
+.inputError {
+  border-color: colors.$error-color !important;
+
+  &:focus {
+    box-shadow: 0 0 0 4px rgba(colors.$error-color, 0.15) !important;
+  }
+}
+
+// エラーメッセージ
+.errorMessage {
+  width: 100%;
+  margin: 8px 0 0 150px;
+  padding: 0;
+  font-size: 0.85rem;
+  color: colors.$error-color;
+  line-height: 1.4;
+
+  @media (max-width: 600px) {
+    margin-left: 0;
   }
 }
