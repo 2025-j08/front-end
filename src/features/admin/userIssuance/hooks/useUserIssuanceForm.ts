@@ -147,15 +147,23 @@ export const useUserIssuanceForm = () => {
 
     try {
       // API送信のシミュレーション
+      // 将来的にはここを実際のAPI呼び出しに置き換える
       await new Promise((resolve) => setTimeout(resolve, SUBMIT_SIMULATION_DELAY));
 
       setIsSuccess(true);
       // 成功時にフォームをリセット
       setFormData({ email: '', facilityId: '' });
-    } catch (error) {
+    } catch (error: unknown) {
       // エラー発生時の処理
+      // unknown型を使用して型安全性を確保
       console.error('Submission failed:', error);
-      setSubmitError('システムエラーが発生しました。しばらくしてから再度お試しください。');
+
+      // エラーメッセージの型安全な取得
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'システムエラーが発生しました。しばらくしてから再度お試しください。';
+      setSubmitError(errorMessage);
     } finally {
       // ローディング解除をfinallyで行う
       setIsLoading(false);
