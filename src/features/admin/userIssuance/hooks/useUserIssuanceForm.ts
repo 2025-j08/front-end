@@ -5,11 +5,14 @@ const SUBMIT_SIMULATION_DELAY = 2000;
 const SUCCESS_MESSAGE_DURATION = 3000;
 
 // メールアドレスの正規表現パターン（RFC準拠の厳密なチェック）
-// - ドメインの各ラベルは英数字で開始・終了（ハイフンは中間のみ）
+// ローカル部（@の前）:
+// - 英数字で開始・終了（_, -, +は中間のみ許可、.は連続不可・先頭末尾不可）
+// ドメイン部（@の後）:
+// - 各ラベルは英数字で開始・終了（ハイフンは中間のみ）
 // - 連続するドットを禁止
 // - TLDは2文字以上の英字のみ
 const EMAIL_REGEX =
-  /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+  /^[a-zA-Z0-9]+([._+-][a-zA-Z0-9]+)*@[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
 
 interface UserIssuanceFormData {
   email: string;
@@ -160,6 +163,7 @@ export const useUserIssuanceForm = (options?: UseUserIssuanceFormOptions) => {
       setIsSuccess(true);
       // 成功時にフォームをリセット
       setFormData({ email: '', facilityId: '' });
+      setErrors({});
       // 成功時のコールバックを実行
       options?.onSuccess?.();
     } catch (error: unknown) {
