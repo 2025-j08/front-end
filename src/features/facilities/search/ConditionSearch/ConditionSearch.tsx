@@ -21,6 +21,7 @@ const extractCityFromAddress = (address: string, prefName: string): string => {
   // 郡・町村の抽出 (例: 相楽郡精華町)
   // 「市」を含まない連続部分に限定してマッチさせることで、誤った範囲を取得しないようにする
   const gunMatch = restAddress.match(/^([^市]+郡[^市]+?[町村])/);
+
   if (gunMatch) return gunMatch[1];
 
   // 区の抽出 (東京23区など、市がない場合)
@@ -47,6 +48,7 @@ export const ConditionSearch = () => {
 
   // 施設データから都道府県ごとの市町村リストを動的に生成
   const dynamicAreaData = useMemo(() => {
+
     // パフォーマンス改善: 都道府県名からデータを高速に引くためのMapを作成
     const prefNameMap = new Map<string, (typeof PREFECTURES)[number]>();
     PREFECTURES.forEach((p) => prefNameMap.set(p.name, p));
@@ -60,11 +62,13 @@ export const ConditionSearch = () => {
 
     // 全施設データを走査して市町村を収集
     searchMapData.forEach((facility) => {
+
       // 住所の先頭文字列から都道府県を特定 (4文字または3文字)
       let pref = prefNameMap.get(facility.address.substring(0, 4));
       if (!pref) {
         pref = prefNameMap.get(facility.address.substring(0, 3));
       }
+
 
       if (pref) {
         const cityName = extractCityFromAddress(facility.address, pref.name);
@@ -77,7 +81,8 @@ export const ConditionSearch = () => {
     // Setを配列に変換してソート（漢字コード順）
     const result: Record<string, string[]> = {};
     Object.keys(map).forEach((key) => {
-      // 修正: sensitivity: 'base' を追加して、より自然な日本語ソート順にする
+
+      // sensitivity: 'base' を追加して、より自然な日本語ソート順にする
       result[key] = Array.from(map[key]).sort((a, b) =>
         a.localeCompare(b, 'ja', { sensitivity: 'base' }),
       );
@@ -85,6 +90,7 @@ export const ConditionSearch = () => {
 
     return result;
   }, []); // PREFECTURES と searchMapData は静的データのため依存配列は空でOK
+
 
   // 都道府県ボタンクリック時の処理
   const handlePrefectureClick = (prefId: string) => {
@@ -109,6 +115,7 @@ export const ConditionSearch = () => {
     );
   };
 
+
   // 検索実行時のハンドラー
   const handleSearch = () => {
     // 選択された条件（市区町村、施設形態）を取得
@@ -132,7 +139,9 @@ export const ConditionSearch = () => {
   return (
     <div className={styles.container}>
       {/* 左上のバッジ */}
+
       <div className={styles.keywordBadge}>条件で探す</div>
+
 
       {/* 都道府県セクション */}
       <div className={styles.section}>
@@ -167,6 +176,7 @@ export const ConditionSearch = () => {
                 className={`${styles.typeButton} ${isSelected ? styles.selected : ''}`}
                 type="button"
                 aria-label={`${type}の施設形態で絞り込み${isSelected ? '（選択中）' : ''}`}
+
                 aria-pressed={isSelected}
                 onClick={() => handleTypeClick(type)}
               >
@@ -191,6 +201,7 @@ export const ConditionSearch = () => {
       </div>
 
       {/* 市区町村選択モーダル */}
+
       {modalOpen && (
         <CitySelectModal
           isOpen={modalOpen}
@@ -201,6 +212,7 @@ export const ConditionSearch = () => {
           onConfirm={handleCitiesConfirm}
         />
       )}
+
     </div>
   );
 };
