@@ -45,16 +45,16 @@ export const BasicInfoSection = ({
       <section className={styles.basicInfoSection}>
         <div className={styles.gridContainer}>
           <div className={styles.infoCard}>
+            <span className={styles.label}>施設の種類</span>
+            <span className={styles.value}>{dormitoryType || '-'}</span>
+          </div>
+          <div className={styles.infoCard}>
             <span className={styles.label}>設立年</span>
             <span className={styles.value}>{establishedYear || '-'}</span>
           </div>
           <div className={styles.infoCard}>
-            <span className={styles.label}>舎の種別</span>
-            <span className={styles.value}>{dormitoryType || '-'}</span>
-          </div>
-          <div className={styles.infoCard}>
             <label className={styles.label} htmlFor="capacity">
-              定員
+              施設定員
             </label>
             <div className={styles.capacityInputs}>
               <div className={styles.capacityField}>
@@ -96,9 +96,14 @@ export const BasicInfoSection = ({
               </div>
             </div>
           </div>
-          <div className={styles.infoCard}>
-            <span className={styles.label}>併設施設</span>
-            <span className={styles.value}>{annexText}</span>
+          <div className={`${styles.infoCard} ${styles.annexCard}`}>
+            <div className={styles.annexHeader}>
+              <span className={styles.label}>併設施設</span>
+              <span className={styles.subStatus}>{annexFacilities?.length ? 'あり' : 'なし'}</span>
+            </div>
+            <div className={styles.annexContent}>
+              <span className={styles.value}>{annexText}</span>
+            </div>
           </div>
         </div>
       </section>
@@ -109,20 +114,25 @@ export const BasicInfoSection = ({
     <section className={styles.basicInfoSection}>
       <div className={styles.gridContainer}>
         <div className={styles.infoCard}>
+          <span className={styles.label}>施設の種類</span>
+          <span className={styles.value}>{dormitoryType || '-'}</span>
+        </div>
+        <div className={styles.infoCard}>
           <span className={styles.label}>設立年</span>
           <span className={styles.value}>{establishedYear || '-'}</span>
         </div>
         <div className={styles.infoCard}>
-          <span className={styles.label}>舎の種別</span>
-          <span className={styles.value}>{dormitoryType || '-'}</span>
-        </div>
-        <div className={styles.infoCard}>
-          <span className={styles.label}>定員</span>
+          <span className={styles.label}>施設定員</span>
           <span className={styles.value}>{capacityText}</span>
         </div>
-        <div className={styles.infoCard}>
-          <span className={styles.label}>併設施設</span>
-          <span className={styles.value}>{annexText}</span>
+        <div className={`${styles.infoCard} ${styles.annexCard}`}>
+          <div className={styles.annexHeader}>
+            <span className={styles.label}>併設施設</span>
+            <span className={styles.subStatus}>{annexFacilities?.length ? 'あり' : 'なし'}</span>
+          </div>
+          <div className={styles.annexContent}>
+            <span className={styles.value}>{annexText}</span>
+          </div>
         </div>
       </div>
     </section>
