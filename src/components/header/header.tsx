@@ -56,6 +56,9 @@ export const Header = () => {
   const isAdmin = true;
 
   // カスタムフックを使用してメニュー外クリックを検知して閉じる
+  // NOTE: menuRefはトリガーボタンを含むラッパー要素に設定しています。
+  // これにより、トリガーボタン自体をクリックした場合はuseClickOutsideが発火せず（内側と判定される）、
+  // ボタン自身のonClickハンドラーによるトグル動作のみが実行される意図的な設計となっています。
   useClickOutside(menuRef, () => setIsMenuOpen(false));
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
@@ -172,7 +175,7 @@ export const Header = () => {
                   aria-expanded={isMenuOpen}
                   aria-haspopup="menu"
                   aria-controls={ADMIN_MENU_ID} // 制御対象のIDを指定
-                  aria-label="管理メニューを開く"
+                  aria-label={isMenuOpen ? '管理メニューを閉じる' : '管理メニューを開く'}
                 >
                   <SettingsOutlinedIcon className={styles.icon} />
                   <span>管理メニュー</span>
