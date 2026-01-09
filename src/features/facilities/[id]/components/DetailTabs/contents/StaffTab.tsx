@@ -1,5 +1,6 @@
 import { StaffInfo } from '@/types/facility';
 
+import { EditField } from './EditField';
 import styles from './TabContent.module.scss';
 import { TabSection } from './TabSection';
 
@@ -9,158 +10,108 @@ export type StaffTabProps = {
   onFieldChange?: (field: string, value: unknown) => void;
 };
 
+/** hasUniversityLecturer の選択オプション */
+const LECTURER_OPTIONS = [
+  { value: '', label: '未設定' },
+  { value: 'true', label: '有' },
+  { value: 'false', label: '無' },
+];
+
 export const StaffTab = ({ staffInfo, isEditMode = false, onFieldChange }: StaffTabProps) => {
   if (isEditMode) {
     return (
       <div className={styles.tabContentWrapper}>
         <div className={styles.textSection}>
-          <div className={styles.editGroup}>
-            <label htmlFor="staffCount" className={styles.editLabel}>
-              職員数
-            </label>
-            <input
+          <EditField
+            type="text"
+            id="staffCount"
+            label="職員数"
+            value={staffInfo.staffCount}
+            onChange={(v) => onFieldChange?.('staffCount', v)}
+            placeholder="例: 常勤16名、非常勤6名"
+          />
+          <EditField
+            type="textarea"
+            id="specialties"
+            label="職員の特徴・専門性"
+            value={staffInfo.specialties}
+            onChange={(v) => onFieldChange?.('specialties', v)}
+            rows={3}
+          />
+          <div className={styles.editRow}>
+            <EditField
               type="text"
-              id="staffCount"
-              className={styles.editInput}
-              value={staffInfo.staffCount || ''}
-              onChange={(e) => onFieldChange?.('staffCount', e.target.value)}
-              placeholder="例: 常勤16名、非常勤6名"
+              id="averageTenure"
+              label="平均勤続年数"
+              value={staffInfo.averageTenure}
+              onChange={(v) => onFieldChange?.('averageTenure', v)}
+              placeholder="例: 6年"
+            />
+            <EditField
+              type="text"
+              id="ageDistribution"
+              label="年齢層の傾向"
+              value={staffInfo.ageDistribution}
+              onChange={(v) => onFieldChange?.('ageDistribution', v)}
             />
           </div>
-
-          <div className={styles.editGroup}>
-            <label htmlFor="specialties" className={styles.editLabel}>
-              職員の特徴・専門性
-            </label>
-            <textarea
-              id="specialties"
-              className={styles.editTextarea}
-              value={staffInfo.specialties || ''}
-              onChange={(e) => onFieldChange?.('specialties', e.target.value)}
-              rows={3}
-            />
-          </div>
-
+          <EditField
+            type="textarea"
+            id="workStyle"
+            label="働き方の特徴"
+            value={staffInfo.workStyle}
+            onChange={(v) => onFieldChange?.('workStyle', v)}
+            rows={2}
+          />
           <div className={styles.editRow}>
-            <div className={styles.editGroup}>
-              <label htmlFor="averageTenure" className={styles.editLabel}>
-                平均勤続年数
-              </label>
-              <input
-                type="text"
-                id="averageTenure"
-                className={styles.editInput}
-                value={staffInfo.averageTenure || ''}
-                onChange={(e) => onFieldChange?.('averageTenure', e.target.value)}
-                placeholder="例: 6年"
-              />
-            </div>
-            <div className={styles.editGroup}>
-              <label htmlFor="ageDistribution" className={styles.editLabel}>
-                年齢層の傾向
-              </label>
-              <input
-                type="text"
-                id="ageDistribution"
-                className={styles.editInput}
-                value={staffInfo.ageDistribution || ''}
-                onChange={(e) => onFieldChange?.('ageDistribution', e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className={styles.editGroup}>
-            <label htmlFor="workStyle" className={styles.editLabel}>
-              働き方の特徴
-            </label>
-            <textarea
-              id="workStyle"
-              className={styles.editTextarea}
-              value={staffInfo.workStyle || ''}
-              onChange={(e) => onFieldChange?.('workStyle', e.target.value)}
-              rows={2}
+            <EditField
+              type="select"
+              id="hasUniversityLecturer"
+              label="大学講義担当"
+              value={
+                staffInfo.hasUniversityLecturer === undefined
+                  ? ''
+                  : staffInfo.hasUniversityLecturer
+                    ? 'true'
+                    : 'false'
+              }
+              onChange={(v) =>
+                onFieldChange?.('hasUniversityLecturer', v === '' ? undefined : v === 'true')
+              }
+              options={LECTURER_OPTIONS}
+            />
+            <EditField
+              type="text"
+              id="lectureSubjects"
+              label="担当科目"
+              value={staffInfo.lectureSubjects}
+              onChange={(v) => onFieldChange?.('lectureSubjects', v)}
             />
           </div>
-
-          <div className={styles.editRow}>
-            <div className={styles.editGroup}>
-              <label htmlFor="hasUniversityLecturer" className={styles.editLabel}>
-                大学講義担当
-              </label>
-              <select
-                id="hasUniversityLecturer"
-                className={styles.editInput}
-                value={
-                  staffInfo.hasUniversityLecturer === undefined
-                    ? ''
-                    : staffInfo.hasUniversityLecturer
-                      ? 'true'
-                      : 'false'
-                }
-                onChange={(e) =>
-                  onFieldChange?.(
-                    'hasUniversityLecturer',
-                    e.target.value === '' ? undefined : e.target.value === 'true',
-                  )
-                }
-              >
-                <option value="">未設定</option>
-                <option value="true">有</option>
-                <option value="false">無</option>
-              </select>
-            </div>
-            <div className={styles.editGroup}>
-              <label htmlFor="lectureSubjects" className={styles.editLabel}>
-                担当科目
-              </label>
-              <input
-                type="text"
-                id="lectureSubjects"
-                className={styles.editInput}
-                value={staffInfo.lectureSubjects || ''}
-                onChange={(e) => onFieldChange?.('lectureSubjects', e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className={styles.editGroup}>
-            <label htmlFor="externalActivities" className={styles.editLabel}>
-              他機関での活動実績
-            </label>
-            <textarea
-              id="externalActivities"
-              className={styles.editTextarea}
-              value={staffInfo.externalActivities || ''}
-              onChange={(e) => onFieldChange?.('externalActivities', e.target.value)}
-              rows={2}
-            />
-          </div>
-
-          <div className={styles.editGroup}>
-            <label htmlFor="qualificationsAndSkills" className={styles.editLabel}>
-              資格やスキル
-            </label>
-            <textarea
-              id="qualificationsAndSkills"
-              className={styles.editTextarea}
-              value={staffInfo.qualificationsAndSkills || ''}
-              onChange={(e) => onFieldChange?.('qualificationsAndSkills', e.target.value)}
-              rows={2}
-            />
-          </div>
-
-          <div className={styles.editGroup}>
-            <label htmlFor="internshipDetails" className={styles.editLabel}>
-              実習生受け入れ
-            </label>
-            <textarea
-              id="internshipDetails"
-              className={styles.editTextarea}
-              value={staffInfo.internshipDetails || ''}
-              onChange={(e) => onFieldChange?.('internshipDetails', e.target.value)}
-              rows={2}
-            />
-          </div>
+          <EditField
+            type="textarea"
+            id="externalActivities"
+            label="他機関での活動実績"
+            value={staffInfo.externalActivities}
+            onChange={(v) => onFieldChange?.('externalActivities', v)}
+            rows={2}
+          />
+          <EditField
+            type="textarea"
+            id="qualificationsAndSkills"
+            label="資格やスキル"
+            value={staffInfo.qualificationsAndSkills}
+            onChange={(v) => onFieldChange?.('qualificationsAndSkills', v)}
+            rows={2}
+          />
+          <EditField
+            type="textarea"
+            id="internshipDetails"
+            label="実習生受け入れ"
+            value={staffInfo.internshipDetails}
+            onChange={(v) => onFieldChange?.('internshipDetails', v)}
+            rows={2}
+          />
         </div>
       </div>
     );
