@@ -27,6 +27,7 @@ export const FacilityDetail = ({ id }: Props) => {
   return (
     <div className={styles.container}>
       <FacilityHeader
+        id={id}
         name={facilityData.name}
         corporation={facilityData.corporation}
         fullAddress={facilityData.fullAddress}

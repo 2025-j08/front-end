@@ -33,6 +33,10 @@
 }
 
 .headerAction {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+
   .webButton {
     display: inline-block;
     background-color: colors.$primary-color;
@@ -45,6 +49,23 @@
 
     &:hover {
       opacity: 0.8;
+    }
+  }
+
+  .editButton {
+    display: inline-block;
+    background-color: colors.$white;
+    color: colors.$primary-color;
+    border: 2px solid colors.$primary-color;
+    padding: 10px 24px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.2s;
+
+    &:hover {
+      background-color: colors.$primary-color;
+      color: colors.$white;
     }
   }
 }

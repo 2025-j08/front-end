@@ -1,6 +1,9 @@
+import Link from 'next/link';
+
 import styles from './FacilityHeader.module.scss';
 
 type FacilityHeaderProps = {
+  id: string | number;
   name: string;
   corporation?: string;
   fullAddress: string;
@@ -24,9 +27,10 @@ const isValidUrl = (url: string | null | undefined): boolean => {
 
 /**
  * 施設詳細ページのヘッダーセクション
- * 施設名、運営法人、住所、TEL、Webサイトボタンを表示
+ * 施設名、運営法人、住所、TEL、Webサイトボタン、編集ボタンを表示
  */
 export const FacilityHeader = ({
+  id,
   name,
   corporation,
   fullAddress,
@@ -45,8 +49,8 @@ export const FacilityHeader = ({
         <p className={styles.address}>{fullAddress}</p>
         <p className={styles.tel}>TEL {phone}</p>
       </div>
-      {hasValidWebsite && (
-        <div className={styles.headerAction}>
+      <div className={styles.headerAction}>
+        {hasValidWebsite && (
           <a
             href={websiteUrl ?? undefined}
             className={styles.webButton}
@@ -56,8 +60,15 @@ export const FacilityHeader = ({
           >
             施設Webサイト
           </a>
-        </div>
-      )}
+        )}
+        <Link
+          href={`/features/facilities/${id}/edit`}
+          className={styles.editButton}
+          aria-label="施設情報を編集する"
+        >
+          編集
+        </Link>
+      </div>
     </header>
   );
 };
