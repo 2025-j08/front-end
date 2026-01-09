@@ -1,11 +1,29 @@
+'use client';
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 // import Image from 'next/image';
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
 import ContactSupportOutlinedIcon from '@mui/icons-material/ContactSupportOutlined';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 
 import styles from './header.module.scss';
 
 export const Header = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
     <header className={styles.header}>
       <div className={styles.headerTop}>
@@ -28,6 +46,52 @@ export const Header = () => {
               <ContactSupportOutlinedIcon className={styles.icon} />
               <span>お問い合わせ</span>
             </Link>
+            {/* 【追加】管理メニュー */}
+            <div className={styles.menuWrapper} ref={menuRef}>
+              <button
+                type="button"
+                className={`${styles.navItem} ${styles.menuTrigger}`}
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                aria-expanded={isMenuOpen}
+                aria-haspopup="true"
+              >
+                <SettingsOutlinedIcon className={styles.icon} />
+                <span>管理メニュー</span>
+              </button>
+
+              {isMenuOpen && (
+                <div className={styles.dropdown}>
+                  <Link
+                    href="/admin/user-issuance"
+                    className={styles.dropdownItem}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    ユーザー発行
+                  </Link>
+                  <Link
+                    href="/admin/users"
+                    className={styles.dropdownItem}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    ユーザー管理
+                  </Link>
+                  <Link
+                    href="/admin/facilities"
+                    className={styles.dropdownItem}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    施設管理
+                  </Link>
+                  <Link
+                    href="/admin/facilities/edit"
+                    className={styles.dropdownItem}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    施設情報編集
+                  </Link>
+                </div>
+              )}
+            </div>
           </nav>
         </div>
       </div>
