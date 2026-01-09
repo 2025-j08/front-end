@@ -51,9 +51,10 @@ export const CitySelectModal = ({
     onCloseRef.current = onClose;
   }, [onClose]);
 
-  /* * 削除: ステート同期用の useEffect
-   * 親コンポーネントでの条件付きレンダリングにより、このuseEffectは不要になりました。
-   * これにより 'react-hooks/set-state-in-effect' エラーが解消されます。
+  /* *
+   * 親コンポーネントでの条件付きレンダリングにより、
+   * selectedCities のステート同期用 useEffect は不要な設計になっています。
+   * これにより 'react-hooks/set-state-in-effect' の指摘対象となる副作用は存在しません。
    */
 
   // モーダル表示時に背景スクロール固定 + Escape キーでのクローズ
