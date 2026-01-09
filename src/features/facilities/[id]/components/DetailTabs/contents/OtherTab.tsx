@@ -24,7 +24,9 @@ export const OtherTab = ({ otherInfo }: OtherTabProps) => {
   return (
     <div className={styles.tabContentWrapper}>
       <div className={styles.textSection}>
-        {otherInfo.title && <TabSection title={otherInfo.title} content={otherInfo.description} />}
+        {(otherInfo.title || otherInfo.description) && (
+          <TabSection title={otherInfo.title} content={otherInfo.description} />
+        )}
 
         <TabSection title="他施設とのネットワークや共同プロジェクト" content={otherInfo.networks} />
 
