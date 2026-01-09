@@ -54,3 +54,54 @@ export interface InviteUserResponseError {
  * }
  */
 export type InviteUserResponse = InviteUserResponseSuccess | InviteUserResponseError;
+
+/**
+ * POST /api/auth/register のリクエスト型
+ * 招待ユーザーが初期登録する際に送信するデータ
+ * 仮登録ユーザのみが実行可能（confirmed_at が null のユーザー）
+ */
+export interface RegisterRequest {
+  /** ユーザーの氏名 */
+  name: string;
+  /** ユーザーの新しいパスワード（HTTPS で送信されハッシング処理される） */
+  password: string;
+}
+
+/**
+ * POST /api/auth/register のレスポンス型
+ * 初期登録成功・失敗を示すレスポンス
+ */
+
+/**
+ * 初期登録成功時のレスポンス
+ */
+export interface RegisterResponseSuccess {
+  /** 初期登録が成功したことを示す */
+  success: true;
+  /** エラーフィールドは存在しない */
+  error?: never;
+}
+
+/**
+ * 初期登録失敗時のレスポンス
+ */
+export interface RegisterResponseError {
+  /** 初期登録が失敗したことを示す */
+  success: false;
+  /** エラーメッセージは必須 */
+  error: string;
+}
+
+/**
+ * 成功と失敗をユニオン型で表現
+ * success フィールドの値によって型が自動的に絞り込まれる
+ *
+ * @example
+ * if (response.success === true) {
+ *   // この時点で response は RegisterResponseSuccess 型
+ * } else {
+ *   // この時点で response は RegisterResponseError 型
+ *   console.log(response.error); // error フィールドへのアクセスが型安全
+ * }
+ */
+export type RegisterResponse = RegisterResponseSuccess | RegisterResponseError;
