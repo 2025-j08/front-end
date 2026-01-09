@@ -41,6 +41,12 @@ $header-nav-gap-mobile: 15px;
     opacity: 0.8;
   }
 
+  // ロゴのフォーカススタイル
+  &:focus-visible {
+    outline: 2px solid colors.$text-link;
+    outline-offset: 2px;
+  }
+
   .logoText {
     font-size: 24px;
     font-weight: normal;
@@ -79,6 +85,13 @@ $header-nav-gap-mobile: 15px;
   &:hover {
     opacity: 0.7;
   }
+
+  // キーボードフォーカス時のスタイル (指摘事項1対応)
+  &:focus-visible {
+    outline: 2px solid colors.$text-link;
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
 }
 
 .icon {
@@ -101,7 +114,8 @@ $header-nav-gap-mobile: 15px;
   background-color: colors.$bg-white;
   border: 1px solid colors.$border-gray;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  // 指摘事項2対応: colors.scssの変数を使用
+  box-shadow: 0 4px 12px colors.$shadow-medium;
   min-width: 180px;
   z-index: 1000;
   padding: 8px 0;
@@ -142,6 +156,15 @@ $header-nav-gap-mobile: 15px;
 
   &:hover {
     background-color: colors.$bg-light-green;
+  }
+
+  // キーボードフォーカス時のスタイル (指摘事項1対応)
+  &:focus-visible {
+    background-color: colors.$bg-light-green;
+    outline: 2px solid colors.$text-link;
+    outline-offset: -2px; // 内側に表示
+    position: relative; // z-index調整用
+    z-index: 1;
   }
 }
 
@@ -208,12 +231,14 @@ $header-nav-gap-mobile: 15px;
   }
 
   // ドロップダウンのモバイル表示
+  // position: absoluteに変更し、トリガーボタン直下に配置
   .dropdown {
-    position: fixed;
-    right: 10px;
-    left: 10px;
-    top: auto;
-    width: auto;
+    position: absolute;
+    right: -10px; // 親要素（トリガーボタン）の右端付近に合わせる（containerのpadding考慮）
+    left: auto; // 左端指定を解除
+    top: 100%; // トリガーボタンの下に配置
+    width: 300px; // 幅を指定
+    max-width: calc(100vw - 24px); // 画面幅を超えないように制限
     margin-top: 10px;
 
     &::before {
