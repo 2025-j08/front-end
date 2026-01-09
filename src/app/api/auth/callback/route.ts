@@ -62,20 +62,6 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(`${origin}/auth/signin?error=no_invitation`);
     }
 
-    // 有効期限が設定されているか
-    if (!invitation.expires_at) {
-      console.error('招待情報に有効期限が設定されていません', {
-        userId: user.id,
-        facilityId: invitation.facility_id,
-        timestamp: new Date().toISOString(),
-      });
-
-      // セッションを破棄
-      await supabaseServer.auth.signOut();
-
-      return NextResponse.redirect(`${origin}/auth/signin?error=invalid_invitation`);
-    }
-
     const expiresAt = new Date(invitation.expires_at);
 
     // 有効な日付フォーマットであるか
@@ -126,12 +112,18 @@ export async function GET(request: NextRequest) {
     // セッション(Cookie)経由でuser_idが自動で渡される
     return NextResponse.redirect(`${origin}/auth/setup`);
   } catch (error) {
+    // 接続用クライアント（RLS有効）
+    const supabaseServer = await createServerClient();
+
     // 予期しないエラーのログ
     console.error('予期しないエラーが発生しました', {
       error: error instanceof Error ? error.message : error,
       stack: error instanceof Error ? error.stack : undefined,
       timestamp: new Date().toISOString(),
     });
+
+    // セッションを破棄
+    await supabaseServer.auth.signOut();
 
     // 詳細なエラー情報は見せない
     return new NextResponse('Internal server error', { status: 500 });
