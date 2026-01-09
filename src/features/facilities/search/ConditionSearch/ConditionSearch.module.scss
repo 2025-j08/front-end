@@ -1,6 +1,7 @@
 @use '@/styles/colors' as colors;
 
 .container {
+  // MapSearchと同じ背景色とボーダーを適用
   background-color: colors.$condition-search-bg;
   border: 2px solid colors.$condition-search-border;
   border-radius: 20px;
@@ -10,79 +11,93 @@
   box-sizing: border-box;
 }
 
-.badge {
+// 左上の「キーワードから探す」風バッジ
+.keywordBadge {
   position: absolute;
   top: -15px;
   left: 20px;
   background-color: colors.$border-green;
   border: 2px solid colors.$border-black;
   border-radius: 20px;
-  padding: 5px 20px;
+  padding: 8px 24px;
   font-weight: bold;
-  font-size: 14px;
-  box-shadow: 2px 2px 0px rgba(colors.$black, 0.2);
+  font-size: 16px;
+  box-shadow: 3px 3px 0px colors.$border-black;
+  z-index: 10;
+  color: colors.$black;
 }
 
 .section {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .sectionTitle {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
-  margin-bottom: 10px;
-  border-bottom: none;
+  margin-bottom: 12px;
+  color: colors.$text-primary;
 }
 
 /* 都道府県グリッド */
 .prefGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 16px;
+  margin-bottom: 10px;
 
   @media (max-width: 600px) {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
+// 都道府県ボタンのスタイル
 .prefButton {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   border: 2px solid colors.$border-black;
-  border-radius: 10px;
-  padding: 10px;
+  border-radius: 12px;
+  padding: 12px 10px;
+
   font-weight: bold;
-  font-size: 16px;
+  font-size: 20px;
+  color: colors.$white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+
   cursor: pointer;
-  box-shadow: 2px 2px 0px rgba(colors.$black, 0.2);
-  transition: transform 0.1s;
-  color: colors.$primary-text-color;
+  box-shadow: 4px 4px 0px colors.$border-black;
+  transition:
+    transform 0.1s,
+    box-shadow 0.1s;
 
   &:active {
     transform: translate(2px, 2px);
-    box-shadow: none;
+    box-shadow: 2px 2px 0px colors.$border-black;
   }
 
-  &.selected {
-    border: 3px solid colors.$border-black;
-    transform: scale(0.98);
-    box-shadow: none;
+  // 右側の三角矢印アイコン
+  &::after {
+    content: '';
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 10px;
+    vertical-align: middle;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 10px solid rgba(255, 255, 255, 0.8);
   }
 }
 
-// 都道府県ごとの色定義
-.hyogo {
-  background-color: colors.$pref-hyogo;
-}
-
-.kyoto {
-  background-color: colors.$pref-kyoto;
-}
-
+// 都道府県カラー
 .osaka {
   background-color: colors.$pref-osaka;
 }
 
-.wakayama {
-  background-color: colors.$pref-wakayama;
+.kyoto {
+  background-color: colors.$pref-kyoto;
 }
 
 .shiga {
@@ -93,58 +108,89 @@
   background-color: colors.$pref-nara;
 }
 
-/* 絞り込み条件グリッド */
-.conditionGrid {
+.hyogo {
+  background-color: colors.$pref-hyogo;
+}
+
+.wakayama {
+  background-color: colors.$pref-wakayama;
+}
+
+// 選択中の市町村がある場合
+.hasSelection {
+  border: 3px solid colors.$border-black;
+}
+
+/* 形態（大舎・中舎など）グリッド */
+.typeGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 12px;
 
   @media (max-width: 600px) {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-.conditionButton {
+// 形態ボタン
+.typeButton {
   background-color: colors.$bg-white;
   border: 2px solid colors.$border-black;
   border-radius: 30px;
-  padding: 8px;
-  font-size: 12px;
-  color: colors.$text-secondary;
+  padding: 10px;
+  font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
+  transition: all 0.2s ease;
 
-  &:hover {
-    background-color: colors.$bg-light-gray;
+  // 選択されている状態（強調）
+  &.selected {
+    background-color: colors.$border-green;
+    color: colors.$black;
+    border-color: colors.$border-black;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   }
 
-  &.selected {
-    background-color: colors.$dark-gray;
-    color: colors.$white;
-    border-color: colors.$dark-gray;
+  // 選択されていない状態
+  &:not(.selected) {
+    color: colors.$placeholder-color;
+    border-color: colors.$border-black;
+
+    &:hover {
+      background-color: colors.$bg-light-gray;
+      transform: translateY(-2px);
+    }
   }
 }
 
-/* 検索ボタンエリア */
+// 絞り込み検索ボタン
 .searchAction {
   display: flex;
   justify-content: flex-end;
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 .submitButton {
   display: flex;
   align-items: center;
-  gap: 5px;
+  justify-content: center;
+  gap: 8px;
   background-color: colors.$condition-search-button-bg;
   border: 2px solid colors.$border-black;
   border-radius: 30px;
-  padding: 8px 20px;
+  padding: 10px 30px;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 16px;
+  color: colors.$black;
   cursor: pointer;
-  box-shadow: 2px 2px 0px rgba(colors.$black, 0.2);
+  box-shadow: 2px 2px 0px colors.$border-black;
+
+  &:hover {
+    opacity: 0.9;
+  }
 
   .icon {
-    font-size: 20px;
+    font-size: 24px;
   }
 }
