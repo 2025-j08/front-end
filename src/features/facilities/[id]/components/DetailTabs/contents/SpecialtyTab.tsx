@@ -26,14 +26,9 @@ export const SpecialtyTab = ({
               id="features"
               className={styles.editTextarea}
               value={specialtyInfo.features?.join('\n') || ''}
-              onChange={(e) =>
-                onFieldChange?.(
-                  'features',
-                  e.target.value.split('\n').filter((f) => f.trim()),
-                )
-              }
+              onChange={(e) => onFieldChange?.('features', e.target.value.split('\n'))}
               rows={5}
-              placeholder="1行に1つずつ入力"
+              placeholder="1行に1つずつ入力（空行は保存時に除外されます）"
             />
           </div>
           <div className={styles.editGroup}>
