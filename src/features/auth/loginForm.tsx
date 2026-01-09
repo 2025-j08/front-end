@@ -15,7 +15,7 @@ import { useLoginForm } from '@/features/auth/hooks/useLoginForm';
 import styles from './loginForm.module.scss';
 
 export const LoginForm = () => {
-  const { formData, isLoading, handleChange, handleSubmit } = useLoginForm();
+  const { formData, isLoading, errorMessage, handleChange, handleSubmit } = useLoginForm();
 
   return (
     <div className={styles.container}>
@@ -28,6 +28,12 @@ export const LoginForm = () => {
       <LoadingOverlay isVisible={isLoading} text="ログイン中..." />
 
       <h1 className={styles.title}>ログイン</h1>
+
+      {errorMessage && (
+        <div className={styles.errorMessage} role="alert" aria-live="polite">
+          {errorMessage}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className={styles.formArea}>
         <FormField

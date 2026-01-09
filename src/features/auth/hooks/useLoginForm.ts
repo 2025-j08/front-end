@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { API_MESSAGES } from '@/const/messages';
 
@@ -48,6 +49,7 @@ const INITIAL_FORM_DATA: LoginFormData = {
  * @returns フォームの状態とハンドラー
  */
 export const useLoginForm = (): UseLoginFormReturn => {
+  const router = useRouter();
   const [formData, setFormData] = useState<LoginFormData>(INITIAL_FORM_DATA);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -77,26 +79,42 @@ export const useLoginForm = (): UseLoginFormReturn => {
       setErrorMessage(null);
 
       try {
-        // TODO: 実際のログインAPI呼び出しを実装
-        // セキュリティのため、パスワードはログに出力しない
-        console.log('ログイン試行:', {
-          userid: formData.userid,
-          // password は意図的にログから除外
+        // 実API呼び出し
+        const payload = {
+          email: formData.userid.trim(),
+          password: formData.password,
+        };
+
+        type SignInResponse = { success?: boolean; error?: string; role?: string | null };
+
+        const response = await fetch('/api/auth/signin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
         });
 
-        // ダミーの遅延（API呼び出しをシミュレート）
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        const body: SignInResponse | null = await response.json().catch(() => null);
 
-        // 成功時の処理（実際にはリダイレクト等を行う）
-        console.log('ログイン成功');
+        if (!response.ok || body?.success !== true) {
+          const message = body?.error ?? API_MESSAGES.LOGIN_FAILED;
+          throw new Error(message);
+        }
+
+        // ロールに応じた遷移（管理者はユーザー発行へ）
+        if (body?.role === 'admin') {
+          router.push('/admin/user-issuance');
+        } else {
+          router.push('/');
+        }
       } catch (error) {
         console.error('ログインエラー:', error);
-        setErrorMessage(API_MESSAGES.LOGIN_FAILED);
+        const message = error instanceof Error ? error.message : API_MESSAGES.LOGIN_FAILED;
+        setErrorMessage(message);
       } finally {
         setIsLoading(false);
       }
     },
-    [formData.userid],
+    [formData.userid, formData.password, router],
   );
 
   /**
