@@ -94,26 +94,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: '管理者権限が必要です' }, { status: 403 });
     }
 
-    // 既存の招待レコードを確認（メールアドレスからユーザーを検索）
-    const { data: existingUsers } = await supabaseAdmin.auth.admin.listUsers();
-    const existingUser = existingUsers?.users.find((u) => u.email === email);
-
-    // 既に招待レコードが存在する場合は削除
-    if (existingUser) {
-      const { error: deleteError } = await supabaseServer
-        .from('invitations')
-        .delete()
-        .eq('user_id', existingUser.id);
-
-      if (deleteError) {
-        console.warn('Failed to delete existing invitation', {
-          userId: existingUser.id,
-          email: email,
-          error: deleteError.message,
-        });
-      }
-    }
-
     // リクエストボディのメールアドレス宛に招待メールを送信
     // authモジュールの関数は管理者権限で実行する必要がある
     // redirectTo: 招待メール内のリンククリック後、ブラウザのクライアントページ(/auth/callback)へ遷移する
@@ -132,20 +112,28 @@ export async function POST(request: Request) {
       );
     }
 
-    // 招待ユーザ用テーブルに招待対象ユーザのIDとユーザが担当する施設のIDを挿入する
-    const { error: insertError } = await supabaseServer.from('invitations').insert({
-      user_id: data.user.id,
-      facility_id: facilityId,
-    });
+    // 招待ユーザ用テーブルに招待対象ユーザのIDとユーザが担当する施設のIDを保存
+    // UPSERT: 既存レコードがあれば更新、なければ挿入（レースコンディション対策）
+    // 管理者クライアントを使用してRLSをバイパス
+    const { error: upsertError } = await supabaseAdmin.from('invitations').upsert(
+      {
+        user_id: data.user.id,
+        facility_id: facilityId,
+        expires_at: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(), // 3日後
+      },
+      {
+        onConflict: 'user_id', // PRIMARY KEYで競合判定
+      },
+    );
 
-    // invitations挿入失敗時の補償処理（ユーザー作成を取り消す）
-    if (insertError) {
+    // invitations保存失敗時の補償処理（ユーザー作成を取り消す）
+    if (upsertError) {
       // エラーの構造化ログを出力
-      console.error('invitations insert failed after user creation', {
+      console.error('invitations upsert failed after user creation', {
         userId: data.user.id,
         email: email,
         facilityId: facilityId,
-        error: insertError.message,
+        error: upsertError.message,
         timestamp: new Date().toISOString(),
       });
 
@@ -159,7 +147,7 @@ export async function POST(request: Request) {
           userId: data.user.id,
           email: email,
           facilityId: facilityId,
-          originalError: insertError.message,
+          originalError: upsertError.message,
           rollbackError: rollbackError instanceof Error ? rollbackError.message : rollbackError,
         });
       }
