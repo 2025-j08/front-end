@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import { AccessInfo } from '@/types/facility';
 
 import { CommunityRelation } from './CommunityRelation';
+import { EditField } from './EditField';
 import styles from './TabContent.module.scss';
 
 // FacilityMapを動的インポート（SSR無効化）
@@ -34,69 +35,45 @@ export const AccessTab = ({
       <>
         <div className={`${styles.tabContentWrapper} ${styles.accessContent}`}>
           <div className={styles.accessInfo}>
-            <div className={styles.editGroup}>
-              <label htmlFor="locationAddress" className={styles.editLabel}>
-                住所
-              </label>
-              <input
-                type="text"
-                id="locationAddress"
-                className={styles.editInput}
-                value={accessInfo.locationAddress || ''}
-                onChange={(e) => onFieldChange?.('locationAddress', e.target.value)}
-              />
-            </div>
-            <div className={styles.editGroup}>
-              <label htmlFor="station" className={styles.editLabel}>
-                最寄り駅
-              </label>
-              <input
-                type="text"
-                id="station"
-                className={styles.editInput}
-                value={accessInfo.station || ''}
-                onChange={(e) => onFieldChange?.('station', e.target.value)}
-              />
-            </div>
-            <div className={styles.editGroup}>
-              <label htmlFor="description" className={styles.editLabel}>
-                アクセス詳細
-              </label>
-              <textarea
-                id="description"
-                className={styles.editTextarea}
-                value={accessInfo.description || ''}
-                onChange={(e) => onFieldChange?.('description', e.target.value)}
-                rows={3}
-              />
-            </div>
+            <EditField
+              type="text"
+              id="locationAddress"
+              label="住所"
+              value={accessInfo.locationAddress}
+              onChange={(v) => onFieldChange?.('locationAddress', v)}
+            />
+            <EditField
+              type="text"
+              id="station"
+              label="最寄り駅"
+              value={accessInfo.station}
+              onChange={(v) => onFieldChange?.('station', v)}
+            />
+            <EditField
+              type="textarea"
+              id="description"
+              label="アクセス詳細"
+              value={accessInfo.description}
+              onChange={(v) => onFieldChange?.('description', v)}
+              rows={3}
+            />
             <div className={styles.editRow}>
-              <div className={styles.editGroup}>
-                <label htmlFor="lat" className={styles.editLabel}>
-                  緯度
-                </label>
-                <input
-                  type="number"
-                  id="lat"
-                  className={styles.editInput}
-                  step="0.000001"
-                  value={accessInfo.lat || ''}
-                  onChange={(e) => onFieldChange?.('lat', Number(e.target.value))}
-                />
-              </div>
-              <div className={styles.editGroup}>
-                <label htmlFor="lng" className={styles.editLabel}>
-                  経度
-                </label>
-                <input
-                  type="number"
-                  id="lng"
-                  className={styles.editInput}
-                  step="0.000001"
-                  value={accessInfo.lng || ''}
-                  onChange={(e) => onFieldChange?.('lng', Number(e.target.value))}
-                />
-              </div>
+              <EditField
+                type="number"
+                id="lat"
+                label="緯度"
+                value={accessInfo.lat}
+                onChange={(v) => onFieldChange?.('lat', v)}
+                step="0.000001"
+              />
+              <EditField
+                type="number"
+                id="lng"
+                label="経度"
+                value={accessInfo.lng}
+                onChange={(v) => onFieldChange?.('lng', v)}
+                step="0.000001"
+              />
             </div>
           </div>
           <div className={styles.mapWrapper}>
