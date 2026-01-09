@@ -37,50 +37,98 @@ export interface AccessInfo {
   station?: string;
   /** ロケーションの詳細説明（オプショナル） */
   description?: string;
+  /** 周囲の環境（住宅街、山間部、都市部など） */
+  environment?: string;
 }
 
 /** 理念情報 */
 export interface PhilosophyInfo {
+  /** 施設として大切にしている理念や価値観 */
   title: string;
+  /** 日々の支援の中で重視している視点 */
   description: string;
 }
 
 /** 生活環境・特色情報 */
 export interface SpecialtyInfo {
+  /** 当施設が特に力を入れている取り組み */
   features: string[];
-}
-
-/** 職員詳細 */
-export interface StaffDetail {
-  role: string;
-  description: string;
+  /** 特色ある活動や独自プログラム */
+  programs?: string;
 }
 
 /** 職員情報 */
 export interface StaffInfo {
-  message: string;
-  staffDetails: StaffDetail[];
+  /** 職員数（常勤/非常勤、職種別） */
+  staffCount?: string;
+  /** 職員の特徴・専門性 */
+  specialties?: string;
+  /** 平均勤続年数 */
+  averageTenure?: string;
+  /** 年齢層の傾向 */
+  ageDistribution?: string;
+  /** 働き方の特徴（年休、有給平均、福利厚生等） */
+  workStyle?: string;
+  /** 大学講義を担当している職員（有/無） */
+  hasUniversityLecturer?: boolean;
+  /** 担当している科目 */
+  lectureSubjects?: string;
+  /** 他機関での活動実績（外部講演・講師） */
+  externalActivities?: string;
+  /** 職員個人の資格やスキルで活かされているもの */
+  qualificationsAndSkills?: string;
+  /** 実習生受け入れについて特筆的なこと */
+  internshipDetails?: string;
 }
 
 /** 教育・進路支援情報 */
 export interface EducationInfo {
-  policy: string;
-  afterCare: string;
+  /** 進学率（高校、専門、大学）と支援体制 */
+  graduationRate?: string;
+  /** 学習支援の工夫や外部連携 */
+  learningSupport?: string;
+  /** 特化した進路支援内容 */
+  careerSupport?: string;
+  /** 教育方針（後方互換用） */
+  policy?: string;
+  /** アフターケア（後方互換用） */
+  afterCare?: string;
 }
 
-/** 特色情報（タイトル付き） */
+/** 高機能化・多機能化への取り組み */
 export interface AdvancedInfo {
+  /** タイトル */
   title?: string;
+  /** 実施している多機能化の取り組み */
   description: string;
+  /** 経緯と背景 */
+  background?: string;
+  /** 取り組みにあたっての苦労や課題 */
+  challenges?: string;
+  /** 工夫や成功要因・乗り越えた方法 */
+  solutions?: string;
+}
+
+/** その他情報 */
+export interface OtherInfoObject {
+  title?: string;
+  description?: string;
+  /** 他施設とのネットワークや共同プロジェクト */
+  networks?: string;
+  /** 今後の展望や課題 */
+  futureOutlook?: string;
+  /** 自由記述欄 */
+  freeText?: string;
 }
 
 /** その他情報（文字列またはオブジェクト形式に対応） */
-export type OtherInfo =
-  | string
-  | {
-      title: string;
-      description: string;
-    };
+export type OtherInfo = string | OtherInfoObject;
+
+/** 併設施設情報 */
+export interface AnnexFacility {
+  name: string;
+  type: string;
+}
 
 /** 施設詳細情報 */
 export interface FacilityDetail {
@@ -92,8 +140,8 @@ export interface FacilityDetail {
   fullAddress: string;
   /** 電話番号（必須） */
   phone: string;
-  /** 舎の区分（大舎・中舎・小舎） */
-  dormitoryType?: '大舎' | '中舎' | '小舎';
+  /** 舎の区分（大舎・中舎・小舎・グループホーム・地域小規模） */
+  dormitoryType?: '大舎' | '中舎' | '小舎' | 'グループホーム' | '地域小規模';
   /** 対象年齢（必須） */
   targetAge: string;
   /** アクセス情報（必須） */
@@ -107,9 +155,15 @@ export interface FacilityDetail {
   websiteUrl?: string;
   /** 設立年 */
   establishedYear?: string;
-
   /** 建物情報 */
   building?: string;
+
+  /** 施設の定員 */
+  capacity?: number;
+  /** 暫定定員 */
+  provisionalCapacity?: number;
+  /** 併設施設 */
+  annexFacilities?: AnnexFacility[];
 
   /** 地域連携情報 */
   relationInfo?: string;
@@ -121,7 +175,7 @@ export interface FacilityDetail {
   staffInfo?: StaffInfo;
   /** 教育・進路支援情報 */
   educationInfo?: EducationInfo;
-  /** 特色情報 */
+  /** 高機能化・多機能化情報 */
   advancedInfo?: AdvancedInfo;
   /** その他情報 */
   otherInfo?: OtherInfo;
