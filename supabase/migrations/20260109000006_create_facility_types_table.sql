@@ -1,8 +1,8 @@
 CREATE TABLE public.facility_types (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name TEXT NOT NULL,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 -- RLSを有効化
@@ -63,7 +63,7 @@ LANGUAGE plpgsql
 SET search_path = ''
 AS $$
 BEGIN
-    NEW.updated_at = NOW();
+    NEW.updated_at = now();
     RETURN NEW;
 END;
 $$;

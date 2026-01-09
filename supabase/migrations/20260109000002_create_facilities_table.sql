@@ -8,8 +8,8 @@ CREATE TABLE public.facilities (
     city TEXT NOT NULL,
     address_detail TEXT NOT NULL,
     established_year INTEGER NOT NULL CHECK (established_year BETWEEN 1800 AND date_part('year', now())),
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 -- RLSを有効化
@@ -33,8 +33,8 @@ SET search_path = ''
 
 AS $$
 BEGIN
-    new.updated_at = now();
-    RETURN new;
+    NEW.updated_at = now();
+    RETURN NEW;
 END;
 $$;
 

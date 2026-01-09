@@ -3,8 +3,8 @@ CREATE TABLE public.profiles (
     id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
     role TEXT NOT NULL CHECK (role IN ('admin', 'staff')) DEFAULT 'staff',
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     PRIMARY KEY (id)
 );
 
@@ -26,7 +26,7 @@ CREATE POLICY "insert_owner_or_admin"
         -- 本人が作成する場合は role を 'staff' に強制
         (
             id = auth.uid()
-            AND new.role = 'staff'
+            AND NEW.role = 'staff'
         )
         -- または既存の管理者が他のユーザーを作成する場合は制限なし
         OR EXISTS (
@@ -51,7 +51,7 @@ CREATE POLICY "update_owner_or_admin"
         -- 本人が更新する場合は role 変更を禁止
         (
             id = auth.uid()
-            AND old.role = new.role
+            AND old.role = NEW.role
         )
         -- または既存の管理者が他のユーザーを更新する場合は制限なし
         OR EXISTS (

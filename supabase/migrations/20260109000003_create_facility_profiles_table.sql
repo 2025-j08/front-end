@@ -1,7 +1,7 @@
 CREATE TABLE public.facility_profiles (
     facility_id BIGINT NOT NULL REFERENCES public.facilities(id) ON DELETE CASCADE,
     user_id uuid NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     PRIMARY KEY (facility_id, user_id),
     CONSTRAINT chk_valid_assignment CHECK (facility_id > 0)
 );

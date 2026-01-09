@@ -1,8 +1,8 @@
 CREATE TABLE public.invitations (
     user_id uuid REFERENCES auth.users(id) ON DELETE CASCADE,
     facility_id BIGINT NOT NULL REFERENCES public.facilities(id) ON DELETE CASCADE,
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    expires_at TIMESTAMPTZ DEFAULT (NOW() + INTERVAL '3 days'),
+    created_at TIMESTAMPTZ DEFAULT now(),
+    expires_at TIMESTAMPTZ DEFAULT (now() + INTERVAL '3 days'),
     -- 1施設1ユーザ想定なのでfacility_idは主キー設定しない
     PRIMARY KEY (user_id)
 );
