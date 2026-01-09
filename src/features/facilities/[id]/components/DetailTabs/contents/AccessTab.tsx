@@ -35,26 +35,36 @@ export const AccessTab = ({
       <>
         <div className={`${styles.tabContentWrapper} ${styles.accessContent}`}>
           <div className={styles.accessInfo}>
-            <EditField
-              type="text"
-              id="locationAddress"
-              label="住所"
-              value={accessInfo.locationAddress}
-              onChange={(v) => onFieldChange?.('locationAddress', v)}
-            />
+            <div className={styles.marginBottom24}>
+              <EditField
+                type="text"
+                id="locationAddress"
+                label="住所（変更不可）"
+                value={accessInfo.locationAddress}
+                onChange={() => {}} // 無効化
+                disabled={true}
+                placeholder="住所は管理者が管理します"
+              />
+              <p
+                className={styles.noticeText}
+                style={{ marginTop: '8px', fontSize: '13px', color: '#666' }}
+              >
+                ※住所の変更は管理者にお問い合わせください。
+              </p>
+            </div>
             <EditField
               type="text"
               id="station"
               label="最寄り駅"
               value={accessInfo.station}
-              onChange={(v) => onFieldChange?.('station', v)}
+              onChange={(v: any) => onFieldChange?.('station', v)}
             />
             <EditField
               type="textarea"
               id="description"
               label="アクセス詳細"
               value={accessInfo.description}
-              onChange={(v) => onFieldChange?.('description', v)}
+              onChange={(v: any) => onFieldChange?.('description', v)}
               rows={3}
             />
             <div className={styles.editRow}>
@@ -63,7 +73,7 @@ export const AccessTab = ({
                 id="lat"
                 label="緯度"
                 value={accessInfo.lat}
-                onChange={(v) => onFieldChange?.('lat', v)}
+                onChange={(v: any) => onFieldChange?.('lat', v)}
                 step="0.000001"
               />
               <EditField
@@ -71,7 +81,7 @@ export const AccessTab = ({
                 id="lng"
                 label="経度"
                 value={accessInfo.lng}
-                onChange={(v) => onFieldChange?.('lng', v)}
+                onChange={(v: any) => onFieldChange?.('lng', v)}
                 step="0.000001"
               />
             </div>

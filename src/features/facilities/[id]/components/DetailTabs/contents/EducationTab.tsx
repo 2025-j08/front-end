@@ -24,7 +24,7 @@ export const EducationTab = ({
             id="graduationRate"
             label="進学率"
             value={educationInfo.graduationRate}
-            onChange={(v) => onFieldChange?.('graduationRate', v)}
+            onChange={(v: any) => onFieldChange?.('graduationRate', v)}
             placeholder="例: 高校進学率95%"
           />
           <EditField
@@ -32,7 +32,7 @@ export const EducationTab = ({
             id="policy"
             label="教育方針"
             value={educationInfo.policy}
-            onChange={(v) => onFieldChange?.('policy', v)}
+            onChange={(v: any) => onFieldChange?.('policy', v)}
             rows={3}
           />
           <EditField
@@ -40,7 +40,7 @@ export const EducationTab = ({
             id="learningSupport"
             label="学習支援の工夫や外部連携"
             value={educationInfo.learningSupport}
-            onChange={(v) => onFieldChange?.('learningSupport', v)}
+            onChange={(v: any) => onFieldChange?.('learningSupport', v)}
             rows={3}
           />
           <EditField
@@ -48,7 +48,7 @@ export const EducationTab = ({
             id="careerSupport"
             label="進路支援内容"
             value={educationInfo.careerSupport}
-            onChange={(v) => onFieldChange?.('careerSupport', v)}
+            onChange={(v: any) => onFieldChange?.('careerSupport', v)}
             rows={3}
           />
           <EditField
@@ -56,7 +56,7 @@ export const EducationTab = ({
             id="afterCare"
             label="アフターケア"
             value={educationInfo.afterCare}
-            onChange={(v) => onFieldChange?.('afterCare', v)}
+            onChange={(v: any) => onFieldChange?.('afterCare', v)}
             rows={2}
           />
         </div>

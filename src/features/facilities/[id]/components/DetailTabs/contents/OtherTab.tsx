@@ -33,14 +33,14 @@ export const OtherTab = ({ otherInfo, isEditMode = false, onFieldChange }: Other
             id="otherTitle"
             label="タイトル"
             value={otherInfo.title}
-            onChange={(v) => onFieldChange?.('title', v)}
+            onChange={(v: any) => onFieldChange?.('title', v)}
           />
           <EditField
             type="textarea"
             id="otherDescription"
             label="説明"
             value={otherInfo.description}
-            onChange={(v) => onFieldChange?.('description', v)}
+            onChange={(v: any) => onFieldChange?.('description', v)}
             rows={3}
           />
           <EditField
@@ -48,7 +48,7 @@ export const OtherTab = ({ otherInfo, isEditMode = false, onFieldChange }: Other
             id="networks"
             label="他施設とのネットワーク"
             value={otherInfo.networks}
-            onChange={(v) => onFieldChange?.('networks', v)}
+            onChange={(v: any) => onFieldChange?.('networks', v)}
             rows={3}
           />
           <EditField
@@ -56,7 +56,7 @@ export const OtherTab = ({ otherInfo, isEditMode = false, onFieldChange }: Other
             id="futureOutlook"
             label="今後の展望や課題"
             value={otherInfo.futureOutlook}
-            onChange={(v) => onFieldChange?.('futureOutlook', v)}
+            onChange={(v: any) => onFieldChange?.('futureOutlook', v)}
             rows={3}
           />
           <EditField
@@ -64,7 +64,7 @@ export const OtherTab = ({ otherInfo, isEditMode = false, onFieldChange }: Other
             id="freeText"
             label="自由記述"
             value={otherInfo.freeText}
-            onChange={(v) => onFieldChange?.('freeText', v)}
+            onChange={(v: any) => onFieldChange?.('freeText', v)}
             rows={4}
           />
         </div>

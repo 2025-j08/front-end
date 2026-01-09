@@ -12,6 +12,8 @@ type BaseFieldProps = {
   label: string;
   /** 値変更時のハンドラー */
   onChange: (value: unknown) => void;
+  /** 無効化フラグ */
+  disabled?: boolean;
 };
 
 type TextFieldProps = BaseFieldProps & {
@@ -63,7 +65,7 @@ export type EditFieldProps =
  * />
  */
 export const EditField = (props: EditFieldProps) => {
-  const { type, id, label, onChange } = props;
+  const { type, id, label, onChange, disabled } = props;
 
   const renderInput = () => {
     switch (type) {
@@ -76,6 +78,7 @@ export const EditField = (props: EditFieldProps) => {
             value={props.value || ''}
             onChange={(e) => onChange(e.target.value)}
             placeholder={props.placeholder}
+            disabled={disabled}
           />
         );
 
@@ -91,6 +94,7 @@ export const EditField = (props: EditFieldProps) => {
             min={props.min}
             max={props.max}
             step={props.step}
+            disabled={disabled}
           />
         );
 
@@ -103,6 +107,7 @@ export const EditField = (props: EditFieldProps) => {
             onChange={(e) => onChange(e.target.value)}
             placeholder={props.placeholder}
             rows={props.rows ?? 3}
+            disabled={disabled}
           />
         );
 
@@ -113,6 +118,7 @@ export const EditField = (props: EditFieldProps) => {
             className={styles.editInput}
             value={props.value ?? ''}
             onChange={(e) => onChange(e.target.value || undefined)}
+            disabled={disabled}
           >
             {props.options.map((opt) => (
               <option key={opt.value} value={opt.value}>

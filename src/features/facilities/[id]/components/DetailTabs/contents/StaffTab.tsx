@@ -27,7 +27,7 @@ export const StaffTab = ({ staffInfo, isEditMode = false, onFieldChange }: Staff
             id="staffCount"
             label="職員数"
             value={staffInfo.staffCount}
-            onChange={(v) => onFieldChange?.('staffCount', v)}
+            onChange={(v: any) => onFieldChange?.('staffCount', v)}
             placeholder="例: 常勤16名、非常勤6名"
           />
           <EditField
@@ -35,7 +35,7 @@ export const StaffTab = ({ staffInfo, isEditMode = false, onFieldChange }: Staff
             id="specialties"
             label="職員の特徴・専門性"
             value={staffInfo.specialties}
-            onChange={(v) => onFieldChange?.('specialties', v)}
+            onChange={(v: any) => onFieldChange?.('specialties', v)}
             rows={3}
           />
           <div className={styles.editRow}>
@@ -44,7 +44,7 @@ export const StaffTab = ({ staffInfo, isEditMode = false, onFieldChange }: Staff
               id="averageTenure"
               label="平均勤続年数"
               value={staffInfo.averageTenure}
-              onChange={(v) => onFieldChange?.('averageTenure', v)}
+              onChange={(v: any) => onFieldChange?.('averageTenure', v)}
               placeholder="例: 6年"
             />
             <EditField
@@ -52,7 +52,7 @@ export const StaffTab = ({ staffInfo, isEditMode = false, onFieldChange }: Staff
               id="ageDistribution"
               label="年齢層の傾向"
               value={staffInfo.ageDistribution}
-              onChange={(v) => onFieldChange?.('ageDistribution', v)}
+              onChange={(v: any) => onFieldChange?.('ageDistribution', v)}
             />
           </div>
           <EditField
@@ -60,7 +60,7 @@ export const StaffTab = ({ staffInfo, isEditMode = false, onFieldChange }: Staff
             id="workStyle"
             label="働き方の特徴"
             value={staffInfo.workStyle}
-            onChange={(v) => onFieldChange?.('workStyle', v)}
+            onChange={(v: any) => onFieldChange?.('workStyle', v)}
             rows={2}
           />
           <div className={styles.editRow}>
@@ -75,7 +75,7 @@ export const StaffTab = ({ staffInfo, isEditMode = false, onFieldChange }: Staff
                     ? 'true'
                     : 'false'
               }
-              onChange={(v) =>
+              onChange={(v: any) =>
                 onFieldChange?.('hasUniversityLecturer', v === '' ? undefined : v === 'true')
               }
               options={LECTURER_OPTIONS}
@@ -85,7 +85,7 @@ export const StaffTab = ({ staffInfo, isEditMode = false, onFieldChange }: Staff
               id="lectureSubjects"
               label="担当科目"
               value={staffInfo.lectureSubjects}
-              onChange={(v) => onFieldChange?.('lectureSubjects', v)}
+              onChange={(v: any) => onFieldChange?.('lectureSubjects', v)}
             />
           </div>
           <EditField
@@ -93,7 +93,7 @@ export const StaffTab = ({ staffInfo, isEditMode = false, onFieldChange }: Staff
             id="externalActivities"
             label="他機関での活動実績"
             value={staffInfo.externalActivities}
-            onChange={(v) => onFieldChange?.('externalActivities', v)}
+            onChange={(v: any) => onFieldChange?.('externalActivities', v)}
             rows={2}
           />
           <EditField
@@ -101,7 +101,7 @@ export const StaffTab = ({ staffInfo, isEditMode = false, onFieldChange }: Staff
             id="qualificationsAndSkills"
             label="資格やスキル"
             value={staffInfo.qualificationsAndSkills}
-            onChange={(v) => onFieldChange?.('qualificationsAndSkills', v)}
+            onChange={(v: any) => onFieldChange?.('qualificationsAndSkills', v)}
             rows={2}
           />
           <EditField
@@ -109,7 +109,7 @@ export const StaffTab = ({ staffInfo, isEditMode = false, onFieldChange }: Staff
             id="internshipDetails"
             label="実習生受け入れ"
             value={staffInfo.internshipDetails}
-            onChange={(v) => onFieldChange?.('internshipDetails', v)}
+            onChange={(v: any) => onFieldChange?.('internshipDetails', v)}
             rows={2}
           />
         </div>

@@ -24,7 +24,7 @@ export const AdvancedTab = ({
             id="advancedTitle"
             label="タイトル"
             value={advancedInfo.title}
-            onChange={(v) => onFieldChange?.('title', v)}
+            onChange={(v: any) => onFieldChange?.('title', v)}
             placeholder="例: 多機能化への取り組み"
           />
           <EditField
@@ -32,7 +32,7 @@ export const AdvancedTab = ({
             id="description"
             label="取り組み内容"
             value={advancedInfo.description}
-            onChange={(v) => onFieldChange?.('description', v)}
+            onChange={(v: any) => onFieldChange?.('description', v)}
             rows={4}
           />
           <EditField
@@ -40,7 +40,7 @@ export const AdvancedTab = ({
             id="background"
             label="経緯と背景"
             value={advancedInfo.background}
-            onChange={(v) => onFieldChange?.('background', v)}
+            onChange={(v: any) => onFieldChange?.('background', v)}
             rows={3}
           />
           <EditField
@@ -48,7 +48,7 @@ export const AdvancedTab = ({
             id="challenges"
             label="苦労や課題"
             value={advancedInfo.challenges}
-            onChange={(v) => onFieldChange?.('challenges', v)}
+            onChange={(v: any) => onFieldChange?.('challenges', v)}
             rows={3}
           />
           <EditField
@@ -56,7 +56,7 @@ export const AdvancedTab = ({
             id="solutions"
             label="工夫や成功要因"
             value={advancedInfo.solutions}
-            onChange={(v) => onFieldChange?.('solutions', v)}
+            onChange={(v: any) => onFieldChange?.('solutions', v)}
             rows={3}
           />
         </div>

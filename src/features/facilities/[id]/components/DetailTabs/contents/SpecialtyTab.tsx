@@ -24,7 +24,7 @@ export const SpecialtyTab = ({
             id="features"
             label="特に力を入れている取り組み"
             value={specialtyInfo.features?.join('\n')}
-            onChange={(v) => onFieldChange?.('features', (v as string).split('\n'))}
+            onChange={(v: any) => onFieldChange?.('features', (v as string).split('\n'))}
             rows={5}
             placeholder="1行に1つずつ入力（空行は保存時に除外されます）"
           />
@@ -33,7 +33,7 @@ export const SpecialtyTab = ({
             id="programs"
             label="特色ある活動や独自プログラム"
             value={specialtyInfo.programs}
-            onChange={(v) => onFieldChange?.('programs', v)}
+            onChange={(v: any) => onFieldChange?.('programs', v)}
             rows={3}
           />
         </div>
