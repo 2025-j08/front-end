@@ -24,14 +24,14 @@ export const PhilosophyTab = ({
             id="philosophyTitle"
             label="タイトル"
             value={philosophyInfo.title}
-            onChange={(v: any) => onFieldChange?.('title', v)}
+            onChange={(v) => onFieldChange?.('title', v)}
           />
           <EditField
             type="textarea"
             id="philosophyDescription"
             label="説明"
             value={philosophyInfo.description}
-            onChange={(v: any) => onFieldChange?.('description', v)}
+            onChange={(v) => onFieldChange?.('description', v)}
             rows={5}
           />
         </div>
