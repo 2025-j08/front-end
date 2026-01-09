@@ -3,6 +3,19 @@
  */
 
 /**
+ * メールアドレスの正規表現パターン（RFC準拠）
+ *
+ * ローカル部（@の前）:
+ * - 英数字で開始・終了（_, -, +は中間のみ許可、.は連続不可・先頭末尾不可）
+ * ドメイン部（@の後）:
+ * - 各ラベルは英数字で開始・終了（ハイフンは中間のみ）
+ * - 連続するドットを禁止
+ * - TLDは2文字以上の英字のみ
+ */
+export const EMAIL_REGEX =
+  /^[a-zA-Z0-9]+([._+-][a-zA-Z0-9]+)*@[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+
+/**
  * パスワード要件の定数
  */
 export const PASSWORD_REQUIREMENTS = {
@@ -69,6 +82,32 @@ export interface ValidationResult {
   /** エラーメッセージ */
   error?: string;
 }
+
+/**
+ * メールアドレスのバリデーション
+ * @param email - 検証するメールアドレス
+ * @param fieldName - フィールド名（エラーメッセージ用、デフォルト: 'メールアドレス'）
+ * @returns バリデーション結果
+ */
+export const validateEmail = (
+  email: string,
+  fieldName: string = 'メールアドレス',
+): ValidationResult => {
+  const trimmed = email.trim();
+  if (!trimmed) {
+    return {
+      isValid: false,
+      error: `${fieldName}を入力してください`,
+    };
+  }
+  if (!EMAIL_REGEX.test(trimmed)) {
+    return {
+      isValid: false,
+      error: `有効な${fieldName}を入力してください`,
+    };
+  }
+  return { isValid: true };
+};
 
 /**
  * 必須入力バリデーション
