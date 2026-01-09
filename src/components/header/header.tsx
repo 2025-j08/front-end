@@ -8,6 +8,8 @@ import ContactSupportOutlinedIcon from '@mui/icons-material/ContactSupportOutlin
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import type { SvgIconComponent } from '@mui/icons-material';
 
+import { useClickOutside } from '@/hooks/useClickOutside';
+
 import styles from './header.module.scss';
 
 // ナビゲーション項目の定義
@@ -36,32 +38,93 @@ const ADMIN_MENU_ITEMS: AdminMenuItem[] = [
 ];
 
 /**
- * クリックアウトサイドフック
- * 指定した要素の外側をクリックした際にコールバックを実行
+ * ヘッダーコンポーネント
+ *
+ * アプリケーション全体のナビゲーションとロゴを表示します。
+ * クライアントサイドでのインタラクション（ドロップダウンメニューなど）を含みます。
+ * 管理メニューへのアクセス機能を提供します。
  */
-const useClickOutside = (ref: React.RefObject<HTMLElement | null>, callback: () => void) => {
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      // refが存在し、かつクリックされた要素がrefの内側でない場合
-      if (ref.current && !ref.current.contains(event.target as Node)) {
-        callback();
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [ref, callback]);
-};
-
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null); // トリガーボタンへの参照
+
+  // 管理者権限チェック（現段階では常にtrueとし、将来的に認証ロジックを実装する）
+  const isAdmin = true;
 
   // カスタムフックを使用してメニュー外クリックを検知して閉じる
   useClickOutside(menuRef, () => setIsMenuOpen(false));
 
   const toggleMenu = () => setIsMenuOpen((prev) => !prev);
+
+  // メニューが開いたときに最初の項目にフォーカスを移動
+  useEffect(() => {
+    if (isMenuOpen) {
+      // requestAnimationFrameを使用してDOM描画後に確実にフォーカスを設定
+      requestAnimationFrame(() => {
+        const firstItem = menuRef.current?.querySelector('[role="menuitem"]') as HTMLElement;
+        firstItem?.focus();
+      });
+    }
+  }, [isMenuOpen]);
+
+  // フォーカスが外れた場合（Tab移動など）にメニューを閉じる
+  const handleBlur = (e: React.FocusEvent) => {
+    // 新しいフォーカス先がメニューの外側であれば閉じる
+    if (menuRef.current && !menuRef.current.contains(e.relatedTarget as Node)) {
+      setIsMenuOpen(false);
+    }
+  };
+
+  // キーボード操作のハンドリング
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    // メニューが開いていない状態で下矢印キーが押されたらメニューを開く
+    if (!isMenuOpen) {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        setIsMenuOpen(true);
+      }
+      return;
+    }
+
+    // メニュー内の項目を取得
+    const items = Array.from(
+      menuRef.current?.querySelectorAll('[role="menuitem"]') || [],
+    ) as HTMLElement[];
+    const currentIndex = items.indexOf(document.activeElement as HTMLElement);
+
+    switch (e.key) {
+      case 'Escape':
+        e.preventDefault();
+        setIsMenuOpen(false);
+        triggerRef.current?.focus(); // トリガーボタンにフォーカスを戻す
+        break;
+      case 'ArrowDown':
+        e.preventDefault();
+        const nextIndex = (currentIndex + 1) % items.length;
+        items[nextIndex]?.focus();
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        const prevIndex =
+          currentIndex === -1 ? items.length - 1 : (currentIndex - 1 + items.length) % items.length;
+        items[prevIndex]?.focus();
+        break;
+      case 'Home':
+        e.preventDefault();
+        items[0]?.focus();
+        break;
+      case 'End':
+        e.preventDefault();
+        items[items.length - 1]?.focus();
+        break;
+      case 'Tab':
+        // Tabキーの場合はデフォルトの挙動（次の要素へフォーカス移動）を許可し、
+        // onBlurイベントによってメニューが閉じるようにする
+        setIsMenuOpen(false);
+        break;
+    }
+  };
 
   return (
     <header className={styles.header}>
@@ -84,35 +147,44 @@ export const Header = () => {
             ))}
 
             {/* 管理メニュー（ドロップダウン） */}
-            <div className={styles.menuWrapper} ref={menuRef}>
-              <button
-                type="button"
-                className={`${styles.navItem} ${styles.menuTrigger}`}
-                onClick={toggleMenu}
-                aria-expanded={isMenuOpen}
-                aria-haspopup="true"
-                aria-label="管理メニューを開く"
+            {isAdmin && (
+              <div
+                className={styles.menuWrapper}
+                ref={menuRef}
+                onKeyDown={handleKeyDown} // キーボードイベントを追加
+                onBlur={handleBlur} // フォーカスイベントを追加
               >
-                <SettingsOutlinedIcon className={styles.icon} />
-                <span>管理メニュー</span>
-              </button>
+                <button
+                  ref={triggerRef} // Refを追加
+                  type="button"
+                  className={`${styles.navItem} ${styles.menuTrigger}`}
+                  onClick={toggleMenu}
+                  aria-expanded={isMenuOpen}
+                  aria-haspopup="true"
+                  aria-label="管理メニューを開く"
+                >
+                  <SettingsOutlinedIcon className={styles.icon} />
+                  <span>管理メニュー</span>
+                </button>
 
-              {isMenuOpen && (
-                <div className={styles.dropdown} role="menu">
-                  {ADMIN_MENU_ITEMS.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={styles.dropdownItem}
-                      onClick={() => setIsMenuOpen(false)}
-                      role="menuitem"
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
+                {isMenuOpen && (
+                  <div className={styles.dropdown} role="menu">
+                    {ADMIN_MENU_ITEMS.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className={styles.dropdownItem}
+                        onClick={() => setIsMenuOpen(false)}
+                        role="menuitem"
+                        tabIndex={-1} // 矢印キーで移動するため、Tab移動の順序からは除外
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </nav>
         </div>
       </div>
