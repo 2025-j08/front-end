@@ -69,6 +69,7 @@ $bg-hover-light: rgba(0, 0, 0, 0.02);
 // シャドウ・エフェクト用カラー
 // ====================================
 $shadow-light: rgba(0, 0, 0, 0.1);
+$shadow-medium: rgba(0, 0, 0, 0.15);
 $text-shadow-subtle: rgba(0, 0, 0, 0.1);
 
 // ====================================
@@ -89,6 +90,12 @@ $link-hover-color: darken($link-color, 10%);
 $placeholder-color: $form-placeholder;
 $input-border: $form-input-border;
 $input-bg: $form-input-bg;
+
+// ====================================
+// ヘッダー・ヒーローエリア用
+// ====================================
+$logo-bg: #99ff99;
+$hero-bg: #dcdcdc;
 
 // ====================================
 // 検索ボタンカラー

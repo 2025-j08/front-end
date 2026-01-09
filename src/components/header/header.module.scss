@@ -1,22 +1,194 @@
+@use '@/styles/colors' as colors;
+
+// 変数定義
+$header-max-width: 1200px;
+$header-nav-gap: 32px;
+$header-nav-gap-mobile: 15px;
+
 .header {
   width: 100%;
 }
 
+// ============================================
 // 上部エリア（ロゴ・ナビ）
+// ============================================
 .headerTop {
-  background-color: #fff;
-  border-bottom: 2px solid #000;
+  background-color: colors.$white;
+  border-bottom: 2px solid colors.$border-black;
   padding: 10px 0;
 }
 
-// 下部エリア（画像エリア）
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: $header-max-width;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+// ロゴエリア
+.logoWrapper {
+  background-color: colors.$logo-bg;
+  border: 1px solid colors.$border-dark;
+  padding: 8px 30px;
+  text-decoration: none;
+  display: inline-block;
+  flex-shrink: 0;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  // ロゴのフォーカススタイル
+  &:focus-visible {
+    outline: 2px solid colors.$text-link;
+    outline-offset: 2px;
+  }
+
+  .logoText {
+    font-size: 24px;
+    font-weight: normal;
+    color: colors.$black;
+    font-family: serif;
+    letter-spacing: 0.05em;
+  }
+}
+
+// ナビゲーション
+.nav {
+  display: flex;
+  gap: $header-nav-gap;
+  align-items: flex-start;
+}
+
+.navItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: colors.$text-primary;
+  font-size: 15px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  white-space: nowrap;
+
+  // ボタン要素（管理メニュー）のリセット
+  &.menuTrigger {
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: inherit;
+  }
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  // キーボードフォーカス時のスタイル (指摘事項1対応)
+  &:focus-visible {
+    outline: 2px solid colors.$text-link;
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+}
+
+.icon {
+  font-size: 35px;
+  margin-bottom: 4px;
+  color: colors.$text-primary;
+}
+
+// ============================================
+// 管理メニュードロップダウン
+// ============================================
+.menuWrapper {
+  position: relative;
+}
+
+.dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: colors.$bg-white;
+  border: 1px solid colors.$border-gray;
+  border-radius: 8px;
+  // 指摘事項2対応: colors.scssの変数を使用
+  box-shadow: 0 4px 12px colors.$shadow-medium;
+  min-width: 180px;
+  z-index: 1000;
+  padding: 8px 0;
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  // フェードインアニメーション
+  animation: fadeIn 0.2s ease-out;
+
+  // 吹き出しの矢印
+  &::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: 24px;
+    width: 12px;
+    height: 12px;
+    background-color: colors.$bg-white;
+    border-top: 1px solid colors.$border-gray;
+    border-left: 1px solid colors.$border-gray;
+    transform: rotate(45deg);
+  }
+}
+
+.dropdownItem {
+  padding: 12px 16px;
+  text-decoration: none;
+  color: colors.$text-primary;
+  font-size: 14px;
+  transition: background-color 0.2s;
+  text-align: left;
+  border-bottom: 1px solid colors.$bg-light-gray;
+  white-space: nowrap;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background-color: colors.$bg-light-green;
+  }
+
+  // キーボードフォーカス時のスタイル (指摘事項1対応)
+  &:focus-visible {
+    background-color: colors.$bg-light-green;
+    outline: 2px solid colors.$text-link;
+    outline-offset: -2px; // 内側に表示
+    position: relative; // z-index調整用
+    z-index: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ============================================
+// 下部エリア（ヒーロー画像プレースホルダー）
+// ============================================
 .heroArea {
-  max-width: 1200px;
+  max-width: $header-max-width;
   margin: 0 auto;
   padding: 0 5%;
-
   aspect-ratio: 6 / 1;
-  background-color: #dcdcdc;
+  background-color: colors.$hero-bg;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -26,70 +198,13 @@
 .noImageText {
   font-size: 64px;
   font-family: serif;
-  color: #000;
+  color: colors.$black;
 }
 
-.container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-/* ロゴエリア */
-.logoWrapper {
-  background-color: #99ff99;
-  border: 1px solid #333;
-  padding: 8px 30px;
-  text-decoration: none;
-  display: inline-block;
-  flex-shrink: 0;
-
-  .logoText {
-    font-size: 24px;
-    font-weight: normal;
-    color: #000;
-    font-family: serif;
-    letter-spacing: 0.05em;
-  }
-}
-
-/* 右側のナビゲーション */
-.nav {
-  display: flex;
-  gap: 32px;
-}
-
-.navItem {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-decoration: none;
-  color: #333;
-  font-size: 15px;
-  cursor: pointer;
-  transition: opacity 0.2s;
-  white-space: nowrap;
-
-  &:hover {
-    opacity: 0.7;
-  }
-}
-
-.icon {
-  font-size: 35px;
-  margin-bottom: 4px;
-  color: #333;
-}
-
-/* スマホ向けのレスポンシブ調整 */
+// ============================================
+// レスポンシブ (スマホ)
+// ============================================
 @media (max-width: 768px) {
-  .noImageText {
-    font-size: 32px;
-  }
-
   .container {
     padding: 0 12px;
   }
@@ -103,7 +218,7 @@
   }
 
   .nav {
-    gap: 15px;
+    gap: $header-nav-gap-mobile;
   }
 
   .navItem {
@@ -113,5 +228,25 @@
   .icon {
     font-size: 24px;
     margin-bottom: 2px;
+  }
+
+  // ドロップダウンのモバイル表示
+  // position: absoluteに変更し、トリガーボタン直下に配置
+  .dropdown {
+    position: absolute;
+    right: -10px; // 親要素（トリガーボタン）の右端付近に合わせる（containerのpadding考慮）
+    left: auto; // 左端指定を解除
+    top: 100%; // トリガーボタンの下に配置
+    width: 300px; // 幅を指定
+    max-width: calc(100vw - 24px); // 画面幅を超えないように制限
+    margin-top: 10px;
+
+    &::before {
+      right: 20px;
+    }
+  }
+
+  .noImageText {
+    font-size: 32px;
   }
 }
