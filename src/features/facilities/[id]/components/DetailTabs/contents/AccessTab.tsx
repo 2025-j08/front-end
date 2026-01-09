@@ -57,14 +57,14 @@ export const AccessTab = ({
               id="station"
               label="最寄り駅"
               value={accessInfo.station}
-              onChange={(v: any) => onFieldChange?.('station', v)}
+              onChange={(v) => onFieldChange?.('station', v)}
             />
             <EditField
               type="textarea"
               id="description"
               label="アクセス詳細"
               value={accessInfo.description}
-              onChange={(v: any) => onFieldChange?.('description', v)}
+              onChange={(v) => onFieldChange?.('description', v)}
               rows={3}
             />
             <div className={styles.editRow}>
@@ -73,7 +73,7 @@ export const AccessTab = ({
                 id="lat"
                 label="緯度"
                 value={accessInfo.lat}
-                onChange={(v: any) => onFieldChange?.('lat', v)}
+                onChange={(v) => onFieldChange?.('lat', v)}
                 step="0.000001"
               />
               <EditField
@@ -81,7 +81,7 @@ export const AccessTab = ({
                 id="lng"
                 label="経度"
                 value={accessInfo.lng}
-                onChange={(v: any) => onFieldChange?.('lng', v)}
+                onChange={(v) => onFieldChange?.('lng', v)}
                 step="0.000001"
               />
             </div>
