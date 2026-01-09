@@ -1,6 +1,7 @@
 import { EducationInfo } from '@/types/facility';
 
 import styles from './TabContent.module.scss';
+import { TabSection } from './TabSection';
 
 type EducationTabProps = {
   educationInfo: EducationInfo;
@@ -10,11 +11,17 @@ export const EducationTab = ({ educationInfo }: EducationTabProps) => {
   return (
     <div className={styles.tabContentWrapper}>
       <div className={styles.textSection}>
-        <h3 className={styles.contentTitle}>方針</h3>
-        <p className={`${styles.simpleText} ${styles.marginBottom24}`}>{educationInfo.policy}</p>
+        <TabSection
+          title="進学率と支援体制"
+          content={educationInfo.graduationRate || educationInfo.policy}
+        />
 
-        <h3 className={styles.contentTitle}>アフターケア</h3>
-        <p className={styles.simpleText}>{educationInfo.afterCare}</p>
+        <TabSection title="学習支援の工夫や外部連携" content={educationInfo.learningSupport} />
+
+        <TabSection
+          title="特化した進路支援内容"
+          content={educationInfo.careerSupport || educationInfo.afterCare}
+        />
       </div>
     </div>
   );

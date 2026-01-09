@@ -1,6 +1,7 @@
 import { PhilosophyInfo } from '@/types/facility';
 
 import styles from './TabContent.module.scss';
+import { TabSection } from './TabSection';
 
 type PhilosophyTabProps = {
   philosophyInfo: PhilosophyInfo;
@@ -10,8 +11,7 @@ export const PhilosophyTab = ({ philosophyInfo }: PhilosophyTabProps) => {
   return (
     <div className={styles.tabContentWrapper}>
       <div className={styles.textSection}>
-        <h3 className={styles.contentTitle}>{philosophyInfo.title}</h3>
-        <p className={styles.simpleText}>{philosophyInfo.description}</p>
+        <TabSection title={philosophyInfo.title} content={philosophyInfo.description} />
       </div>
     </div>
   );
