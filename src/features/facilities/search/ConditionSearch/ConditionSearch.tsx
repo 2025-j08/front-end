@@ -21,7 +21,6 @@ const extractCityFromAddress = (address: string, prefName: string): string => {
   // 郡・町村の抽出 (例: 相楽郡精華町)
   // 「市」を含まない連続部分に限定してマッチさせることで、誤った範囲を取得しないようにする
   const gunMatch = restAddress.match(/^([^市]+郡[^市]+?[町村])/);
-
   if (gunMatch) return gunMatch[1];
 
   // 区の抽出 (東京23区など、市がない場合)
@@ -69,7 +68,6 @@ export const ConditionSearch = () => {
         pref = prefNameMap.get(facility.address.substring(0, 3));
       }
 
-
       if (pref) {
         const cityName = extractCityFromAddress(facility.address, pref.name);
         if (cityName) {
@@ -90,7 +88,6 @@ export const ConditionSearch = () => {
 
     return result;
   }, []); // PREFECTURES と searchMapData は静的データのため依存配列は空でOK
-
 
   // 都道府県ボタンクリック時の処理
   const handlePrefectureClick = (prefId: string) => {
@@ -139,9 +136,7 @@ export const ConditionSearch = () => {
   return (
     <div className={styles.container}>
       {/* 左上のバッジ */}
-
       <div className={styles.keywordBadge}>条件で探す</div>
-
 
       {/* 都道府県セクション */}
       <div className={styles.section}>
@@ -176,7 +171,6 @@ export const ConditionSearch = () => {
                 className={`${styles.typeButton} ${isSelected ? styles.selected : ''}`}
                 type="button"
                 aria-label={`${type}の施設形態で絞り込み${isSelected ? '（選択中）' : ''}`}
-
                 aria-pressed={isSelected}
                 onClick={() => handleTypeClick(type)}
               >
@@ -201,18 +195,18 @@ export const ConditionSearch = () => {
       </div>
 
       {/* 市区町村選択モーダル */}
-
-      {modalOpen && (
-        <CitySelectModal
-          isOpen={modalOpen}
-          prefectureName={activePrefName}
-          cities={activeCitiesList}
-          selectedCities={currentSelectedCities}
-          onClose={() => setModalOpen(false)}
-          onConfirm={handleCitiesConfirm}
-        />
-      )}
-
-    </div>
+      {
+        modalOpen && (
+          <CitySelectModal
+            isOpen={modalOpen}
+            prefectureName={activePrefName}
+            cities={activeCitiesList}
+            selectedCities={currentSelectedCities}
+            onClose={() => setModalOpen(false)}
+            onConfirm={handleCitiesConfirm}
+          />
+        )
+      }
+    </div >
   );
 };
