@@ -4,6 +4,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 
+import type { RegisterRequest, RegisterResponse } from '@/types/api';
 import {
   validatePassword,
   validateRequired,
@@ -14,11 +15,16 @@ import {
 import { VALIDATION_MESSAGES, API_MESSAGES } from '@/const/messages';
 
 /**
+ * API エンドポイント定数
+ */
+const REGISTER_API_ENDPOINT = '/api/auth/register';
+
+/**
  * 初期登録フォームのデータ型
  */
 interface RegisterFormData {
   /** 氏名 */
-  fullName: string;
+  name: string;
   /** パスワード */
   password: string;
   /** パスワード確認 */
@@ -29,7 +35,7 @@ interface RegisterFormData {
  * フィールドエラーの型
  */
 interface FieldErrors {
-  fullName?: string;
+  name?: string;
   password?: string;
   confirmPassword?: string;
 }
@@ -64,7 +70,7 @@ interface UseRegisterFormReturn {
  * 初期登録フォームの初期値
  */
 const INITIAL_FORM_DATA: RegisterFormData = {
-  fullName: '',
+  name: '',
   password: '',
   confirmPassword: '',
 };
@@ -141,9 +147,9 @@ export const useRegisterForm = (): UseRegisterFormReturn => {
       let hasError = false;
 
       // 氏名の必須チェック
-      const fullNameValidation = validateRequired(formData.fullName, '氏名');
-      if (!fullNameValidation.isValid) {
-        newFieldErrors.fullName = fullNameValidation.error;
+      const nameValidation = validateRequired(formData.name, '氏名');
+      if (!nameValidation.isValid) {
+        newFieldErrors.name = nameValidation.error;
         hasError = true;
       }
 
@@ -175,15 +181,29 @@ export const useRegisterForm = (): UseRegisterFormReturn => {
       setErrorMessage(null);
 
       try {
-        // TODO: 実際の登録API呼び出しを実装
-        // セキュリティのため、パスワードはログに出力しない
-        console.log('登録データ:', {
-          fullName: formData.fullName,
-          // password は意図的にログから除外
+        // リクエストペイロード作成
+        const payload: RegisterRequest = {
+          name: formData.name.trim(),
+          password: formData.password,
+        };
+
+        // API呼び出し
+        const response = await fetch(REGISTER_API_ENDPOINT, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
         });
 
-        // ダミーの遅延（API呼び出しをシミュレート）
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        // レスポンス解析
+        const responseBody: RegisterResponse | null = await response.json().catch(() => null);
+
+        // エラーハンドリング
+        if (!response.ok || !responseBody?.success) {
+          const apiError = responseBody?.error ?? '登録に失敗しました。もう一度お試しください。';
+          throw new Error(apiError);
+        }
 
         // 成功時の処理
         setIsSuccess(true);
@@ -194,7 +214,7 @@ export const useRegisterForm = (): UseRegisterFormReturn => {
         }, 1500);
       } catch (error) {
         console.error('登録エラー:', error);
-        setErrorMessage(API_MESSAGES.REGISTRATION_FAILED);
+        setErrorMessage(error instanceof Error ? error.message : API_MESSAGES.REGISTRATION_FAILED);
       } finally {
         setIsLoading(false);
       }

@@ -51,14 +51,14 @@ export const RegisterForm = () => {
           <FormField
             label="氏名"
             type="text"
-            id="fullName"
-            name="fullName"
+            id="name"
+            name="name"
             placeholder="山田 太郎"
             autoComplete="name"
             required
-            value={formData.fullName}
+            value={formData.name}
             onChange={handleChange}
-            error={fieldErrors.fullName}
+            error={fieldErrors.name}
           />
 
           <FormField
