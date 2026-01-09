@@ -61,41 +61,6 @@ export const getPasswordRequirementsText = (): string => {
 };
 
 /**
- * フリガナバリデーション結果の型
- */
-export interface FuriganaValidationResult {
-  /** バリデーションが成功したかどうか */
-  isValid: boolean;
-  /** エラーメッセージ */
-  error?: string;
-}
-
-/**
- * フリガナ（カタカナ）のバリデーション
- * 全角カタカナ、長音記号、中黒、スペースのみを許可
- * @param furigana - 検証するフリガナ
- * @returns バリデーション結果
- */
-export const validateFurigana = (furigana: string): FuriganaValidationResult => {
-  // 空文字の場合はバリデーションをスキップ（requiredは別途チェック）
-  if (!furigana) {
-    return { isValid: true };
-  }
-
-  // 全角カタカナ（ァ-ヶ）、長音記号（ー）、中黒（・）、全角スペース、半角スペースを許可
-  const katakanaRegex = /^[ァ-ヶー・\s　]+$/;
-
-  if (!katakanaRegex.test(furigana)) {
-    return {
-      isValid: false,
-      error: 'フリガナはカタカナで入力してください',
-    };
-  }
-
-  return { isValid: true };
-};
-
-/**
  * 汎用バリデーション結果の型
  */
 export interface ValidationResult {

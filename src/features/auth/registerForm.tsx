@@ -3,7 +3,7 @@
 /**
  * RegisterForm コンポーネント
  * ユーザー初期登録フォームのメインコンポーネントです。
- * 氏名、フリガナ、パスワードの入力を受け付けます。
+ * 氏名、パスワードの入力を受け付けます。
  */
 
 import { LoadingOverlay, SuccessOverlay } from '@/components/form/overlay';
@@ -58,19 +58,7 @@ export const RegisterForm = () => {
             required
             value={formData.fullName}
             onChange={handleChange}
-          />
-
-          <FormField
-            label="フリガナ"
-            type="text"
-            id="furigana"
-            name="furigana"
-            placeholder="ヤマダ タロウ"
-            autoComplete="off"
-            required
-            value={formData.furigana}
-            onChange={handleChange}
-            error={fieldErrors.furigana}
+            error={fieldErrors.fullName}
           />
 
           <FormField

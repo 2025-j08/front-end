@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 
 import {
   validatePassword,
-  validateFurigana,
   validateRequired,
   validatePasswordMatch,
   PASSWORD_REQUIREMENTS,
@@ -20,8 +19,6 @@ import { VALIDATION_MESSAGES, API_MESSAGES } from '@/const/messages';
 interface RegisterFormData {
   /** 氏名 */
   fullName: string;
-  /** フリガナ */
-  furigana: string;
   /** パスワード */
   password: string;
   /** パスワード確認 */
@@ -33,7 +30,6 @@ interface RegisterFormData {
  */
 interface FieldErrors {
   fullName?: string;
-  furigana?: string;
   password?: string;
   confirmPassword?: string;
 }
@@ -69,7 +65,6 @@ interface UseRegisterFormReturn {
  */
 const INITIAL_FORM_DATA: RegisterFormData = {
   fullName: '',
-  furigana: '',
   password: '',
   confirmPassword: '',
 };
@@ -103,15 +98,6 @@ export const useRegisterForm = (): UseRegisterFormReturn => {
       ...prev,
       [name]: value,
     }));
-
-    // フリガナフィールドの場合、カタカナバリデーション
-    if (name === 'furigana') {
-      const validation = validateFurigana(value);
-      setFieldErrors((prev) => ({
-        ...prev,
-        furigana: validation.error,
-      }));
-    }
 
     // パスワードフィールドの場合、リアルタイムバリデーション
     if (name === 'password') {
@@ -161,19 +147,6 @@ export const useRegisterForm = (): UseRegisterFormReturn => {
         hasError = true;
       }
 
-      // フリガナのバリデーション（必須＋カタカナ）
-      const furiganaRequiredValidation = validateRequired(formData.furigana, 'フリガナ');
-      if (!furiganaRequiredValidation.isValid) {
-        newFieldErrors.furigana = furiganaRequiredValidation.error;
-        hasError = true;
-      } else {
-        const furiganaFormatValidation = validateFurigana(formData.furigana);
-        if (!furiganaFormatValidation.isValid) {
-          newFieldErrors.furigana = furiganaFormatValidation.error;
-          hasError = true;
-        }
-      }
-
       // パスワードのバリデーション
       const passwordValidation = validatePassword(formData.password);
       if (!passwordValidation.isValid) {
@@ -206,7 +179,6 @@ export const useRegisterForm = (): UseRegisterFormReturn => {
         // セキュリティのため、パスワードはログに出力しない
         console.log('登録データ:', {
           fullName: formData.fullName,
-          furigana: formData.furigana,
           // password は意図的にログから除外
         });
 
