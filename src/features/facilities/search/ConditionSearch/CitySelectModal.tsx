@@ -51,7 +51,7 @@ export const CitySelectModal = ({
     onCloseRef.current = onClose;
   }, [onClose]);
 
-  /* *
+  /**
    * 親コンポーネント側でモーダルの開閉と選択状態の確定を制御する設計のため、
    * このコンポーネントでは props.selectedCities をマウント時の初期値としてのみ利用し、
    * その後の props 変更に同期させる useEffect はあえて持たない方針としています。
@@ -159,7 +159,6 @@ export const CitySelectModal = ({
                       id={inputId}
                       type="checkbox"
                       checked={isChecked}
-                      aria-checked={isChecked}
                       onChange={() => handleToggleCity(city)}
                     />
                     <span>{city}</span>
