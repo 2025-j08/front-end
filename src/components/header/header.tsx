@@ -37,6 +37,9 @@ const ADMIN_MENU_ITEMS: AdminMenuItem[] = [
   { label: '施設情報編集', href: '/admin/facilities/edit' },
 ];
 
+// メニューのID定義（aria-controls用）
+const ADMIN_MENU_ID = 'admin-menu-dropdown';
+
 /**
  * ヘッダーコンポーネント
  *
@@ -94,6 +97,13 @@ export const Header = () => {
     const currentIndex = items.indexOf(document.activeElement as HTMLElement);
 
     switch (e.key) {
+      case ' ': // Spaceキー対応 (Point 1)
+        // role="menuitem" のリンク上でSpaceキーが押された場合、クリック動作をエミュレート
+        if (currentIndex !== -1) {
+          e.preventDefault(); // ページスクロールを防ぐ
+          items[currentIndex].click();
+        }
+        break;
       case 'Escape':
         e.preventDefault();
         setIsMenuOpen(false);
@@ -160,7 +170,8 @@ export const Header = () => {
                   className={`${styles.navItem} ${styles.menuTrigger}`}
                   onClick={toggleMenu}
                   aria-expanded={isMenuOpen}
-                  aria-haspopup="true"
+                  aria-haspopup="menu"
+                  aria-controls={ADMIN_MENU_ID} // 制御対象のIDを指定
                   aria-label="管理メニューを開く"
                 >
                   <SettingsOutlinedIcon className={styles.icon} />
@@ -168,7 +179,11 @@ export const Header = () => {
                 </button>
 
                 {isMenuOpen && (
-                  <div className={styles.dropdown} role="menu">
+                  <div
+                    id={ADMIN_MENU_ID} // IDを追加
+                    className={styles.dropdown}
+                    role="menu"
+                  >
                     {ADMIN_MENU_ITEMS.map((item) => (
                       <Link
                         key={item.href}
