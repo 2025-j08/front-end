@@ -1,67 +1,59 @@
 @use '@/styles/colors' as colors;
 
+// 変数定義
+$header-max-width: 1200px;
+$header-nav-gap: 32px;
+$header-nav-gap-mobile: 15px;
+
 .header {
   width: 100%;
 }
 
+// ============================================
 // 上部エリア（ロゴ・ナビ）
+// ============================================
 .headerTop {
-  background-color: #fff;
-  border-bottom: 2px solid #000;
+  background-color: colors.$white;
+  border-bottom: 2px solid colors.$border-black;
   padding: 10px 0;
-}
-
-// 下部エリア（画像エリア）
-.heroArea {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 5%;
-
-  aspect-ratio: 6 / 1;
-  background-color: #dcdcdc;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-}
-
-.noImageText {
-  font-size: 64px;
-  font-family: serif;
-  color: #000;
 }
 
 .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 1200px;
+  max-width: $header-max-width;
   margin: 0 auto;
   padding: 0 20px;
 }
 
-/* ロゴエリア */
+// ロゴエリア
 .logoWrapper {
-  background-color: #99ff99;
-  border: 1px solid #333;
+  background-color: colors.$logo-bg;
+  border: 1px solid colors.$border-dark;
   padding: 8px 30px;
   text-decoration: none;
   display: inline-block;
   flex-shrink: 0;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.8;
+  }
 
   .logoText {
     font-size: 24px;
     font-weight: normal;
-    color: #000;
+    color: colors.$black;
     font-family: serif;
     letter-spacing: 0.05em;
   }
 }
 
-/* 右側のナビゲーション */
+// ナビゲーション
 .nav {
   display: flex;
-  gap: 32px;
+  gap: $header-nav-gap;
   align-items: flex-start;
 }
 
@@ -70,11 +62,19 @@
   flex-direction: column;
   align-items: center;
   text-decoration: none;
-  color: #333;
+  color: colors.$text-primary;
   font-size: 15px;
   cursor: pointer;
   transition: opacity 0.2s;
   white-space: nowrap;
+
+  // ボタン要素（管理メニュー）のリセット
+  &.menuTrigger {
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: inherit;
+  }
 
   &:hover {
     opacity: 0.7;
@@ -84,18 +84,14 @@
 .icon {
   font-size: 35px;
   margin-bottom: 4px;
-  color: #333;
+  color: colors.$text-primary;
 }
 
+// ============================================
+// 管理メニュードロップダウン
+// ============================================
 .menuWrapper {
   position: relative;
-}
-
-.menuTrigger {
-  background: none;
-  border: none;
-  padding: 0;
-  font-family: inherit;
 }
 
 .dropdown {
@@ -112,8 +108,10 @@
   display: flex;
   flex-direction: column;
   margin-top: 10px;
+  // フェードインアニメーション
+  animation: fadeIn 0.2s ease-out;
 
-  // 吹き出しの矢印（装飾）
+  // 吹き出しの矢印
   &::before {
     content: '';
     position: absolute;
@@ -147,12 +145,43 @@
   }
 }
 
-/* スマホ向けのレスポンシブ調整 */
-@media (max-width: 768px) {
-  .noImageText {
-    font-size: 32px;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
   }
 
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ============================================
+// 下部エリア（ヒーロー画像プレースホルダー）
+// ============================================
+.heroArea {
+  max-width: $header-max-width;
+  margin: 0 auto;
+  padding: 0 5%;
+  aspect-ratio: 6 / 1;
+  background-color: colors.$hero-bg;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.noImageText {
+  font-size: 64px;
+  font-family: serif;
+  color: colors.$black;
+}
+
+// ============================================
+// レスポンシブ (スマホ)
+// ============================================
+@media (max-width: 768px) {
   .container {
     padding: 0 12px;
   }
@@ -166,7 +195,7 @@
   }
 
   .nav {
-    gap: 15px;
+    gap: $header-nav-gap-mobile;
   }
 
   .navItem {
@@ -178,8 +207,8 @@
     margin-bottom: 2px;
   }
 
+  // ドロップダウンのモバイル表示
   .dropdown {
-    // スマホでは画面幅に合わせて配置
     position: fixed;
     right: 10px;
     left: 10px;
@@ -187,9 +216,12 @@
     width: auto;
     margin-top: 10px;
 
-    // 矢印の位置調整
     &::before {
       right: 20px;
     }
+  }
+
+  .noImageText {
+    font-size: 32px;
   }
 }
