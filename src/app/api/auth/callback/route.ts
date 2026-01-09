@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     // 認可コードをチェック
     if (!code) {
       console.warn('認可コードが見つかりません', { timestamp: new Date().toISOString() });
-      return NextResponse.redirect(`${origin}/auth/signin?error=no_code`);
+      return NextResponse.redirect(`${origin}/features/auth?error=no_code`);
     }
 
     // 認証情報を取得する
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
         timestamp: new Date().toISOString(),
       });
 
-      const errorUrl = new URL(`${origin}/auth/signin`);
+      const errorUrl = new URL(`${origin}/features/auth`);
       errorUrl.searchParams.set('error', 'auth_failed');
       return NextResponse.redirect(errorUrl);
     }
@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
       // 不正なユーザーがセッションを保持しないようにする
       await supabaseServer.auth.signOut();
 
-      return NextResponse.redirect(`${origin}/auth/signin?error=no_invitation`);
+      return NextResponse.redirect(`${origin}/features/auth?error=no_invitation`);
     }
 
     const expiresAt = new Date(invitation.expires_at);
@@ -75,7 +75,7 @@ export async function GET(request: NextRequest) {
       // セッションを破棄
       await supabaseServer.auth.signOut();
 
-      return NextResponse.redirect(`${origin}/auth/signin?error=invalid_invitation`);
+      return NextResponse.redirect(`${origin}/features/auth?error=invalid_invitation`);
     }
 
     // 有効期限は切れているか
@@ -105,12 +105,12 @@ export async function GET(request: NextRequest) {
       // セッションを破棄
       await supabaseServer.auth.signOut();
 
-      return NextResponse.redirect(`${origin}/auth/signin?error=expired_invitation`);
+      return NextResponse.redirect(`${origin}/features/auth?error=expired_invitation`);
     }
 
-    // セットアップ機能にリダイレクト
+    // 初期登録画面にリダイレクト
     // セッション(Cookie)経由でuser_idが自動で渡される
-    return NextResponse.redirect(`${origin}/auth/setup`);
+    return NextResponse.redirect(`${origin}/registration`);
   } catch (error) {
     // 接続用クライアント（RLS有効）
     const supabaseServer = await createServerClient();
