@@ -57,33 +57,43 @@ export const BasicInfoSection = ({
               定員
             </label>
             <div className={styles.capacityInputs}>
-              <input
-                type="number"
-                id="capacity"
-                className={styles.editInput}
-                value={capacity || ''}
-                onChange={(e) =>
-                  onFieldChange?.('capacity', e.target.value ? Number(e.target.value) : undefined)
-                }
-                placeholder="定員"
-                aria-label="定員"
-                min={0}
-              />
-              <input
-                type="number"
-                id="provisionalCapacity"
-                className={styles.editInput}
-                value={provisionalCapacity || ''}
-                onChange={(e) =>
-                  onFieldChange?.(
-                    'provisionalCapacity',
-                    e.target.value ? Number(e.target.value) : undefined,
-                  )
-                }
-                placeholder="暫定定員"
-                aria-label="暫定定員"
-                min={0}
-              />
+              <div className={styles.capacityField}>
+                <label htmlFor="capacity" className={styles.subLabel}>
+                  定員
+                </label>
+                <input
+                  type="number"
+                  id="capacity"
+                  className={styles.editInput}
+                  value={capacity || ''}
+                  onChange={(e) =>
+                    onFieldChange?.('capacity', e.target.value ? Number(e.target.value) : undefined)
+                  }
+                  placeholder="定員"
+                  aria-label="定員"
+                  min={0}
+                />
+              </div>
+              <div className={styles.capacityField}>
+                <label htmlFor="provisionalCapacity" className={styles.subLabel}>
+                  暫定定員
+                </label>
+                <input
+                  type="number"
+                  id="provisionalCapacity"
+                  className={styles.editInput}
+                  value={provisionalCapacity || ''}
+                  onChange={(e) =>
+                    onFieldChange?.(
+                      'provisionalCapacity',
+                      e.target.value ? Number(e.target.value) : undefined,
+                    )
+                  }
+                  placeholder="暫定定員"
+                  aria-label="暫定定員"
+                  min={0}
+                />
+              </div>
             </div>
           </div>
           <div className={styles.infoCard}>

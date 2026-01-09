@@ -5,7 +5,8 @@
  * 施設詳細ページのメインコンポーネントです。
  * 表示モードと編集モードを切り替え可能
  */
-import { useState, useCallback } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useCallback } from 'react';
 
 import { useFacilityData } from './hooks/useFacilityData';
 import { useFacilityDetail } from './hooks/useFacilityDetail';
@@ -20,11 +21,13 @@ type Props = {
 };
 
 export const FacilityDetail = ({ id }: Props) => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { data: facilityData, isLoading, error } = useFacilityData(id);
   const { activeTab, setActiveTab, tabs } = useFacilityDetail();
 
-  // 編集モード状態
-  const [isEditMode, setIsEditMode] = useState(false);
+  // URLクエリパラメータから編集モード判定
+  const isEditMode = searchParams.get('mode') === 'edit';
 
   // 編集フック
   const { formData, isSaving, isDirty, updateField, updateNestedField, handleSubmit, resetForm } =
@@ -38,18 +41,15 @@ export const FacilityDetail = ({ id }: Props) => {
     [updateField],
   );
 
-  // 編集モード切り替え
-  const handleEditModeToggle = useCallback(() => {
-    setIsEditMode(true);
-  }, []);
-
   // 保存処理
   const handleSave = useCallback(async () => {
     const success = await handleSubmit();
     if (success) {
-      setIsEditMode(false);
+      // 成功したら完了後に閲覧モードへ（クエリパラム削除）
+      router.push(`/features/facilities/${id}`);
+      router.refresh();
     }
-  }, [handleSubmit]);
+  }, [handleSubmit, router, id]);
 
   // キャンセル処理
   const handleCancel = useCallback(() => {
@@ -58,8 +58,9 @@ export const FacilityDetail = ({ id }: Props) => {
       if (!confirmed) return;
     }
     resetForm();
-    setIsEditMode(false);
-  }, [isDirty, resetForm]);
+    // 閲覧モードへ戻る
+    router.push(`/features/facilities/${id}`);
+  }, [isDirty, resetForm, router, id]);
 
   if (isLoading) return <div className={styles.container}>読み込み中...</div>;
   if (error) return <div className={styles.container}>{error}</div>;
@@ -77,7 +78,6 @@ export const FacilityDetail = ({ id }: Props) => {
         phone={displayData.phone}
         websiteUrl={displayData.websiteUrl}
         isEditMode={isEditMode}
-        onEditModeToggle={handleEditModeToggle}
         isSaving={isSaving}
         isDirty={isDirty}
         onSave={handleSave}

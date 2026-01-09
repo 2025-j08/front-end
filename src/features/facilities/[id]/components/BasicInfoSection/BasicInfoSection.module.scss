@@ -55,11 +55,24 @@
 
   .capacityInputs {
     display: flex;
-    gap: 8px;
+    gap: 16px;
     width: 100%;
 
-    .editInput {
+    .capacityField {
+      display: flex;
+      flex-direction: column;
       flex: 1;
+      gap: 4px;
+
+      .subLabel {
+        font-size: 12px;
+        color: colors.$text-secondary;
+        text-align: left;
+      }
+    }
+
+    .editInput {
+      width: 100%;
     }
   }
 }

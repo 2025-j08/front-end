@@ -8,8 +8,6 @@ type FacilityHeaderProps = {
   websiteUrl?: string | null;
   /** 編集モードかどうか */
   isEditMode?: boolean;
-  /** 編集モード切り替えハンドラー */
-  onEditModeToggle?: () => void;
   /** 保存中かどうか */
   isSaving?: boolean;
   /** 未保存の変更があるか */
@@ -45,7 +43,6 @@ export const FacilityHeader = ({
   phone,
   websiteUrl,
   isEditMode = false,
-  onEditModeToggle,
   isSaving = false,
   isDirty = false,
   onSave,
@@ -80,7 +77,7 @@ export const FacilityHeader = ({
             施設Webサイト
           </a>
         )}
-        {isEditMode ? (
+        {isEditMode && (
           <>
             <button
               type="button"
@@ -101,15 +98,6 @@ export const FacilityHeader = ({
               {isSaving ? '保存中...' : '保存する'}
             </button>
           </>
-        ) : (
-          <button
-            type="button"
-            className={styles.editButton}
-            onClick={onEditModeToggle}
-            aria-label="施設情報を編集する"
-          >
-            編集
-          </button>
         )}
       </div>
     </header>
