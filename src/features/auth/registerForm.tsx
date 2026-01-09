@@ -58,6 +58,7 @@ export const RegisterForm = () => {
             required
             value={formData.fullName}
             onChange={handleChange}
+            error={fieldErrors.fullName}
           />
 
           <FormField
