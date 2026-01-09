@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import styles from './CitySelectModal.module.scss';
 
@@ -21,17 +21,25 @@ export const CitySelectModal = ({
   onClose,
   onConfirm,
 }: Props) => {
+  // オーバーレイ上でのマウス操作を追跡するためのRef
+  const isMouseDownOnOverlay = useRef(false);
+
   // モーダル表示時に背景スクロール固定
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
     };
-  }, [isOpen]);
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -43,14 +51,35 @@ export const CitySelectModal = ({
     }
   };
 
+  // オーバーレイ上でマウスダウンしたかを記録
+  const handleOverlayMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.target === e.currentTarget) {
+      isMouseDownOnOverlay.current = true;
+    }
+  };
+
+  // オーバーレイ上でマウスアップし、かつマウスダウンもオーバーレイ上だった場合のみ閉じる
+  const handleOverlayMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isMouseDownOnOverlay.current && e.target === e.currentTarget) {
+      onClose();
+    }
+    // 処理終了後はフラグをリセット
+    isMouseDownOnOverlay.current = false;
+  };
+
   return (
-    <div className={styles.overlay} onClick={onClose}>
+    <div
+      className={styles.overlay}
+      onMouseDown={handleOverlayMouseDown}
+      onMouseUp={handleOverlayMouseUp}
+    >
       <div
         className={styles.modal}
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
+        onMouseDown={(e) => e.stopPropagation()} // モーダル内のドラッグがオーバーレイに伝播して誤判定されるのを防ぐ（念のため）
       >
         <div className={styles.header}>
           <h3 id="modal-title">{prefectureName}の市区町村を選択</h3>
