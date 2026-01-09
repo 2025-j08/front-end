@@ -89,9 +89,15 @@ export interface EducationInfo {
   learningSupport?: string;
   /** 特化した進路支援内容 */
   careerSupport?: string;
-  /** 教育方針（後方互換用） */
+  /**
+   * 教育方針
+   * @deprecated 2026-Q2までに削除予定 - graduationRate に統合
+   */
   policy?: string;
-  /** アフターケア（後方互換用） */
+  /**
+   * アフターケア
+   * @deprecated 2026-Q2までに削除予定 - careerSupport に統合
+   */
   afterCare?: string;
 }
 
