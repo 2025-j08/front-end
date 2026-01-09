@@ -66,6 +66,7 @@ export const BasicInfoSection = ({
                   onFieldChange?.('capacity', e.target.value ? Number(e.target.value) : undefined)
                 }
                 placeholder="定員"
+                aria-label="定員"
                 min={0}
               />
               <input
@@ -80,6 +81,7 @@ export const BasicInfoSection = ({
                   )
                 }
                 placeholder="暫定定員"
+                aria-label="暫定定員"
                 min={0}
               />
             </div>
