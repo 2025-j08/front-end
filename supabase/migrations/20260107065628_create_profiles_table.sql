@@ -32,27 +32,31 @@ CREATE POLICY "delete_service_role"
     TO service_role
     USING (auth.role() = 'service_role');
 
--- 新規ユーザー作成時のプロフィール自動生成
-CREATE FUNCTION public.handle_new_user()
+-- メール確認完了時のプロフィール自動生成
+-- confirmed_at が NULL から値が設定されたタイミングで profiles を作成
+CREATE FUNCTION public.handle_confirmed_user()
 RETURNS TRIGGER
 LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = ''
 AS $$
 BEGIN
-    INSERT INTO public.profiles (id, name, role)
-    VALUES (
-        new.id,
-        COALESCE(new.raw_user_meta_data ->> 'name', 'Guest'),
-        'staff'
-    );
-    RETURN new;
+    -- メール確認が完了したタイミングのみ実行
+    IF OLD.confirmed_at IS NULL AND NEW.confirmed_at IS NOT NULL THEN
+        INSERT INTO public.profiles (id, name, role)
+        VALUES (
+            NEW.id,
+            COALESCE(NEW.raw_user_meta_data ->> 'name', 'Guest'),
+            'staff'
+        );
+    END IF;
+    RETURN NEW;
 END;
 $$;
 
-CREATE TRIGGER on_auth_user_created
-    AFTER INSERT ON auth.users
-    FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
+CREATE TRIGGER on_auth_user_confirmed
+    AFTER UPDATE ON auth.users
+    FOR EACH ROW EXECUTE FUNCTION public.handle_confirmed_user();
 
 -- updated_at 自動更新
 CREATE OR REPLACE FUNCTION public.update_profiles_timestamp()

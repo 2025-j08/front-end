@@ -52,14 +52,13 @@ CREATE INDEX IF NOT EXISTS idx_facilities_name ON public.facilities (name);
 CREATE OR REPLACE FUNCTION public.update_facilities_timestamp()
 RETURNS TRIGGER
 LANGUAGE plpgsql
-
 -- 意図しないスキーマの参照防止
 SET search_path = ''
 
 AS $$
 BEGIN
     new.updated_at = now();
-    return new;
+    RETURN new;
 END;
 $$;
 

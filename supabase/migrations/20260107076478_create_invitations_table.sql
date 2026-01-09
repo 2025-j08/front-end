@@ -3,6 +3,7 @@ CREATE TABLE invitations (
     facility_id BIGINT REFERENCES facilities(id) ON DELETE CASCADE,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     expires_at TIMESTAMPTZ DEFAULT (NOW() + INTERVAL '3 days'),
+    -- 1施設1ユーザ想定なのでfacility_idは主キー設定しない
     PRIMARY KEY (user_id)
 );
 
@@ -14,7 +15,7 @@ CREATE POLICY "invitations_select_self" ON invitations
     FOR SELECT
     USING (auth.uid() = user_id);
 
--- INSERT: 管理者のみ
+-- INSERT: 管理者ユーザのみ
 CREATE POLICY "invitations_insert_policy" ON invitations
     FOR INSERT WITH CHECK (
         EXISTS (
@@ -23,7 +24,7 @@ CREATE POLICY "invitations_insert_policy" ON invitations
         )
     );
 
--- UPDATE: 管理者のみ
+-- UPDATE: 管理者ユーザのみ
 CREATE POLICY "invitations_update_policy" ON invitations
     FOR UPDATE USING (
         EXISTS (
