@@ -1,21 +1,14 @@
 import { NextResponse } from 'next/server';
 
+import type { InviteUserRequest } from '@/types/api';
 import { createClient as createServerClient, createAdminClient } from '@/lib/supabase/server';
-
-// メール検証用の正規表現
-const EMAIL_REGEX = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,}$/;
-
-// リクエストボディのパラメータ
-type InviteRequestBody = {
-  email: string;
-  facilityId: number;
-};
+import { validateEmail } from '@/lib/validation';
 
 // 関数式を使用して変数のように関数を定義
 // 成功/失敗時の戻り値の種類を定義
 const parseRequestBody = (
   body: unknown,
-): { success: true; data: InviteRequestBody } | { success: false; message: string } => {
+): { success: true; data: InviteUserRequest } | { success: false; message: string } => {
   // json形式になっているか(配列も含む)
   if (typeof body !== 'object' || body === null) {
     return { success: false, message: '不正なリクエスト形式です' };
@@ -25,8 +18,16 @@ const parseRequestBody = (
   const { email, facilityId } = body as Record<string, unknown>;
 
   // emailの型チェック
-  if (typeof email !== 'string' || !EMAIL_REGEX.test(email)) {
+  if (typeof email !== 'string') {
     return { success: false, message: '有効なメールアドレスを指定してください' };
+  }
+
+  const emailValidation = validateEmail(email);
+  if (!emailValidation.isValid) {
+    return {
+      success: false,
+      message: emailValidation.error ?? '有効なメールアドレスを指定してください',
+    };
   }
 
   // facility_idの型チェック
@@ -49,7 +50,7 @@ export async function POST(request: Request) {
     const parsed = parseRequestBody(json);
     // 失敗時のエラーレスポンス
     if (!parsed.success) {
-      return NextResponse.json({ error: parsed.message }, { status: 400 });
+      return NextResponse.json({ success: false, error: parsed.message }, { status: 400 });
     }
 
     // バリデーション済みデータを代入
@@ -60,7 +61,10 @@ export async function POST(request: Request) {
     // 未設定のエラーレスポンス
     if (!appUrl) {
       console.error('NEXT_PUBLIC_APP_URL is not set');
-      return NextResponse.json({ error: '環境設定エラーが発生しました' }, { status: 500 });
+      return NextResponse.json(
+        { success: false, error: '環境設定エラーが発生しました' },
+        { status: 500 },
+      );
     }
 
     // サーバ用クライアントと管理者用クライアントを作成
@@ -74,7 +78,7 @@ export async function POST(request: Request) {
 
     // 未認証のエラーレスポンス
     if (!user) {
-      return NextResponse.json({ error: '認証が必要です' }, { status: 401 });
+      return NextResponse.json({ success: false, error: '認証が必要です' }, { status: 401 });
     }
 
     // 管理者ユーザか確認する(役割を抽出)
@@ -87,12 +91,33 @@ export async function POST(request: Request) {
 
     // 管理者ではなかったときのエラーレスポンス
     if (profile?.role !== 'admin') {
-      return NextResponse.json({ error: '管理者権限が必要です' }, { status: 403 });
+      return NextResponse.json({ success: false, error: '管理者権限が必要です' }, { status: 403 });
+    }
+
+    // 既存の招待レコードを確認（メールアドレスからユーザーを検索）
+    const { data: existingUsers } = await supabaseAdmin.auth.admin.listUsers();
+    const existingUser = existingUsers?.users.find((u) => u.email === email);
+
+    // 既に招待レコードが存在する場合は削除
+    if (existingUser) {
+      const { error: deleteError } = await supabaseServer
+        .from('invitations')
+        .delete()
+        .eq('user_id', existingUser.id);
+
+      if (deleteError) {
+        console.warn('Failed to delete existing invitation', {
+          userId: existingUser.id,
+          email: email,
+          error: deleteError.message,
+        });
+      }
     }
 
     // リクエストボディのメールアドレス宛に招待メールを送信
     // authモジュールの関数は管理者権限で実行する必要がある
-    // redirectTo: 招待ユーザが遷移する(リダイレクトされる)リンク
+    // redirectTo: 招待メール内のリンククリック後、ブラウザのクライアントページ(/auth/callback)へ遷移する
+    // 招待リンクはハッシュ(#access_token 等)を返すため、サーバAPIではなくクライアントで処理する必要がある
     const { data, error: authError } = await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
       redirectTo: `${appUrl}/auth/callback`,
     });
@@ -101,11 +126,14 @@ export async function POST(request: Request) {
     // 失敗時のエラーレスポンス
     if (authError || !data?.user?.id) {
       console.error('inviteUserByEmail failed', authError);
-      return NextResponse.json({ error: '招待メール送信に失敗しました' }, { status: 400 });
+      return NextResponse.json(
+        { success: false, error: '招待メール送信に失敗しました' },
+        { status: 400 },
+      );
     }
 
     // 招待ユーザ用テーブルに招待対象ユーザのIDとユーザが担当する施設のIDを挿入する
-    const { error: insertError } = await supabaseServer.from('invitations').upsert({
+    const { error: insertError } = await supabaseServer.from('invitations').insert({
       user_id: data.user.id,
       facility_id: facilityId,
     });
@@ -113,7 +141,7 @@ export async function POST(request: Request) {
     // invitations挿入失敗時の補償処理（ユーザー作成を取り消す）
     if (insertError) {
       // エラーの構造化ログを出力
-      console.error('invitations upsert failed after user creation', {
+      console.error('invitations insert failed after user creation', {
         userId: data.user.id,
         email: email,
         facilityId: facilityId,
@@ -136,7 +164,10 @@ export async function POST(request: Request) {
         });
       }
 
-      return NextResponse.json({ error: '招待情報の保存に失敗しました' }, { status: 500 });
+      return NextResponse.json(
+        { success: false, error: '招待情報の保存に失敗しました' },
+        { status: 500 },
+      );
     }
 
     // 成功レスポンス
@@ -144,6 +175,9 @@ export async function POST(request: Request) {
   } catch (error) {
     // 処理中にエラーが発生した場合のレスポンス
     console.error('Unexpected error in invite API', error);
-    return NextResponse.json({ error: 'サーバーエラーが発生しました' }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: 'サーバーエラーが発生しました' },
+      { status: 500 },
+    );
   }
 }
