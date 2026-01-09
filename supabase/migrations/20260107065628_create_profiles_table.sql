@@ -17,20 +17,51 @@ CREATE POLICY "select_owner"
     FOR SELECT
     USING (id = auth.uid());
 
--- サービスロールのみ更新可能（ロール変更の保護）
-CREATE POLICY "update_service_role"
+-- 本人または管理者が挿入可能
+CREATE POLICY "insert_owner_or_admin"
+    ON public.profiles
+    FOR INSERT
+    TO authenticated
+    WITH CHECK (
+        id = auth.uid()
+        OR EXISTS (
+            SELECT 1 FROM public.profiles p
+            WHERE p.id = auth.uid() AND p.role = 'admin'
+        )
+    );
+
+-- 本人または管理者が更新可能
+CREATE POLICY "update_owner_or_admin"
     ON public.profiles
     FOR UPDATE
-    TO service_role
-    USING (auth.role() = 'service_role')
-    WITH CHECK (auth.role() = 'service_role');
+    TO authenticated
+    USING (
+        id = auth.uid()
+        OR EXISTS (
+            SELECT 1 FROM public.profiles p
+            WHERE p.id = auth.uid() AND p.role = 'admin'
+        )
+    )
+    WITH CHECK (
+        id = auth.uid()
+        OR EXISTS (
+            SELECT 1 FROM public.profiles p
+            WHERE p.id = auth.uid() AND p.role = 'admin'
+        )
+    );
 
--- サービスロールのみ削除可能
-CREATE POLICY "delete_service_role"
+-- 本人または管理者が削除可能
+CREATE POLICY "delete_owner_or_admin"
     ON public.profiles
     FOR DELETE
-    TO service_role
-    USING (auth.role() = 'service_role');
+    TO authenticated
+    USING (
+        id = auth.uid()
+        OR EXISTS (
+            SELECT 1 FROM public.profiles p
+            WHERE p.id = auth.uid() AND p.role = 'admin'
+        )
+    );
 
 -- メール確認完了時のプロフィール自動生成
 -- confirmed_at が NULL から値が設定されたタイミングで profiles を作成
