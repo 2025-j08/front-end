@@ -1,5 +1,6 @@
 import { AdvancedInfo } from '@/types/facility';
 
+import { EditField } from './EditField';
 import styles from './TabContent.module.scss';
 import { TabSection } from './TabSection';
 
@@ -18,71 +19,46 @@ export const AdvancedTab = ({
     return (
       <div className={styles.tabContentWrapper}>
         <div className={styles.textSection}>
-          <div className={styles.editGroup}>
-            <label htmlFor="advancedTitle" className={styles.editLabel}>
-              タイトル
-            </label>
-            <input
-              type="text"
-              id="advancedTitle"
-              className={styles.editInput}
-              value={advancedInfo.title || ''}
-              onChange={(e) => onFieldChange?.('title', e.target.value)}
-              placeholder="例: 多機能化への取り組み"
-            />
-          </div>
-
-          <div className={styles.editGroup}>
-            <label htmlFor="description" className={styles.editLabel}>
-              取り組み内容
-            </label>
-            <textarea
-              id="description"
-              className={styles.editTextarea}
-              value={advancedInfo.description || ''}
-              onChange={(e) => onFieldChange?.('description', e.target.value)}
-              rows={4}
-            />
-          </div>
-
-          <div className={styles.editGroup}>
-            <label htmlFor="background" className={styles.editLabel}>
-              経緯と背景
-            </label>
-            <textarea
-              id="background"
-              className={styles.editTextarea}
-              value={advancedInfo.background || ''}
-              onChange={(e) => onFieldChange?.('background', e.target.value)}
-              rows={3}
-            />
-          </div>
-
-          <div className={styles.editGroup}>
-            <label htmlFor="challenges" className={styles.editLabel}>
-              苦労や課題
-            </label>
-            <textarea
-              id="challenges"
-              className={styles.editTextarea}
-              value={advancedInfo.challenges || ''}
-              onChange={(e) => onFieldChange?.('challenges', e.target.value)}
-              rows={3}
-            />
-          </div>
-
-          <div className={styles.editGroup}>
-            <label htmlFor="solutions" className={styles.editLabel}>
-              工夫や成功要因
-            </label>
-            <textarea
-              id="solutions"
-              className={styles.editTextarea}
-              value={advancedInfo.solutions || ''}
-              onChange={(e) => onFieldChange?.('solutions', e.target.value)}
-              rows={3}
-            />
-          </div>
+          <EditField
+            type="text"
+            id="advancedTitle"
+            label="タイトル"
+            value={advancedInfo.title}
+            onChange={(v) => onFieldChange?.('title', v)}
+            placeholder="例: 多機能化への取り組み"
+          />
+          <EditField
+            type="textarea"
+            id="description"
+            label="取り組み内容"
+            value={advancedInfo.description}
+            onChange={(v) => onFieldChange?.('description', v)}
+            rows={4}
+          />
+          <EditField
+            type="textarea"
+            id="background"
+            label="経緯と背景"
+            value={advancedInfo.background}
+            onChange={(v) => onFieldChange?.('background', v)}
+            rows={3}
+          />
+          <EditField
+            type="textarea"
+            id="challenges"
+            label="苦労や課題"
+            value={advancedInfo.challenges}
+            onChange={(v) => onFieldChange?.('challenges', v)}
+            rows={3}
+          />
+          <EditField
+            type="textarea"
+            id="solutions"
+            label="工夫や成功要因"
+            value={advancedInfo.solutions}
+            onChange={(v) => onFieldChange?.('solutions', v)}
+            rows={3}
+          />
         </div>
       </div>
     );
