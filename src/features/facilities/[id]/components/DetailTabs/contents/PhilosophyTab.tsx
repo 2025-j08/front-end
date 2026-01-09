@@ -1,5 +1,6 @@
 import { PhilosophyInfo } from '@/types/facility';
 
+import { EditField } from './EditField';
 import styles from './TabContent.module.scss';
 import { TabSection } from './TabSection';
 
@@ -18,30 +19,21 @@ export const PhilosophyTab = ({
     return (
       <div className={styles.tabContentWrapper}>
         <div className={styles.textSection}>
-          <div className={styles.editGroup}>
-            <label htmlFor="philosophyTitle" className={styles.editLabel}>
-              タイトル
-            </label>
-            <input
-              type="text"
-              id="philosophyTitle"
-              className={styles.editInput}
-              value={philosophyInfo.title || ''}
-              onChange={(e) => onFieldChange?.('title', e.target.value)}
-            />
-          </div>
-          <div className={styles.editGroup}>
-            <label htmlFor="philosophyDescription" className={styles.editLabel}>
-              説明
-            </label>
-            <textarea
-              id="philosophyDescription"
-              className={styles.editTextarea}
-              value={philosophyInfo.description || ''}
-              onChange={(e) => onFieldChange?.('description', e.target.value)}
-              rows={5}
-            />
-          </div>
+          <EditField
+            type="text"
+            id="philosophyTitle"
+            label="タイトル"
+            value={philosophyInfo.title}
+            onChange={(v) => onFieldChange?.('title', v)}
+          />
+          <EditField
+            type="textarea"
+            id="philosophyDescription"
+            label="説明"
+            value={philosophyInfo.description}
+            onChange={(v) => onFieldChange?.('description', v)}
+            rows={5}
+          />
         </div>
       </div>
     );
