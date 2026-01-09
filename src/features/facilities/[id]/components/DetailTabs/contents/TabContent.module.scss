@@ -154,3 +154,21 @@
   color: colors.$text-secondary;
   white-space: normal;
 }
+
+// -----------------------------------------------------------------------------
+// 汎用セクション（TabSection コンポーネント用）
+// -----------------------------------------------------------------------------
+
+.section {
+  margin-bottom: 32px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.textContent {
+  white-space: pre-wrap;
+  text-align: justify;
+  line-height: 1.8;
+}
