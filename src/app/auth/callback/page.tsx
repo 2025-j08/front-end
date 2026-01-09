@@ -71,6 +71,8 @@ export default function AuthCallbackPage() {
         }
 
         // 期限チェック
+        // 複数の日付比較で一貫性を保つため、現在時刻を一度だけ取得
+        const now = new Date();
         const expires = new Date(invitation.expires_at);
         if (!Number.isFinite(expires.getTime())) {
           await supabase.auth.signOut();
@@ -78,7 +80,7 @@ export default function AuthCallbackPage() {
           return;
         }
 
-        if (expires < new Date()) {
+        if (expires < now) {
           // 期限切れ招待を削除（ポリシー上、本人も削除可能）
           await supabase.from('invitations').delete().eq('user_id', userId);
           await supabase.auth.signOut();
