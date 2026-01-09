@@ -136,6 +136,28 @@ export async function POST(request: Request) {
       );
     }
 
+    // ロールバック用に元のプロフィール情報を取得
+    const { data: originalProfile, error: originalProfileError } = await supabaseServer
+      .from('profiles')
+      .select('name')
+      .eq('id', user.id)
+      .single();
+
+    if (originalProfileError || !originalProfile) {
+      console.error('プロフィール取得に失敗しました', {
+        userId: user.id,
+        error: originalProfileError?.message,
+        timestamp: new Date().toISOString(),
+      });
+
+      return NextResponse.json(
+        { success: false, error: 'プロフィールが見つかりません' },
+        { status: 400 },
+      );
+    }
+
+    const originalName = originalProfile.name;
+
     // profiles.name 更新
     const { error: profileUpdateError } = await supabaseServer
       .from('profiles')
@@ -168,13 +190,17 @@ export async function POST(request: Request) {
         timestamp: new Date().toISOString(),
       });
 
-      // profiles.name をロールバック（可能な限り）
+      // profiles.name をロールバック（元の値に復元）
       try {
-        await supabaseServer.from('profiles').update({ name: '' }).eq('id', user.id);
-        console.log('プロフィールのロールバック成功', { userId: user.id });
+        await supabaseServer.from('profiles').update({ name: originalName }).eq('id', user.id);
+        console.log('プロフィールのロールバック成功', {
+          userId: user.id,
+          restoredName: originalName,
+        });
       } catch (rollbackError) {
         console.error('FATAL: プロフィールのロールバック失敗', {
           userId: user.id,
+          originalName,
           rollbackError: rollbackError instanceof Error ? rollbackError.message : rollbackError,
         });
       }
