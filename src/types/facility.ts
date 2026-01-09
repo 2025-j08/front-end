@@ -37,8 +37,6 @@ export interface AccessInfo {
   station?: string;
   /** ロケーションの詳細説明（オプショナル） */
   description?: string;
-  /** 周囲の環境（住宅街、山間部、都市部など） */
-  environment?: string;
 }
 
 /** 理念情報 */
