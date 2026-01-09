@@ -91,12 +91,12 @@ export interface EducationInfo {
   careerSupport?: string;
   /**
    * 教育方針
-   * @deprecated 2026-Q2までに削除予定 - graduationRate に統合
+   * @deprecated 将来的に削除予定 - graduationRate に統合
    */
   policy?: string;
   /**
    * アフターケア
-   * @deprecated 2026-Q2までに削除予定 - careerSupport に統合
+   * @deprecated 将来的に削除予定 - careerSupport に統合
    */
   afterCare?: string;
 }
