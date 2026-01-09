@@ -35,8 +35,8 @@ export const FacilityDetail = ({ id }: Props) => {
       />
 
       <BasicInfoSection
-        establishedYear={facilityData.establishedYear}
         dormitoryType={facilityData.dormitoryType}
+        establishedYear={facilityData.establishedYear}
       />
 
       <DetailTabs
