@@ -59,7 +59,11 @@ export const FacilityHeader = ({
         <h1 className={styles.title}>
           {name}
           {corporation && <span className={styles.corporation}>運営法人 {corporation}</span>}
-          {isEditMode && isDirty && <span className={styles.dirtyIndicator}>● 未保存</span>}
+          {isEditMode && isDirty && (
+            <span className={styles.dirtyIndicator} role="status" aria-live="polite">
+              ● 未保存の変更があります
+            </span>
+          )}
         </h1>
         <p className={styles.address}>{fullAddress}</p>
         <p className={styles.tel}>TEL {phone}</p>
@@ -91,6 +95,8 @@ export const FacilityHeader = ({
               className={styles.saveButton}
               onClick={onSave}
               disabled={isSaving || !isDirty}
+              aria-busy={isSaving}
+              aria-live="polite"
             >
               {isSaving ? '保存中...' : '保存する'}
             </button>
