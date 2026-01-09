@@ -24,6 +24,9 @@ export const useClickOutside = (ref: RefObject<HTMLElement | null>, callback: ()
       }
     };
 
+    // NOTE: ref.currentの有無に関わらず、コンポーネントマウント時にリスナーを登録します。
+    // ref.currentは変更されても再レンダリングをトリガーしないため、
+    // イベント発生時にハンドラー内部で現在値をチェックすることで整合性を保っています。
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
