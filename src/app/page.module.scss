@@ -1,15 +1,1 @@
-@use '@/styles/colors' as colors;
-
-// 開発・テスト用ナビゲーションエリア
-.devNavigation {
-  padding: 10px 20px;
-  background-color: colors.$warning-bg;
-  border-bottom: 1px solid colors.$warning-border;
-  text-align: center;
-}
-
-.devNavigationText {
-  margin: 0 0 10px 0;
-  font-size: 12px;
-  color: colors.$warning-color;
-}
+// pege.module.scss
