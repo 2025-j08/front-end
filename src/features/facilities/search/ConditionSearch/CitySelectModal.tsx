@@ -52,9 +52,10 @@ export const CitySelectModal = ({
   }, [onClose]);
 
   /* *
-   * 親コンポーネントでの条件付きレンダリングにより、
-   * selectedCities のステート同期用 useEffect は不要な設計になっています。
-   * これにより 'react-hooks/set-state-in-effect' の指摘対象となる副作用は存在しません。
+   * 親コンポーネント側でモーダルの開閉と選択状態の確定を制御する設計のため、
+   * このコンポーネントでは props.selectedCities をマウント時の初期値としてのみ利用し、
+   * その後の props 変更に同期させる useEffect はあえて持たない方針としています。
+   * モーダルを閉じるタイミングで onConfirm により選択結果のみを親へ伝播させます。
    */
 
   // モーダル表示時に背景スクロール固定 + Escape キーでのクローズ
@@ -127,6 +128,10 @@ export const CitySelectModal = ({
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
+        // モーダル内でのマウスダウンがオーバーレイに伝播すると、
+        // handleOverlayMouseDown / handleOverlayMouseUp の判定で
+        // 「モーダル外クリック」と誤認されてモーダルが閉じてしまうため、
+        // ここでイベント伝播を止めている（オーバーレイ上での操作のみ閉じる）。
         onMouseDown={(e) => e.stopPropagation()}
       >
         <div className={styles.header}>
