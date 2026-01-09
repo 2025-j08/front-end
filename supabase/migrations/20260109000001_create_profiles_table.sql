@@ -17,20 +17,25 @@ CREATE POLICY "select_owner"
     FOR SELECT
     USING (id = auth.uid());
 
--- 本人または管理者が挿入可能
+-- 本人が挿入する場合は role を 'staff' に制限、管理者は任意のロールで挿入可能
 CREATE POLICY "insert_owner_or_admin"
     ON public.profiles
     FOR INSERT
     TO authenticated
     WITH CHECK (
-        id = auth.uid()
+        -- 本人が作成する場合は role を 'staff' に強制
+        (
+            id = auth.uid()
+            AND new.role = 'staff'
+        )
+        -- または既存の管理者が他のユーザーを作成する場合は制限なし
         OR EXISTS (
             SELECT 1 FROM public.profiles p
             WHERE p.id = auth.uid() AND p.role = 'admin'
         )
     );
 
--- 本人または管理者が更新可能
+-- 本人が更新する場合は role を変更できない、管理者のみが role を変更可能
 CREATE POLICY "update_owner_or_admin"
     ON public.profiles
     FOR UPDATE
@@ -43,7 +48,12 @@ CREATE POLICY "update_owner_or_admin"
         )
     )
     WITH CHECK (
-        id = auth.uid()
+        -- 本人が更新する場合は role 変更を禁止
+        (
+            id = auth.uid()
+            AND old.role = new.role
+        )
+        -- または既存の管理者が他のユーザーを更新する場合は制限なし
         OR EXISTS (
             SELECT 1 FROM public.profiles p
             WHERE p.id = auth.uid() AND p.role = 'admin'
@@ -96,8 +106,8 @@ LANGUAGE plpgsql
 SET search_path = ''
 AS $$
 BEGIN
-    new.updated_at = now();
-    RETURN new;
+    NEW.updated_at = now();
+    RETURN NEW;
 END;
 $$;
 

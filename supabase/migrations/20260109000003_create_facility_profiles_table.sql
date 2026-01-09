@@ -21,47 +21,43 @@ CREATE POLICY "select_owner"
         )
     );
 
--- 本人または管理者が挿入可能
-CREATE POLICY "insert_owner_or_admin"
+-- 挿入は管理者のみ許可
+CREATE POLICY "insert_admin_only"
     ON public.facility_profiles
     FOR INSERT
     TO authenticated
     WITH CHECK (
-        user_id = auth.uid()
-        OR EXISTS (
+        EXISTS (
             SELECT 1 FROM public.profiles p
             WHERE p.id = auth.uid() AND p.role = 'admin'
         )
     );
 
--- 本人または管理者が更新可能
-CREATE POLICY "update_owner_or_admin"
+-- 更新は管理者のみ許可
+CREATE POLICY "update_admin_only"
     ON public.facility_profiles
     FOR UPDATE
     TO authenticated
     USING (
-        user_id = auth.uid()
-        OR EXISTS (
+        EXISTS (
             SELECT 1 FROM public.profiles p
             WHERE p.id = auth.uid() AND p.role = 'admin'
         )
     )
     WITH CHECK (
-        user_id = auth.uid()
-        OR EXISTS (
+        EXISTS (
             SELECT 1 FROM public.profiles p
             WHERE p.id = auth.uid() AND p.role = 'admin'
         )
     );
 
--- 本人または管理者が削除可能
-CREATE POLICY "delete_owner_or_admin"
+-- 削除は管理者のみ許可
+CREATE POLICY "delete_admin_only"
     ON public.facility_profiles
     FOR DELETE
     TO authenticated
     USING (
-        user_id = auth.uid()
-        OR EXISTS (
+        EXISTS (
             SELECT 1 FROM public.profiles p
             WHERE p.id = auth.uid() AND p.role = 'admin'
         )

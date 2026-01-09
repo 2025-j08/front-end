@@ -14,8 +14,8 @@ CREATE POLICY "select_public"
     FOR SELECT
     USING (true);
 
--- 管理者または施設担当者が挿入可能
-CREATE POLICY "insert_admin_or_facility_staff"
+-- 管理者のみが挿入可能
+CREATE POLICY "insert_admin_only"
     ON public.facility_types
     FOR INSERT
     TO authenticated
@@ -24,16 +24,10 @@ CREATE POLICY "insert_admin_or_facility_staff"
             SELECT 1 FROM public.profiles
             WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
         )
-        OR
-        EXISTS (
-            SELECT 1 FROM public.facility_profiles
-            WHERE facility_profiles.user_id = auth.uid()
-            AND facility_profiles.facility_id = facility_id
-        )
     );
 
--- 管理者または施設担当者が更新可能
-CREATE POLICY "update_admin_or_facility_staff"
+-- 管理者のみが更新可能
+CREATE POLICY "update_admin_only"
     ON public.facility_types
     FOR UPDATE
     TO authenticated
@@ -42,28 +36,16 @@ CREATE POLICY "update_admin_or_facility_staff"
             SELECT 1 FROM public.profiles
             WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
         )
-        OR
-        EXISTS (
-            SELECT 1 FROM public.facility_profiles
-            WHERE facility_profiles.user_id = auth.uid()
-            AND facility_profiles.facility_id = facility_id
-        )
     )
     WITH CHECK (
         EXISTS (
             SELECT 1 FROM public.profiles
             WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
         )
-        OR
-        EXISTS (
-            SELECT 1 FROM public.facility_profiles
-            WHERE facility_profiles.user_id = auth.uid()
-            AND facility_profiles.facility_id = facility_id
-        )
     );
 
--- 管理者または施設担当者が削除可能
-CREATE POLICY "delete_admin_or_facility_staff"
+-- 管理者のみが削除可能
+CREATE POLICY "delete_admin_only"
     ON public.facility_types
     FOR DELETE
     TO authenticated
@@ -72,16 +54,7 @@ CREATE POLICY "delete_admin_or_facility_staff"
             SELECT 1 FROM public.profiles
             WHERE profiles.id = auth.uid() AND profiles.role = 'admin'
         )
-        OR
-        EXISTS (
-            SELECT 1 FROM public.facility_profiles
-            WHERE facility_profiles.user_id = auth.uid()
-            AND facility_profiles.facility_id = facility_id
-        )
     );
-
--- facility_idのインデックスを作成（既にPKで作成されているが、明示的に記載）
--- CREATE INDEX IF NOT EXISTS idx_facility_types_facility_id ON public.facility_types (facility_id);
 
 -- updated_atカラムを自動更新するプロシージャ
 CREATE OR REPLACE FUNCTION public.update_facility_types_timestamp()
