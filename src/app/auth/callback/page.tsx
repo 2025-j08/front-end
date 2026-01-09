@@ -11,17 +11,15 @@ const parseHashParams = (
 ): {
   accessToken?: string;
   refreshToken?: string;
-  type?: string;
   expiresAt?: number;
 } => {
   if (!hash || !hash.startsWith('#')) return {};
   const params = new URLSearchParams(hash.slice(1));
   const accessToken = params.get('access_token') ?? undefined;
   const refreshToken = params.get('refresh_token') ?? undefined;
-  const type = params.get('type') ?? undefined;
   const expires = params.get('expires_at');
   const expiresAt = expires ? Number(expires) : undefined;
-  return { accessToken, refreshToken, type, expiresAt };
+  return { accessToken, refreshToken, expiresAt };
 };
 
 export default function AuthCallbackPage() {
@@ -29,7 +27,7 @@ export default function AuthCallbackPage() {
   const supabase = useMemo(() => createClient(), []);
 
   useEffect(() => {
-    const { accessToken, refreshToken, type, expiresAt } = parseHashParams(window.location.hash);
+    const { accessToken, refreshToken, expiresAt } = parseHashParams(window.location.hash);
 
     // ハッシュにトークンが含まれない場合はログイン画面へ
     if (!accessToken || !refreshToken) {
