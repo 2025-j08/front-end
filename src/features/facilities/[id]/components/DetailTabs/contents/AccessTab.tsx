@@ -24,27 +24,21 @@ export const AccessTab = ({ accessInfo, facilityName, relationInfo }: AccessTabP
   return (
     <>
       <div className={`${styles.tabContentWrapper} ${styles.accessContent}`}>
-        {accessInfo ? (
-          <>
-            <div className={styles.accessInfo}>
-              <p className={styles.accessText}>{accessInfo.locationAddress}</p>
-              {accessInfo.station && <p className={styles.accessText}>{accessInfo.station}</p>}
-              {accessInfo.description && (
-                <p className={styles.accessDescription}>{accessInfo.description}</p>
-              )}
-            </div>
-            <div className={styles.mapWrapper}>
-              <FacilityMap
-                lat={accessInfo.lat}
-                lng={accessInfo.lng}
-                name={facilityName}
-                address={accessInfo.locationAddress}
-              />
-            </div>
-          </>
-        ) : (
-          <div className={styles.placeholderContent}>アクセス情報がありません</div>
-        )}
+        <div className={styles.accessInfo}>
+          <p className={styles.accessText}>{accessInfo.locationAddress}</p>
+          {accessInfo.station && <p className={styles.accessText}>{accessInfo.station}</p>}
+          {accessInfo.description && (
+            <p className={styles.accessDescription}>{accessInfo.description}</p>
+          )}
+        </div>
+        <div className={styles.mapWrapper}>
+          <FacilityMap
+            lat={accessInfo.lat}
+            lng={accessInfo.lng}
+            name={facilityName}
+            address={accessInfo.locationAddress}
+          />
+        </div>
       </div>
 
       {relationInfo && <CommunityRelation relationInfo={relationInfo} />}
