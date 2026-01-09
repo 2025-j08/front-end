@@ -32,6 +32,14 @@ type DetailTabsProps = {
   educationInfo?: EducationInfo;
   advancedInfo?: AdvancedInfo;
   otherInfo?: OtherInfo;
+  /** 編集モードかどうか */
+  isEditMode?: boolean;
+  /** ネストしたフィールドの更新ハンドラー */
+  onNestedFieldChange?: <K extends keyof import('@/types/facility').FacilityDetail>(
+    parent: K,
+    field: string,
+    value: unknown,
+  ) => void;
 };
 
 /**
@@ -53,6 +61,8 @@ export const DetailTabs = ({
   educationInfo,
   advancedInfo,
   otherInfo,
+  isEditMode = false,
+  onNestedFieldChange,
 }: DetailTabsProps) => {
   // タブIDの配列を生成
   const tabIds = tabs.map((tab) => tab.key);
@@ -99,20 +109,68 @@ export const DetailTabs = ({
                   accessInfo={accessInfo}
                   facilityName={facilityName || ''}
                   relationInfo={relationInfo}
+                  isEditMode={isEditMode}
+                  onFieldChange={(field, value) =>
+                    onNestedFieldChange?.('accessInfo', field, value)
+                  }
                 />
               ) : null;
             case 'philosophy':
-              return philosophyInfo ? <PhilosophyTab philosophyInfo={philosophyInfo} /> : null;
+              return philosophyInfo ? (
+                <PhilosophyTab
+                  philosophyInfo={philosophyInfo}
+                  isEditMode={isEditMode}
+                  onFieldChange={(field, value) =>
+                    onNestedFieldChange?.('philosophyInfo', field, value)
+                  }
+                />
+              ) : null;
             case 'specialty':
-              return specialtyInfo ? <SpecialtyTab specialtyInfo={specialtyInfo} /> : null;
+              return specialtyInfo ? (
+                <SpecialtyTab
+                  specialtyInfo={specialtyInfo}
+                  isEditMode={isEditMode}
+                  onFieldChange={(field, value) =>
+                    onNestedFieldChange?.('specialtyInfo', field, value)
+                  }
+                />
+              ) : null;
             case 'staff':
-              return staffInfo ? <StaffTab staffInfo={staffInfo} /> : null;
+              return staffInfo ? (
+                <StaffTab
+                  staffInfo={staffInfo}
+                  isEditMode={isEditMode}
+                  onFieldChange={(field, value) => onNestedFieldChange?.('staffInfo', field, value)}
+                />
+              ) : null;
             case 'education':
-              return educationInfo ? <EducationTab educationInfo={educationInfo} /> : null;
+              return educationInfo ? (
+                <EducationTab
+                  educationInfo={educationInfo}
+                  isEditMode={isEditMode}
+                  onFieldChange={(field, value) =>
+                    onNestedFieldChange?.('educationInfo', field, value)
+                  }
+                />
+              ) : null;
             case 'advanced':
-              return advancedInfo ? <AdvancedTab advancedInfo={advancedInfo} /> : null;
+              return advancedInfo ? (
+                <AdvancedTab
+                  advancedInfo={advancedInfo}
+                  isEditMode={isEditMode}
+                  onFieldChange={(field, value) =>
+                    onNestedFieldChange?.('advancedInfo', field, value)
+                  }
+                />
+              ) : null;
             case 'other':
-              return otherInfo ? <OtherTab otherInfo={otherInfo} /> : null;
+              return otherInfo ? (
+                <OtherTab
+                  otherInfo={otherInfo}
+                  isEditMode={isEditMode}
+                  onFieldChange={(field, value) => onNestedFieldChange?.('otherInfo', field, value)}
+                />
+              ) : null;
             default:
               return null;
           }
