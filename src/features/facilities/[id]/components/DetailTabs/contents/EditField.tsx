@@ -1,5 +1,7 @@
 import styles from './TabContent.module.scss';
 
+const DEFAULT_TEXTAREA_ROWS = 3;
+
 type SelectOption = {
   value: string;
   label: string;
@@ -10,8 +12,6 @@ type BaseFieldProps = {
   id: string;
   /** ラベルテキスト */
   label: string;
-  /** 値変更時のハンドラー */
-  onChange: (value: unknown) => void;
   /** 無効化フラグ */
   disabled?: boolean;
 };
@@ -19,12 +19,14 @@ type BaseFieldProps = {
 type TextFieldProps = BaseFieldProps & {
   type: 'text';
   value: string | undefined;
+  onChange: (value: string) => void;
   placeholder?: string;
 };
 
 type NumberFieldProps = BaseFieldProps & {
   type: 'number';
-  value: number | string | undefined;
+  value: number | undefined; // Removed string allowing strictly number or undefined
+  onChange: (value: number | undefined) => void;
   placeholder?: string;
   min?: number;
   max?: number;
@@ -34,6 +36,7 @@ type NumberFieldProps = BaseFieldProps & {
 type TextareaFieldProps = BaseFieldProps & {
   type: 'textarea';
   value: string | undefined;
+  onChange: (value: string) => void;
   placeholder?: string;
   rows?: number;
 };
@@ -41,6 +44,7 @@ type TextareaFieldProps = BaseFieldProps & {
 type SelectFieldProps = BaseFieldProps & {
   type: 'select';
   value: string | undefined;
+  onChange: (value: string | undefined) => void;
   options: SelectOption[];
 };
 
@@ -65,10 +69,10 @@ export type EditFieldProps =
  * />
  */
 export const EditField = (props: EditFieldProps) => {
-  const { type, id, label, onChange, disabled } = props;
+  const { id, label, disabled } = props;
 
   const renderInput = () => {
-    switch (type) {
+    switch (props.type) {
       case 'text':
         return (
           <input
@@ -76,7 +80,7 @@ export const EditField = (props: EditFieldProps) => {
             id={id}
             className={styles.editInput}
             value={props.value || ''}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={(e) => props.onChange(e.target.value)}
             placeholder={props.placeholder}
             disabled={disabled}
           />
@@ -89,7 +93,7 @@ export const EditField = (props: EditFieldProps) => {
             id={id}
             className={styles.editInput}
             value={props.value ?? ''}
-            onChange={(e) => onChange(e.target.value ? Number(e.target.value) : undefined)}
+            onChange={(e) => props.onChange(e.target.value ? Number(e.target.value) : undefined)}
             placeholder={props.placeholder}
             min={props.min}
             max={props.max}
@@ -104,9 +108,9 @@ export const EditField = (props: EditFieldProps) => {
             id={id}
             className={styles.editTextarea}
             value={props.value || ''}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={(e) => props.onChange(e.target.value)}
             placeholder={props.placeholder}
-            rows={props.rows ?? 3}
+            rows={props.rows ?? DEFAULT_TEXTAREA_ROWS}
             disabled={disabled}
           />
         );
@@ -117,7 +121,7 @@ export const EditField = (props: EditFieldProps) => {
             id={id}
             className={styles.editInput}
             value={props.value ?? ''}
-            onChange={(e) => onChange(e.target.value || undefined)}
+            onChange={(e) => props.onChange(e.target.value || undefined)}
             disabled={disabled}
           >
             {props.options.map((opt) => (
