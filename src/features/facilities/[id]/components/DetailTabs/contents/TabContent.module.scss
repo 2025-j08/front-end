@@ -70,34 +70,10 @@
   }
 }
 
-// スタッフカードグリッド (StaffTab用)
-.staffGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
-  margin-top: 24px;
-}
-
-.staffCard {
-  background-color: colors.$bg-light-gray;
-  padding: 24px;
-  border-radius: 8px;
-
-  .role {
-    display: inline-block;
-    background-color: colors.$primary-color;
-    color: white;
-    font-size: 12px;
-    padding: 4px 8px;
-    border-radius: 4px;
-    margin-bottom: 12px;
-  }
-
-  .description {
-    font-size: 14px;
-    line-height: 1.6;
-  }
-}
+// -----------------------------------------------------------------------------
+// Note: staffGrid / staffCard は削除済み（未使用のため）
+// 将来カード形式のスタッフ表示が必要な場合は再実装してください
+// -----------------------------------------------------------------------------
 
 // シンプルな説明文 (AdvancedTab, OtherTab用)
 .simpleText {
