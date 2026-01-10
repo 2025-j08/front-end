@@ -1,11 +1,16 @@
-import { NextResponse } from 'next/server';
-
 import type { InviteUserRequest } from '@/types/api';
 import { createClient as createServerClient, createAdminClient } from '@/lib/supabase/server';
 import { appConfig } from '@/lib/supabase/config';
 import { validateEmail } from '@/lib/validation';
 import { HTTP_STATUS } from '@/const/httpStatus';
 import { logError, logInfo, logFatal, maskEmail } from '@/lib/logger';
+import {
+  validateRequestBody,
+  validatePositiveIntegerField,
+  createErrorResponse,
+  createSuccessResponse,
+  type ParseResult,
+} from '@/lib/api/validators';
 
 // 招待の有効期限（日数）を一元管理
 const INVITATION_EXPIRES_IN_DAYS = 3;
@@ -16,25 +21,27 @@ const buildExpiresAtUtc = () => {
   return expiresAt.toISOString();
 };
 
-// 関数式を使用して変数のように関数を定義
-// 成功/失敗時の戻り値の種類を定義
-const parseRequestBody = (
-  body: unknown,
-): { success: true; data: InviteUserRequest } | { success: false; message: string } => {
-  // json形式になっているか(配列も含む)
-  if (typeof body !== 'object' || body === null) {
-    return { success: false, message: '不正なリクエスト形式です' };
+/**
+ * 招待APIリクエストボディのパース関数
+ *
+ * @param body - リクエストボディ
+ * @returns パース結果
+ */
+const parseInviteRequestBody = (body: unknown): ParseResult<InviteUserRequest> => {
+  // 基本的なJSONオブジェクト検証
+  const bodyValidation = validateRequestBody(body);
+  if (!bodyValidation.success) {
+    return bodyValidation;
   }
 
-  // jsonのリクエストボディを代入
-  const { email, facilityId } = body as Record<string, unknown>;
+  const obj = bodyValidation.data;
 
-  // emailの型チェック
-  if (typeof email !== 'string') {
+  // メールアドレスの検証
+  if (typeof obj.email !== 'string') {
     return { success: false, message: '有効なメールアドレスを指定してください' };
   }
 
-  const emailValidation = validateEmail(email);
+  const emailValidation = validateEmail(obj.email);
   if (!emailValidation.isValid) {
     return {
       success: false,
@@ -42,15 +49,23 @@ const parseRequestBody = (
     };
   }
 
-  // facility_idの型チェック
-  const parsedFacilityId = Number(facilityId);
-  // 不適切な型だった
-  if (!Number.isInteger(parsedFacilityId) || parsedFacilityId <= 0) {
-    return { success: false, message: '有効な施設IDを指定してください' };
+  // 施設IDの検証
+  const facilityIdValidation = validatePositiveIntegerField(
+    obj,
+    'facilityId',
+    '有効な施設IDを指定してください',
+  );
+  if (!facilityIdValidation.success) {
+    return facilityIdValidation;
   }
 
-  // 各値を返却する
-  return { success: true, data: { email, facilityId: parsedFacilityId } };
+  return {
+    success: true,
+    data: {
+      email: obj.email,
+      facilityId: facilityIdValidation.data,
+    },
+  };
 };
 
 export async function POST(request: Request) {
@@ -59,13 +74,10 @@ export async function POST(request: Request) {
     const json = await request.json().catch(() => null);
 
     // 各パラメータをバリデーションする
-    const parsed = parseRequestBody(json);
+    const parsed = parseInviteRequestBody(json);
     // 失敗時のエラーレスポンス
     if (!parsed.success) {
-      return NextResponse.json(
-        { success: false, error: parsed.message },
-        { status: HTTP_STATUS.BAD_REQUEST },
-      );
+      return createErrorResponse(parsed.message, HTTP_STATUS.BAD_REQUEST);
     }
 
     // バリデーション済みデータを代入
@@ -82,10 +94,7 @@ export async function POST(request: Request) {
 
     // 未認証のエラーレスポンス
     if (!user) {
-      return NextResponse.json(
-        { success: false, error: '認証が必要です' },
-        { status: HTTP_STATUS.UNAUTHORIZED },
-      );
+      return createErrorResponse('認証が必要です', HTTP_STATUS.UNAUTHORIZED);
     }
 
     // 管理者ユーザか確認する(役割を抽出)
@@ -98,10 +107,7 @@ export async function POST(request: Request) {
 
     // 管理者ではなかったときのエラーレスポンス
     if (profile?.role !== 'admin') {
-      return NextResponse.json(
-        { success: false, error: '管理者権限が必要です' },
-        { status: HTTP_STATUS.FORBIDDEN },
-      );
+      return createErrorResponse('管理者権限が必要です', HTTP_STATUS.FORBIDDEN);
     }
 
     // リクエストボディのメールアドレス宛に招待メールを送信
@@ -119,10 +125,7 @@ export async function POST(request: Request) {
         error: authError.message,
         errorCode: authError.code,
       });
-      return NextResponse.json(
-        { success: false, error: '招待メール送信に失敗しました' },
-        { status: HTTP_STATUS.BAD_REQUEST },
-      );
+      return createErrorResponse('招待メール送信に失敗しました', HTTP_STATUS.BAD_REQUEST);
     }
 
     // ユーザーIDが取得できない場合（メールは送信済みの可能性がある）
@@ -131,9 +134,9 @@ export async function POST(request: Request) {
         email: maskEmail(email),
         dataReceived: data,
       });
-      return NextResponse.json(
-        { success: false, error: '招待処理に失敗しました。管理者にお問い合わせください' },
-        { status: HTTP_STATUS.INTERNAL_SERVER_ERROR },
+      return createErrorResponse(
+        '招待処理に失敗しました。管理者にお問い合わせください',
+        HTTP_STATUS.INTERNAL_SERVER_ERROR,
       );
     }
 
@@ -177,22 +180,16 @@ export async function POST(request: Request) {
         });
       }
 
-      return NextResponse.json(
-        { success: false, error: '招待情報の保存に失敗しました' },
-        { status: HTTP_STATUS.INTERNAL_SERVER_ERROR },
-      );
+      return createErrorResponse('招待情報の保存に失敗しました', HTTP_STATUS.INTERNAL_SERVER_ERROR);
     }
 
     // 成功レスポンス
-    return NextResponse.json({ success: true });
+    return createSuccessResponse();
   } catch (error) {
     // 処理中にエラーが発生した場合のレスポンス
     logError('招待APIで予期しないエラーが発生しました', {
       error: error instanceof Error ? error : String(error),
     });
-    return NextResponse.json(
-      { success: false, error: 'サーバーエラーが発生しました' },
-      { status: HTTP_STATUS.INTERNAL_SERVER_ERROR },
-    );
+    return createErrorResponse('サーバーエラーが発生しました', HTTP_STATUS.INTERNAL_SERVER_ERROR);
   }
 }

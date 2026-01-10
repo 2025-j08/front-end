@@ -1,43 +1,47 @@
-import { NextResponse } from 'next/server';
-
 import type { RegisterRequest } from '@/types/api';
 import { createClient as createServerClient, createAdminClient } from '@/lib/supabase/server';
 import { validateRequired, validatePassword } from '@/lib/validation';
 import { HTTP_STATUS } from '@/const/httpStatus';
 import { logWarn, logError, logInfo, logFatal, maskEmail } from '@/lib/logger';
 import { deleteFacilityProfile, restoreProfileName } from '@/lib/auth/registration';
+import {
+  validateRequestBody,
+  createErrorResponse,
+  createSuccessResponse,
+  type ParseResult,
+} from '@/lib/api/validators';
 
 /**
- * リクエストボディのバリデーション
+ * 登録APIリクエストボディのパース関数
+ *
  * @param body - リクエストボディ
- * @returns バリデーション結果
+ * @returns パース結果
  */
-const parseRequestBody = (
-  body: unknown,
-): { success: true; data: RegisterRequest } | { success: false; message: string } => {
-  // JSON形式の確認
-  if (typeof body !== 'object' || body === null) {
-    return { success: false, message: '不正なリクエスト形式です' };
+const parseRegisterRequestBody = (body: unknown): ParseResult<RegisterRequest> => {
+  // 基本的なJSONオブジェクト検証
+  const bodyValidation = validateRequestBody(body);
+  if (!bodyValidation.success) {
+    return bodyValidation;
   }
 
-  const { name, password } = body as Record<string, unknown>;
+  const obj = bodyValidation.data;
 
-  // nameの型チェックとバリデーション
-  if (typeof name !== 'string') {
+  // 氏名の検証
+  if (typeof obj.name !== 'string') {
     return { success: false, message: '氏名を入力してください' };
   }
 
-  const nameValidation = validateRequired(name, '氏名');
+  const nameValidation = validateRequired(obj.name, '氏名');
   if (!nameValidation.isValid) {
     return { success: false, message: nameValidation.error ?? '氏名を入力してください' };
   }
 
-  // passwordの型チェックとバリデーション
-  if (typeof password !== 'string') {
+  // パスワードの検証
+  if (typeof obj.password !== 'string') {
     return { success: false, message: 'パスワードを入力してください' };
   }
 
-  const passwordValidation = validatePassword(password);
+  const passwordValidation = validatePassword(obj.password);
   if (!passwordValidation.isValid) {
     return {
       success: false,
@@ -45,7 +49,7 @@ const parseRequestBody = (
     };
   }
 
-  return { success: true, data: { name: name.trim(), password } };
+  return { success: true, data: { name: obj.name.trim(), password: obj.password } };
 };
 
 /**
@@ -65,12 +69,9 @@ export async function POST(request: Request) {
     const json = await request.json().catch(() => null);
 
     // バリデーション
-    const parsed = parseRequestBody(json);
+    const parsed = parseRegisterRequestBody(json);
     if (!parsed.success) {
-      return NextResponse.json(
-        { success: false, error: parsed.message },
-        { status: HTTP_STATUS.BAD_REQUEST },
-      );
+      return createErrorResponse(parsed.message, HTTP_STATUS.BAD_REQUEST);
     }
 
     const { name, password } = parsed.data;
@@ -86,9 +87,9 @@ export async function POST(request: Request) {
 
     // 未認証のエラーレスポンス
     if (!user) {
-      return NextResponse.json(
-        { success: false, error: '認証が必要です。再度ログインしてください' },
-        { status: HTTP_STATUS.UNAUTHORIZED },
+      return createErrorResponse(
+        '認証が必要です。再度ログインしてください',
+        HTTP_STATUS.UNAUTHORIZED,
       );
     }
 
@@ -107,10 +108,7 @@ export async function POST(request: Request) {
         error: invitationError?.message,
       });
 
-      return NextResponse.json(
-        { success: false, error: '招待情報が見つかりません' },
-        { status: HTTP_STATUS.FORBIDDEN },
-      );
+      return createErrorResponse('招待情報が見つかりません', HTTP_STATUS.FORBIDDEN);
     }
 
     // 施設情報を取得（レスポンスに含めるため）
@@ -127,10 +125,7 @@ export async function POST(request: Request) {
         error: facilityError?.message,
       });
 
-      return NextResponse.json(
-        { success: false, error: '施設情報が見つかりません' },
-        { status: HTTP_STATUS.BAD_REQUEST },
-      );
+      return createErrorResponse('施設情報が見つかりません', HTTP_STATUS.BAD_REQUEST);
     }
 
     // 有効期限チェック
@@ -144,9 +139,9 @@ export async function POST(request: Request) {
         expiresAtParsed: expiresAt.toString(),
       });
 
-      return NextResponse.json(
-        { success: false, error: 'システムエラーが発生しました。管理者にお問い合わせください' },
-        { status: HTTP_STATUS.INTERNAL_SERVER_ERROR },
+      return createErrorResponse(
+        'システムエラーが発生しました。管理者にお問い合わせください',
+        HTTP_STATUS.INTERNAL_SERVER_ERROR,
       );
     }
 
@@ -159,10 +154,7 @@ export async function POST(request: Request) {
       // 期限切れの招待レコードを削除
       await supabaseServer.from('invitations').delete().eq('user_id', user.id);
 
-      return NextResponse.json(
-        { success: false, error: '招待の有効期限が切れています' },
-        { status: HTTP_STATUS.FORBIDDEN },
-      );
+      return createErrorResponse('招待の有効期限が切れています', HTTP_STATUS.FORBIDDEN);
     }
 
     // ロールバック用に元のプロフィール情報を取得
@@ -178,10 +170,7 @@ export async function POST(request: Request) {
         error: originalProfileError?.message,
       });
 
-      return NextResponse.json(
-        { success: false, error: 'プロフィールが見つかりません' },
-        { status: HTTP_STATUS.BAD_REQUEST },
-      );
+      return createErrorResponse('プロフィールが見つかりません', HTTP_STATUS.BAD_REQUEST);
     }
 
     const originalName = originalProfile.name;
@@ -200,10 +189,7 @@ export async function POST(request: Request) {
         error: facilityProfileError.message,
       });
 
-      return NextResponse.json(
-        { success: false, error: '施設の紐付けに失敗しました' },
-        { status: HTTP_STATUS.INTERNAL_SERVER_ERROR },
-      );
+      return createErrorResponse('施設の紐付けに失敗しました', HTTP_STATUS.INTERNAL_SERVER_ERROR);
     }
 
     // profiles.name 更新
@@ -221,9 +207,9 @@ export async function POST(request: Request) {
       // 施設紐付けをロールバック
       await deleteFacilityProfile(supabaseAdmin, user.id, invitation.facility_id);
 
-      return NextResponse.json(
-        { success: false, error: 'プロフィールの更新に失敗しました' },
-        { status: HTTP_STATUS.INTERNAL_SERVER_ERROR },
+      return createErrorResponse(
+        'プロフィールの更新に失敗しました',
+        HTTP_STATUS.INTERNAL_SERVER_ERROR,
       );
     }
 
@@ -243,9 +229,9 @@ export async function POST(request: Request) {
       await restoreProfileName(supabaseAdmin, user.id, originalName);
       await deleteFacilityProfile(supabaseAdmin, user.id, invitation.facility_id);
 
-      return NextResponse.json(
-        { success: false, error: 'パスワードの設定に失敗しました' },
-        { status: HTTP_STATUS.INTERNAL_SERVER_ERROR },
+      return createErrorResponse(
+        'パスワードの設定に失敗しました',
+        HTTP_STATUS.INTERNAL_SERVER_ERROR,
       );
     }
 
@@ -280,8 +266,7 @@ export async function POST(request: Request) {
       facilityName: facility.name,
     });
 
-    return NextResponse.json({
-      success: true,
+    return createSuccessResponse({
       facilityId: facility.id,
       facilityName: facility.name,
       redirectUrl: '/',
@@ -293,9 +278,6 @@ export async function POST(request: Request) {
       stack: error instanceof Error ? error.stack : undefined,
     });
 
-    return NextResponse.json(
-      { success: false, error: 'サーバーエラーが発生しました' },
-      { status: HTTP_STATUS.INTERNAL_SERVER_ERROR },
-    );
+    return createErrorResponse('サーバーエラーが発生しました', HTTP_STATUS.INTERNAL_SERVER_ERROR);
   }
 }

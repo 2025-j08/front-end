@@ -1,19 +1,21 @@
-import { NextResponse } from 'next/server';
-
 import { createClient as createServerClient } from '@/lib/supabase/server';
 import { validateEmail, validatePassword } from '@/lib/validation';
 import { HTTP_STATUS } from '@/const/httpStatus';
 import { logWarn, logError, maskEmail } from '@/lib/logger';
+import {
+  validateRequestBody,
+  createErrorResponse,
+  createSuccessResponse,
+  type ParseResult,
+} from '@/lib/api/validators';
 
 type SignInRequestBody = {
   email: string;
   password: string;
 };
 
-type SignInResponseBody = {
-  success?: boolean;
-  error?: string;
-  role?: string | null;
+type SignInSuccessData = {
+  role: string | null;
 };
 
 /**
@@ -25,20 +27,27 @@ const getClientIp = (request: Request): string => {
   return forwarded?.split(',')[0].trim() || realIp || '不明';
 };
 
-const parseRequestBody = (
-  body: unknown,
-): { success: true; data: SignInRequestBody } | { success: false; message: string } => {
-  if (typeof body !== 'object' || body === null) {
-    return { success: false, message: '不正なリクエスト形式です' };
+/**
+ * サインインAPIリクエストボディのパース関数
+ *
+ * @param body - リクエストボディ
+ * @returns パース結果
+ */
+const parseSignInRequestBody = (body: unknown): ParseResult<SignInRequestBody> => {
+  // 基本的なJSONオブジェクト検証
+  const bodyValidation = validateRequestBody(body);
+  if (!bodyValidation.success) {
+    return bodyValidation;
   }
 
-  const { email, password } = body as Record<string, unknown>;
+  const obj = bodyValidation.data;
 
-  if (typeof email !== 'string') {
+  // メールアドレスの検証
+  if (typeof obj.email !== 'string') {
     return { success: false, message: '有効なメールアドレスを指定してください' };
   }
 
-  const emailValidation = validateEmail(email);
+  const emailValidation = validateEmail(obj.email);
   if (!emailValidation.isValid) {
     return {
       success: false,
@@ -46,27 +55,25 @@ const parseRequestBody = (
     };
   }
 
-  if (typeof password !== 'string') {
+  // パスワードの検証
+  if (typeof obj.password !== 'string') {
     return { success: false, message: 'パスワードが不正です' };
   }
 
-  const passwordValidation = validatePassword(password);
+  const passwordValidation = validatePassword(obj.password);
   if (!passwordValidation.isValid) {
     return { success: false, message: 'パスワードが不正です' };
   }
 
-  return { success: true, data: { email: email.trim(), password } };
+  return { success: true, data: { email: obj.email.trim(), password: obj.password } };
 };
 
 export async function POST(request: Request) {
   try {
     const json = await request.json().catch(() => null);
-    const parsed = parseRequestBody(json);
+    const parsed = parseSignInRequestBody(json);
     if (!parsed.success) {
-      return NextResponse.json<SignInResponseBody>(
-        { error: parsed.message },
-        { status: HTTP_STATUS.BAD_REQUEST },
-      );
+      return createErrorResponse(parsed.message, HTTP_STATUS.BAD_REQUEST);
     }
 
     const { email, password } = parsed.data;
@@ -86,10 +93,7 @@ export async function POST(request: Request) {
       });
 
       // エラー詳細は返さず、一般的なメッセージのみ返却
-      return NextResponse.json<SignInResponseBody>(
-        { error: 'メールまたはパスワードが不正です' },
-        { status: HTTP_STATUS.UNAUTHORIZED },
-      );
+      return createErrorResponse('メールまたはパスワードが不正です', HTTP_STATUS.UNAUTHORIZED);
     }
 
     // 役割取得（RLS有効、セッションユーザー）
@@ -107,14 +111,11 @@ export async function POST(request: Request) {
       });
     }
 
-    return NextResponse.json<SignInResponseBody>({ success: true, role: profile?.role ?? null });
+    return createSuccessResponse<SignInSuccessData>({ role: profile?.role ?? null });
   } catch (err) {
     logError('サインインAPIで予期しないエラーが発生しました', {
       error: err instanceof Error ? err : String(err),
     });
-    return NextResponse.json<SignInResponseBody>(
-      { error: 'サーバーエラーが発生しました' },
-      { status: HTTP_STATUS.INTERNAL_SERVER_ERROR },
-    );
+    return createErrorResponse('サーバーエラーが発生しました', HTTP_STATUS.INTERNAL_SERVER_ERROR);
   }
 }
