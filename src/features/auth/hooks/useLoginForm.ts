@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -55,6 +55,14 @@ export const useLoginForm = (): UseLoginFormReturn => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  // 最新の formData を参照するための ref
+  const formDataRef = useRef<LoginFormData>(formData);
+
+  // formData が変更されるたびに ref を更新
+  useEffect(() => {
+    formDataRef.current = formData;
+  }, [formData]);
+
   /**
    * 入力値変更ハンドラ
    */
@@ -81,9 +89,10 @@ export const useLoginForm = (): UseLoginFormReturn => {
 
       try {
         // 実API呼び出し
+        // ref から最新の formData を取得
         const payload = {
-          email: formData.userid.trim(),
-          password: formData.password,
+          email: formDataRef.current.userid.trim(),
+          password: formDataRef.current.password,
         };
 
         type SignInResponse = { success?: boolean; error?: string; role?: string | null };
@@ -119,7 +128,7 @@ export const useLoginForm = (): UseLoginFormReturn => {
         setIsLoading(false);
       }
     },
-    [formData.userid, formData.password, router],
+    [router],
   );
 
   /**

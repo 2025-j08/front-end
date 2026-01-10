@@ -37,6 +37,20 @@
 
 - ※dockerインストール&起動済み前提
 
+### 初回セットアップ
+
+1. `.env.local.example` を `.env.local` にコピー
+
+   ```bash
+   cp .env.local.example .env.local
+   ```
+
+2. 環境に応じてポート番号を調整（オプション）
+   - Windows環境など、デフォルトポート（54321番台）が予約済みの場合は、`.env.local` のポート番号を適宜変更してください
+   - デフォルトでは 56321番台のポートを使用する設定になっています
+
+### Supabase CLIのインストール
+
 1. `cd /tmp`
    - バイナリファイルをダウンロードするためtmpに移動
 1. `curl -L https://github.com/supabase/cli/releases/latest/download/supabase_linux_amd64.tar.gz \`
@@ -45,13 +59,20 @@
    - ダウンロードしたファイルを再配置
 1. `supabase --version`
    - 無事バージョン確認できたら`プロジェクトのルートディレクトリ`に戻る
+
+### 起動
+
 1. `supabase start`
    - docker上でsupabaseを起動するコマンド
-   - 起動してるポート
-     1. http://127.0.0.1:54321
-        - DBへのアクセスポイント(機能実装する際はenbファイルに記述しておくこと)
-     1. http://127.0.0.1:54323
-        - GUIの管理ページ(テーブル状態等諸々確認できる)
+   - 主なアクセスポイント（デフォルト設定の場合）:
+     1. API Gateway: http://127.0.0.1:56321
+        - Next.jsアプリからの接続先（`NEXT_PUBLIC_SUPABASE_URL` で指定）
+     1. Studio (Web UI): http://127.0.0.1:56323
+        - GUIの管理ページ（テーブル状態等を確認可能）
+     1. Database: http://127.0.0.1:56322
+        - PostgreSQLへの直接接続
+
+> **注意**: ポート番号は `.env.local` の設定に依存します。環境変数を変更した場合は、それに応じたポート番号でアクセスしてください。
 
 ## ディレクトリ解説
 
