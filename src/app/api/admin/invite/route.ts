@@ -2,8 +2,9 @@ import { NextResponse } from 'next/server';
 
 import type { InviteUserRequest } from '@/types/api';
 import { createClient as createServerClient, createAdminClient } from '@/lib/supabase/server';
+import { appConfig } from '@/lib/supabase/config';
 import { validateEmail } from '@/lib/validation';
-import { logError, logInfo, logFatal } from '@/lib/logger';
+import { logError, logInfo, logFatal, maskEmail } from '@/lib/logger';
 
 // 関数式を使用して変数のように関数を定義
 // 成功/失敗時の戻り値の種類を定義
@@ -57,21 +58,6 @@ export async function POST(request: Request) {
     // バリデーション済みデータを代入
     const { email, facilityId } = parsed.data;
 
-    // 環境変数が正しく設定できているか
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL;
-    // 未設定のエラーレスポンス
-    if (!appUrl) {
-      logError('NEXT_PUBLIC_APP_URL is not set');
-      return NextResponse.json(
-        {
-          success: false,
-          error:
-            'アプリケーションURLが設定されていません: 環境変数 NEXT_PUBLIC_APP_URL を確認してください',
-        },
-        { status: 500 },
-      );
-    }
-
     // サーバ用クライアントと管理者用クライアントを作成
     const supabaseServer = await createServerClient();
     const supabaseAdmin = createAdminClient();
@@ -104,13 +90,13 @@ export async function POST(request: Request) {
     // redirectTo: 招待メール内のリンククリック後、ブラウザのクライアントページ(/auth/callback)へ遷移する
     // 招待リンクはハッシュ(#access_token 等)を返すため、サーバAPIではなくクライアントで処理する必要がある
     const { data, error: authError } = await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
-      redirectTo: `${appUrl}/auth/callback`,
+      redirectTo: `${appConfig.baseUrl}/auth/callback`,
     });
 
     // 招待メールの送信に失敗した場合
     if (authError) {
       logError('招待メール送信に失敗しました', {
-        email: email,
+        email: maskEmail(email),
         error: authError.message,
         errorCode: authError.code,
       });
@@ -123,7 +109,7 @@ export async function POST(request: Request) {
     // ユーザーIDが取得できない場合（メールは送信済みの可能性がある）
     if (!data?.user?.id) {
       logError('招待ユーザーIDの取得に失敗しました（メール送信済みの可能性あり）', {
-        email: email,
+        email: maskEmail(email),
         dataReceived: data,
       });
       return NextResponse.json(
@@ -151,7 +137,7 @@ export async function POST(request: Request) {
       // エラーの構造化ログを出力
       logError('ユーザー作成後の招待情報保存に失敗しました', {
         userId: data.user.id,
-        email: email,
+        email: maskEmail(email),
         facilityId: facilityId,
         error: upsertError.message,
       });
@@ -159,12 +145,12 @@ export async function POST(request: Request) {
       // 補償トランザクションにより作成された認証ユーザーを削除
       try {
         await supabaseAdmin.auth.admin.deleteUser(data.user.id);
-        logInfo('ロールバック成功', { userId: data.user.id, email: email });
+        logInfo('ロールバック成功', { userId: data.user.id, email: maskEmail(email) });
       } catch (rollbackError) {
         // ロールバック失敗は手動対応が必要になる
         logFatal('ロールバックに失敗しました（手動クリーンアップが必要です）', {
           userId: data.user.id,
-          email: email,
+          email: maskEmail(email),
           facilityId: facilityId,
           originalError: upsertError.message,
           rollbackError: rollbackError instanceof Error ? rollbackError.message : rollbackError,
