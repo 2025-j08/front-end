@@ -12,6 +12,8 @@ type BasicInfoSectionProps = {
   isEditMode?: boolean;
   /** フィールド更新ハンドラー */
   onFieldChange?: (field: string, value: unknown) => void;
+  /** エラー取得関数 */
+  getError?: (field: string) => string | undefined;
 };
 
 /** 情報カード（ラベルと値を表示する共通コンポーネント） */
@@ -45,6 +47,47 @@ const AnnexCard = ({ annexFacilities, annexText }: AnnexCardProps) => (
   </div>
 );
 
+/** 数値入力フィールド（定員入力用の共通コンポーネント） */
+type NumberInputFieldProps = {
+  id: string;
+  label: string;
+  value: number | undefined;
+  placeholder: string;
+  error?: string;
+  onChange: (value: string) => void;
+};
+
+const NumberInputField = ({
+  id,
+  label,
+  value,
+  placeholder,
+  error,
+  onChange,
+}: NumberInputFieldProps) => (
+  <div className={styles.capacityField}>
+    <label htmlFor={id} className={styles.subLabel}>
+      {label}
+    </label>
+    <input
+      type="number"
+      id={id}
+      className={`${styles.editInput} ${error ? styles.errorInput : ''}`}
+      value={value ?? ''}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      min={0}
+      aria-invalid={!!error}
+      aria-describedby={error ? `${id}-error` : undefined}
+    />
+    {error && (
+      <span id={`${id}-error`} className={styles.errorText} role="alert">
+        {error}
+      </span>
+    )}
+  </div>
+);
+
 /**
  * 施設詳細ページの基本情報セクション
  * 設立年、舎の種別、定員、併設施設を表示
@@ -58,7 +101,13 @@ export const BasicInfoSection = ({
   annexFacilities,
   isEditMode = false,
   onFieldChange,
+  getError = () => undefined,
 }: BasicInfoSectionProps) => {
+  // 数値フィールド変更のヘルパー関数
+  const handleNumberChange = (field: string, value: string) => {
+    onFieldChange?.(field, value ? Number(value) : undefined);
+  };
+
   // 定員表示の生成
   const capacityText = capacity
     ? provisionalCapacity
@@ -82,43 +131,22 @@ export const BasicInfoSection = ({
               施設定員
             </label>
             <div className={styles.capacityInputs}>
-              <div className={styles.capacityField}>
-                <label htmlFor="capacity" className={styles.subLabel}>
-                  定員
-                </label>
-                <input
-                  type="number"
-                  id="capacity"
-                  className={styles.editInput}
-                  value={capacity || ''}
-                  onChange={(e) =>
-                    onFieldChange?.('capacity', e.target.value ? Number(e.target.value) : undefined)
-                  }
-                  placeholder="定員"
-                  aria-label="定員"
-                  min={0}
-                />
-              </div>
-              <div className={styles.capacityField}>
-                <label htmlFor="provisionalCapacity" className={styles.subLabel}>
-                  暫定定員
-                </label>
-                <input
-                  type="number"
-                  id="provisionalCapacity"
-                  className={styles.editInput}
-                  value={provisionalCapacity || ''}
-                  onChange={(e) =>
-                    onFieldChange?.(
-                      'provisionalCapacity',
-                      e.target.value ? Number(e.target.value) : undefined,
-                    )
-                  }
-                  placeholder="暫定定員"
-                  aria-label="暫定定員"
-                  min={0}
-                />
-              </div>
+              <NumberInputField
+                id="capacity"
+                label="定員"
+                value={capacity}
+                placeholder="定員"
+                error={getError('capacity')}
+                onChange={(value) => handleNumberChange('capacity', value)}
+              />
+              <NumberInputField
+                id="provisionalCapacity"
+                label="暫定定員"
+                value={provisionalCapacity}
+                placeholder="暫定定員"
+                error={getError('provisionalCapacity')}
+                onChange={(value) => handleNumberChange('provisionalCapacity', value)}
+              />
             </div>
           </div>
           <AnnexCard annexFacilities={annexFacilities} annexText={annexText} />
