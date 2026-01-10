@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import type { InviteUserRequest } from '@/types/api';
 import { createClient as createServerClient, createAdminClient } from '@/lib/supabase/server';
 import { validateEmail } from '@/lib/validation';
+import { logError, logInfo, logFatal } from '@/lib/logger';
 
 // 関数式を使用して変数のように関数を定義
 // 成功/失敗時の戻り値の種類を定義
@@ -60,9 +61,13 @@ export async function POST(request: Request) {
     const appUrl = process.env.NEXT_PUBLIC_APP_URL;
     // 未設定のエラーレスポンス
     if (!appUrl) {
-      console.error('NEXT_PUBLIC_APP_URL is not set');
+      logError('NEXT_PUBLIC_APP_URL is not set');
       return NextResponse.json(
-        { success: false, error: '環境設定エラーが発生しました' },
+        {
+          success: false,
+          error:
+            'アプリケーションURLが設定されていません: 環境変数 NEXT_PUBLIC_APP_URL を確認してください',
+        },
         { status: 500 },
       );
     }
@@ -105,7 +110,9 @@ export async function POST(request: Request) {
     // 招待ユーザのIDが取得できなかった or 招待メールの送信に失敗した
     // 失敗時のエラーレスポンス
     if (authError || !data?.user?.id) {
-      console.error('inviteUserByEmail failed', authError);
+      logError('inviteUserByEmail failed', {
+        error: authError?.message,
+      });
       return NextResponse.json(
         { success: false, error: '招待メール送信に失敗しました' },
         { status: 400 },
@@ -129,21 +136,20 @@ export async function POST(request: Request) {
     // invitations保存失敗時の補償処理（ユーザー作成を取り消す）
     if (upsertError) {
       // エラーの構造化ログを出力
-      console.error('invitations upsert failed after user creation', {
+      logError('invitations upsert failed after user creation', {
         userId: data.user.id,
         email: email,
         facilityId: facilityId,
         error: upsertError.message,
-        timestamp: new Date().toISOString(),
       });
 
       // 補償トランザクションにより作成された認証ユーザーを削除
       try {
         await supabaseAdmin.auth.admin.deleteUser(data.user.id);
-        console.log('Rollback successful', { userId: data.user.id, email: email });
+        logInfo('Rollback successful', { userId: data.user.id, email: email });
       } catch (rollbackError) {
         // ロールバック失敗は手動対応が必要になる
-        console.error('FATAL: Rollback failed - manual cleanup required', {
+        logFatal('Rollback failed - manual cleanup required', {
           userId: data.user.id,
           email: email,
           facilityId: facilityId,
@@ -162,7 +168,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true });
   } catch (error) {
     // 処理中にエラーが発生した場合のレスポンス
-    console.error('Unexpected error in invite API', error);
+    logError('Unexpected error in invite API', {
+      error: error instanceof Error ? error : String(error),
+    });
     return NextResponse.json(
       { success: false, error: 'サーバーエラーが発生しました' },
       { status: 500 },
