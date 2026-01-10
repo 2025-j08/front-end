@@ -40,7 +40,7 @@ const parseRequestBody = (
   if (!passwordValidation.isValid) {
     return {
       success: false,
-      message: passwordValidation.errors.join('、'),
+      message: 'パスワードが要件を満たしていません',
     };
   }
 
@@ -132,12 +132,18 @@ export async function POST(request: Request) {
     // 有効期限チェック
     const expiresAt = new Date(invitation.expires_at);
     if (!Number.isFinite(expiresAt.getTime())) {
-      logError('無効な有効期限のフォーマットです', {
+      // 日付フォーマットが無効な場合はシステム側の問題
+      logFatal('データベースの有効期限フォーマットが無効です（データ整合性エラー）', {
         userId: user.id,
-        expiresAt: invitation.expires_at,
+        facilityId: invitation.facility_id,
+        expiresAtRaw: invitation.expires_at,
+        expiresAtParsed: expiresAt.toString(),
       });
 
-      return NextResponse.json({ success: false, error: '招待情報が無効です' }, { status: 400 });
+      return NextResponse.json(
+        { success: false, error: 'システムエラーが発生しました。管理者にお問い合わせください' },
+        { status: 500 },
+      );
     }
 
     if (expiresAt < new Date()) {
