@@ -43,6 +43,8 @@ export default function AuthCallbackPage() {
   );
 
   useEffect(() => {
+    // コンポーネントのマウント状態を追跡
+    let isMounted = true;
     const { accessToken, refreshToken, expiresAt } = parseHashParams(window.location.hash);
 
     // ハッシュにトークンが含まれない場合はログイン画面へ
@@ -66,7 +68,7 @@ export default function AuthCallbackPage() {
         // 現在のユーザーを取得
         const { data: userData, error: userError } = await supabase.auth.getUser();
         if (userError || !userData?.user) {
-          router.replace('/features/auth?error=auth_failed');
+          if (isMounted) router.replace('/features/auth?error=auth_failed');
           return;
         }
 
@@ -81,7 +83,7 @@ export default function AuthCallbackPage() {
 
         if (invitationError || !invitation) {
           // セッション破棄してログインへ
-          await signOutSafely('no_invitation', '/features/auth?error=no_invitation');
+          if (isMounted) await signOutSafely('no_invitation', '/features/auth?error=no_invitation');
           return;
         }
 
@@ -90,24 +92,36 @@ export default function AuthCallbackPage() {
         const now = new Date();
         const expires = new Date(invitation.expires_at);
         if (!Number.isFinite(expires.getTime())) {
-          await signOutSafely('invalid_invitation', '/features/auth?error=invalid_invitation');
+          if (isMounted)
+            await signOutSafely('invalid_invitation', '/features/auth?error=invalid_invitation');
           return;
         }
 
         if (expires < now) {
           // 期限切れ招待を削除（ポリシー上、本人も削除可能）
           await supabase.from('invitations').delete().eq('user_id', userId);
-          await signOutSafely('expired_invitation', '/features/auth?error=expired_invitation');
+          if (isMounted)
+            await signOutSafely('expired_invitation', '/features/auth?error=expired_invitation');
           return;
         }
 
         // 正常：初期登録画面へ遷移
-        router.replace('/registration');
+        if (isMounted) router.replace('/registration');
       } catch (e) {
         // 予期しないエラー時は安全側へ遷移
-        router.replace('/features/auth?error=auth_failed');
+        logError('認証コールバック処理で予期しないエラーが発生しました', {
+          context: 'auth/callback',
+          error: e instanceof Error ? e.message : String(e),
+          stack: e instanceof Error ? e.stack : undefined,
+        });
+        if (isMounted) router.replace('/features/auth?error=auth_failed');
       }
     })();
+
+    // Cleanup関数: コンポーネントのアンマウント時にフラグを更新
+    return () => {
+      isMounted = false;
+    };
   }, [router, supabase, signOutSafely]);
 
   // シンプルなステータス表示（アクセシビリティ対応）
