@@ -97,16 +97,24 @@ function parseAddress(address: string): {
 /**
  * 設立年を抽出する
  * 例: "1946年（昭和21年）8月" → 1946
- * @throws 設立年が見つからない場合はエラーを発生
+ * 設立年が見つからない場合は現在年を仮データとして返す
  */
 function parseEstablishedYear(yearString: string | undefined, facilityId: number): number {
+  const currentYear = new Date().getFullYear();
+
   if (!yearString) {
-    throw new Error(`設立年が見つかりません（施設ID: ${facilityId}）`);
+    console.warn(
+      `設立年が見つかりません（施設ID: ${facilityId}）仮データとして現在年「${currentYear}」を使用します`,
+    );
+    return currentYear;
   }
 
   const match = yearString.match(/(\d{4})/);
   if (!match) {
-    throw new Error(`設立年を抽出できません（施設ID: ${facilityId}, 値: "${yearString}"）`);
+    console.warn(
+      `設立年を抽出できません（施設ID: ${facilityId}, 値: "${yearString}"）仮データとして現在年「${currentYear}」を使用します`,
+    );
+    return currentYear;
   }
 
   return parseInt(match[1], 10);
@@ -133,27 +141,18 @@ function prepareFacilityData(): FacilityInsertData[] {
   return allFacilities.map((facility) => {
     const detail = facilitiesDetail[facility.id.toString()];
     const { prefecture, city, address_detail } = parseAddress(facility.address);
+    const established_year = parseEstablishedYear(detail?.establishedYear, facility.id);
 
-    try {
-      const established_year = parseEstablishedYear(detail?.establishedYear, facility.id);
-
-      return {
-        name: facility.name,
-        corporation: detail?.corporation || '法人名未設定',
-        postal_code: facility.postalCode,
-        phone: facility.phone,
-        prefecture,
-        city,
-        address_detail,
-        established_year,
-      };
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      console.error(
-        `施設 "${facility.name}"（ID: ${facility.id}）のデータ準備に失敗しました: ${errorMessage}`,
-      );
-      throw error;
-    }
+    return {
+      name: facility.name,
+      corporation: detail?.corporation || '法人名未設定',
+      postal_code: facility.postalCode,
+      phone: facility.phone,
+      prefecture,
+      city,
+      address_detail,
+      established_year,
+    };
   });
 }
 
