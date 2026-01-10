@@ -30,8 +30,17 @@ export const FacilityDetail = ({ id }: Props) => {
   const isEditMode = searchParams.get('mode') === 'edit';
 
   // 編集フック
-  const { formData, isSaving, isDirty, updateField, updateNestedField, handleSubmit, resetForm } =
-    useFacilityEdit(facilityData, id);
+  const {
+    formData,
+    isSaving,
+    isDirty,
+    updateField,
+    updateNestedField,
+    handleSubmit,
+    resetForm,
+    errors,
+    getError,
+  } = useFacilityEdit(facilityData, id);
 
   // フィールド更新ハンドラー（BasicInfoSection用）
   const handleFieldChange = useCallback(
@@ -62,9 +71,24 @@ export const FacilityDetail = ({ id }: Props) => {
     router.push(`/features/facilities/${id}`);
   }, [isDirty, resetForm, router, id]);
 
-  if (isLoading) return <div className={styles.container}>読み込み中...</div>;
-  if (error) return <div className={styles.container}>{error}</div>;
-  if (!facilityData) return <div className={styles.container}>施設データが見つかりません</div>;
+  if (isLoading)
+    return (
+      <div className={styles.container} role="status" aria-live="polite" aria-busy="true">
+        読み込み中...
+      </div>
+    );
+  if (error)
+    return (
+      <div className={styles.container} role="alert">
+        {error}
+      </div>
+    );
+  if (!facilityData)
+    return (
+      <div className={styles.container} role="alert">
+        施設データが見つかりません
+      </div>
+    );
 
   // 表示用データ（編集モード時はformData、表示モード時はfacilityData）
   const displayData = isEditMode ? { ...facilityData, ...formData } : facilityData;
@@ -92,6 +116,7 @@ export const FacilityDetail = ({ id }: Props) => {
         annexFacilities={displayData.annexFacilities}
         isEditMode={isEditMode}
         onFieldChange={handleFieldChange}
+        getError={getError}
       />
 
       <DetailTabs
@@ -109,6 +134,8 @@ export const FacilityDetail = ({ id }: Props) => {
         otherInfo={displayData.otherInfo}
         isEditMode={isEditMode}
         onNestedFieldChange={updateNestedField}
+        errors={errors}
+        getError={getError}
       />
     </div>
   );
