@@ -27,6 +27,24 @@ const InfoCard = ({ label, value }: InfoCardProps) => (
   </div>
 );
 
+/** 併設施設カード（共通コンポーネント） */
+type AnnexCardProps = {
+  annexFacilities: AnnexFacility[] | undefined;
+  annexText: string;
+};
+
+const AnnexCard = ({ annexFacilities, annexText }: AnnexCardProps) => (
+  <div className={`${styles.infoCard} ${styles.annexCard}`}>
+    <div className={styles.annexHeader}>
+      <span className={styles.label}>併設施設</span>
+      <span className={styles.subStatus}>{annexFacilities?.length ? 'あり' : 'なし'}</span>
+    </div>
+    <div className={styles.annexContent}>
+      <span className={styles.value}>{annexText}</span>
+    </div>
+  </div>
+);
+
 /**
  * 施設詳細ページの基本情報セクション
  * 設立年、舎の種別、定員、併設施設を表示
@@ -103,15 +121,7 @@ export const BasicInfoSection = ({
               </div>
             </div>
           </div>
-          <div className={`${styles.infoCard} ${styles.annexCard}`}>
-            <div className={styles.annexHeader}>
-              <span className={styles.label}>併設施設</span>
-              <span className={styles.subStatus}>{annexFacilities?.length ? 'あり' : 'なし'}</span>
-            </div>
-            <div className={styles.annexContent}>
-              <span className={styles.value}>{annexText}</span>
-            </div>
-          </div>
+          <AnnexCard annexFacilities={annexFacilities} annexText={annexText} />
         </div>
       </section>
     );
@@ -123,15 +133,7 @@ export const BasicInfoSection = ({
         <InfoCard label="施設の種類" value={dormitoryType || '-'} />
         <InfoCard label="設立年" value={establishedYear || '-'} />
         <InfoCard label="施設定員" value={capacityText} />
-        <div className={`${styles.infoCard} ${styles.annexCard}`}>
-          <div className={styles.annexHeader}>
-            <span className={styles.label}>併設施設</span>
-            <span className={styles.subStatus}>{annexFacilities?.length ? 'あり' : 'なし'}</span>
-          </div>
-          <div className={styles.annexContent}>
-            <span className={styles.value}>{annexText}</span>
-          </div>
-        </div>
+        <AnnexCard annexFacilities={annexFacilities} annexText={annexText} />
       </div>
     </section>
   );
