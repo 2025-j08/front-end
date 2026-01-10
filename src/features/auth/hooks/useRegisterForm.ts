@@ -51,6 +51,8 @@ interface UseRegisterFormReturn {
   isLoading: boolean;
   /** 登録成功かどうか */
   isSuccess: boolean;
+  /** 成功時の施設名 */
+  successFacilityName: string | null;
   /** 全体エラーメッセージ */
   errorMessage: string | null;
   /** 各フィールドのエラーメッセージ */
@@ -87,6 +89,7 @@ export const useRegisterForm = (): UseRegisterFormReturn => {
   const [formData, setFormData] = useState<RegisterFormData>(INITIAL_FORM_DATA);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [successFacilityName, setSuccessFacilityName] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
@@ -208,10 +211,12 @@ export const useRegisterForm = (): UseRegisterFormReturn => {
 
         // 成功時の処理
         setIsSuccess(true);
+        setSuccessFacilityName(responseBody.facilityName ?? null);
 
-        // 成功オーバーレイ表示後、ホーム画面に遷移
+        // 成功オーバーレイ表示後、指定されたURLまたはホーム画面に遷移
+        const redirectUrl = responseBody.redirectUrl ?? '/';
         setTimeout(() => {
-          router.push('/');
+          router.push(redirectUrl);
         }, 1500);
       } catch (error) {
         logError('登録エラー', {
@@ -235,12 +240,14 @@ export const useRegisterForm = (): UseRegisterFormReturn => {
     setFieldErrors({});
     setErrorMessage(null);
     setIsSuccess(false);
+    setSuccessFacilityName(null);
   }, []);
 
   return {
     formData,
     isLoading,
     isSuccess,
+    successFacilityName,
     errorMessage,
     fieldErrors,
     passwordMinLength: PASSWORD_REQUIREMENTS.MIN_LENGTH,

@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import type { RegisterRequest } from '@/types/api';
 import { createClient as createServerClient, createAdminClient } from '@/lib/supabase/server';
 import { validateRequired, validatePassword } from '@/lib/validation';
-import { logWarn, logError, logInfo, logFatal } from '@/lib/logger';
+import { logWarn, logError, logInfo, logFatal, maskEmail } from '@/lib/logger';
 import { deleteFacilityProfile, restoreProfileName } from '@/lib/auth/registration';
 
 /**
@@ -99,13 +99,33 @@ export async function POST(request: Request) {
     if (invitationError || !invitation) {
       logWarn('招待情報が見つかりません', {
         userId: user.id,
-        email: user.email,
+        email: maskEmail(user.email ?? ''),
         error: invitationError?.message,
       });
 
       return NextResponse.json(
         { success: false, error: '招待情報が見つかりません' },
         { status: 403 },
+      );
+    }
+
+    // 施設情報を取得（レスポンスに含めるため）
+    const { data: facility, error: facilityError } = await supabaseServer
+      .from('facilities')
+      .select('id, name')
+      .eq('id', invitation.facility_id)
+      .single();
+
+    if (facilityError || !facility) {
+      logError('施設情報の取得に失敗しました', {
+        userId: user.id,
+        facilityId: invitation.facility_id,
+        error: facilityError?.message,
+      });
+
+      return NextResponse.json(
+        { success: false, error: '施設情報が見つかりません' },
+        { status: 400 },
       );
     }
 
@@ -245,11 +265,17 @@ export async function POST(request: Request) {
     // 成功レスポンス
     logInfo('ユーザー初期登録完了', {
       userId: user.id,
-      email: user.email,
+      email: maskEmail(user.email ?? ''),
       facilityId: invitation.facility_id,
+      facilityName: facility.name,
     });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({
+      success: true,
+      facilityId: facility.id,
+      facilityName: facility.name,
+      redirectUrl: '/',
+    });
   } catch (error) {
     // 予期しないエラー
     logError('初期登録API で予期しないエラーが発生しました', {

@@ -80,6 +80,12 @@ export interface RegisterResponseSuccess {
   success: true;
   /** エラーフィールドは存在しない */
   error?: never;
+  /** リダイレクト先URL（省略時はデフォルトのホーム画面） */
+  redirectUrl?: string;
+  /** 割り当てられた施設名（成功メッセージに表示可能） */
+  facilityName?: string;
+  /** 割り当てられた施設ID */
+  facilityId?: number;
 }
 
 /**
