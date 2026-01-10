@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useCallback, useRef, useEffect } from 'react';
-import type { ChangeEvent, FormEvent } from 'react';
+import { useCallback } from 'react';
+import type { FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { API_MESSAGES } from '@/const/messages';
 import { API_ENDPOINTS } from '@/const/api';
 import { logError } from '@/lib/clientLogger';
+import { useFormState } from '@/lib/hooks/useFormState';
 
 /**
  * ログインフォームのデータ型
@@ -29,7 +30,7 @@ interface UseLoginFormReturn {
   /** 全体エラーメッセージ */
   errorMessage: string | null;
   /** 入力フィールドの値が変更されたときのハンドラー */
-  handleChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   /** フォーム送信時のハンドラー */
   handleSubmit: (e: FormEvent<HTMLFormElement>) => Promise<void>;
   /** フォームをリセットする */
@@ -52,100 +53,59 @@ const INITIAL_FORM_DATA: LoginFormData = {
  */
 export const useLoginForm = (): UseLoginFormReturn => {
   const router = useRouter();
-  const [formData, setFormData] = useState<LoginFormData>(INITIAL_FORM_DATA);
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-  // 最新の formData を参照するための ref
-  const formDataRef = useRef<LoginFormData>(formData);
-
-  // formData が変更されるたびに ref を更新
-  useEffect(() => {
-    formDataRef.current = formData;
-  }, [formData]);
 
   /**
-   * 入力値変更ハンドラ
+   * ログイン送信処理
    */
-  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const handleLoginSubmit = useCallback(
+    async (data: LoginFormData) => {
+      const payload = {
+        email: data.userid.trim(),
+        password: data.password,
+      };
 
-    // 入力時にエラーをクリア
-    setErrorMessage(null);
-  }, []);
+      type SignInResponse = { success?: boolean; error?: string; role?: string | null };
 
-  /**
-   * フォーム送信ハンドラ
-   */
-  const handleSubmit = useCallback(
-    async (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
+      const response = await fetch(API_ENDPOINTS.AUTH.SIGNIN, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
 
-      setIsLoading(true);
-      setErrorMessage(null);
+      const body: SignInResponse | null = await response.json().catch(() => null);
 
-      try {
-        // 実API呼び出し
-        // ref から最新の formData を取得
-        const payload = {
-          email: formDataRef.current.userid.trim(),
-          password: formDataRef.current.password,
-        };
-
-        type SignInResponse = { success?: boolean; error?: string; role?: string | null };
-
-        const response = await fetch(API_ENDPOINTS.AUTH.SIGNIN, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-
-        const body: SignInResponse | null = await response.json().catch(() => null);
-
-        if (!response.ok || body?.success !== true) {
-          const message = body?.error ?? API_MESSAGES.LOGIN_FAILED;
-          throw new Error(message);
-        }
-
-        // ロールに応じた遷移（管理者はユーザー発行へ）
-        if (body?.role === 'admin') {
-          router.push('/admin/user-issuance');
-        } else {
-          router.push('/');
-        }
-      } catch (error) {
+      if (!response.ok || body?.success !== true) {
+        const message = body?.error ?? API_MESSAGES.LOGIN_FAILED;
         logError('ログインエラー', {
           component: 'useLoginForm',
           action: 'handleSubmit',
-          error: error instanceof Error ? error : String(error),
+          error: message,
         });
-        const message = error instanceof Error ? error.message : API_MESSAGES.LOGIN_FAILED;
-        setErrorMessage(message);
-      } finally {
-        setIsLoading(false);
+        throw new Error(message);
+      }
+
+      // ロールに応じた遷移（管理者はユーザー発行へ）
+      if (body?.role === 'admin') {
+        router.push('/admin/user-issuance');
+      } else {
+        router.push('/');
       }
     },
     [router],
   );
 
-  /**
-   * フォームリセット関数
-   */
-  const resetForm = useCallback(() => {
-    setFormData(INITIAL_FORM_DATA);
-    setErrorMessage(null);
-  }, []);
+  // ベースフォームhookを使用
+  const baseForm = useFormState({
+    initialData: INITIAL_FORM_DATA,
+    onSubmit: handleLoginSubmit,
+  });
 
   return {
-    formData,
-    isLoading,
-    errorMessage,
-    handleChange,
-    handleSubmit,
-    resetForm,
+    formData: baseForm.formData,
+    isLoading: baseForm.isLoading,
+    errorMessage: baseForm.error,
+    handleChange: baseForm.handleChange,
+    handleSubmit: baseForm.handleSubmit,
+    resetForm: baseForm.resetForm,
   };
 };
