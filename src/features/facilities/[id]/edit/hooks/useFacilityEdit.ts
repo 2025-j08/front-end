@@ -2,7 +2,7 @@
  * 施設編集用カスタムフック
  * API連携を考慮した設計
  */
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 
 import { FacilityDetail } from '@/types/facility';
 
@@ -129,11 +129,6 @@ export const useFacilityEdit = (
 ): UseFacilityEditReturn => {
   const [state, setState] = useState<EditFormState>(() => createInitialState(initialData));
 
-  // handleSubmitで最新のstateを参照するためのref
-  const stateRef = useRef(state);
-  useEffect(() => {
-    stateRef.current = state;
-  }, [state]);
   const [lastInitialDataId, setLastInitialDataId] = useState<number | null>(
     initialData?.id ?? null,
   );
@@ -199,8 +194,7 @@ export const useFacilityEdit = (
 
   // フォーム送信（API連携用の準備）
   const handleSubmit = useCallback(async (): Promise<boolean> => {
-    // refから最新のstateを取得（依存配列からstate.formData, state.changedFieldsを除外するため）
-    const { formData, changedFields } = stateRef.current;
+    const { formData, changedFields } = state;
 
     // バリデーション実行（純粋関数を使用）
     const errors = validateFacilityData(formData);
@@ -242,7 +236,7 @@ export const useFacilityEdit = (
       }));
       return false;
     }
-  }, [facilityId]);
+  }, [facilityId, state]);
 
   // フォームリセット
   const resetForm = useCallback(() => {
