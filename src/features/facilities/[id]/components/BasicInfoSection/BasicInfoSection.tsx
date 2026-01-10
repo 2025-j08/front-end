@@ -120,12 +120,13 @@ export const BasicInfoSection = ({
     ? annexFacilities.map((f) => `${f.name}（${f.type}）`).join('、')
     : '-';
 
-  if (isEditMode) {
-    return (
-      <section className={styles.basicInfoSection}>
-        <div className={styles.gridContainer}>
-          <InfoCard label="施設の種類" value={dormitoryType || '-'} />
-          <InfoCard label="設立年" value={establishedYear || '-'} />
+  return (
+    <section className={styles.basicInfoSection}>
+      <div className={styles.gridContainer}>
+        <InfoCard label="施設の種類" value={dormitoryType || '-'} />
+        <InfoCard label="設立年" value={establishedYear || '-'} />
+
+        {isEditMode ? (
           <div className={styles.infoCard}>
             <label className={styles.label} htmlFor="capacity">
               施設定員
@@ -149,18 +150,10 @@ export const BasicInfoSection = ({
               />
             </div>
           </div>
-          <AnnexCard annexFacilities={annexFacilities} annexText={annexText} />
-        </div>
-      </section>
-    );
-  }
+        ) : (
+          <InfoCard label="施設定員" value={capacityText} />
+        )}
 
-  return (
-    <section className={styles.basicInfoSection}>
-      <div className={styles.gridContainer}>
-        <InfoCard label="施設の種類" value={dormitoryType || '-'} />
-        <InfoCard label="設立年" value={establishedYear || '-'} />
-        <InfoCard label="施設定員" value={capacityText} />
         <AnnexCard annexFacilities={annexFacilities} annexText={annexText} />
       </div>
     </section>
