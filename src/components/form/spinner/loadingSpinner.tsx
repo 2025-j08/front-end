@@ -4,7 +4,11 @@
  */
 import styles from './loadingSpinner.module.scss';
 
-interface LoadingSpinnerProps {
+/**
+ * LoadingSpinnerコンポーネントのProps
+ */
+export interface LoadingSpinnerProps {
+  /** スピナーのサイズ */
   size?: 'small' | 'medium' | 'large';
 }
 

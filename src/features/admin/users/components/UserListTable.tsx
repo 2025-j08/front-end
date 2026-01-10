@@ -3,12 +3,15 @@
 import { User } from '../types';
 import styles from '../users.module.scss';
 
-type UserListTableProps = {
+/**
+ * UserListTableコンポーネントのProps
+ */
+export interface UserListTableProps {
   /** ユーザー一覧データ */
   users: User[];
   /** 削除ボタンクリック時のハンドラ */
   onDelete?: (userId: string) => void;
-};
+}
 
 /**
  * ユーザー一覧テーブルコンポーネント

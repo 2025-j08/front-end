@@ -5,8 +5,13 @@
 import { LoadingSpinner } from '../spinner';
 import styles from './loadingOverlay.module.scss';
 
-interface LoadingOverlayProps {
+/**
+ * LoadingOverlayコンポーネントのProps
+ */
+export interface LoadingOverlayProps {
+  /** 表示するテキスト */
   text?: string;
+  /** オーバーレイの表示状態 */
   isVisible: boolean;
 }
 

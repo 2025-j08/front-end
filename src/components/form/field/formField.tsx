@@ -6,16 +6,29 @@ import type { ChangeEvent } from 'react';
 
 import styles from './formField.module.scss';
 
-interface FormFieldProps {
+/**
+ * FormFieldコンポーネントのProps
+ */
+export interface FormFieldProps {
+  /** フィールドのラベル */
   label: string;
+  /** inputのtype属性 */
   type?: string;
+  /** フィールドのID */
   id: string;
+  /** フィールドのname属性 */
   name: string;
+  /** プレースホルダーテキスト */
   placeholder?: string;
+  /** 必須フィールドかどうか */
   required?: boolean;
+  /** フィールドの値 */
   value?: string;
+  /** autocomplete属性 */
   autoComplete?: string;
+  /** textareaの行数 */
   rows?: number;
+  /** textareaとして表示するか */
   isTextarea?: boolean;
   /** 最小文字数 */
   minLength?: number;
@@ -23,6 +36,7 @@ interface FormFieldProps {
   maxLength?: number;
   /** エラーメッセージ */
   error?: string;
+  /** 値変更時のハンドラ */
   onChange?: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 }
 

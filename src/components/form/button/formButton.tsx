@@ -4,11 +4,19 @@
  */
 import styles from './formButton.module.scss';
 
-interface FormButtonProps {
+/**
+ * FormButtonコンポーネントのProps
+ */
+export interface FormButtonProps {
+  /** ボタンのラベルテキスト */
   label?: string;
+  /** ローディング中のラベルテキスト */
   loadingLabel?: string;
+  /** ローディング状態 */
   isLoading?: boolean;
+  /** 無効化状態 */
   disabled?: boolean;
+  /** ボタンのタイプ */
   type?: 'submit' | 'button' | 'reset';
 }
 

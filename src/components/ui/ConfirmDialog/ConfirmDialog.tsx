@@ -4,7 +4,10 @@ import { useEffect, useRef } from 'react';
 
 import styles from './ConfirmDialog.module.scss';
 
-export type ConfirmDialogProps = {
+/**
+ * ConfirmDialogコンポーネントのProps
+ */
+export interface ConfirmDialogProps {
   /** ダイアログを表示するかどうか */
   isOpen: boolean;
   /** タイトル */
@@ -21,7 +24,7 @@ export type ConfirmDialogProps = {
   onConfirm: () => void;
   /** キャンセル時のハンドラ */
   onCancel: () => void;
-};
+}
 
 /**
  * 汎用確認ダイアログコンポーネント
