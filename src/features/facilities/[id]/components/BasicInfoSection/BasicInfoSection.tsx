@@ -88,6 +88,72 @@ const NumberInputField = ({
   </div>
 );
 
+/** 併設施設編集コンポーネント */
+type AnnexFacilityEditorProps = {
+  annexFacilities: AnnexFacility[] | undefined;
+  onFieldChange?: (field: string, value: unknown) => void;
+};
+
+const AnnexFacilityEditor = ({ annexFacilities, onFieldChange }: AnnexFacilityEditorProps) => {
+  const items = annexFacilities || [];
+
+  const handleItemChange = (index: number, field: 'name' | 'type', value: string) => {
+    const newItems = [...items];
+    newItems[index] = { ...newItems[index], [field]: value };
+    onFieldChange?.('annexFacilities', newItems);
+  };
+
+  const handleAddItem = () => {
+    const newItems = [...items, { name: '', type: '' }];
+    onFieldChange?.('annexFacilities', newItems);
+  };
+
+  const handleRemoveItem = (index: number) => {
+    const newItems = items.filter((_, i) => i !== index);
+    onFieldChange?.('annexFacilities', newItems);
+  };
+
+  return (
+    <div className={styles.annexEditor}>
+      {items.length === 0 ? (
+        <span className={styles.value}>-</span>
+      ) : (
+        items.map((item, index) => (
+          <div key={index} className={styles.annexItem}>
+            <input
+              type="text"
+              className={styles.annexInput}
+              value={item.name}
+              onChange={(e) => handleItemChange(index, 'name', e.target.value)}
+              placeholder="施設名"
+              aria-label={`併設施設${index + 1}の名前`}
+            />
+            <input
+              type="text"
+              className={styles.annexInput}
+              value={item.type}
+              onChange={(e) => handleItemChange(index, 'type', e.target.value)}
+              placeholder="種別"
+              aria-label={`併設施設${index + 1}の種別`}
+            />
+            <button
+              type="button"
+              className={styles.removeButton}
+              onClick={() => handleRemoveItem(index)}
+              aria-label={`併設施設${index + 1}を削除`}
+            >
+              ×
+            </button>
+          </div>
+        ))
+      )}
+      <button type="button" className={styles.addButton} onClick={handleAddItem}>
+        + 施設を追加
+      </button>
+    </div>
+  );
+};
+
 /**
  * 施設詳細ページの基本情報セクション
  * 設立年、舎の種別、定員、併設施設を表示
@@ -154,7 +220,17 @@ export const BasicInfoSection = ({
           <InfoCard label="施設定員" value={capacityText} />
         )}
 
-        <AnnexCard annexFacilities={annexFacilities} annexText={annexText} />
+        {isEditMode ? (
+          <div className={`${styles.infoCard} ${styles.annexCard}`}>
+            <div className={styles.annexHeader}>
+              <span className={styles.label}>併設施設</span>
+              <span className={styles.subStatus}>{annexFacilities?.length ? 'あり' : 'なし'}</span>
+            </div>
+            <AnnexFacilityEditor annexFacilities={annexFacilities} onFieldChange={onFieldChange} />
+          </div>
+        ) : (
+          <AnnexCard annexFacilities={annexFacilities} annexText={annexText} />
+        )}
       </div>
     </section>
   );
