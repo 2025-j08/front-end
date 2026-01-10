@@ -26,7 +26,7 @@ CREATE POLICY "insert_owner_or_admin"
         -- 本人が作成する場合は role を 'staff' に強制
         (
             id = auth.uid()
-            AND NEW.role = 'staff'
+            AND role = 'staff'
         )
         -- または既存の管理者が他のユーザーを作成する場合は制限なし
         OR EXISTS (
@@ -35,7 +35,7 @@ CREATE POLICY "insert_owner_or_admin"
         )
     );
 
--- 本人が更新する場合は role を変更できない、管理者のみが role を変更可能
+-- 本人が更新する場合は役割以外を変更可能、管理者のみが役割を変更可能
 CREATE POLICY "update_owner_or_admin"
     ON public.profiles
     FOR UPDATE
@@ -51,7 +51,9 @@ CREATE POLICY "update_owner_or_admin"
         -- 本人が更新する場合は role 変更を禁止
         (
             id = auth.uid()
-            AND old.role = NEW.role
+            AND role = (
+                SELECT role FROM public.profiles WHERE id = auth.uid()
+            )
         )
         -- または既存の管理者が他のユーザーを更新する場合は制限なし
         OR EXISTS (
@@ -87,7 +89,7 @@ BEGIN
         INSERT INTO public.profiles (id, name, role)
         VALUES (
             NEW.id,
-            COALESCE(NEW.raw_user_meta_data ->> 'name', 'Guest'),
+            COALESCE(NEW.raw_user_meta_data ->> 'name', '未登録'),
             'staff'
         );
     END IF;

@@ -31,6 +31,11 @@ CREATE POLICY "invitations_update_policy" ON public.invitations
             SELECT 1 FROM public.profiles p
             WHERE p.id = auth.uid() AND p.role = 'admin'
         )
+    ) WITH CHECK (
+        EXISTS (
+            SELECT 1 FROM public.profiles p
+            WHERE p.id = auth.uid() AND p.role = 'admin'
+        )
     );
 
 -- DELETE: 管理者または削除対象ユーザ自身
