@@ -21,6 +21,8 @@ export type AccessTabProps = {
   relationInfo?: string;
   isEditMode?: boolean;
   onFieldChange?: (field: string, value: unknown) => void;
+  errors?: Record<string, string>;
+  getError?: (field: string) => string | undefined;
 };
 
 export const AccessTab = ({
@@ -29,6 +31,8 @@ export const AccessTab = ({
   relationInfo,
   isEditMode = false,
   onFieldChange,
+  errors = {},
+  getError = () => undefined,
 }: AccessTabProps) => {
   if (isEditMode) {
     return (
@@ -58,6 +62,7 @@ export const AccessTab = ({
               label="最寄り駅"
               value={accessInfo.station}
               onChange={(v) => onFieldChange?.('station', v)}
+              error={getError('accessInfo.station')}
             />
             <EditField
               type="textarea"
@@ -66,6 +71,7 @@ export const AccessTab = ({
               value={accessInfo.description}
               onChange={(v) => onFieldChange?.('description', v)}
               rows={3}
+              error={getError('accessInfo.description')}
             />
             <div className={styles.editRow}>
               <EditField
@@ -75,6 +81,7 @@ export const AccessTab = ({
                 value={accessInfo.lat}
                 onChange={(v) => onFieldChange?.('lat', v)}
                 step="0.000001"
+                error={getError('accessInfo.lat')}
               />
               <EditField
                 type="number"
@@ -83,6 +90,7 @@ export const AccessTab = ({
                 value={accessInfo.lng}
                 onChange={(v) => onFieldChange?.('lng', v)}
                 step="0.000001"
+                error={getError('accessInfo.lng')}
               />
             </div>
           </div>

@@ -8,26 +8,33 @@ export type SpecialtyTabProps = {
   specialtyInfo: SpecialtyInfo;
   isEditMode?: boolean;
   onFieldChange?: (field: string, value: unknown) => void;
+  errors?: Record<string, string>;
+  getError?: (field: string) => string | undefined;
 };
 
 export const SpecialtyTab = ({
   specialtyInfo,
   isEditMode = false,
   onFieldChange,
+  errors = {},
+  getError = () => undefined,
 }: SpecialtyTabProps) => {
   if (isEditMode) {
     return (
       <div className={styles.tabContentWrapper}>
         <div className={styles.textSection}>
-          <EditField
-            type="textarea"
-            id="features"
-            label="特に力を入れている取り組み"
-            value={specialtyInfo.features?.join('\n')}
-            onChange={(v) => onFieldChange?.('features', v.split('\n'))}
-            rows={5}
-            placeholder="1行に1つずつ入力（空行は保存時に除外されます）"
-          />
+          <div className={styles.editGroup}>
+            <EditField
+              type="textarea"
+              id="features"
+              label="特色"
+              value={specialtyInfo.features?.join('\n')}
+              onChange={(v) => onFieldChange?.('features', v.split('\n'))}
+              rows={5}
+              placeholder="施設の特色を入力してください（改行で区切る）"
+              error={getError('specialtyInfo.features')}
+            />
+          </div>
           <EditField
             type="textarea"
             id="programs"

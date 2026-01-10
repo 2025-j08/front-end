@@ -8,12 +8,16 @@ export type PhilosophyTabProps = {
   philosophyInfo: PhilosophyInfo;
   isEditMode?: boolean;
   onFieldChange?: (field: string, value: unknown) => void;
+  errors?: Record<string, string>;
+  getError?: (field: string) => string | undefined;
 };
 
 export const PhilosophyTab = ({
   philosophyInfo,
   isEditMode = false,
   onFieldChange,
+  errors = {},
+  getError = () => undefined,
 }: PhilosophyTabProps) => {
   if (isEditMode) {
     return (
@@ -33,6 +37,16 @@ export const PhilosophyTab = ({
             value={philosophyInfo.description}
             onChange={(v) => onFieldChange?.('description', v)}
             rows={5}
+          />
+          <EditField
+            type="textarea"
+            id="description"
+            label="運営方針・理念"
+            value={philosophyInfo.description}
+            onChange={(v) => onFieldChange?.('description', v)}
+            rows={10}
+            placeholder="施設の運営方針や理念を入力してください"
+            error={getError('philosophyInfo.description')}
           />
         </div>
       </div>

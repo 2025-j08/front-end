@@ -8,6 +8,8 @@ export type StaffTabProps = {
   staffInfo: StaffInfo;
   isEditMode?: boolean;
   onFieldChange?: (field: string, value: unknown) => void;
+  errors?: Record<string, string>;
+  getError?: (field: string) => string | undefined;
 };
 
 /** hasUniversityLecturer の選択オプション */
@@ -17,19 +19,28 @@ const LECTURER_OPTIONS = [
   { value: 'false', label: '無' },
 ];
 
-export const StaffTab = ({ staffInfo, isEditMode = false, onFieldChange }: StaffTabProps) => {
+export const StaffTab = ({
+  staffInfo,
+  isEditMode = false,
+  onFieldChange,
+  errors = {},
+  getError = () => undefined,
+}: StaffTabProps) => {
   if (isEditMode) {
     return (
       <div className={styles.tabContentWrapper}>
         <div className={styles.textSection}>
-          <EditField
-            type="text"
-            id="staffCount"
-            label="職員数"
-            value={staffInfo.staffCount}
-            onChange={(v) => onFieldChange?.('staffCount', v)}
-            placeholder="例: 常勤16名、非常勤6名"
-          />
+          <div className={styles.editGroup}>
+            <EditField
+              type="text"
+              id="staffCount"
+              label="職員数"
+              value={staffInfo.staffCount}
+              onChange={(v) => onFieldChange?.('staffCount', v)}
+              placeholder="例: 常勤16名、非常勤5名"
+              error={getError('staffInfo.staffCount')}
+            />
+          </div>
           <EditField
             type="textarea"
             id="specialties"
@@ -45,7 +56,8 @@ export const StaffTab = ({ staffInfo, isEditMode = false, onFieldChange }: Staff
               label="平均勤続年数"
               value={staffInfo.averageTenure}
               onChange={(v) => onFieldChange?.('averageTenure', v)}
-              placeholder="例: 6年"
+              placeholder="例: 8.5年"
+              error={getError('staffInfo.averageTenure')}
             />
             <EditField
               type="text"
