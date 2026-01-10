@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 import type { InviteUserResponse } from '@/types/api';
 import { validateEmail } from '@/lib/validation';
+import { logError } from '@/lib/clientLogger';
 
 const SUCCESS_MESSAGE_DURATION = 3000;
 const INVITE_API_ENDPOINT = '/api/admin/invite';
@@ -179,7 +180,11 @@ export const useUserIssuanceForm = (options?: UseUserIssuanceFormOptions) => {
     } catch (error: unknown) {
       // エラー発生時の処理
       // unknown型を使用して型安全性を確保
-      console.error('Submission failed:', error);
+      logError('Submission failed', {
+        component: 'useUserIssuanceForm',
+        action: 'handleSubmit',
+        error: error instanceof Error ? error : String(error),
+      });
 
       // エラーメッセージの型安全な取得
       const errorMessage =

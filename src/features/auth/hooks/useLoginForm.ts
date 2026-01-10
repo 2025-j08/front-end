@@ -5,6 +5,7 @@ import type { ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { API_MESSAGES } from '@/const/messages';
+import { logError } from '@/lib/clientLogger';
 
 /**
  * ログインフォームのデータ型
@@ -107,7 +108,11 @@ export const useLoginForm = (): UseLoginFormReturn => {
           router.push('/');
         }
       } catch (error) {
-        console.error('ログインエラー:', error);
+        logError('ログインエラー', {
+          component: 'useLoginForm',
+          action: 'handleSubmit',
+          error: error instanceof Error ? error : String(error),
+        });
         const message = error instanceof Error ? error.message : API_MESSAGES.LOGIN_FAILED;
         setErrorMessage(message);
       } finally {

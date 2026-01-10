@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 
+import { logDebug } from '@/lib/clientLogger';
+
 import styles from './SearchInput.module.scss';
 
 /**
@@ -29,9 +31,7 @@ export const SearchInput = () => {
    */
   const handleSearch = () => {
     // 実装完了までは開発環境でのみキーワードをログ出力しておく
-    if (process.env.NODE_ENV === 'development') {
-      console.log('キーワード検索実行:', { keyword });
-    }
+    logDebug('キーワード検索実行', { component: 'SearchInput', keyword });
   };
 
   /**

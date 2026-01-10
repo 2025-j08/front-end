@@ -13,6 +13,7 @@ import {
   getPasswordRequirementsText,
 } from '@/lib/validation';
 import { VALIDATION_MESSAGES, API_MESSAGES } from '@/const/messages';
+import { logError } from '@/lib/clientLogger';
 
 /**
  * API エンドポイント定数
@@ -213,7 +214,11 @@ export const useRegisterForm = (): UseRegisterFormReturn => {
           router.push('/');
         }, 1500);
       } catch (error) {
-        console.error('登録エラー:', error);
+        logError('登録エラー', {
+          component: 'useRegisterForm',
+          action: 'handleSubmit',
+          error: error instanceof Error ? error : String(error),
+        });
         setErrorMessage(error instanceof Error ? error.message : API_MESSAGES.REGISTRATION_FAILED);
       } finally {
         setIsLoading(false);
