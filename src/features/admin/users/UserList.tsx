@@ -3,10 +3,10 @@
 import { useState } from 'react';
 
 import usersData from '@/dummy_data/users_list.json';
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog/ConfirmDialog';
 
 import { User } from './types';
 import { UserListTable } from './components/UserListTable';
-import { DeleteConfirmDialog } from './components/DeleteConfirmDialog';
 import styles from './users.module.scss';
 
 /**
@@ -51,9 +51,18 @@ export const UserList = () => {
       <h1 className={styles.title}>ユーザー管理</h1>
       <UserListTable users={users} onDelete={handleDeleteClick} />
 
-      <DeleteConfirmDialog
+      <ConfirmDialog
         isOpen={deleteTarget !== null}
-        userName={deleteTarget?.name ?? ''}
+        title="削除の確認"
+        message={
+          <>
+            <strong>{deleteTarget?.name}</strong> を削除しますか？
+            <br />
+            この操作は取り消せません。
+          </>
+        }
+        confirmLabel="削除する"
+        isDanger={true}
         onConfirm={handleConfirmDelete}
         onCancel={handleCancelDelete}
       />
