@@ -77,6 +77,15 @@ CREATE POLICY "delete_owner_or_admin"
 
 -- メール確認完了時のプロフィール自動生成
 -- confirmed_at が NULL から値が設定されたタイミングで profiles を作成
+--
+-- 動作フロー:
+-- 1. 通常のサインアップ: raw_user_meta_data に name が設定されている場合はそれを使用
+-- 2. 招待フロー: raw_user_meta_data に name が設定されていないため '仮登録ユーザ' を設定
+--    → 後に /api/auth/register で実際の名前に更新される（一時的な値として問題なし）
+--
+-- 注意: 招待フローでは、メール確認時点ではまだユーザーが名前を入力していないため、
+-- COALESCE のデフォルト値 '仮登録ユーザ' が使用されます。
+-- これは意図的な動作であり、初期登録完了時に正しい名前で上書きされます。
 CREATE FUNCTION public.handle_confirmed_user()
 RETURNS TRIGGER
 LANGUAGE plpgsql
@@ -89,7 +98,7 @@ BEGIN
         INSERT INTO public.profiles (id, name, role)
         VALUES (
             NEW.id,
-            COALESCE(NEW.raw_user_meta_data ->> 'name', '未登録'),
+            COALESCE(NEW.raw_user_meta_data ->> 'name', '仮登録ユーザ'),
             'staff'
         );
     END IF;
