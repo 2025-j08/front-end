@@ -6,7 +6,9 @@
  * 表示モードと編集モードを切り替え可能
  */
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
+
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog/ConfirmDialog';
 
 import { useFacilityData } from './hooks/useFacilityData';
 import { useFacilityDetail } from './hooks/useFacilityDetail';
@@ -28,6 +30,9 @@ export const FacilityDetail = ({ id }: Props) => {
 
   // URLクエリパラメータから編集モード判定
   const isEditMode = searchParams.get('mode') === 'edit';
+
+  // ダイアログ状態管理
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
 
   // 編集フック
   const {
@@ -60,16 +65,28 @@ export const FacilityDetail = ({ id }: Props) => {
     }
   }, [handleSubmit, router, id]);
 
-  // キャンセル処理
-  const handleCancel = useCallback(() => {
+  // キャンセルボタンクリック時の処理
+  const handleCancelClick = useCallback(() => {
     if (isDirty) {
-      const confirmed = window.confirm('変更が保存されていません。破棄してもよろしいですか？');
-      if (!confirmed) return;
+      setIsConfirmDialogOpen(true);
+      return;
     }
+    // 変更がない場合は確認なしで戻る
     resetForm();
-    // 閲覧モードへ戻る
     router.push(`/features/facilities/${id}`);
   }, [isDirty, resetForm, router, id]);
+
+  // キャンセル確定時の処理（ダイアログのOKボタン）
+  const handleConfirmCancel = useCallback(() => {
+    setIsConfirmDialogOpen(false);
+    resetForm();
+    router.push(`/features/facilities/${id}`);
+  }, [resetForm, router, id]);
+
+  // ダイアログを閉じる処理
+  const handleCloseDialog = useCallback(() => {
+    setIsConfirmDialogOpen(false);
+  }, []);
 
   if (isLoading)
     return (
@@ -105,7 +122,7 @@ export const FacilityDetail = ({ id }: Props) => {
         isSaving={isSaving}
         isDirty={isDirty}
         onSave={handleSave}
-        onCancel={handleCancel}
+        onCancel={handleCancelClick}
       />
 
       <BasicInfoSection
@@ -136,6 +153,17 @@ export const FacilityDetail = ({ id }: Props) => {
         onNestedFieldChange={updateNestedField}
         errors={errors}
         getError={getError}
+      />
+
+      <ConfirmDialog
+        isOpen={isConfirmDialogOpen}
+        title="変更の破棄"
+        message="変更が保存されていません。破棄してもよろしいですか？"
+        confirmLabel="破棄する"
+        cancelLabel="キャンセル"
+        isDanger={true}
+        onConfirm={handleConfirmCancel}
+        onCancel={handleCloseDialog}
       />
     </div>
   );
