@@ -20,12 +20,12 @@ import { logInfo, logFatal } from '@/lib/logger';
  * @returns 成功したかどうか
  */
 export async function deleteFacilityProfile(
-  supabaseServer: SupabaseClient,
+  supabaseAdmin: SupabaseClient,
   userId: string,
   facilityId: number,
 ): Promise<boolean> {
   try {
-    await supabaseServer
+    await supabaseAdmin
       .from('facility_profiles')
       .delete()
       .eq('user_id', userId)
@@ -56,12 +56,12 @@ export async function deleteFacilityProfile(
  * @returns 成功したかどうか
  */
 export async function restoreProfileName(
-  supabaseServer: SupabaseClient,
+  supabaseAdmin: SupabaseClient,
   userId: string,
   originalName: string,
 ): Promise<boolean> {
   try {
-    await supabaseServer.from('profiles').update({ name: originalName }).eq('id', userId);
+    await supabaseAdmin.from('profiles').update({ name: originalName }).eq('id', userId);
 
     logInfo('プロフィールのロールバック成功', {
       userId,
@@ -82,6 +82,14 @@ export async function restoreProfileName(
 
 /**
  * 複数の処理をロールバック
+ *
+ * Promise.all を使用して並行実行する理由:
+ * - 処理速度の向上（2つのDB操作を並行実行）
+ * - 部分的なロールバックの許容（片方が失敗しても、もう片方は実行を継続）
+ * - ロールバックは「可能な限り元の状態に戻す」ことが目的であり、
+ *   片方が失敗したからといって、もう片方のロールバックを中止する必要はない
+ * - 各処理の成否は個別にログ出力されるため、失敗箇所の特定が可能
+ *
  * @param supabaseServer - Supabaseサーバークライアント
  * @param userId - ユーザーID
  * @param facilityId - 施設ID
@@ -89,15 +97,29 @@ export async function restoreProfileName(
  * @returns すべてのロールバックが成功したかどうか
  */
 export async function rollbackRegistration(
-  supabaseServer: SupabaseClient,
+  supabaseAdmin: SupabaseClient,
   userId: string,
   facilityId: number,
   originalName: string,
 ): Promise<boolean> {
+  // 並行実行により処理速度を向上させる
+  // 片方が失敗しても、もう片方のロールバックは継続される（部分的なロールバックを許容）
   const results = await Promise.all([
-    restoreProfileName(supabaseServer, userId, originalName),
-    deleteFacilityProfile(supabaseServer, userId, facilityId),
+    restoreProfileName(supabaseAdmin, userId, originalName),
+    deleteFacilityProfile(supabaseAdmin, userId, facilityId),
   ]);
 
-  return results.every((result) => result === true);
+  // すべてのロールバックが成功した場合のみ true を返す
+  const allSucceeded = results.every((result) => result === true);
+
+  if (!allSucceeded) {
+    logFatal('一部またはすべてのロールバック処理に失敗しました', {
+      userId,
+      facilityId,
+      profileRollback: results[0],
+      facilityProfileRollback: results[1],
+    });
+  }
+
+  return allSucceeded;
 }
