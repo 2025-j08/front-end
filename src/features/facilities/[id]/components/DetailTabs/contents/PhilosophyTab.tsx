@@ -30,14 +30,7 @@ export const PhilosophyTab = ({
             value={philosophyInfo.title}
             onChange={(v) => onFieldChange?.('title', v)}
           />
-          <EditField
-            type="textarea"
-            id="philosophyDescription"
-            label="説明"
-            value={philosophyInfo.description}
-            onChange={(v) => onFieldChange?.('description', v)}
-            rows={5}
-          />
+
           <EditField
             type="textarea"
             id="description"

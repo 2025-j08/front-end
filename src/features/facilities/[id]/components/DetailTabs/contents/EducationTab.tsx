@@ -25,6 +25,14 @@ export const EducationTab = ({
         <div className={styles.editGroup}>
           <EditField
             type="textarea"
+            id="graduationRate"
+            label="進学率と支援体制"
+            value={educationInfo.graduationRate}
+            onChange={(v) => onFieldChange?.('graduationRate', v)}
+            rows={2}
+          />
+          <EditField
+            type="textarea"
             id="learningSupport"
             label="学習支援の内容"
             value={educationInfo.learningSupport}
@@ -33,8 +41,16 @@ export const EducationTab = ({
           />
           <EditField
             type="textarea"
+            id="careerSupport"
+            label="特化した進路支援内容"
+            value={educationInfo.careerSupport}
+            onChange={(v) => onFieldChange?.('careerSupport', v)}
+            rows={2}
+          />
+          <EditField
+            type="textarea"
             id="afterCare"
-            label="アフターケア"
+            label="アフターケア（旧項目）"
             value={educationInfo.afterCare}
             onChange={(v) => onFieldChange?.('afterCare', v)}
             rows={2}
