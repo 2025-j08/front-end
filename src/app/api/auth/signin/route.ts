@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 import { createClient as createServerClient } from '@/lib/supabase/server';
 import { validateEmail, validatePassword } from '@/lib/validation';
-import { logWarn, logError } from '@/lib/logger';
+import { logWarn, logError, maskEmail } from '@/lib/logger';
 
 type SignInRequestBody = {
   email: string;
@@ -72,10 +72,10 @@ export async function POST(request: Request) {
     const { data, error } = await supabaseServer.auth.signInWithPassword({ email, password });
 
     if (error || !data.user) {
-      // セキュリティ監視用のログを出力（パスワードは含めない）
+      // セキュリティ監視用のログを出力（パスワードとメールアドレスはプライバシー保護のためマスク）
       const clientIp = getClientIp(request);
       logWarn('ログイン失敗', {
-        email,
+        email: maskEmail(email),
         reason: error?.message || 'ユーザーが見つかりません',
         ipAddress: clientIp,
         timestamp: new Date().toISOString(),

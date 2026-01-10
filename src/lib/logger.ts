@@ -8,6 +8,55 @@
  */
 
 /**
+ * メールアドレスをマスク化してプライバシーを保護
+ *
+ * GDPRやその他のプライバシー規制への対応として、
+ * ログに記録されるメールアドレスを部分的にマスクします。
+ *
+ * @param email - マスク化するメールアドレス
+ * @returns マスク化されたメールアドレス
+ *
+ * @example
+ * maskEmail('user@example.com')      // => 'u***@e***.com'
+ * maskEmail('john.doe@company.co.jp') // => 'j***@c***.co.jp'
+ * maskEmail('a@b.com')                // => 'a***@b***.com'
+ */
+export const maskEmail = (email: string): string => {
+  if (!email || typeof email !== 'string') {
+    return '***';
+  }
+
+  const atIndex = email.indexOf('@');
+  if (atIndex === -1) {
+    // '@'がない場合は全体をマスク
+    return '***';
+  }
+
+  const localPart = email.substring(0, atIndex);
+  const domainPart = email.substring(atIndex + 1);
+
+  // ローカル部分のマスク化（最初の1文字のみ表示）
+  const maskedLocal = localPart.length > 0 ? `${localPart[0]}***` : '***';
+
+  // ドメイン部分のマスク化（最初の1文字とTLDのみ表示）
+  const domainParts = domainPart.split('.');
+  if (domainParts.length === 0) {
+    return `${maskedLocal}@***`;
+  }
+
+  const maskedDomainParts = domainParts.map((part, index) => {
+    // 最後の部分（TLD）はそのまま表示
+    if (index === domainParts.length - 1) {
+      return part;
+    }
+    // それ以外は最初の1文字と'***'
+    return part.length > 0 ? `${part[0]}***` : '***';
+  });
+
+  return `${maskedLocal}@${maskedDomainParts.join('.')}`;
+};
+
+/**
  * ログメタデータの型定義
  */
 type LogMetadata = {
