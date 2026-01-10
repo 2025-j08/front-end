@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { createClient } from '@/lib/supabase/client';
+import { logError } from '@/lib/clientLogger';
 
 // 招待リンクのハッシュを安全にパースする関数
 const parseHashParams = (
@@ -25,6 +26,21 @@ const parseHashParams = (
 export default function AuthCallbackPage() {
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
+
+  const signOutSafely = useCallback(
+    async (reason: string, redirectPath: string) => {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        logError('サインアウトに失敗しました', {
+          context: 'auth/callback',
+          reason,
+          error: error.message,
+        });
+      }
+      router.replace(redirectPath);
+    },
+    [router, supabase.auth],
+  );
 
   useEffect(() => {
     const { accessToken, refreshToken, expiresAt } = parseHashParams(window.location.hash);
@@ -65,8 +81,7 @@ export default function AuthCallbackPage() {
 
         if (invitationError || !invitation) {
           // セッション破棄してログインへ
-          await supabase.auth.signOut();
-          router.replace('/features/auth?error=no_invitation');
+          await signOutSafely('no_invitation', '/features/auth?error=no_invitation');
           return;
         }
 
@@ -75,16 +90,14 @@ export default function AuthCallbackPage() {
         const now = new Date();
         const expires = new Date(invitation.expires_at);
         if (!Number.isFinite(expires.getTime())) {
-          await supabase.auth.signOut();
-          router.replace('/features/auth?error=invalid_invitation');
+          await signOutSafely('invalid_invitation', '/features/auth?error=invalid_invitation');
           return;
         }
 
         if (expires < now) {
           // 期限切れ招待を削除（ポリシー上、本人も削除可能）
           await supabase.from('invitations').delete().eq('user_id', userId);
-          await supabase.auth.signOut();
-          router.replace('/features/auth?error=expired_invitation');
+          await signOutSafely('expired_invitation', '/features/auth?error=expired_invitation');
           return;
         }
 
@@ -95,7 +108,7 @@ export default function AuthCallbackPage() {
         router.replace('/features/auth?error=auth_failed');
       }
     })();
-  }, [router, supabase.auth]);
+  }, [router, supabase, signOutSafely]);
 
   // シンプルなステータス表示（アクセシビリティ対応）
   return (

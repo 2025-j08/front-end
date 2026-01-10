@@ -6,6 +6,15 @@ import { appConfig } from '@/lib/supabase/config';
 import { validateEmail } from '@/lib/validation';
 import { logError, logInfo, logFatal, maskEmail } from '@/lib/logger';
 
+// 招待の有効期限（日数）を一元管理
+const INVITATION_EXPIRES_IN_DAYS = 3;
+const MS_IN_DAY = 24 * 60 * 60 * 1000;
+
+const buildExpiresAtUtc = () => {
+  const expiresAt = new Date(Date.now() + INVITATION_EXPIRES_IN_DAYS * MS_IN_DAY);
+  return expiresAt.toISOString();
+};
+
 // 関数式を使用して変数のように関数を定義
 // 成功/失敗時の戻り値の種類を定義
 const parseRequestBody = (
@@ -125,7 +134,8 @@ export async function POST(request: Request) {
       {
         user_id: data.user.id,
         facility_id: facilityId,
-        expires_at: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(), // 3日後
+        // DBのデフォルト (now() + interval '3 days') と同一の期間をUTC基準で付与
+        expires_at: buildExpiresAtUtc(),
       },
       {
         onConflict: 'user_id', // PRIMARY KEYで競合判定

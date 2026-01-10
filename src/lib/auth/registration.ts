@@ -60,12 +60,23 @@ export async function restoreProfileName(
   userId: string,
   originalName: string,
 ): Promise<boolean> {
+  // originalName が取得できていない場合は、ロールバックを実施しない
+  if (!originalName || typeof originalName !== 'string' || !originalName.trim()) {
+    logFatal('プロフィールのロールバック失敗（元の名前が無効）', {
+      userId,
+      originalName,
+    });
+    return false;
+  }
+
+  const sanitizedOriginalName = originalName.trim();
+
   try {
-    await supabaseAdmin.from('profiles').update({ name: originalName }).eq('id', userId);
+    await supabaseAdmin.from('profiles').update({ name: sanitizedOriginalName }).eq('id', userId);
 
     logInfo('プロフィールのロールバック成功', {
       userId,
-      restoredName: originalName,
+      restoredName: sanitizedOriginalName,
     });
 
     return true;
@@ -81,14 +92,10 @@ export async function restoreProfileName(
 }
 
 /**
- * 複数の処理をロールバック
+ * 複数の処理をロールバック（順次実行で一貫性を担保）
  *
- * Promise.all を使用して並行実行する理由:
- * - 処理速度の向上（2つのDB操作を並行実行）
- * - 部分的なロールバックの許容（片方が失敗しても、もう片方は実行を継続）
- * - ロールバックは「可能な限り元の状態に戻す」ことが目的であり、
- *   片方が失敗したからといって、もう片方のロールバックを中止する必要はない
- * - 各処理の成否は個別にログ出力されるため、失敗箇所の特定が可能
+ * - プロフィール名復元と施設紐付け削除を順に行い、どちらかが失敗した時点で終了
+ * - 部分的な成功による不整合を避け、呼び出し元が失敗を把握できるようにする
  *
  * @param supabaseServer - Supabaseサーバークライアント
  * @param userId - ユーザーID
@@ -102,24 +109,24 @@ export async function rollbackRegistration(
   facilityId: number,
   originalName: string,
 ): Promise<boolean> {
-  // 並行実行により処理速度を向上させる
-  // 片方が失敗しても、もう片方のロールバックは継続される（部分的なロールバックを許容）
-  const results = await Promise.all([
-    restoreProfileName(supabaseAdmin, userId, originalName),
-    deleteFacilityProfile(supabaseAdmin, userId, facilityId),
-  ]);
-
-  // すべてのロールバックが成功した場合のみ true を返す
-  const allSucceeded = results.every((result) => result === true);
-
-  if (!allSucceeded) {
-    logFatal('一部またはすべてのロールバック処理に失敗しました', {
+  // 順次実行して一貫したロールバック状態を担保する
+  const profileRolledBack = await restoreProfileName(supabaseAdmin, userId, originalName);
+  if (!profileRolledBack) {
+    logFatal('プロフィールのロールバックに失敗しました', {
       userId,
       facilityId,
-      profileRollback: results[0],
-      facilityProfileRollback: results[1],
     });
+    return false;
   }
 
-  return allSucceeded;
+  const facilityUnlinked = await deleteFacilityProfile(supabaseAdmin, userId, facilityId);
+  if (!facilityUnlinked) {
+    logFatal('施設紐付けのロールバックに失敗しました', {
+      userId,
+      facilityId,
+    });
+    return false;
+  }
+
+  return true;
 }

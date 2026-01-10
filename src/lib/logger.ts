@@ -21,19 +21,24 @@
  * maskEmail('john.doe@company.co.jp') // => 'j***@c***.co.jp'
  * maskEmail('a@b.com')                // => 'a***@b***.com'
  */
+const INVALID_EMAIL_MASK = '[INVALID_EMAIL]';
+
 export const maskEmail = (email: string): string => {
+  // 空や非文字列は無効として扱う
   if (!email || typeof email !== 'string') {
-    return '***';
+    return INVALID_EMAIL_MASK;
   }
 
-  const atIndex = email.indexOf('@');
-  if (atIndex === -1) {
-    // '@'がない場合は全体をマスク
-    return '***';
+  const trimmedEmail = email.trim();
+  const atIndex = trimmedEmail.indexOf('@');
+
+  // '@' がない、先頭/末尾に '@' があるなどの無効入力は明示的に示す
+  if (atIndex <= 0 || atIndex === trimmedEmail.length - 1) {
+    return INVALID_EMAIL_MASK;
   }
 
-  const localPart = email.substring(0, atIndex);
-  const domainPart = email.substring(atIndex + 1);
+  const localPart = trimmedEmail.substring(0, atIndex);
+  const domainPart = trimmedEmail.substring(atIndex + 1);
 
   // ローカル部分のマスク化（最初の1文字のみ表示）
   const maskedLocal = localPart.length > 0 ? `${localPart[0]}***` : '***';
@@ -52,6 +57,11 @@ export const maskEmail = (email: string): string => {
     // それ以外は最初の1文字と'***'
     return part.length > 0 ? `${part[0]}***` : '***';
   });
+
+  const hasEmptyDomainSegment = domainParts.some((part) => part.length === 0);
+  if (hasEmptyDomainSegment) {
+    return INVALID_EMAIL_MASK;
+  }
 
   return `${maskedLocal}@${maskedDomainParts.join('.')}`;
 };
