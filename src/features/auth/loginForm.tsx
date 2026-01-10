@@ -14,8 +14,16 @@ import { useLoginForm } from '@/features/auth/hooks/useLoginForm';
 
 import styles from './loginForm.module.scss';
 
-export const LoginForm = () => {
+type LoginFormProps = {
+  /** 招待認証エラーなどの初期エラーメッセージ */
+  initialError?: string;
+};
+
+export const LoginForm = ({ initialError }: LoginFormProps) => {
   const { formData, isLoading, errorMessage, handleChange, handleSubmit } = useLoginForm();
+
+  // 初期エラーまたはフォームのエラーを表示
+  const displayError = initialError || errorMessage;
 
   return (
     <div className={styles.container}>
@@ -29,9 +37,9 @@ export const LoginForm = () => {
 
       <h1 className={styles.title}>ログイン</h1>
 
-      {errorMessage && (
+      {displayError && (
         <div className={styles.errorMessage} role="alert" aria-live="polite">
-          {errorMessage}
+          {displayError}
         </div>
       )}
 
