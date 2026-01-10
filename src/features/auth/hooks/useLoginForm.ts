@@ -5,6 +5,7 @@ import type { ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { API_MESSAGES } from '@/const/messages';
+import { API_ENDPOINTS } from '@/const/api';
 import { logError } from '@/lib/clientLogger';
 
 /**
@@ -97,7 +98,7 @@ export const useLoginForm = (): UseLoginFormReturn => {
 
         type SignInResponse = { success?: boolean; error?: string; role?: string | null };
 
-        const response = await fetch('/api/auth/signin', {
+        const response = await fetch(API_ENDPOINTS.AUTH.SIGNIN, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),

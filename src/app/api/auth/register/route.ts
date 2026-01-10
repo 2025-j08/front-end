@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import type { RegisterRequest } from '@/types/api';
 import { createClient as createServerClient, createAdminClient } from '@/lib/supabase/server';
 import { validateRequired, validatePassword } from '@/lib/validation';
+import { HTTP_STATUS } from '@/const/httpStatus';
 import { logWarn, logError, logInfo, logFatal, maskEmail } from '@/lib/logger';
 import { deleteFacilityProfile, restoreProfileName } from '@/lib/auth/registration';
 
@@ -66,7 +67,10 @@ export async function POST(request: Request) {
     // バリデーション
     const parsed = parseRequestBody(json);
     if (!parsed.success) {
-      return NextResponse.json({ success: false, error: parsed.message }, { status: 400 });
+      return NextResponse.json(
+        { success: false, error: parsed.message },
+        { status: HTTP_STATUS.BAD_REQUEST },
+      );
     }
 
     const { name, password } = parsed.data;
@@ -84,7 +88,7 @@ export async function POST(request: Request) {
     if (!user) {
       return NextResponse.json(
         { success: false, error: '認証が必要です。再度ログインしてください' },
-        { status: 401 },
+        { status: HTTP_STATUS.UNAUTHORIZED },
       );
     }
 
@@ -105,7 +109,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json(
         { success: false, error: '招待情報が見つかりません' },
-        { status: 403 },
+        { status: HTTP_STATUS.FORBIDDEN },
       );
     }
 
@@ -125,7 +129,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json(
         { success: false, error: '施設情報が見つかりません' },
-        { status: 400 },
+        { status: HTTP_STATUS.BAD_REQUEST },
       );
     }
 
@@ -142,7 +146,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json(
         { success: false, error: 'システムエラーが発生しました。管理者にお問い合わせください' },
-        { status: 500 },
+        { status: HTTP_STATUS.INTERNAL_SERVER_ERROR },
       );
     }
 
@@ -157,7 +161,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json(
         { success: false, error: '招待の有効期限が切れています' },
-        { status: 403 },
+        { status: HTTP_STATUS.FORBIDDEN },
       );
     }
 
@@ -176,7 +180,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json(
         { success: false, error: 'プロフィールが見つかりません' },
-        { status: 400 },
+        { status: HTTP_STATUS.BAD_REQUEST },
       );
     }
 
@@ -198,7 +202,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json(
         { success: false, error: '施設の紐付けに失敗しました' },
-        { status: 500 },
+        { status: HTTP_STATUS.INTERNAL_SERVER_ERROR },
       );
     }
 
@@ -219,7 +223,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json(
         { success: false, error: 'プロフィールの更新に失敗しました' },
-        { status: 500 },
+        { status: HTTP_STATUS.INTERNAL_SERVER_ERROR },
       );
     }
 
@@ -241,7 +245,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json(
         { success: false, error: 'パスワードの設定に失敗しました' },
-        { status: 500 },
+        { status: HTTP_STATUS.INTERNAL_SERVER_ERROR },
       );
     }
 
@@ -291,7 +295,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(
       { success: false, error: 'サーバーエラーが発生しました' },
-      { status: 500 },
+      { status: HTTP_STATUS.INTERNAL_SERVER_ERROR },
     );
   }
 }

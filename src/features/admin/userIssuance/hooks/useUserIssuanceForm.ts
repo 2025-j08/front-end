@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 
 import type { InviteUserResponse } from '@/types/api';
 import { validateEmail } from '@/lib/validation';
+import { API_ENDPOINTS } from '@/const/api';
 import { logError } from '@/lib/clientLogger';
 
 const SUCCESS_MESSAGE_DURATION = 3000;
-const INVITE_API_ENDPOINT = '/api/admin/invite';
 
 interface UserIssuanceFormData {
   email: string;
@@ -154,7 +154,7 @@ export const useUserIssuanceForm = (options?: UseUserIssuanceFormOptions) => {
         facilityId: Number(formData.facilityId),
       };
 
-      const response = await fetch(INVITE_API_ENDPOINT, {
+      const response = await fetch(API_ENDPOINTS.ADMIN.INVITE, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

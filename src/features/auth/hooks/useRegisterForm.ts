@@ -13,12 +13,8 @@ import {
   getPasswordRequirementsText,
 } from '@/lib/validation';
 import { VALIDATION_MESSAGES, API_MESSAGES } from '@/const/messages';
+import { API_ENDPOINTS } from '@/const/api';
 import { logError } from '@/lib/clientLogger';
-
-/**
- * API エンドポイント定数
- */
-const REGISTER_API_ENDPOINT = '/api/auth/register';
 
 /**
  * 初期登録フォームのデータ型
@@ -192,7 +188,7 @@ export const useRegisterForm = (): UseRegisterFormReturn => {
         };
 
         // API呼び出し
-        const response = await fetch(REGISTER_API_ENDPOINT, {
+        const response = await fetch(API_ENDPOINTS.AUTH.REGISTER, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

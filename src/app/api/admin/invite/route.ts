@@ -4,6 +4,7 @@ import type { InviteUserRequest } from '@/types/api';
 import { createClient as createServerClient, createAdminClient } from '@/lib/supabase/server';
 import { appConfig } from '@/lib/supabase/config';
 import { validateEmail } from '@/lib/validation';
+import { HTTP_STATUS } from '@/const/httpStatus';
 import { logError, logInfo, logFatal, maskEmail } from '@/lib/logger';
 
 // 招待の有効期限（日数）を一元管理
@@ -61,7 +62,10 @@ export async function POST(request: Request) {
     const parsed = parseRequestBody(json);
     // 失敗時のエラーレスポンス
     if (!parsed.success) {
-      return NextResponse.json({ success: false, error: parsed.message }, { status: 400 });
+      return NextResponse.json(
+        { success: false, error: parsed.message },
+        { status: HTTP_STATUS.BAD_REQUEST },
+      );
     }
 
     // バリデーション済みデータを代入
@@ -78,7 +82,10 @@ export async function POST(request: Request) {
 
     // 未認証のエラーレスポンス
     if (!user) {
-      return NextResponse.json({ success: false, error: '認証が必要です' }, { status: 401 });
+      return NextResponse.json(
+        { success: false, error: '認証が必要です' },
+        { status: HTTP_STATUS.UNAUTHORIZED },
+      );
     }
 
     // 管理者ユーザか確認する(役割を抽出)
@@ -91,7 +98,10 @@ export async function POST(request: Request) {
 
     // 管理者ではなかったときのエラーレスポンス
     if (profile?.role !== 'admin') {
-      return NextResponse.json({ success: false, error: '管理者権限が必要です' }, { status: 403 });
+      return NextResponse.json(
+        { success: false, error: '管理者権限が必要です' },
+        { status: HTTP_STATUS.FORBIDDEN },
+      );
     }
 
     // リクエストボディのメールアドレス宛に招待メールを送信
@@ -111,7 +121,7 @@ export async function POST(request: Request) {
       });
       return NextResponse.json(
         { success: false, error: '招待メール送信に失敗しました' },
-        { status: 400 },
+        { status: HTTP_STATUS.BAD_REQUEST },
       );
     }
 
@@ -123,7 +133,7 @@ export async function POST(request: Request) {
       });
       return NextResponse.json(
         { success: false, error: '招待処理に失敗しました。管理者にお問い合わせください' },
-        { status: 500 },
+        { status: HTTP_STATUS.INTERNAL_SERVER_ERROR },
       );
     }
 
@@ -169,7 +179,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json(
         { success: false, error: '招待情報の保存に失敗しました' },
-        { status: 500 },
+        { status: HTTP_STATUS.INTERNAL_SERVER_ERROR },
       );
     }
 
@@ -182,7 +192,7 @@ export async function POST(request: Request) {
     });
     return NextResponse.json(
       { success: false, error: 'サーバーエラーが発生しました' },
-      { status: 500 },
+      { status: HTTP_STATUS.INTERNAL_SERVER_ERROR },
     );
   }
 }

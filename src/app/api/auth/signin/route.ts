@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 
 import { createClient as createServerClient } from '@/lib/supabase/server';
 import { validateEmail, validatePassword } from '@/lib/validation';
+import { HTTP_STATUS } from '@/const/httpStatus';
 import { logWarn, logError, maskEmail } from '@/lib/logger';
 
 type SignInRequestBody = {
@@ -62,7 +63,10 @@ export async function POST(request: Request) {
     const json = await request.json().catch(() => null);
     const parsed = parseRequestBody(json);
     if (!parsed.success) {
-      return NextResponse.json<SignInResponseBody>({ error: parsed.message }, { status: 400 });
+      return NextResponse.json<SignInResponseBody>(
+        { error: parsed.message },
+        { status: HTTP_STATUS.BAD_REQUEST },
+      );
     }
 
     const { email, password } = parsed.data;
@@ -84,7 +88,7 @@ export async function POST(request: Request) {
       // エラー詳細は返さず、一般的なメッセージのみ返却
       return NextResponse.json<SignInResponseBody>(
         { error: 'メールまたはパスワードが不正です' },
-        { status: 401 },
+        { status: HTTP_STATUS.UNAUTHORIZED },
       );
     }
 
@@ -110,7 +114,7 @@ export async function POST(request: Request) {
     });
     return NextResponse.json<SignInResponseBody>(
       { error: 'サーバーエラーが発生しました' },
-      { status: 500 },
+      { status: HTTP_STATUS.INTERNAL_SERVER_ERROR },
     );
   }
 }
