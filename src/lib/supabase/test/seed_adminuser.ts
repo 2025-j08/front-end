@@ -118,15 +118,11 @@ async function main() {
       logInfo('管理者ユーザーを作成しました', { userId, email });
     }
   } else {
-    // 既存ユーザーのパスワード更新（必要時）
-    try {
-      await supabaseAdmin.auth.admin.updateUserById(userId, { password });
-      logInfo('既存管理者ユーザーのパスワードを更新しました', { userId, email });
-    } catch (e) {
-      logWarn('パスワード更新に失敗しました（既存ユーザー）', {
-        error: e instanceof Error ? e.message : String(e),
-      });
-    }
+    // 既存ユーザーがいる場合はパスワードを変更しない（誤実行防止）
+    logWarn('既存管理者ユーザーを検出したためパスワード更新をスキップしました', {
+      userId,
+      email,
+    });
   }
 
   if (!userId) {
