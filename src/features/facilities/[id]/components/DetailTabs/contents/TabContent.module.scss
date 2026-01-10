@@ -209,3 +209,38 @@
     flex: 1;
   }
 }
+
+.errorInput {
+  border-color: colors.$error-color !important;
+  background-color: rgba(colors.$error-color, 0.05);
+
+  &:focus {
+    border-color: colors.$error-color !important;
+    box-shadow: 0 0 0 2px rgba(colors.$error-color, 0.2);
+  }
+}
+
+.errorText {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  color: colors.$error-color;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  &::before {
+    content: '!';
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: colors.$error-color;
+    color: colors.$white;
+    font-size: 11px;
+    font-weight: bold;
+  }
+}

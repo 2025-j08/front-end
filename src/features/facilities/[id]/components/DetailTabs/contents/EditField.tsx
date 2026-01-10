@@ -14,6 +14,8 @@ type BaseFieldProps = {
   label: string;
   /** 無効化フラグ */
   disabled?: boolean;
+  /** バリデーションエラーメッセージ */
+  error?: string;
 };
 
 type TextFieldProps = BaseFieldProps & {
@@ -78,11 +80,13 @@ export const EditField = (props: EditFieldProps) => {
           <input
             type="text"
             id={id}
-            className={styles.editInput}
+            className={`${styles.editInput} ${props.error ? styles.errorInput : ''}`}
             value={props.value || ''}
             onChange={(e) => props.onChange(e.target.value)}
             placeholder={props.placeholder}
             disabled={disabled}
+            aria-invalid={!!props.error}
+            aria-describedby={props.error ? `${id}-error` : undefined}
           />
         );
 
@@ -91,7 +95,7 @@ export const EditField = (props: EditFieldProps) => {
           <input
             type="number"
             id={id}
-            className={styles.editInput}
+            className={`${styles.editInput} ${props.error ? styles.errorInput : ''}`}
             value={props.value ?? ''}
             onChange={(e) => props.onChange(e.target.value ? Number(e.target.value) : undefined)}
             placeholder={props.placeholder}
@@ -99,6 +103,8 @@ export const EditField = (props: EditFieldProps) => {
             max={props.max}
             step={props.step}
             disabled={disabled}
+            aria-invalid={!!props.error}
+            aria-describedby={props.error ? `${id}-error` : undefined}
           />
         );
 
@@ -106,12 +112,14 @@ export const EditField = (props: EditFieldProps) => {
         return (
           <textarea
             id={id}
-            className={styles.editTextarea}
+            className={`${styles.editTextarea} ${props.error ? styles.errorInput : ''}`}
             value={props.value || ''}
             onChange={(e) => props.onChange(e.target.value)}
             placeholder={props.placeholder}
             rows={props.rows ?? DEFAULT_TEXTAREA_ROWS}
             disabled={disabled}
+            aria-invalid={!!props.error}
+            aria-describedby={props.error ? `${id}-error` : undefined}
           />
         );
 
@@ -119,10 +127,12 @@ export const EditField = (props: EditFieldProps) => {
         return (
           <select
             id={id}
-            className={styles.editInput}
+            className={`${styles.editInput} ${props.error ? styles.errorInput : ''}`}
             value={props.value ?? ''}
             onChange={(e) => props.onChange(e.target.value || undefined)}
             disabled={disabled}
+            aria-invalid={!!props.error}
+            aria-describedby={props.error ? `${id}-error` : undefined}
           >
             {props.options.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -140,6 +150,11 @@ export const EditField = (props: EditFieldProps) => {
         {label}
       </label>
       {renderInput()}
+      {props.error && (
+        <span id={`${id}-error`} className={styles.errorText} role="alert">
+          {props.error}
+        </span>
+      )}
     </div>
   );
 };
