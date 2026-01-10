@@ -8,48 +8,28 @@ export type EducationTabProps = {
   educationInfo: EducationInfo;
   isEditMode?: boolean;
   onFieldChange?: (field: string, value: unknown) => void;
+  errors?: Record<string, string>;
+  getError?: (field: string) => string | undefined;
 };
 
 export const EducationTab = ({
   educationInfo,
   isEditMode = false,
   onFieldChange,
+  errors = {},
+  getError = () => undefined,
 }: EducationTabProps) => {
   if (isEditMode) {
     return (
       <div className={styles.tabContentWrapper}>
-        <div className={styles.textSection}>
-          <EditField
-            type="text"
-            id="graduationRate"
-            label="進学率"
-            value={educationInfo.graduationRate}
-            onChange={(v) => onFieldChange?.('graduationRate', v)}
-            placeholder="例: 高校進学率95%"
-          />
-          <EditField
-            type="textarea"
-            id="policy"
-            label="教育方針"
-            value={educationInfo.policy}
-            onChange={(v) => onFieldChange?.('policy', v)}
-            rows={3}
-          />
+        <div className={styles.editGroup}>
           <EditField
             type="textarea"
             id="learningSupport"
-            label="学習支援の工夫や外部連携"
+            label="学習支援の内容"
             value={educationInfo.learningSupport}
             onChange={(v) => onFieldChange?.('learningSupport', v)}
-            rows={3}
-          />
-          <EditField
-            type="textarea"
-            id="careerSupport"
-            label="進路支援内容"
-            value={educationInfo.careerSupport}
-            onChange={(v) => onFieldChange?.('careerSupport', v)}
-            rows={3}
+            rows={2}
           />
           <EditField
             type="textarea"

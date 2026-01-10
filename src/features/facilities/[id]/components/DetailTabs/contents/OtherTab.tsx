@@ -8,9 +8,17 @@ export type OtherTabProps = {
   otherInfo: OtherInfo;
   isEditMode?: boolean;
   onFieldChange?: (field: string, value: unknown) => void;
+  errors?: Record<string, string>;
+  getError?: (field: string) => string | undefined;
 };
 
-export const OtherTab = ({ otherInfo, isEditMode = false, onFieldChange }: OtherTabProps) => {
+export const OtherTab = ({
+  otherInfo,
+  isEditMode = false,
+  onFieldChange,
+  errors = {},
+  getError = () => undefined,
+}: OtherTabProps) => {
   // 文字列の場合は後方互換性のため対応
   const isString = typeof otherInfo === 'string';
 
@@ -28,45 +36,39 @@ export const OtherTab = ({ otherInfo, isEditMode = false, onFieldChange }: Other
     return (
       <div className={styles.tabContentWrapper}>
         <div className={styles.textSection}>
-          <EditField
-            type="text"
-            id="otherTitle"
-            label="タイトル"
-            value={otherInfo.title}
-            onChange={(v) => onFieldChange?.('title', v)}
-          />
-          <EditField
-            type="textarea"
-            id="otherDescription"
-            label="説明"
-            value={otherInfo.description}
-            onChange={(v) => onFieldChange?.('description', v)}
-            rows={3}
-          />
-          <EditField
-            type="textarea"
-            id="networks"
-            label="他施設とのネットワーク"
-            value={otherInfo.networks}
-            onChange={(v) => onFieldChange?.('networks', v)}
-            rows={3}
-          />
-          <EditField
-            type="textarea"
-            id="futureOutlook"
-            label="今後の展望や課題"
-            value={otherInfo.futureOutlook}
-            onChange={(v) => onFieldChange?.('futureOutlook', v)}
-            rows={3}
-          />
-          <EditField
-            type="textarea"
-            id="freeText"
-            label="自由記述"
-            value={otherInfo.freeText}
-            onChange={(v) => onFieldChange?.('freeText', v)}
-            rows={4}
-          />
+          <div className={styles.editGroup}>
+            <EditField
+              type="textarea"
+              id="networks"
+              label="他施設とのネットワーク"
+              value={otherInfo.networks}
+              onChange={(v) => onFieldChange?.('networks', v)}
+              rows={3}
+              error={getError('otherInfo.networks')}
+            />
+          </div>
+          <div className={styles.editGroup}>
+            <EditField
+              type="textarea"
+              id="futureOutlook"
+              label="今後の展望や課題"
+              value={otherInfo.futureOutlook}
+              onChange={(v) => onFieldChange?.('futureOutlook', v)}
+              rows={3}
+              error={getError('otherInfo.futureOutlook')}
+            />
+          </div>
+          <div className={styles.editGroup}>
+            <EditField
+              type="textarea"
+              id="freeText"
+              label="自由記述"
+              value={otherInfo.freeText}
+              onChange={(v) => onFieldChange?.('freeText', v)}
+              rows={4}
+              error={getError('otherInfo.freeText')}
+            />
+          </div>
         </div>
       </div>
     );

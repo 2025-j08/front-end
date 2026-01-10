@@ -8,12 +8,16 @@ export type AdvancedTabProps = {
   advancedInfo: AdvancedInfo;
   isEditMode?: boolean;
   onFieldChange?: (field: string, value: unknown) => void;
+  errors?: Record<string, string>;
+  getError?: (field: string) => string | undefined;
 };
 
 export const AdvancedTab = ({
   advancedInfo,
   isEditMode = false,
   onFieldChange,
+  errors = {},
+  getError = () => undefined,
 }: AdvancedTabProps) => {
   if (isEditMode) {
     return (
@@ -41,14 +45,6 @@ export const AdvancedTab = ({
             label="経緯と背景"
             value={advancedInfo.background}
             onChange={(v) => onFieldChange?.('background', v)}
-            rows={3}
-          />
-          <EditField
-            type="textarea"
-            id="challenges"
-            label="苦労や課題"
-            value={advancedInfo.challenges}
-            onChange={(v) => onFieldChange?.('challenges', v)}
             rows={3}
           />
           <EditField
