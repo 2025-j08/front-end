@@ -98,8 +98,28 @@ export default function AuthCallbackPage() {
         }
 
         if (expires < now) {
-          // 期限切れ招待を削除（ポリシー上、本人も削除可能）
-          await supabase.from('invitations').delete().eq('user_id', userId);
+          // 期限切れ招待を削除試行（失敗時もフロー継続）
+          try {
+            const { error: deleteError } = await supabase
+              .from('invitations')
+              .delete()
+              .eq('user_id', userId);
+            if (deleteError) {
+              logError('期限切れ招待レコードの削除に失敗しました', {
+                context: 'auth/callback',
+                userId,
+                supabaseError: deleteError.message,
+              });
+            }
+          } catch (e) {
+            logError('期限切れ招待レコードの削除中に予期しないエラーが発生しました', {
+              context: 'auth/callback',
+              userId,
+              error: e instanceof Error ? e.message : String(e),
+              stack: e instanceof Error ? e.stack : undefined,
+            });
+          }
+
           if (isMounted)
             await signOutSafely('expired_invitation', '/features/auth?error=expired_invitation');
           return;

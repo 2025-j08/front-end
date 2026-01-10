@@ -60,8 +60,15 @@ export async function restoreProfileName(
   userId: string,
   originalName: string,
 ): Promise<boolean> {
-  // originalName が取得できていない場合は、ロールバックを実施しない
-  if (!originalName || typeof originalName !== 'string' || !originalName.trim()) {
+  // originalName が取得できていない、または不可視文字のみの場合はロールバック対象外
+  // 不可視文字: 空白類・ゼロ幅スペース等（trimでは除去されないケースに対応）
+  const hasVisibleChars = (value: string): boolean => {
+    // 目に見えない制御/空白類を除いた可視文字が1つ以上存在するか判定
+    // \s: 一般的な空白、\u200B-\u200D: 零幅スペース/接合、\u2060: Word Joiner
+    return /[^\s\u200B\u200C\u200D\u2060]/u.test(value);
+  };
+
+  if (!originalName || typeof originalName !== 'string' || !hasVisibleChars(originalName)) {
     logFatal('プロフィールのロールバック失敗（元の名前が無効）', {
       userId,
       originalName,
