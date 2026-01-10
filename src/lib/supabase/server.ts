@@ -2,6 +2,8 @@ import { createServerClient } from '@supabase/ssr';
 import { createClient as createSupabaseClient, type SupabaseClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 
+import { logError } from '@/lib/logger';
+
 import { supabaseConfig, getServiceRoleKey } from './config';
 
 /**
@@ -19,7 +21,9 @@ export async function createClient(): Promise<SupabaseClient> {
         try {
           cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
         } catch (error) {
-          console.error('Cookieの設定に失敗しました');
+          logError('Cookieの設定に失敗しました', {
+            error: error instanceof Error ? error : String(error),
+          });
         }
       },
     },
