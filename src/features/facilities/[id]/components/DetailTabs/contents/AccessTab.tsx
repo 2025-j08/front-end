@@ -45,16 +45,10 @@ export const AccessTab = ({
                 id="locationAddress"
                 label="住所（変更不可）"
                 value={accessInfo.locationAddress}
-                onChange={() => {}} // 無効化
                 disabled={true}
                 placeholder="住所は管理者が管理します"
               />
-              <p
-                className={styles.noticeText}
-                style={{ marginTop: '8px', fontSize: '13px', color: '#666' }}
-              >
-                ※住所の変更は管理者にお問い合わせください。
-              </p>
+              <p className={styles.noticeText}>※住所の変更は管理者にお問い合わせください。</p>
             </div>
             <EditField
               type="text"

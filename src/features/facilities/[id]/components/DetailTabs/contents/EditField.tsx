@@ -21,14 +21,14 @@ type BaseFieldProps = {
 type TextFieldProps = BaseFieldProps & {
   type: 'text';
   value: string | undefined;
-  onChange: (value: string) => void;
+  onChange?: (value: string) => void;
   placeholder?: string;
 };
 
 type NumberFieldProps = BaseFieldProps & {
   type: 'number';
   value: number | undefined; // Removed string allowing strictly number or undefined
-  onChange: (value: number | undefined) => void;
+  onChange?: (value: number | undefined) => void;
   placeholder?: string;
   min?: number;
   max?: number;
@@ -38,7 +38,7 @@ type NumberFieldProps = BaseFieldProps & {
 type TextareaFieldProps = BaseFieldProps & {
   type: 'textarea';
   value: string | undefined;
-  onChange: (value: string) => void;
+  onChange?: (value: string) => void;
   placeholder?: string;
   rows?: number;
 };
@@ -46,7 +46,7 @@ type TextareaFieldProps = BaseFieldProps & {
 type SelectFieldProps = BaseFieldProps & {
   type: 'select';
   value: string | undefined;
-  onChange: (value: string | undefined) => void;
+  onChange?: (value: string | undefined) => void;
   options: SelectOption[];
 };
 
@@ -82,7 +82,7 @@ export const EditField = (props: EditFieldProps) => {
             id={id}
             className={`${styles.editInput} ${props.error ? styles.errorInput : ''}`}
             value={props.value || ''}
-            onChange={(e) => props.onChange(e.target.value)}
+            onChange={(e) => props.onChange?.(e.target.value)}
             placeholder={props.placeholder}
             disabled={disabled}
             aria-invalid={!!props.error}
@@ -97,7 +97,7 @@ export const EditField = (props: EditFieldProps) => {
             id={id}
             className={`${styles.editInput} ${props.error ? styles.errorInput : ''}`}
             value={props.value ?? ''}
-            onChange={(e) => props.onChange(e.target.value ? Number(e.target.value) : undefined)}
+            onChange={(e) => props.onChange?.(e.target.value ? Number(e.target.value) : undefined)}
             placeholder={props.placeholder}
             min={props.min}
             max={props.max}
@@ -114,7 +114,7 @@ export const EditField = (props: EditFieldProps) => {
             id={id}
             className={`${styles.editTextarea} ${props.error ? styles.errorInput : ''}`}
             value={props.value || ''}
-            onChange={(e) => props.onChange(e.target.value)}
+            onChange={(e) => props.onChange?.(e.target.value)}
             placeholder={props.placeholder}
             rows={props.rows ?? DEFAULT_TEXTAREA_ROWS}
             disabled={disabled}
@@ -129,7 +129,7 @@ export const EditField = (props: EditFieldProps) => {
             id={id}
             className={`${styles.editInput} ${props.error ? styles.errorInput : ''}`}
             value={props.value ?? ''}
-            onChange={(e) => props.onChange(e.target.value || undefined)}
+            onChange={(e) => props.onChange?.(e.target.value || undefined)}
             disabled={disabled}
             aria-invalid={!!props.error}
             aria-describedby={props.error ? `${id}-error` : undefined}

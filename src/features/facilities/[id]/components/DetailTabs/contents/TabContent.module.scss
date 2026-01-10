@@ -33,6 +33,12 @@
     margin-top: 24px;
     line-height: 1.6;
   }
+
+  .noticeText {
+    margin-top: 8px;
+    font-size: 13px;
+    color: colors.$text-secondary;
+  }
 }
 
 // テキストメインのセクション
@@ -212,16 +218,15 @@
 
 .errorInput {
   border-color: colors.$error-color !important;
-  background-color: rgba(colors.$error-color, 0.05);
+  background-color: rgba(211, 47, 47, 0.05);
 
   &:focus {
     border-color: colors.$error-color !important;
-    box-shadow: 0 0 0 2px rgba(colors.$error-color, 0.2);
+    box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.2);
   }
 }
 
 .errorText {
-  display: block;
   margin-top: 6px;
   font-size: 13px;
   color: colors.$error-color;
