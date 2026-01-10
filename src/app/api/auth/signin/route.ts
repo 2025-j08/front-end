@@ -2,12 +2,8 @@ import { createClient as createServerClient } from '@/lib/supabase/server';
 import { validateEmail, validatePassword } from '@/lib/validation';
 import { HTTP_STATUS } from '@/const/httpStatus';
 import { logWarn, logError, maskEmail } from '@/lib/logger';
-import {
-  validateRequestBody,
-  createErrorResponse,
-  createSuccessResponse,
-  type ParseResult,
-} from '@/lib/api/validators';
+import { createErrorResponse, createSuccessResponse } from '@/lib/api/validators';
+import { createValidator, stringField } from '@/lib/api/createValidator';
 
 type SignInRequestBody = {
   email: string;
@@ -29,44 +25,17 @@ const getClientIp = (request: Request): string => {
 
 /**
  * サインインAPIリクエストボディのパース関数
- *
- * @param body - リクエストボディ
- * @returns パース結果
  */
-const parseSignInRequestBody = (body: unknown): ParseResult<SignInRequestBody> => {
-  // 基本的なJSONオブジェクト検証
-  const bodyValidation = validateRequestBody(body);
-  if (!bodyValidation.success) {
-    return bodyValidation;
-  }
-
-  const obj = bodyValidation.data;
-
-  // メールアドレスの検証
-  if (typeof obj.email !== 'string') {
-    return { success: false, message: '有効なメールアドレスを指定してください' };
-  }
-
-  const emailValidation = validateEmail(obj.email);
-  if (!emailValidation.isValid) {
-    return {
-      success: false,
-      message: emailValidation.error ?? '有効なメールアドレスを指定してください',
-    };
-  }
-
-  // パスワードの検証
-  if (typeof obj.password !== 'string') {
-    return { success: false, message: 'パスワードが不正です' };
-  }
-
-  const passwordValidation = validatePassword(obj.password);
-  if (!passwordValidation.isValid) {
-    return { success: false, message: 'パスワードが不正です' };
-  }
-
-  return { success: true, data: { email: obj.email.trim(), password: obj.password } };
-};
+const parseSignInRequestBody = createValidator<SignInRequestBody>({
+  email: {
+    validator: stringField(validateEmail, '有効なメールアドレスを指定してください'),
+    errorMessage: '有効なメールアドレスを指定してください',
+  },
+  password: {
+    validator: stringField(validatePassword, 'パスワードが不正です', false),
+    errorMessage: 'パスワードが不正です',
+  },
+});
 
 export async function POST(request: Request) {
   try {

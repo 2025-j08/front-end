@@ -4,13 +4,8 @@ import { appConfig } from '@/lib/supabase/config';
 import { validateEmail } from '@/lib/validation';
 import { HTTP_STATUS } from '@/const/httpStatus';
 import { logError, logInfo, logFatal, maskEmail } from '@/lib/logger';
-import {
-  validateRequestBody,
-  validatePositiveIntegerField,
-  createErrorResponse,
-  createSuccessResponse,
-  type ParseResult,
-} from '@/lib/api/validators';
+import { createErrorResponse, createSuccessResponse } from '@/lib/api/validators';
+import { createValidator, stringField, positiveIntegerField } from '@/lib/api/createValidator';
 
 // 招待の有効期限（日数）を一元管理
 const INVITATION_EXPIRES_IN_DAYS = 3;
@@ -23,50 +18,17 @@ const buildExpiresAtUtc = () => {
 
 /**
  * 招待APIリクエストボディのパース関数
- *
- * @param body - リクエストボディ
- * @returns パース結果
  */
-const parseInviteRequestBody = (body: unknown): ParseResult<InviteUserRequest> => {
-  // 基本的なJSONオブジェクト検証
-  const bodyValidation = validateRequestBody(body);
-  if (!bodyValidation.success) {
-    return bodyValidation;
-  }
-
-  const obj = bodyValidation.data;
-
-  // メールアドレスの検証
-  if (typeof obj.email !== 'string') {
-    return { success: false, message: '有効なメールアドレスを指定してください' };
-  }
-
-  const emailValidation = validateEmail(obj.email);
-  if (!emailValidation.isValid) {
-    return {
-      success: false,
-      message: emailValidation.error ?? '有効なメールアドレスを指定してください',
-    };
-  }
-
-  // 施設IDの検証
-  const facilityIdValidation = validatePositiveIntegerField(
-    obj,
-    'facilityId',
-    '有効な施設IDを指定してください',
-  );
-  if (!facilityIdValidation.success) {
-    return facilityIdValidation;
-  }
-
-  return {
-    success: true,
-    data: {
-      email: obj.email,
-      facilityId: facilityIdValidation.data,
-    },
-  };
-};
+const parseInviteRequestBody = createValidator<InviteUserRequest>({
+  email: {
+    validator: stringField(validateEmail, '有効なメールアドレスを指定してください', false),
+    errorMessage: '有効なメールアドレスを指定してください',
+  },
+  facilityId: {
+    validator: positiveIntegerField('有効な施設IDを指定してください'),
+    errorMessage: '有効な施設IDを指定してください',
+  },
+});
 
 export async function POST(request: Request) {
   try {

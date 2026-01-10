@@ -4,53 +4,22 @@ import { validateRequired, validatePassword } from '@/lib/validation';
 import { HTTP_STATUS } from '@/const/httpStatus';
 import { logWarn, logError, logInfo, logFatal, maskEmail } from '@/lib/logger';
 import { deleteFacilityProfile, restoreProfileName } from '@/lib/auth/registration';
-import {
-  validateRequestBody,
-  createErrorResponse,
-  createSuccessResponse,
-  type ParseResult,
-} from '@/lib/api/validators';
+import { createErrorResponse, createSuccessResponse } from '@/lib/api/validators';
+import { createValidator, stringField } from '@/lib/api/createValidator';
 
 /**
  * 登録APIリクエストボディのパース関数
- *
- * @param body - リクエストボディ
- * @returns パース結果
  */
-const parseRegisterRequestBody = (body: unknown): ParseResult<RegisterRequest> => {
-  // 基本的なJSONオブジェクト検証
-  const bodyValidation = validateRequestBody(body);
-  if (!bodyValidation.success) {
-    return bodyValidation;
-  }
-
-  const obj = bodyValidation.data;
-
-  // 氏名の検証
-  if (typeof obj.name !== 'string') {
-    return { success: false, message: '氏名を入力してください' };
-  }
-
-  const nameValidation = validateRequired(obj.name, '氏名');
-  if (!nameValidation.isValid) {
-    return { success: false, message: nameValidation.error ?? '氏名を入力してください' };
-  }
-
-  // パスワードの検証
-  if (typeof obj.password !== 'string') {
-    return { success: false, message: 'パスワードを入力してください' };
-  }
-
-  const passwordValidation = validatePassword(obj.password);
-  if (!passwordValidation.isValid) {
-    return {
-      success: false,
-      message: 'パスワードが要件を満たしていません',
-    };
-  }
-
-  return { success: true, data: { name: obj.name.trim(), password: obj.password } };
-};
+const parseRegisterRequestBody = createValidator<RegisterRequest>({
+  name: {
+    validator: stringField((value) => validateRequired(value, '氏名'), '氏名を入力してください'),
+    errorMessage: '氏名を入力してください',
+  },
+  password: {
+    validator: stringField(validatePassword, 'パスワードが要件を満たしていません', false),
+    errorMessage: 'パスワードが要件を満たしていません',
+  },
+});
 
 /**
  * POST /api/auth/register
