@@ -40,6 +40,10 @@ type DetailTabsProps = {
     field: string,
     value: unknown,
   ) => void;
+  /** エラー情報 */
+  errors?: Record<string, string>;
+  /** エラー取得関数 */
+  getError?: (field: string) => string | undefined;
 };
 
 /**
@@ -63,6 +67,8 @@ export const DetailTabs = ({
   otherInfo,
   isEditMode = false,
   onNestedFieldChange,
+  errors = {},
+  getError = () => undefined,
 }: DetailTabsProps) => {
   // タブIDの配列を生成
   const tabIds = tabs.map((tab) => tab.key);
@@ -113,6 +119,8 @@ export const DetailTabs = ({
                   onFieldChange={(field, value) =>
                     onNestedFieldChange?.('accessInfo', field, value)
                   }
+                  errors={errors}
+                  getError={getError}
                 />
               ) : null;
             case 'philosophy':
@@ -123,6 +131,8 @@ export const DetailTabs = ({
                   onFieldChange={(field, value) =>
                     onNestedFieldChange?.('philosophyInfo', field, value)
                   }
+                  errors={errors}
+                  getError={getError}
                 />
               ) : null;
             case 'specialty':
@@ -133,6 +143,8 @@ export const DetailTabs = ({
                   onFieldChange={(field, value) =>
                     onNestedFieldChange?.('specialtyInfo', field, value)
                   }
+                  errors={errors}
+                  getError={getError}
                 />
               ) : null;
             case 'staff':
@@ -141,6 +153,8 @@ export const DetailTabs = ({
                   staffInfo={staffInfo}
                   isEditMode={isEditMode}
                   onFieldChange={(field, value) => onNestedFieldChange?.('staffInfo', field, value)}
+                  errors={errors}
+                  getError={getError}
                 />
               ) : null;
             case 'education':
@@ -151,6 +165,8 @@ export const DetailTabs = ({
                   onFieldChange={(field, value) =>
                     onNestedFieldChange?.('educationInfo', field, value)
                   }
+                  errors={errors}
+                  getError={getError}
                 />
               ) : null;
             case 'advanced':
@@ -161,6 +177,8 @@ export const DetailTabs = ({
                   onFieldChange={(field, value) =>
                     onNestedFieldChange?.('advancedInfo', field, value)
                   }
+                  errors={errors}
+                  getError={getError}
                 />
               ) : null;
             case 'other':
@@ -169,6 +187,8 @@ export const DetailTabs = ({
                   otherInfo={otherInfo}
                   isEditMode={isEditMode}
                   onFieldChange={(field, value) => onNestedFieldChange?.('otherInfo', field, value)}
+                  errors={errors}
+                  getError={getError}
                 />
               ) : null;
             default:
