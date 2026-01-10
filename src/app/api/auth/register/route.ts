@@ -158,7 +158,7 @@ export async function POST(request: Request) {
 
     // 施設紐付けを先に実行（外部キー制約等の確認を含む）
     // 失敗時のロールバックを最小限にするために、最初に実行
-    const { error: facilityProfileError } = await supabaseServer.from('facility_profiles').insert({
+    const { error: facilityProfileError } = await supabaseAdmin.from('facility_profiles').insert({
       facility_id: invitation.facility_id,
       user_id: user.id,
     });
@@ -189,7 +189,7 @@ export async function POST(request: Request) {
       });
 
       // 施設紐付けをロールバック
-      await deleteFacilityProfile(supabaseServer, user.id, invitation.facility_id);
+      await deleteFacilityProfile(supabaseAdmin, user.id, invitation.facility_id);
 
       return NextResponse.json(
         { success: false, error: 'プロフィールの更新に失敗しました' },
@@ -210,8 +210,8 @@ export async function POST(request: Request) {
       });
 
       // プロフィール名と施設紐付けをロールバック
-      await restoreProfileName(supabaseServer, user.id, originalName);
-      await deleteFacilityProfile(supabaseServer, user.id, invitation.facility_id);
+      await restoreProfileName(supabaseAdmin, user.id, originalName);
+      await deleteFacilityProfile(supabaseAdmin, user.id, invitation.facility_id);
 
       return NextResponse.json(
         { success: false, error: 'パスワードの設定に失敗しました' },
@@ -220,6 +220,13 @@ export async function POST(request: Request) {
     }
 
     // 初期登録完了後、招待レコードを削除（期限切れ以外もクリーンアップ）
+    //
+    // 削除失敗時の判断理由:
+    // - ユーザーの初期登録（名前・パスワード設定・施設紐付け）は全て完了済み
+    // - 招待レコードはあくまで「登録中」の状態管理用であり、削除失敗してもユーザー体験に影響しない
+    // - 残存する招待レコードは有効期限切れで再利用されることはない
+    // - 定期的なバッチ処理や手動クリーンアップで後から削除可能
+    // - したがって、削除失敗は警告ログのみ出力し、ユーザーには成功を返す
     const { error: deleteInvitationError } = await supabaseServer
       .from('invitations')
       .delete()
@@ -232,6 +239,7 @@ export async function POST(request: Request) {
         error: deleteInvitationError.message,
       });
       // 招待削除失敗は致命的でないため、成功レスポンスを返す
+      // フロントエンド側では登録完了として扱われ、ユーザーは通常通りサービスを利用可能
     }
 
     // 成功レスポンス

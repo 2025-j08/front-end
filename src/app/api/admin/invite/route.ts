@@ -107,15 +107,28 @@ export async function POST(request: Request) {
       redirectTo: `${appUrl}/auth/callback`,
     });
 
-    // 招待ユーザのIDが取得できなかった or 招待メールの送信に失敗した
-    // 失敗時のエラーレスポンス
-    if (authError || !data?.user?.id) {
-      logError('inviteUserByEmail failed', {
-        error: authError?.message,
+    // 招待メールの送信に失敗した場合
+    if (authError) {
+      logError('招待メール送信に失敗しました', {
+        email: email,
+        error: authError.message,
+        errorCode: authError.code,
       });
       return NextResponse.json(
         { success: false, error: '招待メール送信に失敗しました' },
         { status: 400 },
+      );
+    }
+
+    // ユーザーIDが取得できない場合（メールは送信済みの可能性がある）
+    if (!data?.user?.id) {
+      logError('招待ユーザーIDの取得に失敗しました（メール送信済みの可能性あり）', {
+        email: email,
+        dataReceived: data,
+      });
+      return NextResponse.json(
+        { success: false, error: '招待処理に失敗しました。管理者にお問い合わせください' },
+        { status: 500 },
       );
     }
 
@@ -136,7 +149,7 @@ export async function POST(request: Request) {
     // invitations保存失敗時の補償処理（ユーザー作成を取り消す）
     if (upsertError) {
       // エラーの構造化ログを出力
-      logError('invitations upsert failed after user creation', {
+      logError('ユーザー作成後の招待情報保存に失敗しました', {
         userId: data.user.id,
         email: email,
         facilityId: facilityId,
@@ -146,10 +159,10 @@ export async function POST(request: Request) {
       // 補償トランザクションにより作成された認証ユーザーを削除
       try {
         await supabaseAdmin.auth.admin.deleteUser(data.user.id);
-        logInfo('Rollback successful', { userId: data.user.id, email: email });
+        logInfo('ロールバック成功', { userId: data.user.id, email: email });
       } catch (rollbackError) {
         // ロールバック失敗は手動対応が必要になる
-        logFatal('Rollback failed - manual cleanup required', {
+        logFatal('ロールバックに失敗しました（手動クリーンアップが必要です）', {
           userId: data.user.id,
           email: email,
           facilityId: facilityId,
@@ -168,7 +181,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true });
   } catch (error) {
     // 処理中にエラーが発生した場合のレスポンス
-    logError('Unexpected error in invite API', {
+    logError('招待APIで予期しないエラーが発生しました', {
       error: error instanceof Error ? error : String(error),
     });
     return NextResponse.json(

@@ -105,7 +105,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json<SignInResponseBody>({ success: true, role: profile?.role ?? null });
   } catch (err) {
-    logError('Unexpected error in signin API', {
+    logError('サインインAPIで予期しないエラーが発生しました', {
       error: err instanceof Error ? err : String(err),
     });
     return NextResponse.json<SignInResponseBody>(
