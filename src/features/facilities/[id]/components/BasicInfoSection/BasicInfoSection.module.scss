@@ -22,6 +22,7 @@
   justify-content: center;
   border-radius: 8px;
   min-height: 120px; // 高さを確保
+  padding: 24px 24px; // 左右の余白を広げて窮屈さを解消
 
   .label {
     font-size: 14px;
@@ -44,6 +45,7 @@
     font-size: 14px;
     text-align: center;
     background-color: colors.$white;
+    box-sizing: border-box; // paddingを含めた幅計算にする
 
     &:focus {
       outline: none;
@@ -53,13 +55,14 @@
 
   .capacityInputs {
     display: flex;
-    gap: 40px; // 隙間をさらに広げる
+    gap: 20px; // 隙間を詰めてバランスを取る
     width: 100%;
 
     .capacityField {
       display: flex;
       flex-direction: column;
       flex: 1;
+      min-width: 0; // フレックスアイテムが縮小できるようにする
       gap: 4px;
 
       .subLabel {
