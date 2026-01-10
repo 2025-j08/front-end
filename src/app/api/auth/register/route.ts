@@ -3,6 +3,8 @@ import { NextResponse } from 'next/server';
 import type { RegisterRequest } from '@/types/api';
 import { createClient as createServerClient, createAdminClient } from '@/lib/supabase/server';
 import { validateRequired, validatePassword } from '@/lib/validation';
+import { logWarn, logError, logInfo, logFatal } from '@/lib/logger';
+import { deleteFacilityProfile, restoreProfileName } from '@/lib/auth/registration';
 
 /**
  * リクエストボディのバリデーション
@@ -95,11 +97,10 @@ export async function POST(request: Request) {
 
     // 招待情報が存在しない場合
     if (invitationError || !invitation) {
-      console.warn('招待情報が見つかりません', {
+      logWarn('招待情報が見つかりません', {
         userId: user.id,
         email: user.email,
         error: invitationError?.message,
-        timestamp: new Date().toISOString(),
       });
 
       return NextResponse.json(
@@ -111,20 +112,18 @@ export async function POST(request: Request) {
     // 有効期限チェック
     const expiresAt = new Date(invitation.expires_at);
     if (!Number.isFinite(expiresAt.getTime())) {
-      console.error('無効な有効期限のフォーマットです', {
+      logError('無効な有効期限のフォーマットです', {
         userId: user.id,
         expiresAt: invitation.expires_at,
-        timestamp: new Date().toISOString(),
       });
 
       return NextResponse.json({ success: false, error: '招待情報が無効です' }, { status: 400 });
     }
 
     if (expiresAt < new Date()) {
-      console.info('招待情報が有効期限切れです', {
+      logInfo('招待情報が有効期限切れです', {
         userId: user.id,
         expiresAt: expiresAt.toISOString(),
-        timestamp: new Date().toISOString(),
       });
 
       // 期限切れの招待レコードを削除
@@ -144,10 +143,9 @@ export async function POST(request: Request) {
       .single();
 
     if (originalProfileError || !originalProfile) {
-      console.error('プロフィール取得に失敗しました', {
+      logError('プロフィール取得に失敗しました', {
         userId: user.id,
         error: originalProfileError?.message,
-        timestamp: new Date().toISOString(),
       });
 
       return NextResponse.json(
@@ -158,6 +156,26 @@ export async function POST(request: Request) {
 
     const originalName = originalProfile.name;
 
+    // 施設紐付けを先に実行（外部キー制約等の確認を含む）
+    // 失敗時のロールバックを最小限にするために、最初に実行
+    const { error: facilityProfileError } = await supabaseServer.from('facility_profiles').insert({
+      facility_id: invitation.facility_id,
+      user_id: user.id,
+    });
+
+    if (facilityProfileError) {
+      logError('施設紐付けの登録に失敗しました', {
+        userId: user.id,
+        facilityId: invitation.facility_id,
+        error: facilityProfileError.message,
+      });
+
+      return NextResponse.json(
+        { success: false, error: '施設の紐付けに失敗しました' },
+        { status: 500 },
+      );
+    }
+
     // profiles.name 更新
     const { error: profileUpdateError } = await supabaseServer
       .from('profiles')
@@ -165,11 +183,13 @@ export async function POST(request: Request) {
       .eq('id', user.id);
 
     if (profileUpdateError) {
-      console.error('プロフィール更新に失敗しました', {
+      logError('プロフィール更新に失敗しました', {
         userId: user.id,
         error: profileUpdateError.message,
-        timestamp: new Date().toISOString(),
       });
+
+      // 施設紐付けをロールバック
+      await deleteFacilityProfile(supabaseServer, user.id, invitation.facility_id);
 
       return NextResponse.json(
         { success: false, error: 'プロフィールの更新に失敗しました' },
@@ -184,49 +204,17 @@ export async function POST(request: Request) {
 
     // パスワード更新失敗時の補償処理
     if (passwordUpdateError) {
-      console.error('パスワード更新に失敗しました', {
+      logError('パスワード更新に失敗しました', {
         userId: user.id,
         error: passwordUpdateError.message,
-        timestamp: new Date().toISOString(),
       });
 
-      // profiles.name をロールバック（元の値に復元）
-      try {
-        await supabaseServer.from('profiles').update({ name: originalName }).eq('id', user.id);
-        console.log('プロフィールのロールバック成功', {
-          userId: user.id,
-          restoredName: originalName,
-        });
-      } catch (rollbackError) {
-        console.error('FATAL: プロフィールのロールバック失敗', {
-          userId: user.id,
-          originalName,
-          rollbackError: rollbackError instanceof Error ? rollbackError.message : rollbackError,
-        });
-      }
+      // プロフィール名と施設紐付けをロールバック
+      await restoreProfileName(supabaseServer, user.id, originalName);
+      await deleteFacilityProfile(supabaseServer, user.id, invitation.facility_id);
 
       return NextResponse.json(
         { success: false, error: 'パスワードの設定に失敗しました' },
-        { status: 500 },
-      );
-    }
-
-    // facility_profiles に登録（ユーザーと施設の紐付け）
-    const { error: facilityProfileError } = await supabaseServer.from('facility_profiles').insert({
-      facility_id: invitation.facility_id,
-      user_id: user.id,
-    });
-
-    if (facilityProfileError) {
-      console.error('施設紐付けの登録に失敗しました', {
-        userId: user.id,
-        facilityId: invitation.facility_id,
-        error: facilityProfileError.message,
-        timestamp: new Date().toISOString(),
-      });
-
-      return NextResponse.json(
-        { success: false, error: '施設の紐付けに失敗しました' },
         { status: 500 },
       );
     }
@@ -238,30 +226,27 @@ export async function POST(request: Request) {
       .eq('user_id', user.id);
 
     if (deleteInvitationError) {
-      console.warn('招待レコードの削除に失敗しました（初期登録は完了）', {
+      logWarn('招待レコードの削除に失敗しました（初期登録は完了）', {
         userId: user.id,
         facilityId: invitation.facility_id,
         error: deleteInvitationError.message,
-        timestamp: new Date().toISOString(),
       });
       // 招待削除失敗は致命的でないため、成功レスポンスを返す
     }
 
     // 成功レスポンス
-    console.log('ユーザー初期登録完了', {
+    logInfo('ユーザー初期登録完了', {
       userId: user.id,
       email: user.email,
       facilityId: invitation.facility_id,
-      timestamp: new Date().toISOString(),
     });
 
     return NextResponse.json({ success: true });
   } catch (error) {
     // 予期しないエラー
-    console.error('初期登録API で予期しないエラーが発生しました', {
-      error: error instanceof Error ? error.message : error,
+    logError('初期登録API で予期しないエラーが発生しました', {
+      error: error instanceof Error ? error : String(error),
       stack: error instanceof Error ? error.stack : undefined,
-      timestamp: new Date().toISOString(),
     });
 
     return NextResponse.json(
