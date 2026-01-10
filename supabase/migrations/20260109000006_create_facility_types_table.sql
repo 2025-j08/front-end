@@ -56,8 +56,9 @@ CREATE POLICY "delete_admin_only"
         )
     );
 
--- updated_atカラムを自動更新するプロシージャ
-CREATE OR REPLACE FUNCTION public.update_facility_types_timestamp()
+-- updated_atカラムを自動更新する汎用プロシージャ
+-- 他テーブルでも再利用できるよう汎用名に統一
+CREATE OR REPLACE FUNCTION public.update_updated_at_column()
 RETURNS TRIGGER
 LANGUAGE plpgsql
 SET search_path = ''
@@ -72,5 +73,5 @@ $$;
 CREATE TRIGGER update_facility_types
     BEFORE UPDATE ON public.facility_types
     FOR EACH ROW
-    EXECUTE FUNCTION public.update_facility_types_timestamp();
+    EXECUTE FUNCTION public.update_updated_at_column();
 
