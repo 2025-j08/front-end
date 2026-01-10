@@ -2,7 +2,7 @@
  * 施設編集用カスタムフック
  * API連携を考慮した設計
  */
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 
 import { FacilityDetail } from '@/types/facility';
 
@@ -114,24 +114,26 @@ const validateFacilityData = (formData: Partial<FacilityDetail>): Record<string,
   return errors;
 };
 
+// 初期状態を生成するヘルパー関数（純粋関数）
+const createInitialState = (data: FacilityDetail | null): EditFormState => ({
+  formData: data ? { ...data } : {},
+  changedFields: new Set(),
+  isSaving: false,
+  isDirty: false,
+  errors: {},
+});
+
 export const useFacilityEdit = (
   initialData: FacilityDetail | null,
   facilityId: string,
 ): UseFacilityEditReturn => {
-  // ... (createInitialState, state, lastInitialDataId は変更なし)
-
-  const createInitialState = useCallback(
-    (data: FacilityDetail | null): EditFormState => ({
-      formData: data ? { ...data } : {},
-      changedFields: new Set(),
-      isSaving: false,
-      isDirty: false,
-      errors: {},
-    }),
-    [],
-  );
-
   const [state, setState] = useState<EditFormState>(() => createInitialState(initialData));
+
+  // handleSubmitで最新のstateを参照するためのref
+  const stateRef = useRef(state);
+  useEffect(() => {
+    stateRef.current = state;
+  }, [state]);
   const [lastInitialDataId, setLastInitialDataId] = useState<number | null>(
     initialData?.id ?? null,
   );
@@ -197,8 +199,11 @@ export const useFacilityEdit = (
 
   // フォーム送信（API連携用の準備）
   const handleSubmit = useCallback(async (): Promise<boolean> => {
+    // refから最新のstateを取得（依存配列からstate.formData, state.changedFieldsを除外するため）
+    const { formData, changedFields } = stateRef.current;
+
     // バリデーション実行（純粋関数を使用）
-    const errors = validateFacilityData(state.formData);
+    const errors = validateFacilityData(formData);
 
     if (Object.keys(errors).length > 0) {
       setState((prev) => ({ ...prev, errors }));
@@ -213,8 +218,8 @@ export const useFacilityEdit = (
 
       console.log('Facility update payload:', {
         facilityId,
-        data: state.formData,
-        changedFields: Array.from(state.changedFields),
+        data: formData,
+        changedFields: Array.from(changedFields),
       });
 
       setState((prev) => ({
@@ -237,7 +242,7 @@ export const useFacilityEdit = (
       }));
       return false;
     }
-  }, [state.formData, state.changedFields, facilityId]);
+  }, [facilityId]);
 
   // フォームリセット
   const resetForm = useCallback(() => {

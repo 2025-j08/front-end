@@ -84,6 +84,7 @@ export const FacilityHeader = ({
               className={styles.cancelButton}
               onClick={onCancel}
               disabled={isSaving}
+              aria-disabled={isSaving}
             >
               キャンセル
             </button>
@@ -92,10 +93,11 @@ export const FacilityHeader = ({
               className={styles.saveButton}
               onClick={onSave}
               disabled={isSaving || !isDirty}
+              aria-disabled={isSaving || !isDirty}
               aria-busy={isSaving}
               aria-live="polite"
             >
-              {isSaving ? '保存中...' : '保存する'}
+              {isSaving ? '⏳ 保存中...' : '保存する'}
             </button>
           </>
         )}
