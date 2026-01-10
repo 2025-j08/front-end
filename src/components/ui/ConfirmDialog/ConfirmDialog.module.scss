@@ -61,8 +61,8 @@
   gap: 12px;
 }
 
-// ボタン共通
-.button {
+// ボタン共通スタイル
+@mixin button-base {
   padding: 8px 20px;
   border-radius: 4px;
   cursor: pointer;
@@ -73,7 +73,7 @@
 
 // キャンセルボタン
 .cancelButton {
-  @extend .button;
+  @include button-base;
   background-color: colors.$bg-light-gray;
   color: colors.$text-primary;
   border: 1px solid colors.$border-gray;
@@ -90,7 +90,7 @@
 
 // 確定ボタン (通常/危険)
 .confirmButton {
-  @extend .button;
+  @include button-base;
   background-color: colors.$primary-color;
   color: colors.$white;
 
