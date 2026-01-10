@@ -1,4 +1,5 @@
-import styles from './TabContent.module.scss'; // 現時点では既存のスタイルを再利用します
+import styles from './TabContent.module.scss';
+import { TabSection } from './TabSection';
 
 type CommunityRelationProps = {
   relationInfo: string;
@@ -8,9 +9,10 @@ export const CommunityRelation = ({ relationInfo }: CommunityRelationProps) => {
   if (!relationInfo) return null;
 
   return (
-    <div className={styles.relationSection}>
-      <h3 className={styles.subTitle}>地域社会との関係や連携状況</h3>
-      <p className={styles.relationText}>{relationInfo}</p>
+    <div className={styles.tabContentWrapper}>
+      <div className={styles.textSection}>
+        <TabSection title="地域社会との関係や連携状況" content={relationInfo} />
+      </div>
     </div>
   );
 };

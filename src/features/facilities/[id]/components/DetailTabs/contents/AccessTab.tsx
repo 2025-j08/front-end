@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import { AccessInfo } from '@/types/facility';
 
 import { CommunityRelation } from './CommunityRelation';
+import { EditField } from './EditField';
 import styles from './TabContent.module.scss';
 
 // FacilityMapを動的インポート（SSR無効化）
@@ -14,37 +15,110 @@ const FacilityMap = dynamic(
   },
 );
 
-type AccessTabProps = {
+export type AccessTabProps = {
   accessInfo: AccessInfo;
   facilityName: string;
   relationInfo?: string;
+  isEditMode?: boolean;
+  onFieldChange?: (field: string, value: unknown) => void;
+  errors?: Record<string, string>;
+  getError?: (field: string) => string | undefined;
 };
 
-export const AccessTab = ({ accessInfo, facilityName, relationInfo }: AccessTabProps) => {
+export const AccessTab = ({
+  accessInfo,
+  facilityName,
+  relationInfo,
+  isEditMode = false,
+  onFieldChange,
+  errors = {},
+  getError = () => undefined,
+}: AccessTabProps) => {
+  if (isEditMode) {
+    return (
+      <>
+        <div className={`${styles.tabContentWrapper} ${styles.accessContent}`}>
+          <div className={styles.accessInfo}>
+            <div className={styles.marginBottom24}>
+              <EditField
+                type="text"
+                id="locationAddress"
+                label="住所（変更不可）"
+                value={accessInfo.locationAddress}
+                disabled={true}
+                placeholder="住所は管理者が管理します"
+              />
+              <p className={styles.noticeText}>※住所の変更は管理者にお問い合わせください。</p>
+            </div>
+            <EditField
+              type="text"
+              id="station"
+              label="最寄り駅"
+              value={accessInfo.station}
+              onChange={(v) => onFieldChange?.('station', v)}
+              error={getError('accessInfo.station')}
+            />
+            <EditField
+              type="textarea"
+              id="description"
+              label="アクセス詳細"
+              value={accessInfo.description}
+              onChange={(v) => onFieldChange?.('description', v)}
+              rows={3}
+              error={getError('accessInfo.description')}
+            />
+            <div className={styles.editRow}>
+              <EditField
+                type="number"
+                id="lat"
+                label="緯度"
+                value={accessInfo.lat}
+                onChange={(v) => onFieldChange?.('lat', v)}
+                step="0.000001"
+                error={getError('accessInfo.lat')}
+              />
+              <EditField
+                type="number"
+                id="lng"
+                label="経度"
+                value={accessInfo.lng}
+                onChange={(v) => onFieldChange?.('lng', v)}
+                step="0.000001"
+                error={getError('accessInfo.lng')}
+              />
+            </div>
+          </div>
+          <div className={styles.mapWrapper}>
+            <FacilityMap
+              lat={accessInfo.lat}
+              lng={accessInfo.lng}
+              name={facilityName}
+              address={accessInfo.locationAddress}
+            />
+          </div>
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
       <div className={`${styles.tabContentWrapper} ${styles.accessContent}`}>
-        {accessInfo ? (
-          <>
-            <div className={styles.accessInfo}>
-              <p className={styles.accessText}>{accessInfo.locationAddress}</p>
-              {accessInfo.station && <p className={styles.accessText}>{accessInfo.station}</p>}
-              {accessInfo.description && (
-                <p className={styles.accessDescription}>{accessInfo.description}</p>
-              )}
-            </div>
-            <div className={styles.mapWrapper}>
-              <FacilityMap
-                lat={accessInfo.lat}
-                lng={accessInfo.lng}
-                name={facilityName}
-                address={accessInfo.locationAddress}
-              />
-            </div>
-          </>
-        ) : (
-          <div className={styles.placeholderContent}>アクセス情報がありません</div>
-        )}
+        <div className={styles.accessInfo}>
+          <p className={styles.accessText}>{accessInfo.locationAddress}</p>
+          {accessInfo.station && <p className={styles.accessText}>{accessInfo.station}</p>}
+          {accessInfo.description && (
+            <p className={styles.accessDescription}>{accessInfo.description}</p>
+          )}
+        </div>
+        <div className={styles.mapWrapper}>
+          <FacilityMap
+            lat={accessInfo.lat}
+            lng={accessInfo.lng}
+            name={facilityName}
+            address={accessInfo.locationAddress}
+          />
+        </div>
       </div>
 
       {relationInfo && <CommunityRelation relationInfo={relationInfo} />}

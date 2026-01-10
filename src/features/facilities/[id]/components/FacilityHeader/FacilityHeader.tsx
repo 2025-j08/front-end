@@ -6,6 +6,16 @@ type FacilityHeaderProps = {
   fullAddress: string;
   phone: string;
   websiteUrl?: string | null;
+  /** 編集モードかどうか */
+  isEditMode?: boolean;
+  /** 保存中かどうか */
+  isSaving?: boolean;
+  /** 未保存の変更があるか */
+  isDirty?: boolean;
+  /** 保存ハンドラー */
+  onSave?: () => void;
+  /** キャンセルハンドラー */
+  onCancel?: () => void;
 };
 
 /**
@@ -24,7 +34,7 @@ const isValidUrl = (url: string | null | undefined): boolean => {
 
 /**
  * 施設詳細ページのヘッダーセクション
- * 施設名、運営法人、住所、TEL、Webサイトボタンを表示
+ * 施設名、運営法人、住所、TEL、Webサイトボタン、編集ボタンを表示
  */
 export const FacilityHeader = ({
   name,
@@ -32,6 +42,11 @@ export const FacilityHeader = ({
   fullAddress,
   phone,
   websiteUrl,
+  isEditMode = false,
+  isSaving = false,
+  isDirty = false,
+  onSave,
+  onCancel,
 }: FacilityHeaderProps) => {
   const hasValidWebsite = isValidUrl(websiteUrl);
 
@@ -41,12 +56,17 @@ export const FacilityHeader = ({
         <h1 className={styles.title}>
           {name}
           {corporation && <span className={styles.corporation}>運営法人 {corporation}</span>}
+          {isEditMode && isDirty && (
+            <span className={styles.dirtyIndicator} role="status" aria-live="polite">
+              ● 未保存の変更があります
+            </span>
+          )}
         </h1>
         <p className={styles.address}>{fullAddress}</p>
         <p className={styles.tel}>TEL {phone}</p>
       </div>
-      {hasValidWebsite && (
-        <div className={styles.headerAction}>
+      <div className={styles.headerAction}>
+        {hasValidWebsite && !isEditMode && (
           <a
             href={websiteUrl ?? undefined}
             className={styles.webButton}
@@ -56,8 +76,32 @@ export const FacilityHeader = ({
           >
             施設Webサイト
           </a>
-        </div>
-      )}
+        )}
+        {isEditMode && (
+          <>
+            <button
+              type="button"
+              className={styles.cancelButton}
+              onClick={onCancel}
+              disabled={isSaving}
+              aria-disabled={isSaving}
+            >
+              キャンセル
+            </button>
+            <button
+              type="button"
+              className={styles.saveButton}
+              onClick={onSave}
+              disabled={isSaving || !isDirty}
+              aria-disabled={isSaving || !isDirty}
+              aria-busy={isSaving}
+              aria-live="polite"
+            >
+              {isSaving ? '⏳ 保存中...' : '保存する'}
+            </button>
+          </>
+        )}
+      </div>
     </header>
   );
 };
