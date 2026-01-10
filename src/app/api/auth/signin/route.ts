@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 
 import { createClient as createServerClient } from '@/lib/supabase/server';
 import { validateEmail, validatePassword } from '@/lib/validation';
+import { logWarn, logError } from '@/lib/logger';
 
 type SignInRequestBody = {
   email: string;
@@ -12,6 +13,15 @@ type SignInResponseBody = {
   success?: boolean;
   error?: string;
   role?: string | null;
+};
+
+/**
+ * リクエストからIPアドレスを取得
+ */
+const getClientIp = (request: Request): string => {
+  const forwarded = request.headers.get('x-forwarded-for');
+  const realIp = request.headers.get('x-real-ip');
+  return forwarded?.split(',')[0].trim() || realIp || '不明';
 };
 
 const parseRequestBody = (
@@ -62,6 +72,15 @@ export async function POST(request: Request) {
     const { data, error } = await supabaseServer.auth.signInWithPassword({ email, password });
 
     if (error || !data.user) {
+      // セキュリティ監視用のログを出力（パスワードは含めない）
+      const clientIp = getClientIp(request);
+      logWarn('ログイン失敗', {
+        email,
+        reason: error?.message || 'ユーザーが見つかりません',
+        ipAddress: clientIp,
+        timestamp: new Date().toISOString(),
+      });
+
       // エラー詳細は返さず、一般的なメッセージのみ返却
       return NextResponse.json<SignInResponseBody>(
         { error: 'メールまたはパスワードが不正です' },
@@ -78,15 +97,17 @@ export async function POST(request: Request) {
 
     if (profileError) {
       // 役割取得失敗時もログイン成功は維持するがロールはnull
-      console.warn('プロフィール取得に失敗', {
+      logWarn('プロフィール取得に失敗', {
         userId: data.user.id,
-        timestamp: new Date().toISOString(),
+        error: profileError.message,
       });
     }
 
     return NextResponse.json<SignInResponseBody>({ success: true, role: profile?.role ?? null });
   } catch (err) {
-    console.error('Unexpected error in signin API', err);
+    logError('Unexpected error in signin API', {
+      error: err instanceof Error ? err : String(err),
+    });
     return NextResponse.json<SignInResponseBody>(
       { error: 'サーバーエラーが発生しました' },
       { status: 500 },
