@@ -110,19 +110,8 @@ CREATE TRIGGER on_auth_user_confirmed
     AFTER UPDATE ON auth.users
     FOR EACH ROW EXECUTE FUNCTION public.handle_confirmed_user();
 
--- updated_at 自動更新
-CREATE OR REPLACE FUNCTION public.update_profiles_timestamp()
-RETURNS TRIGGER
-LANGUAGE plpgsql
-SET search_path = ''
-AS $$
-BEGIN
-    NEW.updated_at = now();
-    RETURN NEW;
-END;
-$$;
-
-CREATE TRIGGER update_profiles_timestamp
+-- updated_at 自動更新（汎用関数を使用）
+CREATE TRIGGER update_profiles_updated_at
     BEFORE UPDATE ON public.profiles
     FOR EACH ROW
-    EXECUTE FUNCTION public.update_profiles_timestamp();
+    EXECUTE FUNCTION public.update_updated_at_column();

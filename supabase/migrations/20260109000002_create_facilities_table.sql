@@ -24,22 +24,8 @@ CREATE POLICY "select_public"
 -- nameカラムのインデックスを作成
 CREATE INDEX IF NOT EXISTS idx_facilities_name ON public.facilities (name);
 
--- updated_atカラムを自動更新するプロシージャ
-CREATE OR REPLACE FUNCTION public.update_facilities_timestamp()
-RETURNS TRIGGER
-LANGUAGE plpgsql
--- 意図しないスキーマの参照防止
-SET search_path = ''
-
-AS $$
-BEGIN
-    NEW.updated_at = now();
-    RETURN NEW;
-END;
-$$;
-
--- 更新処理に際してプロシージャを呼び出すトリガー
-CREATE TRIGGER update_facilities
+-- updated_at 自動更新（汎用関数を使用）
+CREATE TRIGGER update_facilities_updated_at
     BEFORE UPDATE ON public.facilities
     FOR EACH ROW
-    EXECUTE FUNCTION public.update_facilities_timestamp();
+    EXECUTE FUNCTION public.update_updated_at_column();
