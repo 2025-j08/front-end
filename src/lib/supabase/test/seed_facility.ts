@@ -6,6 +6,8 @@ import { join } from 'path';
 
 import { createClient } from '@supabase/supabase-js';
 
+import { logInfo, logError } from '@/lib/logger';
+
 // JSONファイルのパス
 const FACILITIES_LIST_PATH = join(__dirname, '../../../dummy_data/facilities_list.json');
 const FACILITIES_DETAIL_PATH = join(__dirname, '../../../dummy_data/facilities_detail.json');
@@ -56,10 +58,11 @@ function parseAddress(address: string): {
   const prefectureMatch = address.match(prefecturePattern);
 
   if (!prefectureMatch) {
-    // 都道府県が見つからない場合はデフォルト値を返す
+    // 都道府県が見つからない場合は警告ログを出力してデフォルト値を返す
+    console.warn(`都道府県が見つかりません（住所: ${address}）デフォルト値「不明」を使用します`);
     return {
-      prefecture: '',
-      city: '',
+      prefecture: '不明',
+      city: '不明',
       address_detail: address,
     };
   }
@@ -72,10 +75,11 @@ function parseAddress(address: string): {
   const cityMatch = remaining.match(cityPattern);
 
   if (!cityMatch) {
-    // 市区町村が見つからない場合
+    // 市区町村が見つからない場合は警告ログを出力してデフォルト値を返す
+    console.warn(`市区町村が見つかりません（住所: ${address}）デフォルト値「不明」を使用します`);
     return {
       prefecture,
-      city: '',
+      city: '不明',
       address_detail: remaining,
     };
   }
@@ -93,14 +97,19 @@ function parseAddress(address: string): {
 /**
  * 設立年を抽出する
  * 例: "1946年（昭和21年）8月" → 1946
+ * @throws 設立年が見つからない場合はエラーを発生
  */
-function parseEstablishedYear(yearString: string | undefined): number {
+function parseEstablishedYear(yearString: string | undefined, facilityId: number): number {
   if (!yearString) {
-    return 2000;
+    throw new Error(`設立年が見つかりません（施設ID: ${facilityId}）`);
   }
 
   const match = yearString.match(/(\d{4})/);
-  return match ? parseInt(match[1], 10) : 2000;
+  if (!match) {
+    throw new Error(`設立年を抽出できません（施設ID: ${facilityId}, 値: "${yearString}"）`);
+  }
+
+  return parseInt(match[1], 10);
 }
 
 /**
@@ -125,16 +134,26 @@ function prepareFacilityData(): FacilityInsertData[] {
     const detail = facilitiesDetail[facility.id.toString()];
     const { prefecture, city, address_detail } = parseAddress(facility.address);
 
-    return {
-      name: facility.name,
-      corporation: detail?.corporation || `${facility.name}の所属法人`,
-      postal_code: facility.postalCode,
-      phone: facility.phone,
-      prefecture,
-      city,
-      address_detail,
-      established_year: parseEstablishedYear(detail?.establishedYear),
-    };
+    try {
+      const established_year = parseEstablishedYear(detail?.establishedYear, facility.id);
+
+      return {
+        name: facility.name,
+        corporation: detail?.corporation || '法人名未設定',
+        postal_code: facility.postalCode,
+        phone: facility.phone,
+        prefecture,
+        city,
+        address_detail,
+        established_year,
+      };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error(
+        `施設 "${facility.name}"（ID: ${facility.id}）のデータ準備に失敗しました: ${errorMessage}`,
+      );
+      throw error;
+    }
   });
 }
 
@@ -170,9 +189,9 @@ async function seedFacilities() {
       throw error;
     }
 
-    console.log(`✓ ${data?.length}件の施設データを正常に挿入しました`);
+    logInfo(`✓ ${data?.length}件の施設データを正常に挿入しました`);
   } catch (error) {
-    console.error('エラーが発生しました:', error);
+    logError('エラーが発生しました', { error: error instanceof Error ? error : String(error) });
     process.exit(1);
   }
 }
