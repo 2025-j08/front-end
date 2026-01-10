@@ -95,7 +95,7 @@ export default function AuthCallbackPage() {
         router.replace('/features/auth?error=auth_failed');
       }
     })();
-  }, [router, supabase]);
+  }, [router, supabase.auth]);
 
   // シンプルなステータス表示（アクセシビリティ対応）
   return (
