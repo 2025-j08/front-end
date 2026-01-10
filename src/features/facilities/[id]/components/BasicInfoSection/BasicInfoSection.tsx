@@ -14,6 +14,19 @@ type BasicInfoSectionProps = {
   onFieldChange?: (field: string, value: unknown) => void;
 };
 
+/** 情報カード（ラベルと値を表示する共通コンポーネント） */
+type InfoCardProps = {
+  label: string;
+  value: string;
+};
+
+const InfoCard = ({ label, value }: InfoCardProps) => (
+  <div className={styles.infoCard}>
+    <span className={styles.label}>{label}</span>
+    <span className={styles.value}>{value}</span>
+  </div>
+);
+
 /**
  * 施設詳細ページの基本情報セクション
  * 設立年、舎の種別、定員、併設施設を表示
@@ -44,14 +57,8 @@ export const BasicInfoSection = ({
     return (
       <section className={styles.basicInfoSection}>
         <div className={styles.gridContainer}>
-          <div className={styles.infoCard}>
-            <span className={styles.label}>施設の種類</span>
-            <span className={styles.value}>{dormitoryType || '-'}</span>
-          </div>
-          <div className={styles.infoCard}>
-            <span className={styles.label}>設立年</span>
-            <span className={styles.value}>{establishedYear || '-'}</span>
-          </div>
+          <InfoCard label="施設の種類" value={dormitoryType || '-'} />
+          <InfoCard label="設立年" value={establishedYear || '-'} />
           <div className={styles.infoCard}>
             <label className={styles.label} htmlFor="capacity">
               施設定員
@@ -113,18 +120,9 @@ export const BasicInfoSection = ({
   return (
     <section className={styles.basicInfoSection}>
       <div className={styles.gridContainer}>
-        <div className={styles.infoCard}>
-          <span className={styles.label}>施設の種類</span>
-          <span className={styles.value}>{dormitoryType || '-'}</span>
-        </div>
-        <div className={styles.infoCard}>
-          <span className={styles.label}>設立年</span>
-          <span className={styles.value}>{establishedYear || '-'}</span>
-        </div>
-        <div className={styles.infoCard}>
-          <span className={styles.label}>施設定員</span>
-          <span className={styles.value}>{capacityText}</span>
-        </div>
+        <InfoCard label="施設の種類" value={dormitoryType || '-'} />
+        <InfoCard label="設立年" value={establishedYear || '-'} />
+        <InfoCard label="施設定員" value={capacityText} />
         <div className={`${styles.infoCard} ${styles.annexCard}`}>
           <div className={styles.annexHeader}>
             <span className={styles.label}>併設施設</span>
