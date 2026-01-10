@@ -1,59 +1,25 @@
+/**
+ * ログインフォーム固有スタイル
+ * 共通スタイルは formLayout.module.scss を使用
+ */
 @use '@/styles/colors' as colors;
 
+// ログインページ固有：最小高さ設定
 .container {
-  position: relative; // オーバーレイ表示のため
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 24px 20px;
-  font-family: 'Geist', sans-serif;
-  background-color: colors.$bg-white;
+  composes: formContainer from '@/components/form/layout/formLayout.module.scss';
   min-height: 600px;
   display: flex;
   flex-direction: column;
 }
 
 .breadcrumb {
-  font-size: 0.9rem;
-  color: colors.$text-secondary;
-  margin-bottom: 16px;
-
-  a {
-    color: colors.$text-link;
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-
-  span {
-    color: colors.$text-primary;
-  }
+  composes: formBreadcrumb from '@/components/form/layout/formLayout.module.scss';
 }
 
 .title {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: colors.$text-primary;
-  margin: 0 0 24px 0;
-  padding-bottom: 8px;
-  border-bottom: 2px solid colors.$border-dark;
-  text-align: left;
+  composes: formTitle from '@/components/form/layout/formLayout.module.scss';
 }
 
 .formArea {
-  width: 100%;
-  max-width: 800px;
-  margin: 24px auto 0;
-}
-
-@media screen and (max-width: 768px) {
-  .container {
-    padding: 16px 12px;
-  }
-
-  .title {
-    font-size: 1.4rem;
-    margin-bottom: 16px;
-  }
+  composes: formContent from '@/components/form/layout/formLayout.module.scss';
 }

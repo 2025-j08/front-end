@@ -1,80 +1,21 @@
-@use '@/styles/colors' as colors;
+/**
+ * お問い合わせフォーム固有スタイル
+ * 共通スタイルは formLayout.module.scss を使用
+ */
 
 .container {
-  position: relative;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 24px 20px;
-  font-family: 'Geist', sans-serif;
-  background-color: colors.$bg-white; // 指定通り明示的に白背景
+  composes: formContainer from '@/components/form/layout/formLayout.module.scss';
 }
 
 .breadcrumb {
-  font-size: 0.9rem;
-  color: colors.$text-secondary;
-  margin-bottom: 16px;
-
-  a {
-    color: colors.$text-link;
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-
-  span {
-    color: colors.$text-primary;
-  }
+  composes: formBreadcrumb from '@/components/form/layout/formLayout.module.scss';
 }
 
 .title {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: colors.$text-primary;
-  margin: 0 0 24px 0;
-  padding-bottom: 8px;
-  border-bottom: 2px solid colors.$border-dark;
+  composes: formTitle from '@/components/form/layout/formLayout.module.scss';
 }
 
 // フォーム説明文
 .form-description {
-  text-align: left;
-  color: colors.$text-secondary;
-  font-size: 0.95rem;
-  margin-bottom: 35px;
-  line-height: 1.6;
-}
-
-// オーバーレイ
-.overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: colors.$border-black;
-  z-index: 10;
-}
-
-@media screen and (max-width: 768px) {
-  .container {
-    padding: 16px 12px;
-  }
-
-  .breadcrumb {
-    font-size: 0.8rem;
-    margin-bottom: 12px;
-  }
-
-  .title {
-    font-size: 1.4rem;
-    margin-bottom: 16px;
-  }
+  composes: formDescription from '@/components/form/layout/formLayout.module.scss';
 }

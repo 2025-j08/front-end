@@ -1,19 +1,20 @@
+/**
+ * ユーザー発行フォーム固有スタイル
+ * 共通スタイルは formLayout.module.scss を使用
+ */
 @use '@/styles/colors' as colors;
 
 .container {
+  composes: formContainer from '@/components/form/layout/formLayout.module.scss';
   max-width: 800px;
   margin: 60px auto;
-  padding: 0 20px;
   background-color: transparent;
 }
 
 .title {
-  text-align: left;
-  font-size: 1.8rem;
+  composes: formTitle from '@/components/form/layout/formLayout.module.scss';
   margin-bottom: 40px;
-  color: colors.$text-primary;
-  border-bottom: 2px solid colors.$border-black;
-  padding-bottom: 10px;
+  border-bottom-color: colors.$border-black;
 }
 
 // メールアドレス入力欄のラッパー
@@ -26,9 +27,8 @@
   color: colors.$error-color;
   font-size: 0.9rem;
   margin-top: -10px;
-  margin-left: 150px; // PC表示時のラベル幅に合わせる
+  margin-left: 150px;
 
-  // レスポンシブ対応：ラベルが上に来る場合はインデントを解除
   @media (max-width: 600px) {
     margin-left: 0;
     margin-top: 4px;
@@ -45,9 +45,9 @@
 // フォーム行のラッパー
 .selectWrapper {
   display: flex;
-  align-items: flex-start; // 検索リストが出てもレイアウト崩れを防ぐためtop合わせ
+  align-items: flex-start;
   margin-bottom: 22px;
-  position: relative; // ドロップダウンの基準位置
+  position: relative;
 
   label {
     width: 150px;
@@ -55,17 +55,17 @@
     color: colors.$dark-gray;
     font-weight: 500;
     flex-shrink: 0;
-    padding-top: 14px; // 入力欄の高さに合わせて調整
+    padding-top: 14px;
   }
 }
 
 // コンボボックス（入力欄＋リスト）のコンテナ
 .comboboxContainer {
   flex-grow: 1;
-  position: relative; // リストの絶対配置の基準
+  position: relative;
 }
 
-// 検索入力欄（既存のinputスタイルをベースに）
+// 検索入力欄
 .searchInput {
   width: 100%;
   padding: 12px 14px;
@@ -74,7 +74,7 @@
   background-color: colors.$form-input-bg;
   font-size: 1rem;
   color: colors.$dark-gray;
-  box-sizing: border-box; // paddingを含めた幅計算
+  box-sizing: border-box;
 
   &:focus {
     outline: none;
@@ -90,7 +90,7 @@
 // ドロップダウンリスト
 .dropdownList {
   position: absolute;
-  top: 100%; // 入力欄の真下
+  top: 100%;
   left: 0;
   width: 100%;
   max-height: 200px;
@@ -101,7 +101,7 @@
   margin-top: 4px;
   padding: 0;
   list-style: none;
-  z-index: 100; // 他の要素より上に表示
+  z-index: 100;
   box-shadow: 0 4px 12px colors.$shadow-light;
 }
 
@@ -115,7 +115,7 @@
 
   &:hover,
   &[data-focused='true'] {
-    background-color: colors.$bg-light-green; // ホバー時とキーボードフォーカス時に薄い緑色
+    background-color: colors.$bg-light-green;
   }
 
   &:not(:last-child) {

@@ -1,0 +1,94 @@
+/**
+ * フォームページ共通レイアウトスタイル
+ * login, register, contact, userIssuance で共有
+ */
+@use '@/styles/colors' as colors;
+
+// ページコンテナ
+.formContainer {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 20px;
+  font-family: 'Geist', sans-serif;
+  background-color: colors.$bg-white;
+}
+
+// パンくずリスト
+.formBreadcrumb {
+  font-size: 0.9rem;
+  color: colors.$text-secondary;
+  margin-bottom: 16px;
+
+  a {
+    color: colors.$text-link;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  span {
+    color: colors.$text-primary;
+  }
+}
+
+// ページタイトル
+.formTitle {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: colors.$text-primary;
+  margin: 0 0 24px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid colors.$border-dark;
+  text-align: left;
+}
+
+// フォームコンテンツエリア
+.formContent {
+  width: 100%;
+  max-width: 800px;
+  margin: 24px auto 0;
+}
+
+// エラーバナー（フォーム全体のエラー）
+.formErrorBanner {
+  background-color: rgba(colors.$error-color, 0.1);
+  border: 1px solid colors.$error-color;
+  color: colors.$error-color;
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 24px;
+  font-size: 0.95rem;
+}
+
+// フォーム説明文
+.formDescription {
+  text-align: left;
+  color: colors.$text-secondary;
+  font-size: 0.95rem;
+  margin-bottom: 35px;
+  line-height: 1.6;
+}
+
+// レスポンシブ対応
+@media screen and (max-width: 768px) {
+  .formContainer {
+    padding: 16px 12px;
+  }
+
+  .formBreadcrumb {
+    font-size: 0.8rem;
+    margin-bottom: 12px;
+  }
+
+  .formTitle {
+    font-size: 1.4rem;
+    margin-bottom: 16px;
+  }
+
+  .formContent {
+    margin-top: 16px;
+  }
+}
