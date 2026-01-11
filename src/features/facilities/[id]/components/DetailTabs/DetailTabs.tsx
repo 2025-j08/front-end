@@ -112,7 +112,7 @@ export const DetailTabs = ({
             case 'access':
               return accessInfo ? (
                 <AccessTab
-                  accessInfo={accessInfo}
+                  data={accessInfo}
                   facilityName={facilityName || ''}
                   relationInfo={relationInfo}
                   isEditMode={isEditMode}
@@ -126,7 +126,7 @@ export const DetailTabs = ({
             case 'philosophy':
               return philosophyInfo ? (
                 <PhilosophyTab
-                  philosophyInfo={philosophyInfo}
+                  data={philosophyInfo}
                   isEditMode={isEditMode}
                   onFieldChange={(field, value) =>
                     onNestedFieldChange?.('philosophyInfo', field, value)
@@ -138,7 +138,7 @@ export const DetailTabs = ({
             case 'specialty':
               return specialtyInfo ? (
                 <SpecialtyTab
-                  specialtyInfo={specialtyInfo}
+                  data={specialtyInfo}
                   isEditMode={isEditMode}
                   onFieldChange={(field, value) =>
                     onNestedFieldChange?.('specialtyInfo', field, value)
@@ -150,7 +150,7 @@ export const DetailTabs = ({
             case 'staff':
               return staffInfo ? (
                 <StaffTab
-                  staffInfo={staffInfo}
+                  data={staffInfo}
                   isEditMode={isEditMode}
                   onFieldChange={(field, value) => onNestedFieldChange?.('staffInfo', field, value)}
                   errors={errors}
@@ -160,7 +160,7 @@ export const DetailTabs = ({
             case 'education':
               return educationInfo ? (
                 <EducationTab
-                  educationInfo={educationInfo}
+                  data={educationInfo}
                   isEditMode={isEditMode}
                   onFieldChange={(field, value) =>
                     onNestedFieldChange?.('educationInfo', field, value)
@@ -172,7 +172,7 @@ export const DetailTabs = ({
             case 'advanced':
               return advancedInfo ? (
                 <AdvancedTab
-                  advancedInfo={advancedInfo}
+                  data={advancedInfo}
                   isEditMode={isEditMode}
                   onFieldChange={(field, value) =>
                     onNestedFieldChange?.('advancedInfo', field, value)
@@ -184,7 +184,7 @@ export const DetailTabs = ({
             case 'other':
               return otherInfo ? (
                 <OtherTab
-                  otherInfo={otherInfo}
+                  data={otherInfo}
                   isEditMode={isEditMode}
                   onFieldChange={(field, value) => onNestedFieldChange?.('otherInfo', field, value)}
                   errors={errors}

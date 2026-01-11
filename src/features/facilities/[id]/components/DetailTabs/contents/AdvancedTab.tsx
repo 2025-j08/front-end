@@ -3,17 +3,12 @@ import { AdvancedInfo } from '@/types/facility';
 import { EditField } from './EditField';
 import styles from './TabContent.module.scss';
 import { TabSection } from './TabSection';
+import { TabProps } from '../types/tabProps';
 
-export type AdvancedTabProps = {
-  advancedInfo: AdvancedInfo;
-  isEditMode?: boolean;
-  onFieldChange?: (field: string, value: unknown) => void;
-  errors?: Record<string, string>;
-  getError?: (field: string) => string | undefined;
-};
+export type AdvancedTabProps = TabProps<AdvancedInfo>;
 
 export const AdvancedTab = ({
-  advancedInfo,
+  data: advancedInfo,
   isEditMode = false,
   onFieldChange,
   errors = {},

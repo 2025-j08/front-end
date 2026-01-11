@@ -3,14 +3,9 @@ import { StaffInfo } from '@/types/facility';
 import { EditField } from './EditField';
 import styles from './TabContent.module.scss';
 import { TabSection } from './TabSection';
+import { TabProps } from '../types/tabProps';
 
-export type StaffTabProps = {
-  staffInfo: StaffInfo;
-  isEditMode?: boolean;
-  onFieldChange?: (field: string, value: unknown) => void;
-  errors?: Record<string, string>;
-  getError?: (field: string) => string | undefined;
-};
+export type StaffTabProps = TabProps<StaffInfo>;
 
 /** hasUniversityLecturer の選択オプション */
 const LECTURER_OPTIONS = [
@@ -20,7 +15,7 @@ const LECTURER_OPTIONS = [
 ];
 
 export const StaffTab = ({
-  staffInfo,
+  data: staffInfo,
   isEditMode = false,
   onFieldChange,
   errors = {},

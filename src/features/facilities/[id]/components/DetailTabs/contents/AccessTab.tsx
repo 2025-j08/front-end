@@ -5,6 +5,7 @@ import { AccessInfo } from '@/types/facility';
 import { CommunityRelation } from './CommunityRelation';
 import { EditField } from './EditField';
 import styles from './TabContent.module.scss';
+import { TabProps } from '../types/tabProps';
 
 // FacilityMapを動的インポート（SSR無効化）
 const FacilityMap = dynamic(
@@ -15,18 +16,13 @@ const FacilityMap = dynamic(
   },
 );
 
-export type AccessTabProps = {
-  accessInfo: AccessInfo;
+export type AccessTabProps = TabProps<AccessInfo> & {
   facilityName: string;
   relationInfo?: string;
-  isEditMode?: boolean;
-  onFieldChange?: (field: string, value: unknown) => void;
-  errors?: Record<string, string>;
-  getError?: (field: string) => string | undefined;
 };
 
 export const AccessTab = ({
-  accessInfo,
+  data: accessInfo,
   facilityName,
   relationInfo,
   isEditMode = false,
