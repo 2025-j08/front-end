@@ -41,14 +41,47 @@ async function seedFacilityTypes(supabase: ReturnType<typeof createClient>) {
     { name: '地域小規模' },
   ];
 
-  const { data, error } = await supabase.from('facility_types').insert(facilityTypes).select();
+  // 既存のデータを取得
+  const { data: existingTypes, error: fetchError } = await supabase
+    .from('facility_types')
+    .select('name, id');
 
-  if (error) {
-    throw error;
+  if (fetchError) {
+    throw fetchError;
   }
 
-  logInfo(`✓ ${data?.length}件の施設種類データを挿入しました`);
-  return data;
+  const existingNames = new Set((existingTypes || []).map((t: any) => t.name));
+
+  // 存在しないデータのみを挿入
+  const newTypes = facilityTypes.filter((type) => !existingNames.has(type.name));
+
+  let insertedData: any[] = [];
+  if (newTypes.length > 0) {
+    const { data, error } = await supabase
+      .from('facility_types')
+      .insert(newTypes as any)
+      .select();
+
+    if (error) {
+      throw error;
+    }
+
+    insertedData = data || [];
+    logInfo(`✓ ${insertedData.length}件の新しい施設種類データを挿入しました`);
+  } else {
+    logInfo('✓ すべての施設種類データは既に存在します');
+  }
+
+  // すべてのデータを再取得して返す
+  const { data: allTypes, error: allError } = await supabase
+    .from('facility_types')
+    .select('name, id');
+
+  if (allError) {
+    throw allError;
+  }
+
+  return allTypes;
 }
 
 /**
