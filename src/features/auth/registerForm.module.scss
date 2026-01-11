@@ -1,12 +1,11 @@
+/**
+ * 登録フォーム固有スタイル
+ * 共通スタイルは formLayout.module.scss を使用
+ */
 @use '@/styles/colors' as colors;
 
 .container {
-  position: relative;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 24px 20px;
-  font-family: 'Geist', sans-serif;
-  background-color: colors.$bg-white;
+  composes: formContainer from '@/components/form/layout/formLayout.module.scss';
 }
 
 // ヘッダー部分
@@ -25,19 +24,13 @@
 
 // フォーム本体
 .formBody {
-  max-width: 800px;
-  margin: 60px auto 0;
+  composes: formContent from '@/components/form/layout/formLayout.module.scss';
+  margin-top: 60px;
 }
 
 // エラーメッセージ
 .errorMessage {
-  background-color: rgba(colors.$error-color, 0.1);
-  border: 1px solid colors.$error-color;
-  color: colors.$error-color;
-  padding: 12px 16px;
-  border-radius: 4px;
-  margin-bottom: 24px;
-  font-size: 0.95rem;
+  composes: formErrorBanner from '@/components/form/layout/formLayout.module.scss';
 }
 
 // パスワード要件ヒント
@@ -54,10 +47,6 @@
 
 // モバイル対応
 @media (max-width: 768px) {
-  .container {
-    padding: 16px 12px;
-  }
-
   .header {
     margin-bottom: 16px;
   }
