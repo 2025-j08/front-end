@@ -4,6 +4,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 
+import type { RegisterRequest, RegisterResponse } from '@/types/api';
 import {
   validatePassword,
   validateRequired,
@@ -12,13 +13,15 @@ import {
   getPasswordRequirementsText,
 } from '@/lib/validation';
 import { VALIDATION_MESSAGES, API_MESSAGES } from '@/const/messages';
+import { API_ENDPOINTS } from '@/const/api';
+import { logError } from '@/lib/clientLogger';
 
 /**
  * 初期登録フォームのデータ型
  */
 interface RegisterFormData {
   /** 氏名 */
-  fullName: string;
+  name: string;
   /** パスワード */
   password: string;
   /** パスワード確認 */
@@ -29,7 +32,7 @@ interface RegisterFormData {
  * フィールドエラーの型
  */
 interface FieldErrors {
-  fullName?: string;
+  name?: string;
   password?: string;
   confirmPassword?: string;
 }
@@ -44,6 +47,8 @@ interface UseRegisterFormReturn {
   isLoading: boolean;
   /** 登録成功かどうか */
   isSuccess: boolean;
+  /** 成功時の施設名 */
+  successFacilityName: string | null;
   /** 全体エラーメッセージ */
   errorMessage: string | null;
   /** 各フィールドのエラーメッセージ */
@@ -64,7 +69,7 @@ interface UseRegisterFormReturn {
  * 初期登録フォームの初期値
  */
 const INITIAL_FORM_DATA: RegisterFormData = {
-  fullName: '',
+  name: '',
   password: '',
   confirmPassword: '',
 };
@@ -80,6 +85,7 @@ export const useRegisterForm = (): UseRegisterFormReturn => {
   const [formData, setFormData] = useState<RegisterFormData>(INITIAL_FORM_DATA);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [successFacilityName, setSuccessFacilityName] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
@@ -141,9 +147,9 @@ export const useRegisterForm = (): UseRegisterFormReturn => {
       let hasError = false;
 
       // 氏名の必須チェック
-      const fullNameValidation = validateRequired(formData.fullName, '氏名');
-      if (!fullNameValidation.isValid) {
-        newFieldErrors.fullName = fullNameValidation.error;
+      const nameValidation = validateRequired(formData.name, '氏名');
+      if (!nameValidation.isValid) {
+        newFieldErrors.name = nameValidation.error;
         hasError = true;
       }
 
@@ -175,26 +181,46 @@ export const useRegisterForm = (): UseRegisterFormReturn => {
       setErrorMessage(null);
 
       try {
-        // TODO: 実際の登録API呼び出しを実装
-        // セキュリティのため、パスワードはログに出力しない
-        console.log('登録データ:', {
-          fullName: formData.fullName,
-          // password は意図的にログから除外
+        // リクエストペイロード作成
+        const payload: RegisterRequest = {
+          name: formData.name.trim(),
+          password: formData.password,
+        };
+
+        // API呼び出し
+        const response = await fetch(API_ENDPOINTS.AUTH.REGISTER, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
         });
 
-        // ダミーの遅延（API呼び出しをシミュレート）
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        // レスポンス解析
+        const responseBody: RegisterResponse | null = await response.json().catch(() => null);
+
+        // エラーハンドリング
+        if (!response.ok || !responseBody?.success) {
+          const apiError = responseBody?.error ?? '登録に失敗しました。もう一度お試しください。';
+          throw new Error(apiError);
+        }
 
         // 成功時の処理
         setIsSuccess(true);
+        setSuccessFacilityName(responseBody.facilityName ?? null);
 
-        // 成功オーバーレイ表示後、ホーム画面に遷移
+        // 成功オーバーレイ表示後、指定されたURLまたはホーム画面に遷移
+        const redirectUrl = responseBody.redirectUrl ?? '/';
         setTimeout(() => {
-          router.push('/');
+          router.push(redirectUrl);
         }, 1500);
       } catch (error) {
-        console.error('登録エラー:', error);
-        setErrorMessage(API_MESSAGES.REGISTRATION_FAILED);
+        logError('登録エラー', {
+          component: 'useRegisterForm',
+          action: 'handleSubmit',
+          error: error instanceof Error ? error : String(error),
+        });
+        setErrorMessage(error instanceof Error ? error.message : API_MESSAGES.REGISTRATION_FAILED);
       } finally {
         setIsLoading(false);
       }
@@ -210,12 +236,14 @@ export const useRegisterForm = (): UseRegisterFormReturn => {
     setFieldErrors({});
     setErrorMessage(null);
     setIsSuccess(false);
+    setSuccessFacilityName(null);
   }, []);
 
   return {
     formData,
     isLoading,
     isSuccess,
+    successFacilityName,
     errorMessage,
     fieldErrors,
     passwordMinLength: PASSWORD_REQUIREMENTS.MIN_LENGTH,

@@ -4,8 +4,13 @@
  */
 import styles from './successOverlay.module.scss';
 
-interface SuccessOverlayProps {
+/**
+ * SuccessOverlayコンポーネントのProps
+ */
+export interface SuccessOverlayProps {
+  /** 表示するテキスト */
   text?: string;
+  /** オーバーレイの表示状態 */
   isVisible: boolean;
 }
 

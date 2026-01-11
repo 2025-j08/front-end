@@ -17,6 +17,7 @@ export const RegisterForm = () => {
     formData,
     isLoading,
     isSuccess,
+    successFacilityName,
     errorMessage,
     fieldErrors,
     passwordMinLength,
@@ -25,13 +26,18 @@ export const RegisterForm = () => {
     handleSubmit,
   } = useRegisterForm();
 
+  // 成功メッセージの生成
+  const successMessage = successFacilityName
+    ? `${successFacilityName}への登録が完了しました`
+    : '登録が完了しました';
+
   return (
     <div className={styles.container}>
       {/* ローディング中のオーバーレイ表示 */}
       <LoadingOverlay isVisible={isLoading} text="登録中..." />
 
       {/* 成功時のオーバーレイ表示 */}
-      <SuccessOverlay isVisible={isSuccess} text="登録が完了しました" />
+      <SuccessOverlay isVisible={isSuccess} text={successMessage} />
 
       {/* ヘッダー部分 */}
       <div className={styles.header}>
@@ -51,14 +57,14 @@ export const RegisterForm = () => {
           <FormField
             label="氏名"
             type="text"
-            id="fullName"
-            name="fullName"
+            id="name"
+            name="name"
             placeholder="山田 太郎"
             autoComplete="name"
             required
-            value={formData.fullName}
+            value={formData.name}
             onChange={handleChange}
-            error={fieldErrors.fullName}
+            error={fieldErrors.name}
           />
 
           <FormField

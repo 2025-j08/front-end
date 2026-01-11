@@ -1,18 +1,11 @@
 import { useState, useEffect } from 'react';
 
-// マジックナンバーを定数として定義
-const SUBMIT_SIMULATION_DELAY = 2000;
-const SUCCESS_MESSAGE_DURATION = 3000;
+import type { InviteUserResponse } from '@/types/api';
+import { validateEmail } from '@/lib/validation';
+import { API_ENDPOINTS } from '@/const/api';
+import { logError } from '@/lib/clientLogger';
 
-// メールアドレスの正規表現パターン（RFC準拠の厳密なチェック）
-// ローカル部（@の前）:
-// - 英数字で開始・終了（_, -, +は中間のみ許可、.は連続不可・先頭末尾不可）
-// ドメイン部（@の後）:
-// - 各ラベルは英数字で開始・終了（ハイフンは中間のみ）
-// - 連続するドットを禁止
-// - TLDは2文字以上の英字のみ
-const EMAIL_REGEX =
-  /^[a-zA-Z0-9]+([._+-][a-zA-Z0-9]+)*@[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$/;
+const SUCCESS_MESSAGE_DURATION = 3000;
 
 interface UserIssuanceFormData {
   email: string;
@@ -35,7 +28,7 @@ interface UseUserIssuanceFormOptions {
  *
  * メールアドレスと施設IDの入力値をローカルステートで保持し、
  * 入力変更ハンドラー・フォーム送信ハンドラー・送信中/成功状態フラグを提供します。
- * 実際のAPI連携は行わず、現在はタイマーによる送信処理のシミュレーションを行います。
+ * `/api/admin/invite` への招待APIを呼び出し、成功時にフォームをリセットします。
  *
  * @param {UseUserIssuanceFormOptions} [options] - フックのオプション
  * @param {() => void} [options.onSuccess] - フォーム送信成功時に呼び出されるコールバック関数
@@ -124,18 +117,18 @@ export const useUserIssuanceForm = (options?: UseUserIssuanceFormOptions) => {
   // バリデーション関数
   const validate = (): boolean => {
     const newErrors: FormErrors = {};
+    const emailValue = formData.email.trim();
+    const facilityIdValue = formData.facilityId.trim();
     let isValid = true;
 
-    if (!formData.email) {
-      newErrors.email = 'メールアドレスを入力してください。';
-      isValid = false;
-    } else if (!EMAIL_REGEX.test(formData.email)) {
-      newErrors.email = '有効なメールアドレスの形式で入力してください。';
+    const emailValidation = validateEmail(emailValue);
+    if (!emailValidation.isValid) {
+      newErrors.email = emailValidation.error;
       isValid = false;
     }
 
     // 施設IDのバリデーション
-    if (!formData.facilityId) {
+    if (!facilityIdValue) {
       newErrors.facilityId = '施設を選択してください。';
       isValid = false;
     }
@@ -156,9 +149,27 @@ export const useUserIssuanceForm = (options?: UseUserIssuanceFormOptions) => {
     setSubmitError(null);
 
     try {
-      // API送信のシミュレーション
-      // 将来的にはここを実際のAPI呼び出しに置き換える
-      await new Promise((resolve) => setTimeout(resolve, SUBMIT_SIMULATION_DELAY));
+      const payload = {
+        email: formData.email.trim(),
+        facilityId: Number(formData.facilityId),
+      };
+
+      const response = await fetch(API_ENDPOINTS.ADMIN.INVITE, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const responseBody: InviteUserResponse | null = await response.json().catch(() => null);
+
+      // APIからのレスポンスを確認（HTTPステータスコードとレスポンスボディの成功フラグで判定）
+      if (!response.ok || !responseBody?.success) {
+        const apiError =
+          responseBody?.error ?? '招待に失敗しました。しばらくしてから再度お試しください。';
+        throw new Error(apiError);
+      }
 
       setIsSuccess(true);
       // 成功時にフォームをリセット
@@ -169,7 +180,11 @@ export const useUserIssuanceForm = (options?: UseUserIssuanceFormOptions) => {
     } catch (error: unknown) {
       // エラー発生時の処理
       // unknown型を使用して型安全性を確保
-      console.error('Submission failed:', error);
+      logError('Submission failed', {
+        component: 'useUserIssuanceForm',
+        action: 'handleSubmit',
+        error: error instanceof Error ? error : String(error),
+      });
 
       // エラーメッセージの型安全な取得
       const errorMessage =

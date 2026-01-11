@@ -1,9 +1,13 @@
 'use client';
 
-import { useState, useCallback } from 'react';
-import type { ChangeEvent, FormEvent } from 'react';
+import { useCallback } from 'react';
+import type { FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { API_MESSAGES } from '@/const/messages';
+import { API_ENDPOINTS } from '@/const/api';
+import { logError } from '@/lib/clientLogger';
+import { useFormState } from '@/lib/hooks/useFormState';
 
 /**
  * ログインフォームのデータ型
@@ -26,7 +30,7 @@ interface UseLoginFormReturn {
   /** 全体エラーメッセージ */
   errorMessage: string | null;
   /** 入力フィールドの値が変更されたときのハンドラー */
-  handleChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   /** フォーム送信時のハンドラー */
   handleSubmit: (e: FormEvent<HTMLFormElement>) => Promise<void>;
   /** フォームをリセットする */
@@ -48,71 +52,60 @@ const INITIAL_FORM_DATA: LoginFormData = {
  * @returns フォームの状態とハンドラー
  */
 export const useLoginForm = (): UseLoginFormReturn => {
-  const [formData, setFormData] = useState<LoginFormData>(INITIAL_FORM_DATA);
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const router = useRouter();
 
   /**
-   * 入力値変更ハンドラ
+   * ログイン送信処理
    */
-  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const handleLoginSubmit = useCallback(
+    async (data: LoginFormData) => {
+      const payload = {
+        email: data.userid.trim(),
+        password: data.password,
+      };
 
-    // 入力時にエラーをクリア
-    setErrorMessage(null);
-  }, []);
+      type SignInResponse = { success?: boolean; error?: string; role?: string | null };
 
-  /**
-   * フォーム送信ハンドラ
-   */
-  const handleSubmit = useCallback(
-    async (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
+      const response = await fetch(API_ENDPOINTS.AUTH.SIGNIN, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
 
-      setIsLoading(true);
-      setErrorMessage(null);
+      const body: SignInResponse | null = await response.json().catch(() => null);
 
-      try {
-        // TODO: 実際のログインAPI呼び出しを実装
-        // セキュリティのため、パスワードはログに出力しない
-        console.log('ログイン試行:', {
-          userid: formData.userid,
-          // password は意図的にログから除外
+      if (!response.ok || body?.success !== true) {
+        const message = body?.error ?? API_MESSAGES.LOGIN_FAILED;
+        logError('ログインエラー', {
+          component: 'useLoginForm',
+          action: 'handleSubmit',
+          error: message,
         });
+        throw new Error(message);
+      }
 
-        // ダミーの遅延（API呼び出しをシミュレート）
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-
-        // 成功時の処理（実際にはリダイレクト等を行う）
-        console.log('ログイン成功');
-      } catch (error) {
-        console.error('ログインエラー:', error);
-        setErrorMessage(API_MESSAGES.LOGIN_FAILED);
-      } finally {
-        setIsLoading(false);
+      // ロールに応じた遷移（管理者はユーザー発行へ）
+      if (body?.role === 'admin') {
+        router.push('/admin/user-issuance');
+      } else {
+        router.push('/');
       }
     },
-    [formData.userid],
+    [router],
   );
 
-  /**
-   * フォームリセット関数
-   */
-  const resetForm = useCallback(() => {
-    setFormData(INITIAL_FORM_DATA);
-    setErrorMessage(null);
-  }, []);
+  // ベースフォームhookを使用
+  const baseForm = useFormState({
+    initialData: INITIAL_FORM_DATA,
+    onSubmit: handleLoginSubmit,
+  });
 
   return {
-    formData,
-    isLoading,
-    errorMessage,
-    handleChange,
-    handleSubmit,
-    resetForm,
+    formData: baseForm.formData,
+    isLoading: baseForm.isLoading,
+    errorMessage: baseForm.error,
+    handleChange: baseForm.handleChange,
+    handleSubmit: baseForm.handleSubmit,
+    resetForm: baseForm.resetForm,
   };
 };

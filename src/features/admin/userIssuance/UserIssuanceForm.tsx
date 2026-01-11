@@ -3,15 +3,30 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 
 import { FormField, FormButton, LoadingOverlay, SuccessOverlay } from '@/components/form';
-import searchMapData from '@/dummy_data/searchmap_data.json';
 
 import { useUserIssuanceForm } from './hooks/useUserIssuanceForm';
 import styles from './UserIssuanceForm.module.scss';
 
 /**
+ * 施設情報の型定義
+ */
+export interface Facility {
+  id: number;
+  name: string;
+}
+
+/**
+ * UserIssuanceFormコンポーネントのプロップス
+ */
+export interface UserIssuanceFormProps {
+  /** データベースから取得した施設一覧 */
+  facilities: Facility[];
+}
+
+/**
  * 管理画面でユーザーを発行（作成）するためのフォームコンポーネントです。
  *
- * - 施設マスタ（`searchmap_data.json`）を元にした施設検索・絞り込み・選択機能を提供します。
+ * - データベースから取得した施設マスタを元にした施設検索・絞り込み・選択機能を提供します。
  * - `useUserIssuanceForm` フックを利用して、入力値の状態管理・バリデーション・送信処理を行います。
  * - 送信中はローディングオーバーレイ、成功時はサクセスオーバーレイを表示します。
  *
@@ -19,8 +34,9 @@ import styles from './UserIssuanceForm.module.scss';
  * ```tsx
  * import { UserIssuanceForm } from '@/features/admin/userIssuance/UserIssuanceForm';
  *
- * const Page = () => {
- * return <UserIssuanceForm />;
+ * const Page = async () => {
+ *   const facilities = await fetchFacilities();
+ *   return <UserIssuanceForm facilities={facilities} />;
  * };
  * ```
  *
@@ -41,7 +57,7 @@ import styles from './UserIssuanceForm.module.scss';
  */
 const normalizeText = (text: string): string => text.toLowerCase().normalize('NFKC');
 
-export const UserIssuanceForm = () => {
+export const UserIssuanceForm = ({ facilities }: UserIssuanceFormProps) => {
   // 検索・絞り込み用のローカルState
   const [searchTerm, setSearchTerm] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -63,14 +79,14 @@ export const UserIssuanceForm = () => {
     onSuccess: () => setSearchTerm(''),
   });
 
-  // JSONデータから選択肢リストを生成（IDを文字列に変換）
-  // 依存配列が空: searchMapDataは静的インポートされたJSONデータで変化しないため
+  // データベースから取得した施設データから選択肢リストを生成（IDを文字列に変換）
+  // 依存配列にfacilities: Server Componentから渡されるpropsのため、ビルド時に確定
   const facilitiesList = useMemo(() => {
-    return searchMapData.map((item) => ({
+    return facilities.map((item) => ({
       id: String(item.id),
       name: item.name,
     }));
-  }, []);
+  }, [facilities]);
 
   // 正規化済みの検索ワード
   const normalizedSearchTerm = useMemo(() => normalizeText(searchTerm), [searchTerm]);

@@ -3,7 +3,6 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-
 // Leafletデフォルトアイコンのインポート
 // src/types/images.d.ts により { src: string } 型として定義されています
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';

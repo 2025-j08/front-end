@@ -14,8 +14,16 @@ import { useLoginForm } from '@/features/auth/hooks/useLoginForm';
 
 import styles from './loginForm.module.scss';
 
-export const LoginForm = () => {
-  const { formData, isLoading, handleChange, handleSubmit } = useLoginForm();
+type LoginFormProps = {
+  /** 招待認証エラーなどの初期エラーメッセージ */
+  initialError?: string;
+};
+
+export const LoginForm = ({ initialError }: LoginFormProps) => {
+  const { formData, isLoading, errorMessage, handleChange, handleSubmit } = useLoginForm();
+
+  // 初期エラーまたはフォームのエラーを表示
+  const displayError = initialError || errorMessage;
 
   return (
     <div className={styles.container}>
@@ -28,6 +36,12 @@ export const LoginForm = () => {
       <LoadingOverlay isVisible={isLoading} text="ログイン中..." />
 
       <h1 className={styles.title}>ログイン</h1>
+
+      {displayError && (
+        <div className={styles.errorMessage} role="alert" aria-live="polite">
+          {displayError}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className={styles.formArea}>
         <FormField
