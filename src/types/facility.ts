@@ -41,8 +41,6 @@ export interface AccessInfo {
 
 /** 理念情報 */
 export interface PhilosophyInfo {
-  /** 施設として大切にしている理念や価値観 */
-  title: string;
   /** 日々の支援の中で重視している視点 */
   description: string;
 }
