@@ -85,7 +85,6 @@ CREATE POLICY "delete_admin_only"
         )
     );
 
--- facility_id のインデックス (主キーなので自動作成されるが明示的に記載)
 -- JSONB データに対する GIN インデックス (検索性能向上のため)
 CREATE INDEX idx_facility_access_data_gin ON public.facility_access USING gin(data);
 

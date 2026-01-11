@@ -80,14 +80,30 @@ tsx src/lib/supabase/test/seed_facility_details.ts
 2. **施設と施設種類の紐づけ (facility_facility_types)**
    - `facilities_detail.json`の`dormitoryType`を元に自動的に紐づけ
 
-3. **施設詳細テーブル (7つ)**
-   - `facility_access`: アクセス情報・地域連携
-   - `facility_philosophy`: 理念情報
-   - `facility_specialty`: 生活環境・特色
-   - `facility_staff`: 職員情報
-   - `facility_education`: 教育・進路支援
-   - `facility_accommodation`: 高機能化・多機能化
-   - `facility_other`: その他情報
+type FacilityDetailItem = {
+id: number;
+name: string;
+dormitoryType?: string;
+accessInfo?: unknown;
+relationInfo?: string;
+philosophyInfo?: unknown;
+specialtyInfo?: unknown;
+staffInfo?: unknown;
+educationInfo?: unknown;
+advancedInfo?: unknown;
+otherInfo?: unknown;
+[key: string]: unknown;
+};
+
+type FacilityInsertRow = {
+facility_id: number;
+data: unknown;
+};
+
+type FacilityTypeAssociation = {
+facility_id: number;
+facility_type_id: number;
+};
 
 ### データソース
 

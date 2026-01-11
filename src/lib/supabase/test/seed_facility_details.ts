@@ -61,7 +61,7 @@ async function seedFacilityFacilityTypes(
 ) {
   console.log('施設と施設種類の紐づけを挿入しています...');
 
-  const associations = [];
+  const associations: Array<{ facility_id: number; facility_type_id: number }> = [];
 
   for (const [facilityIdStr, detail] of Object.entries(facilitiesDetail)) {
     const facilityId = parseInt(facilityIdStr, 10);
@@ -102,13 +102,13 @@ async function seedFacilityDetailTables(
   console.log('施設詳細テーブルにデータを挿入しています...');
 
   // 各テーブルへの挿入データを準備
-  const accessData = [];
-  const philosophyData = [];
-  const specialtyData = [];
-  const staffData = [];
-  const educationData = [];
-  const advancedData = [];
-  const otherData = [];
+  const accessData: Array<{ facility_id: number; data: unknown }> = [];
+  const philosophyData: Array<{ facility_id: number; data: unknown }> = [];
+  const specialtyData: Array<{ facility_id: number; data: unknown }> = [];
+  const staffData: Array<{ facility_id: number; data: unknown }> = [];
+  const educationData: Array<{ facility_id: number; data: unknown }> = [];
+  const advancedData: Array<{ facility_id: number; data: unknown }> = [];
+  const otherData: Array<{ facility_id: number; data: unknown }> = [];
 
   for (const [facilityIdStr, detail] of Object.entries(facilitiesDetail)) {
     const facilityId = parseInt(facilityIdStr, 10);
@@ -190,7 +190,10 @@ async function seedFacilityDetailTables(
       continue;
     }
 
-    const { data, error } = await supabase.from(table.name).insert(table.data).select();
+    const { data, error } = await supabase
+      .from(table.name)
+      .insert(table.data as never)
+      .select();
 
     if (error) {
       throw new Error(`${table.name} の挿入に失敗しました: ${error.message}`);

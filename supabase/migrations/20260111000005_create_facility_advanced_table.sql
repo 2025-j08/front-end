@@ -25,11 +25,14 @@ CREATE POLICY "insert_facility_owner_or_admin"
     FOR INSERT
     TO authenticated
     WITH CHECK (
+        -- 管理者
         EXISTS (
             SELECT 1 FROM public.profiles p
             WHERE p.id = auth.uid() AND p.role = 'admin'
         )
         OR
+        -- 施設担当者
+        -- 管理者
         EXISTS (
             SELECT 1 FROM public.facility_profiles fp
             WHERE fp.facility_id = facility_advanced.facility_id
@@ -43,11 +46,14 @@ CREATE POLICY "update_facility_owner_or_admin"
     FOR UPDATE
     TO authenticated
     USING (
+        -- 管理者
         EXISTS (
             SELECT 1 FROM public.profiles p
             WHERE p.id = auth.uid() AND p.role = 'admin'
         )
         OR
+        -- 施設担当者
+        -- 管理者
         EXISTS (
             SELECT 1 FROM public.facility_profiles fp
             WHERE fp.facility_id = facility_advanced.facility_id
@@ -55,11 +61,14 @@ CREATE POLICY "update_facility_owner_or_admin"
         )
     )
     WITH CHECK (
+        -- 管理者
         EXISTS (
             SELECT 1 FROM public.profiles p
             WHERE p.id = auth.uid() AND p.role = 'admin'
         )
         OR
+        -- 施設担当者
+        -- 管理者
         EXISTS (
             SELECT 1 FROM public.facility_profiles fp
             WHERE fp.facility_id = facility_advanced.facility_id
@@ -73,6 +82,7 @@ CREATE POLICY "delete_admin_only"
     FOR DELETE
     TO authenticated
     USING (
+        -- 管理者
         EXISTS (
             SELECT 1 FROM public.profiles p
             WHERE p.id = auth.uid() AND p.role = 'admin'

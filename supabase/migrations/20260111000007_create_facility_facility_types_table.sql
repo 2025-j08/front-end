@@ -5,9 +5,10 @@ CREATE TABLE public.facility_facility_types (
     facility_id BIGINT NOT NULL REFERENCES public.facilities(id) ON DELETE CASCADE,
     facility_type_id BIGINT NOT NULL REFERENCES public.facility_types(id) ON DELETE RESTRICT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    -- 1施設に同じ種類を重複登録できないように複合主キーで制約
     PRIMARY KEY (facility_id, facility_type_id),
 
-    -- 1施設に同じ種類を重複登録できないように複合主キーで制約
+    -- IDが正の整数であることを保証
     CONSTRAINT chk_valid_ids CHECK (facility_id > 0 AND facility_type_id > 0)
 );
 
