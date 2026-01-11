@@ -32,7 +32,6 @@ CREATE POLICY "insert_facility_owner_or_admin"
         )
         OR
         -- 施設担当者
-        -- 管理者
         EXISTS (
             SELECT 1 FROM public.facility_profiles fp
             WHERE fp.facility_id = facility_other.facility_id
@@ -53,7 +52,6 @@ CREATE POLICY "update_facility_owner_or_admin"
         )
         OR
         -- 施設担当者
-        -- 管理者
         EXISTS (
             SELECT 1 FROM public.facility_profiles fp
             WHERE fp.facility_id = facility_other.facility_id
@@ -68,7 +66,6 @@ CREATE POLICY "update_facility_owner_or_admin"
         )
         OR
         -- 施設担当者
-        -- 管理者
         EXISTS (
             SELECT 1 FROM public.facility_profiles fp
             WHERE fp.facility_id = facility_other.facility_id
