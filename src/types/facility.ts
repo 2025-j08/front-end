@@ -132,8 +132,13 @@ export interface OtherInfoObject {
   freeText?: string;
 }
 
-/** その他情報（文字列またはオブジェクト形式に対応） */
-export type OtherInfo = string | OtherInfoObject;
+/**
+ * その他情報（オブジェクト形式に統一）
+ * 注: 以前は string | OtherInfoObject の Union型でしたが、
+ * 型安全性向上のため OtherInfoObject のみに変更しました。
+ * データ取得時に自動的に正規化されます。
+ */
+export type OtherInfo = OtherInfoObject;
 
 /** 併設施設情報 */
 export interface AnnexFacility {

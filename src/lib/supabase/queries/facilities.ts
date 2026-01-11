@@ -4,7 +4,7 @@
  */
 
 import { createClient } from '@/lib/supabase/client';
-import type { FacilityDetail, AnnexFacility } from '@/types/facility';
+import type { FacilityDetail, AnnexFacility, OtherInfo, OtherInfoObject } from '@/types/facility';
 
 /**
  * 詳細テーブルのエラーチェック用ヘルパー関数
@@ -14,6 +14,26 @@ const checkDetailTableError = (result: { error: unknown }, tableName: string) =>
   if (result.error && (result.error as { code?: string }).code !== 'PGRST116') {
     throw new Error(`${tableName}の取得に失敗しました: ${(result.error as Error).message}`);
   }
+};
+
+/**
+ * OtherInfoを正規化する（文字列→オブジェクト変換）
+ * 後方互換性のため文字列形式も受け入れるが、必ずOtherInfoObject形式に変換
+ */
+const normalizeOtherInfo = (raw: unknown): OtherInfoObject | undefined => {
+  if (!raw) return undefined;
+
+  // 既にオブジェクト形式の場合はそのまま返す
+  if (typeof raw === 'object' && raw !== null) {
+    return raw as OtherInfoObject;
+  }
+
+  // 文字列の場合はオブジェクト形式に変換
+  if (typeof raw === 'string') {
+    return { description: raw };
+  }
+
+  return undefined;
 };
 
 /**
@@ -181,7 +201,7 @@ export async function getFacilityDetail(id: number): Promise<FacilityDetail | nu
     staffInfo: detailTables.staffResult.data?.data,
     educationInfo: detailTables.educationResult.data?.data,
     advancedInfo: detailTables.advancedResult.data?.data,
-    otherInfo: detailTables.otherResult.data?.data,
+    otherInfo: normalizeOtherInfo(detailTables.otherResult.data?.data),
   };
 
   return facilityDetail;

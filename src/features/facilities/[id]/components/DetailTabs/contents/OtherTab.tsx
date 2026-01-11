@@ -14,19 +14,6 @@ export const OtherTab = ({
   errors = {},
   getError = () => undefined,
 }: OtherTabProps) => {
-  // 文字列の場合は後方互換性のため対応
-  const isString = typeof otherInfo === 'string';
-
-  if (isString) {
-    return (
-      <div className={styles.tabContentWrapper}>
-        <div className={styles.textSection}>
-          <TabSection content={otherInfo} />
-        </div>
-      </div>
-    );
-  }
-
   if (isEditMode) {
     return (
       <div className={styles.tabContentWrapper}>
