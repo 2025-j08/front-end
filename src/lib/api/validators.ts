@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
 
-import { HTTP_STATUS } from '@/const/httpStatus';
-
 /**
  * API共通のエラーレスポンス型
  */
