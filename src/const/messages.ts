@@ -45,3 +45,40 @@ export const INVITATION_ERROR_MESSAGES = {
 
 /** 招待エラーコードの型 */
 export type InvitationErrorCode = keyof typeof INVITATION_ERROR_MESSAGES;
+
+/**
+ * サインアウト関連のメッセージ定数
+ */
+export const SIGNOUT_MESSAGES = {
+  INVALIDATE_OTHERS_FAILED: '他端末の無効化に失敗しました',
+  TARGET_ID_REQUIRED: 'targetUserId が必要です',
+  INVALID_TARGET_FORMAT: 'targetUserId の形式が不正です',
+  ADMIN_FORCE_FAILED: '管理者による強制ログアウトに失敗しました',
+  INVALID_ACTION: '不正な action です',
+  SIGNOUT_FAILED: 'サインアウトに失敗しました',
+} as const;
+
+export type SignoutMessageKey = keyof typeof SIGNOUT_MESSAGES;
+
+/**
+ * サインイン用のメッセージ定数
+ */
+export const SIGNIN_MESSAGES = {
+  INVALID_CREDENTIALS: 'メールまたはパスワードが不正です',
+  INVALID_EMAIL: '有効なメールアドレスを指定してください',
+  INVALID_PASSWORD: 'パスワードが不正です',
+} as const;
+
+export type SigninMessageKey = keyof typeof SIGNIN_MESSAGES;
+
+/**
+ * 認証に関する共通エラーメッセージ
+ * サインイン / サインアウトで使われる共通メッセージはここに置く
+ */
+export const AUTH_ERROR_MESSAGES = {
+  AUTH_REQUIRED: '認証が必要です',
+  SERVER_ERROR: 'サーバーエラーが発生しました',
+  PERMISSION_REQUIRED: '管理者権限が必要です',
+} as const;
+
+export type AuthErrorMessageKey = keyof typeof AUTH_ERROR_MESSAGES;
