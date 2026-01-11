@@ -7,17 +7,24 @@ import { createClient } from '@/lib/supabase/client';
 import type { FacilityDetail, AnnexFacility } from '@/types/facility';
 
 /**
- * 施設の詳細情報を取得する
- * facilities テーブルと各詳細テーブルを結合して1つのオブジェクトにまとめる
- *
- * @param id - 施設ID
- * @returns 施設詳細情報、エラー時はnull
- * @throws データ取得エラー時は Error をスロー
+ * 詳細テーブルのエラーチェック用ヘルパー関数
+ * PGRST116（データが存在しない）以外のエラーをスロー
  */
-export async function getFacilityDetail(id: number): Promise<FacilityDetail | null> {
+const checkDetailTableError = (result: { error: unknown }, tableName: string) => {
+  if (result.error && (result.error as { code?: string }).code !== 'PGRST116') {
+    throw new Error(`${tableName}の取得に失敗しました: ${(result.error as Error).message}`);
+  }
+};
+
+/**
+ * 施設基本情報を取得
+ * @param id - 施設ID
+ * @returns 施設基本情報、存在しない場合はnull
+ * @throws データ取得エラー時はErrorをスロー
+ */
+async function getFacilityBasicInfo(id: number) {
   const supabase = createClient();
 
-  // 1. 施設基本情報を取得
   const { data: facility, error: facilityError } = await supabase
     .from('facilities')
     .select('*')
@@ -28,11 +35,18 @@ export async function getFacilityDetail(id: number): Promise<FacilityDetail | nu
     throw new Error(`施設基本情報の取得に失敗しました: ${facilityError.message}`);
   }
 
-  if (!facility) {
-    return null;
-  }
+  return facility;
+}
 
-  // 2. 施設種類を取得（facility_facility_types と facility_types を結合）
+/**
+ * 施設種類を取得
+ * @param id - 施設ID
+ * @returns 施設種類（dormitoryType）
+ * @throws データ取得エラー時はErrorをスロー
+ */
+async function getFacilityTypes(id: number) {
+  const supabase = createClient();
+
   const { data: facilityTypes, error: typesError } = await supabase
     .from('facility_facility_types')
     .select('facility_type_id, facility_types(name)')
@@ -52,7 +66,18 @@ export async function getFacilityDetail(id: number): Promise<FacilityDetail | nu
     | '地域小規模'
     | undefined;
 
-  // 3. 各詳細テーブルからデータを取得
+  return dormitoryType;
+}
+
+/**
+ * 各詳細テーブルからデータを並列取得
+ * @param id - 施設ID
+ * @returns 7つの詳細情報（access, philosophy, specialty, staff, education, advanced, other）
+ * @throws データ取得エラー時はErrorをスロー（データが存在しない場合は除く）
+ */
+async function getFacilityDetailTables(id: number) {
+  const supabase = createClient();
+
   const [
     accessResult,
     philosophyResult,
@@ -71,14 +96,6 @@ export async function getFacilityDetail(id: number): Promise<FacilityDetail | nu
     supabase.from('facility_other').select('data').eq('facility_id', id).single(),
   ]);
 
-  // 詳細テーブルのエラーチェック用ヘルパー関数
-  const checkDetailTableError = (result: { error: unknown }, tableName: string) => {
-    // PGRST116はデータが存在しない場合のコードなので無視
-    if (result.error && (result.error as { code?: string }).code !== 'PGRST116') {
-      throw new Error(`${tableName}の取得に失敗しました: ${(result.error as Error).message}`);
-    }
-  };
-
   // 全テーブルで均等にエラーチェック
   const detailTables = [
     { result: accessResult, name: 'アクセス情報' },
@@ -92,16 +109,47 @@ export async function getFacilityDetail(id: number): Promise<FacilityDetail | nu
 
   detailTables.forEach(({ result, name }) => checkDetailTableError(result, name));
 
-  // 4. 完全住所を構築
+  return {
+    accessResult,
+    philosophyResult,
+    specialtyResult,
+    staffResult,
+    educationResult,
+    advancedResult,
+    otherResult,
+  };
+}
+
+/**
+ * 施設の詳細情報を取得する
+ * facilities テーブルと各詳細テーブルを結合して1つのオブジェクトにまとめる
+ *
+ * @param id - 施設ID
+ * @returns 施設詳細情報、エラー時はnull
+ * @throws データ取得エラー時は Error をスロー
+ */
+export async function getFacilityDetail(id: number): Promise<FacilityDetail | null> {
+  // 1. 基本情報、施設種類、詳細テーブルを並列取得
+  const [facility, dormitoryType, detailTables] = await Promise.all([
+    getFacilityBasicInfo(id),
+    getFacilityTypes(id),
+    getFacilityDetailTables(id),
+  ]);
+
+  if (!facility) {
+    return null;
+  }
+
+  // 2. 完全住所を構築
   const fullAddress = `${facility.prefecture}${facility.city}${facility.address_detail}`;
 
-  // 5. 併設施設データの型変換
+  // 3. 併設施設データの型変換
   const annexFacilities: AnnexFacility[] = Array.isArray(facility.annex_facilities)
     ? (facility.annex_facilities as AnnexFacility[])
     : [];
 
-  // 6. facility_access の JSONB データから追加フィールドを取得
-  const accessData = accessResult.data?.data || {};
+  // 4. facility_access の JSONB データから追加フィールドを取得
+  const accessData = detailTables.accessResult.data?.data || {};
   const accessInfo = {
     locationAddress: accessData.locationAddress || fullAddress,
     lat: accessData.lat || 0,
@@ -111,7 +159,7 @@ export async function getFacilityDetail(id: number): Promise<FacilityDetail | nu
     locationAppeal: accessData.locationAppeal,
   };
 
-  // 7. FacilityDetail 型に整形
+  // 5. FacilityDetail 型に整形
   const facilityDetail: FacilityDetail = {
     id: facility.id,
     name: facility.name,
@@ -128,12 +176,12 @@ export async function getFacilityDetail(id: number): Promise<FacilityDetail | nu
     provisionalCapacity: accessData.provisionalCapacity,
     annexFacilities,
     relationInfo: accessData.relationInfo,
-    philosophyInfo: philosophyResult.data?.data,
-    specialtyInfo: specialtyResult.data?.data,
-    staffInfo: staffResult.data?.data,
-    educationInfo: educationResult.data?.data,
-    advancedInfo: advancedResult.data?.data,
-    otherInfo: otherResult.data?.data,
+    philosophyInfo: detailTables.philosophyResult.data?.data,
+    specialtyInfo: detailTables.specialtyResult.data?.data,
+    staffInfo: detailTables.staffResult.data?.data,
+    educationInfo: detailTables.educationResult.data?.data,
+    advancedInfo: detailTables.advancedResult.data?.data,
+    otherInfo: detailTables.otherResult.data?.data,
   };
 
   return facilityDetail;
