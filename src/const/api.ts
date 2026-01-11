@@ -17,7 +17,7 @@ export const API_ENDPOINTS = {
     SIGNIN: '/api/auth/signin',
 
     /** サインアウトAPI */
-    SIGNOUT: 'api/auth/signout',
+    SIGNOUT: '/api/auth/signout',
 
     /** ユーザー登録API */
     REGISTER: '/api/auth/register',
