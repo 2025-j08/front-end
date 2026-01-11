@@ -4,15 +4,9 @@ import { EditField } from './EditField';
 import styles from './TabContent.module.scss';
 import { TabSection } from './TabSection';
 import { TabProps } from '../types/tabProps';
+import { STAFF_FIELDS } from './staffFieldsConfig';
 
 export type StaffTabProps = TabProps<StaffInfo>;
-
-/** hasUniversityLecturer の選択オプション */
-const LECTURER_OPTIONS = [
-  { value: '', label: '未設定' },
-  { value: 'true', label: '有' },
-  { value: 'false', label: '無' },
-];
 
 export const StaffTab = ({
   data: staffInfo,
@@ -21,120 +15,130 @@ export const StaffTab = ({
   errors = {},
   getError = () => undefined,
 }: StaffTabProps) => {
+  /**
+   * フィールド値を取得（hasUniversityLecturerの特殊処理含む）
+   */
+  const getFieldValue = (fieldId: keyof StaffInfo): string | number | undefined => {
+    const value = staffInfo[fieldId];
+
+    // hasUniversityLecturer は boolean → string 変換が必要
+    if (fieldId === 'hasUniversityLecturer') {
+      return value === undefined ? '' : value ? 'true' : 'false';
+    }
+
+    return value as string | number | undefined;
+  };
+
+  /**
+   * フィールド変更ハンドラー（hasUniversityLecturerの特殊処理含む）
+   */
+  const handleFieldChange = (fieldId: keyof StaffInfo, value: unknown) => {
+    // hasUniversityLecturer は string → boolean 変換が必要
+    if (fieldId === 'hasUniversityLecturer') {
+      const boolValue = value === '' ? undefined : value === 'true';
+      onFieldChange?.(fieldId, boolValue);
+      return;
+    }
+
+    onFieldChange?.(fieldId, value);
+  };
+
+  /**
+   * メタデータからEditFieldのpropsを生成
+   */
+  const renderEditField = (field: (typeof STAFF_FIELDS)[number]) => {
+    const commonProps = {
+      key: field.id,
+      id: field.id,
+      label: field.label,
+      suffix: field.suffix,
+      error: getError(`staffInfo.${field.id}`),
+    };
+
+    switch (field.type) {
+      case 'text':
+        return (
+          <EditField
+            {...commonProps}
+            type="text"
+            value={getFieldValue(field.id) as string | undefined}
+            onChange={(v: string) => handleFieldChange(field.id, v)}
+            placeholder={field.placeholder}
+          />
+        );
+
+      case 'number':
+        return (
+          <EditField
+            {...commonProps}
+            type="number"
+            value={getFieldValue(field.id) as number | undefined}
+            onChange={(v: number | undefined) => handleFieldChange(field.id, v)}
+            placeholder={field.placeholder}
+          />
+        );
+
+      case 'textarea':
+        return (
+          <EditField
+            {...commonProps}
+            type="textarea"
+            value={getFieldValue(field.id) as string | undefined}
+            onChange={(v: string) => handleFieldChange(field.id, v)}
+            placeholder={field.placeholder}
+            rows={field.rows}
+          />
+        );
+
+      case 'select':
+        return (
+          <EditField
+            {...commonProps}
+            type="select"
+            value={getFieldValue(field.id) as string | undefined}
+            onChange={(v: string | undefined) => handleFieldChange(field.id, v)}
+            options={field.options!}
+          />
+        );
+    }
+  };
+
+  /**
+   * 編集モード表示
+   */
   if (isEditMode) {
+    // rowGroup でフィールドをグループ化
+    const groupedFields = STAFF_FIELDS.reduce(
+      (acc, field) => {
+        const group = field.rowGroup || 0;
+        if (!acc[group]) acc[group] = [];
+        acc[group].push(field);
+        return acc;
+      },
+      {} as Record<number, (typeof STAFF_FIELDS)[number][]>,
+    );
+
     return (
       <div className={styles.tabContentWrapper}>
         <div className={styles.textSection}>
-          <div className={styles.editRow}>
-            <EditField
-              type="number"
-              id="fullTimeStaffCount"
-              label="常勤職員数"
-              value={staffInfo.fullTimeStaffCount}
-              onChange={(v) => onFieldChange?.('fullTimeStaffCount', v)}
-              placeholder="例:16"
-              suffix="名"
-              error={getError('staffInfo.fullTimeStaffCount')}
-            />
-            <EditField
-              type="number"
-              id="partTimeStaffCount"
-              label="非常勤職員数"
-              value={staffInfo.partTimeStaffCount}
-              onChange={(v) => onFieldChange?.('partTimeStaffCount', v)}
-              placeholder="例:5"
-              suffix="名"
-              error={getError('staffInfo.partTimeStaffCount')}
-            />
-          </div>
-          <EditField
-            type="textarea"
-            id="specialties"
-            label="職員の特徴・専門性"
-            value={staffInfo.specialties}
-            onChange={(v) => onFieldChange?.('specialties', v)}
-            rows={3}
-          />
-          <div className={styles.editRow}>
-            <EditField
-              type="text"
-              id="averageTenure"
-              label="平均勤続年数"
-              value={staffInfo.averageTenure}
-              onChange={(v) => onFieldChange?.('averageTenure', v)}
-              placeholder="例: 8.5年"
-              error={getError('staffInfo.averageTenure')}
-            />
-            <EditField
-              type="text"
-              id="ageDistribution"
-              label="年齢層の傾向"
-              value={staffInfo.ageDistribution}
-              onChange={(v) => onFieldChange?.('ageDistribution', v)}
-            />
-          </div>
-          <EditField
-            type="textarea"
-            id="workStyle"
-            label="働き方の特徴"
-            value={staffInfo.workStyle}
-            onChange={(v) => onFieldChange?.('workStyle', v)}
-            rows={2}
-          />
-          <div className={styles.editRow}>
-            <EditField
-              type="select"
-              id="hasUniversityLecturer"
-              label="大学講義担当"
-              value={
-                staffInfo.hasUniversityLecturer === undefined
-                  ? ''
-                  : staffInfo.hasUniversityLecturer
-                    ? 'true'
-                    : 'false'
-              }
-              onChange={(v) =>
-                onFieldChange?.('hasUniversityLecturer', v === '' ? undefined : v === 'true')
-              }
-              options={LECTURER_OPTIONS}
-            />
-            <EditField
-              type="text"
-              id="lectureSubjects"
-              label="担当科目"
-              value={staffInfo.lectureSubjects}
-              onChange={(v) => onFieldChange?.('lectureSubjects', v)}
-            />
-          </div>
-          <EditField
-            type="textarea"
-            id="externalActivities"
-            label="他機関での活動実績"
-            value={staffInfo.externalActivities}
-            onChange={(v) => onFieldChange?.('externalActivities', v)}
-            rows={2}
-          />
-          <EditField
-            type="textarea"
-            id="qualificationsAndSkills"
-            label="資格やスキル"
-            value={staffInfo.qualificationsAndSkills}
-            onChange={(v) => onFieldChange?.('qualificationsAndSkills', v)}
-            rows={2}
-          />
-          <EditField
-            type="textarea"
-            id="internshipDetails"
-            label="実習生受け入れ"
-            value={staffInfo.internshipDetails}
-            onChange={(v) => onFieldChange?.('internshipDetails', v)}
-            rows={2}
-          />
+          {Object.entries(groupedFields).map(([groupId, fields]) => {
+            const isRow = fields.length > 1;
+            const containerClass = isRow ? styles.editRow : '';
+
+            return (
+              <div key={groupId} className={containerClass}>
+                {fields.map((field) => renderEditField(field))}
+              </div>
+            );
+          })}
         </div>
       </div>
     );
   }
 
+  /**
+   * 表示モード
+   */
   return (
     <div className={styles.tabContentWrapper}>
       <div className={styles.textSection}>
