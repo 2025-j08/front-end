@@ -155,6 +155,35 @@
   line-height: 1.8;
 }
 
+// 職員数表示用のグリッド
+.staffCountGrid {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.staffCountItem {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 24px;
+  background-color: colors.$bg-light-gray;
+  border-radius: 8px;
+  min-width: 120px;
+}
+
+.staffCountLabel {
+  font-size: 13px;
+  color: colors.$text-secondary;
+  font-weight: 500;
+}
+
+.staffCountValue {
+  font-size: 24px;
+  font-weight: bold;
+  color: colors.$primary-color;
+}
+
 // -----------------------------------------------------------------------------
 // 編集モード用スタイル
 // -----------------------------------------------------------------------------
@@ -173,6 +202,19 @@
   font-weight: 500;
   color: colors.$text-secondary;
   margin-bottom: 8px;
+}
+
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.suffix {
+  font-size: 14px;
+  color: colors.$text-primary;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .editInput {

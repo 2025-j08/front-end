@@ -40,7 +40,8 @@
       "internshipDetails": "福祉系大学からの実習生を年間10名程度受け入れ",
       "ageDistribution": "20代〜50代まで幅広い年齢層の職員が在籍",
       "specialties": "被虐待児童への専門的ケア、発達支援",
-      "staffCount": "常勤16名、非常勤6名",
+      "fullTimeStaffCount": 16,
+      "partTimeStaffCount": 6,
       "averageTenure": "6年"
     },
     "educationInfo": {
@@ -110,7 +111,8 @@
       "internshipDetails": "市内の福祉系専門学校と連携し、実習生を積極的に受け入れ",
       "ageDistribution": "30代〜40代の中堅職員が中心",
       "specialties": "家庭復帰支援、里親連携",
-      "staffCount": "常勤17名、非常勤7名",
+      "fullTimeStaffCount": 17,
+      "partTimeStaffCount": 7,
       "averageTenure": "7年"
     },
     "educationInfo": {
@@ -179,7 +181,8 @@
       "internshipDetails": "小規模施設のため少数精鋭での実習受け入れ",
       "ageDistribution": "20代〜30代の若手職員が中心",
       "specialties": "家庭的養育、生活スキル支援",
-      "staffCount": "常勤18名、非常勤8名",
+      "fullTimeStaffCount": 18,
+      "partTimeStaffCount": 8,
       "averageTenure": "8年"
     },
     "educationInfo": {
@@ -249,7 +252,8 @@
       "internshipDetails": "「後ろにはチームがいる」という安心感のもと、未経験者や新卒へのフォロー体制も充実",
       "ageDistribution": "20代〜30代が中心、若手が多い活気ある職場",
       "specialties": "チームアプローチ、小規模グループケア、心理支援",
-      "staffCount": "常勤19名、非常勤9名",
+      "fullTimeStaffCount": 19,
+      "partTimeStaffCount": 9,
       "averageTenure": "9年"
     },
     "educationInfo": {
@@ -318,7 +322,8 @@
       "internshipDetails": "農業体験を含む独自の実習プログラムを提供",
       "ageDistribution": "幅広い年齢層、経験豊富なベテラン職員も多数",
       "specialties": "自然体験活動指導、自立支援",
-      "staffCount": "常勤20名、非常勤10名",
+      "fullTimeStaffCount": 20,
+      "partTimeStaffCount": 10,
       "averageTenure": "10年"
     },
     "educationInfo": {
@@ -388,7 +393,8 @@
       "internshipDetails": "大学との連携による学生ボランティア・実習生の受け入れ",
       "ageDistribution": "20代〜40代、学習支援に意欲的な職員が多い",
       "specialties": "学習支援、ICT活用、進路支援",
-      "staffCount": "常勤21名、非常勤11名",
+      "fullTimeStaffCount": 21,
+      "partTimeStaffCount": 11,
       "averageTenure": "11年"
     },
     "educationInfo": {
@@ -457,7 +463,8 @@
       "internshipDetails": "スポーツを通じた関わりも含む多様な実習機会を提供",
       "ageDistribution": "20代〜50代まで幅広く在籍",
       "specialties": "スポーツ指導、里親支援、アフターケア",
-      "staffCount": "常勤22名、非常勤12名",
+      "fullTimeStaffCount": 22,
+      "partTimeStaffCount": 12,
       "averageTenure": "12年"
     },
     "educationInfo": {
@@ -526,7 +533,8 @@
       "internshipDetails": "自然体験を含む独自の実習カリキュラムを提供",
       "ageDistribution": "地元出身者を含む幅広い年齢層",
       "specialties": "自然体験活動、健康管理、地域連携",
-      "staffCount": "常勤23名、非常勤13名",
+      "fullTimeStaffCount": 23,
+      "partTimeStaffCount": 13,
       "averageTenure": "13年"
     },
     "educationInfo": {
@@ -596,7 +604,8 @@
       "internshipDetails": "琵琶湖での環境学習を含む特色ある実習を実施",
       "ageDistribution": "若手からベテランまでバランスよく配置",
       "specialties": "心理支援、環境教育、自立支援プログラム",
-      "staffCount": "常勤24名、非常勤14名",
+      "fullTimeStaffCount": 24,
+      "partTimeStaffCount": 14,
       "averageTenure": "14年"
     },
     "educationInfo": {
@@ -665,7 +674,8 @@
       "internshipDetails": "家庭的な環境での養育を学べる実習を提供",
       "ageDistribution": "20代〜40代の職員が家庭的な雰囲気を作っている",
       "specialties": "家庭的養育、食育、地域文化体験",
-      "staffCount": "常勤25名、非常勤15名",
+      "fullTimeStaffCount": 25,
+      "partTimeStaffCount": 15,
       "averageTenure": "15年"
     },
     "educationInfo": {
@@ -735,7 +745,8 @@
       "internshipDetails": "長年の実績に基づく充実した実習指導体制",
       "ageDistribution": "20代〜60代まで幅広い世代が活躍",
       "specialties": "困難ケース対応、心理支援、退所者支援",
-      "staffCount": "常勤26名、非常勤16名",
+      "fullTimeStaffCount": 26,
+      "partTimeStaffCount": 16,
       "averageTenure": "16年"
     },
     "educationInfo": {
@@ -804,7 +815,8 @@
       "internshipDetails": "歴史文化体験を含む特色ある実習プログラム",
       "ageDistribution": "地元出身者を含む幅広い年齢層",
       "specialties": "歴史文化教育、自立支援、地域連携",
-      "staffCount": "常勤27名、非常勤17名",
+      "fullTimeStaffCount": 27,
+      "partTimeStaffCount": 17,
       "averageTenure": "17年"
     },
     "educationInfo": {

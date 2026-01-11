@@ -16,6 +16,8 @@ type BaseFieldProps = {
   disabled?: boolean;
   /** バリデーションエラーメッセージ */
   error?: string;
+  /** 入力欄の後に表示するテキスト（例: "名"） */
+  suffix?: string;
 };
 
 type TextFieldProps = BaseFieldProps & {
@@ -71,7 +73,7 @@ export type EditFieldProps =
  * />
  */
 export const EditField = (props: EditFieldProps) => {
-  const { id, label, disabled } = props;
+  const { id, label, disabled, suffix } = props;
 
   const renderInput = () => {
     switch (props.type) {
@@ -149,7 +151,10 @@ export const EditField = (props: EditFieldProps) => {
       <label htmlFor={id} className={styles.editLabel}>
         {label}
       </label>
-      {renderInput()}
+      <div className={styles.inputWrapper}>
+        {renderInput()}
+        {suffix && <span className={styles.suffix}>{suffix}</span>}
+      </div>
       {props.error && (
         <span id={`${id}-error`} className={styles.errorText} role="alert">
           {props.error}

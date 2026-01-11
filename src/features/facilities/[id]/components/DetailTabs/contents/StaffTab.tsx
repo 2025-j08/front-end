@@ -38,6 +38,7 @@ export const StaffTab = ({
               value={staffInfo.fullTimeStaffCount}
               onChange={(v) => onFieldChange?.('fullTimeStaffCount', v)}
               placeholder="例:16"
+              suffix="名"
               error={getError('staffInfo.fullTimeStaffCount')}
             />
             <EditField
@@ -47,6 +48,7 @@ export const StaffTab = ({
               value={staffInfo.partTimeStaffCount}
               onChange={(v) => onFieldChange?.('partTimeStaffCount', v)}
               placeholder="例:5"
+              suffix="名"
               error={getError('staffInfo.partTimeStaffCount')}
             />
           </div>
@@ -142,23 +144,25 @@ export const StaffTab = ({
     <div className={styles.tabContentWrapper}>
       <div className={styles.textSection}>
         <TabSection title="職員数">
-          <p className={styles.textContent}>
-            {staffInfo.fullTimeStaffCount !== undefined ||
-            staffInfo.partTimeStaffCount !== undefined ? (
-              <>
-                {staffInfo.fullTimeStaffCount !== undefined && (
-                  <>
-                    常勤：{staffInfo.fullTimeStaffCount}名<br />
-                  </>
-                )}
-                {staffInfo.partTimeStaffCount !== undefined && (
-                  <>非常勤：{staffInfo.partTimeStaffCount}名</>
-                )}
-              </>
-            ) : (
-              staffInfo.staffCount || '-'
-            )}
-          </p>
+          {staffInfo.fullTimeStaffCount !== undefined ||
+          staffInfo.partTimeStaffCount !== undefined ? (
+            <div className={styles.staffCountGrid}>
+              {staffInfo.fullTimeStaffCount !== undefined && (
+                <div className={styles.staffCountItem}>
+                  <span className={styles.staffCountLabel}>常勤</span>
+                  <span className={styles.staffCountValue}>{staffInfo.fullTimeStaffCount}名</span>
+                </div>
+              )}
+              {staffInfo.partTimeStaffCount !== undefined && (
+                <div className={styles.staffCountItem}>
+                  <span className={styles.staffCountLabel}>非常勤</span>
+                  <span className={styles.staffCountValue}>{staffInfo.partTimeStaffCount}名</span>
+                </div>
+              )}
+            </div>
+          ) : (
+            <p className={styles.textContent}>{staffInfo.staffCount || '-'}</p>
+          )}
         </TabSection>
 
         <TabSection title="職員の特徴・専門性" content={staffInfo.specialties} />
