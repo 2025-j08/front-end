@@ -5,33 +5,60 @@
 
 import { StaffInfo } from '@/types/facility';
 
-type FieldType = 'text' | 'number' | 'textarea' | 'select';
-
 type SelectOption = {
   value: string;
   label: string;
 };
 
-export type StaffFieldConfig = {
+/** フィールド定義の共通プロパティ */
+type BaseFieldConfig = {
   /** フィールドID（StaffInfoのキー） */
   id: keyof StaffInfo;
-  /** 入力フィールドの型 */
-  type: FieldType;
   /** ラベル */
   label: string;
-  /** プレースホルダー */
-  placeholder?: string;
-  /** 接尾辞（例: "名", "年"） */
-  suffix?: string;
-  /** テキストエリアの行数 */
-  rows?: number;
-  /** セレクトボックスの選択肢 */
-  options?: SelectOption[];
   /** 表示モード用のタイトル（省略時はlabelを使用） */
   displayTitle?: string;
   /** 行グループID（同じIDのフィールドは横並び） */
   rowGroup?: number;
 };
+
+/** テキストフィールド定義 */
+type TextFieldConfig = BaseFieldConfig & {
+  type: 'text';
+  placeholder?: string;
+};
+
+/** 数値フィールド定義 */
+type NumberFieldConfig = BaseFieldConfig & {
+  type: 'number';
+  placeholder?: string;
+  /** 接尾辞（例: "名", "年"） */
+  suffix?: string;
+};
+
+/** テキストエリアフィールド定義 */
+type TextareaFieldConfig = BaseFieldConfig & {
+  type: 'textarea';
+  /** テキストエリアの行数 */
+  rows?: number;
+};
+
+/** セレクトフィールド定義 */
+type SelectFieldConfig = BaseFieldConfig & {
+  type: 'select';
+  /** セレクトボックスの選択肢（必須） */
+  options: SelectOption[];
+};
+
+/**
+ * StaffTabのフィールド設定型
+ * 型に応じて必要なプロパティが変わる判別共用体
+ */
+export type StaffFieldConfig =
+  | TextFieldConfig
+  | NumberFieldConfig
+  | TextareaFieldConfig
+  | SelectFieldConfig;
 
 /** hasUniversityLecturer の選択オプション */
 const LECTURER_OPTIONS: SelectOption[] = [

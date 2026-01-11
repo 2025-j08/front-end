@@ -47,11 +47,10 @@ export const StaffTab = ({
    * メタデータからEditFieldのpropsを生成
    */
   const renderEditField = (field: (typeof STAFF_FIELDS)[number]) => {
-    const commonProps = {
+    const baseProps = {
       key: field.id,
       id: field.id,
       label: field.label,
-      suffix: field.suffix,
       error: getError(`staffInfo.${field.id}`),
     };
 
@@ -59,7 +58,7 @@ export const StaffTab = ({
       case 'text':
         return (
           <EditField
-            {...commonProps}
+            {...baseProps}
             type="text"
             value={getFieldValue(field.id) as string | undefined}
             onChange={(v: string) => handleFieldChange(field.id, v)}
@@ -70,22 +69,22 @@ export const StaffTab = ({
       case 'number':
         return (
           <EditField
-            {...commonProps}
+            {...baseProps}
             type="number"
             value={getFieldValue(field.id) as number | undefined}
             onChange={(v: number | undefined) => handleFieldChange(field.id, v)}
             placeholder={field.placeholder}
+            suffix={field.suffix}
           />
         );
 
       case 'textarea':
         return (
           <EditField
-            {...commonProps}
+            {...baseProps}
             type="textarea"
             value={getFieldValue(field.id) as string | undefined}
             onChange={(v: string) => handleFieldChange(field.id, v)}
-            placeholder={field.placeholder}
             rows={field.rows}
           />
         );
@@ -93,11 +92,11 @@ export const StaffTab = ({
       case 'select':
         return (
           <EditField
-            {...commonProps}
+            {...baseProps}
             type="select"
             value={getFieldValue(field.id) as string | undefined}
             onChange={(v: string | undefined) => handleFieldChange(field.id, v)}
-            options={field.options!}
+            options={field.options}
           />
         );
     }
