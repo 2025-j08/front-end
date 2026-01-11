@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { createClient } from '@/lib/supabase/client';
@@ -27,8 +27,13 @@ export default function AuthCallbackPage() {
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
 
-  const signOutSafely = useCallback(
-    async (reason: string, redirectPath: string) => {
+  useEffect(() => {
+    // コンポーネントのマウント状態を追跡
+    let isMounted = true;
+    const { accessToken, refreshToken, expiresAt } = parseHashParams(window.location.hash);
+
+    // signOutSafely関数をuseEffect内で定義（isMountedにアクセスするため）
+    const signOutSafely = async (reason: string, redirectPath: string) => {
       const { error } = await supabase.auth.signOut();
       if (error) {
         logError('サインアウトに失敗しました', {
@@ -37,15 +42,10 @@ export default function AuthCallbackPage() {
           error: error.message,
         });
       }
+      // isMountedチェックを追加してレースコンディションを防ぐ
+      if (!isMounted) return;
       router.replace(redirectPath);
-    },
-    [router, supabase.auth],
-  );
-
-  useEffect(() => {
-    // コンポーネントのマウント状態を追跡
-    let isMounted = true;
-    const { accessToken, refreshToken, expiresAt } = parseHashParams(window.location.hash);
+    };
 
     // ハッシュにトークンが含まれない場合はログイン画面へ
     if (!accessToken || !refreshToken) {
@@ -142,7 +142,7 @@ export default function AuthCallbackPage() {
     return () => {
       isMounted = false;
     };
-  }, [router, supabase, signOutSafely]);
+  }, [router, supabase]);
 
   // シンプルなステータス表示（アクセシビリティ対応）
   return (
