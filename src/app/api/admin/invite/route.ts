@@ -1,5 +1,5 @@
 import type { InviteUserRequest } from '@/types/api';
-import { createClient as createServerClient, createAdminClient } from '@/lib/supabase/server';
+import { createServer, createAdmin } from '@/lib/supabase/server';
 import { appConfig } from '@/lib/supabase/config';
 import { validateEmail } from '@/lib/validation';
 import { HTTP_STATUS } from '@/const/httpStatus';
@@ -47,8 +47,8 @@ export async function POST(request: Request) {
     const { email, facilityId } = parsed.data;
 
     // サーバ用クライアントと管理者用クライアントを作成
-    const supabaseServer = await createServerClient();
-    const supabaseAdmin = createAdminClient();
+    const supabaseServer = await createServer();
+    const supabaseAdmin = createAdmin();
 
     // cookiesからセッションを参照し認証済みユーザかどうか調べている
     const {

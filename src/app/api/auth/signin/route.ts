@@ -1,4 +1,4 @@
-import { createClient as createServerClient } from '@/lib/supabase/server';
+import { createServer } from '@/lib/supabase/server';
 import { validateEmail, validatePassword } from '@/lib/validation';
 import { HTTP_STATUS } from '@/const/httpStatus';
 import { logWarn, logError, maskEmail } from '@/lib/logger';
@@ -48,7 +48,7 @@ export async function POST(request: Request) {
 
     const { email, password } = parsed.data;
 
-    const supabaseServer = await createServerClient();
+    const supabaseServer = await createServer();
 
     const { data, error } = await supabaseServer.auth.signInWithPassword({ email, password });
 

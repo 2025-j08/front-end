@@ -10,7 +10,7 @@ import { supabaseConfig, getServiceRoleKey } from './config';
  * サーバーサイド用のSupabaseクライアント
  * Cookie経由でユーザーセッションを保持
  */
-export async function createClient(): Promise<SupabaseClient> {
+export async function createServer(): Promise<SupabaseClient> {
   const cookieStore = await cookies();
   return createServerClient(supabaseConfig.url, supabaseConfig.anonKey, {
     cookies: {
@@ -33,7 +33,7 @@ export async function createClient(): Promise<SupabaseClient> {
 /**
  * Admin用のSupabaseクライアント
  */
-export function createAdminClient(): SupabaseClient {
+export function createAdmin(): SupabaseClient {
   // 使用する環境変数の取得
   const supabaseUrl = supabaseConfig.url;
   const serviceRoleKey = getServiceRoleKey();
