@@ -4,6 +4,7 @@ import { validateRequired, validatePassword } from '@/lib/validation';
 import { HTTP_STATUS } from '@/const/httpStatus';
 import { logError, logInfo, maskEmail } from '@/lib/logger';
 import { createErrorResponse, createSuccessResponse } from '@/lib/api/validators';
+import { AUTH_ERROR_MESSAGES } from '@/const/messages';
 import { createValidator, stringField } from '@/lib/api/createValidator';
 
 import {
@@ -104,6 +105,6 @@ export async function POST(request: Request) {
       stack: error instanceof Error ? error.stack : undefined,
     });
 
-    return createErrorResponse('サーバーエラーが発生しました', HTTP_STATUS.INTERNAL_SERVER_ERROR);
+    return createErrorResponse(AUTH_ERROR_MESSAGES.SERVER_ERROR, HTTP_STATUS.INTERNAL_SERVER_ERROR);
   }
 }

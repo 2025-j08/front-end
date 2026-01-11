@@ -5,6 +5,7 @@ import { validateEmail } from '@/lib/validation';
 import { HTTP_STATUS } from '@/const/httpStatus';
 import { logError, logInfo, logFatal, maskEmail } from '@/lib/logger';
 import { createErrorResponse, createSuccessResponse } from '@/lib/api/validators';
+import { AUTH_ERROR_MESSAGES } from '@/const/messages';
 import { createValidator, stringField, positiveIntegerField } from '@/lib/api/createValidator';
 
 // 招待の有効期限（日数）を一元管理
@@ -56,7 +57,7 @@ export async function POST(request: Request) {
 
     // 未認証のエラーレスポンス
     if (!user) {
-      return createErrorResponse('認証が必要です', HTTP_STATUS.UNAUTHORIZED);
+      return createErrorResponse(AUTH_ERROR_MESSAGES.AUTH_REQUIRED, HTTP_STATUS.UNAUTHORIZED);
     }
 
     // 管理者ユーザか確認する(役割を抽出)
@@ -69,7 +70,7 @@ export async function POST(request: Request) {
 
     // 管理者ではなかったときのエラーレスポンス
     if (profile?.role !== 'admin') {
-      return createErrorResponse('管理者権限が必要です', HTTP_STATUS.FORBIDDEN);
+      return createErrorResponse(AUTH_ERROR_MESSAGES.PERMISSION_REQUIRED, HTTP_STATUS.FORBIDDEN);
     }
 
     // リクエストボディのメールアドレス宛に招待メールを送信
@@ -152,6 +153,6 @@ export async function POST(request: Request) {
     logError('招待APIで予期しないエラーが発生しました', {
       error: error instanceof Error ? error : String(error),
     });
-    return createErrorResponse('サーバーエラーが発生しました', HTTP_STATUS.INTERNAL_SERVER_ERROR);
+    return createErrorResponse(AUTH_ERROR_MESSAGES.SERVER_ERROR, HTTP_STATUS.INTERNAL_SERVER_ERROR);
   }
 }

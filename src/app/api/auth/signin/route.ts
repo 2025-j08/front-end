@@ -3,6 +3,7 @@ import { validateEmail, validatePassword } from '@/lib/validation';
 import { HTTP_STATUS } from '@/const/httpStatus';
 import { logWarn, logError, maskEmail } from '@/lib/logger';
 import { createErrorResponse, createSuccessResponse } from '@/lib/api/validators';
+import { SIGNIN_MESSAGES, AUTH_ERROR_MESSAGES } from '@/const/messages';
 import { createValidator, stringField } from '@/lib/api/createValidator';
 
 type SignInRequestBody = {
@@ -28,12 +29,12 @@ const getClientIp = (request: Request): string => {
  */
 const parseSignInRequestBody = createValidator<SignInRequestBody>({
   email: {
-    validator: stringField(validateEmail, '有効なメールアドレスを指定してください'),
-    errorMessage: '有効なメールアドレスを指定してください',
+    validator: stringField(validateEmail, SIGNIN_MESSAGES.INVALID_EMAIL),
+    errorMessage: SIGNIN_MESSAGES.INVALID_EMAIL,
   },
   password: {
-    validator: stringField(validatePassword, 'パスワードが不正です', false),
-    errorMessage: 'パスワードが不正です',
+    validator: stringField(validatePassword, SIGNIN_MESSAGES.INVALID_PASSWORD, false),
+    errorMessage: SIGNIN_MESSAGES.INVALID_PASSWORD,
   },
 });
 
@@ -62,7 +63,7 @@ export async function POST(request: Request) {
       });
 
       // エラー詳細は返さず、一般的なメッセージのみ返却
-      return createErrorResponse('メールまたはパスワードが不正です', HTTP_STATUS.UNAUTHORIZED);
+      return createErrorResponse(SIGNIN_MESSAGES.INVALID_CREDENTIALS, HTTP_STATUS.UNAUTHORIZED);
     }
 
     // 役割取得（RLS有効、セッションユーザー）
@@ -85,6 +86,6 @@ export async function POST(request: Request) {
     logError('サインインAPIで予期しないエラーが発生しました', {
       error: err instanceof Error ? err : String(err),
     });
-    return createErrorResponse('サーバーエラーが発生しました', HTTP_STATUS.INTERNAL_SERVER_ERROR);
+    return createErrorResponse(AUTH_ERROR_MESSAGES.SERVER_ERROR, HTTP_STATUS.INTERNAL_SERVER_ERROR);
   }
 }
