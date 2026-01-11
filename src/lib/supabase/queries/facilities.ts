@@ -71,10 +71,26 @@ export async function getFacilityDetail(id: number): Promise<FacilityDetail | nu
     supabase.from('facility_other').select('data').eq('facility_id', id).single(),
   ]);
 
-  // エラーチェック（データが存在しない場合は無視）
-  if (accessResult.error && accessResult.error.code !== 'PGRST116') {
-    throw new Error(`アクセス情報の取得に失敗しました: ${accessResult.error.message}`);
-  }
+  // 詳細テーブルのエラーチェック用ヘルパー関数
+  const checkDetailTableError = (result: { error: unknown }, tableName: string) => {
+    // PGRST116はデータが存在しない場合のコードなので無視
+    if (result.error && (result.error as { code?: string }).code !== 'PGRST116') {
+      throw new Error(`${tableName}の取得に失敗しました: ${(result.error as Error).message}`);
+    }
+  };
+
+  // 全テーブルで均等にエラーチェック
+  const detailTables = [
+    { result: accessResult, name: 'アクセス情報' },
+    { result: philosophyResult, name: '運営方針' },
+    { result: specialtyResult, name: '特色・強み' },
+    { result: staffResult, name: 'スタッフ情報' },
+    { result: educationResult, name: '教育支援' },
+    { result: advancedResult, name: '高度な取り組み' },
+    { result: otherResult, name: 'その他情報' },
+  ];
+
+  detailTables.forEach(({ result, name }) => checkDetailTableError(result, name));
 
   // 4. 完全住所を構築
   const fullAddress = `${facility.prefecture}${facility.city}${facility.address_detail}`;
