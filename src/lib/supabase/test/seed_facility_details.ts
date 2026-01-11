@@ -146,13 +146,18 @@ async function seedFacilityDetailTables(
   for (const [facilityIdStr, detail] of Object.entries(facilitiesDetail)) {
     const facilityId = parseInt(facilityIdStr, 10);
 
-    // アクセス情報(accessInfo + relationInfo)
+    // アクセス情報(accessInfo + relationInfo + その他基本情報)
     if (detail.accessInfo) {
       accessData.push({
         facility_id: facilityId,
         data: {
           ...detail.accessInfo,
           relationInfo: detail.relationInfo,
+          websiteUrl: detail.websiteUrl,
+          capacity: detail.capacity,
+          provisionalCapacity: detail.provisionalCapacity,
+          targetAge: detail.targetAge,
+          building: detail.building,
         },
       });
     }
@@ -279,7 +284,10 @@ async function seedFacilityDetails() {
 
     logInfo('✓ 全ての施設詳細データの挿入が完了しました');
   } catch (error) {
-    logError('エラーが発生しました', { error: error instanceof Error ? error : String(error) });
+    console.error('エラーが発生しました:', error);
+    logError('エラーが発生しました', {
+      error: error instanceof Error ? error.message : JSON.stringify(error),
+    });
     process.exit(1);
   }
 }
