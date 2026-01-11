@@ -68,7 +68,7 @@ export interface UseFormStateReturn<T> {
  * });
  * ```
  */
-export function useFormState<T extends Record<string, any>>(
+export function useFormState<T extends Record<string, unknown>>(
   options: UseFormStateOptions<T>,
 ): UseFormStateReturn<T> {
   const { initialData, onSubmit, onFieldChange } = options;
