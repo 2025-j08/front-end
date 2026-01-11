@@ -30,15 +30,24 @@ export const StaffTab = ({
     return (
       <div className={styles.tabContentWrapper}>
         <div className={styles.textSection}>
-          <div className={styles.editGroup}>
+          <div className={styles.editRow}>
             <EditField
-              type="text"
-              id="staffCount"
-              label="職員数"
-              value={staffInfo.staffCount}
-              onChange={(v) => onFieldChange?.('staffCount', v)}
-              placeholder="例: 常勤16名、非常勤5名"
-              error={getError('staffInfo.staffCount')}
+              type="number"
+              id="fullTimeStaffCount"
+              label="常勤職員数"
+              value={staffInfo.fullTimeStaffCount}
+              onChange={(v) => onFieldChange?.('fullTimeStaffCount', v)}
+              placeholder="例:16"
+              error={getError('staffInfo.fullTimeStaffCount')}
+            />
+            <EditField
+              type="number"
+              id="partTimeStaffCount"
+              label="非常勤職員数"
+              value={staffInfo.partTimeStaffCount}
+              onChange={(v) => onFieldChange?.('partTimeStaffCount', v)}
+              placeholder="例:5"
+              error={getError('staffInfo.partTimeStaffCount')}
             />
           </div>
           <EditField
@@ -132,7 +141,25 @@ export const StaffTab = ({
   return (
     <div className={styles.tabContentWrapper}>
       <div className={styles.textSection}>
-        <TabSection title="職員数" content={staffInfo.staffCount} />
+        <TabSection title="職員数">
+          <p className={styles.textContent}>
+            {staffInfo.fullTimeStaffCount !== undefined ||
+            staffInfo.partTimeStaffCount !== undefined ? (
+              <>
+                {staffInfo.fullTimeStaffCount !== undefined && (
+                  <>
+                    常勤：{staffInfo.fullTimeStaffCount}名<br />
+                  </>
+                )}
+                {staffInfo.partTimeStaffCount !== undefined && (
+                  <>非常勤：{staffInfo.partTimeStaffCount}名</>
+                )}
+              </>
+            ) : (
+              staffInfo.staffCount || '-'
+            )}
+          </p>
+        </TabSection>
 
         <TabSection title="職員の特徴・専門性" content={staffInfo.specialties} />
 

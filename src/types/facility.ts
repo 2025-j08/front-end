@@ -33,10 +33,12 @@ export interface AccessInfo {
   locationAddress: string;
   lat: number;
   lng: number;
-  /** 最寄り駅・バス停からのアクセス方法（オプショナル） */
+  /** 最寄り駅・バス停名（オプショナル） */
   station?: string;
-  /** ロケーションの詳細説明（オプショナル） */
+  /** 駅からのアクセス方法（オプショナル） */
   description?: string;
+  /** 立地のアピールポイント（オプショナル） */
+  locationAppeal?: string;
 }
 
 /** 理念情報 */
@@ -55,7 +57,14 @@ export interface SpecialtyInfo {
 
 /** 職員情報 */
 export interface StaffInfo {
-  /** 職員数（常勤/非常勤、職種別） */
+  /** 常勤職員数 */
+  fullTimeStaffCount?: number;
+  /** 非常勤職員数 */
+  partTimeStaffCount?: number;
+  /**
+   * 職員数（常勤/非常勤、職種別）
+   * @deprecated 将来的に削除予定 - fullTimeStaffCount, partTimeStaffCount に分離
+   */
   staffCount?: string;
   /** 職員の特徴・専門性 */
   specialties?: string;
