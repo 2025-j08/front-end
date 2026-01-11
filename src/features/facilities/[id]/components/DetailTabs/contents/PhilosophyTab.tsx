@@ -24,14 +24,6 @@ export const PhilosophyTab = ({
       <div className={styles.tabContentWrapper}>
         <div className={styles.textSection}>
           <EditField
-            type="text"
-            id="philosophyTitle"
-            label="タイトル"
-            value={philosophyInfo.title}
-            onChange={(v) => onFieldChange?.('title', v)}
-          />
-
-          <EditField
             type="textarea"
             id="description"
             label="運営方針・理念"
@@ -49,7 +41,7 @@ export const PhilosophyTab = ({
   return (
     <div className={styles.tabContentWrapper}>
       <div className={styles.textSection}>
-        <TabSection title={philosophyInfo.title} content={philosophyInfo.description} />
+        <TabSection title="理念" content={philosophyInfo.description} />
       </div>
     </div>
   );
