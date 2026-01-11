@@ -1,5 +1,6 @@
 import type { AnnexFacility } from '@/types/facility';
 
+import { formatCapacity } from '../../utils/formatters';
 import styles from './BasicInfoSection.module.scss';
 
 type BasicInfoSectionProps = {
@@ -174,12 +175,8 @@ export const BasicInfoSection = ({
     onFieldChange?.(field, value ? Number(value) : undefined);
   };
 
-  // 定員表示の生成
-  const capacityText = capacity
-    ? provisionalCapacity
-      ? `${capacity}名（暫定${provisionalCapacity}名）`
-      : `${capacity}名`
-    : '-';
+  // 定員表示の生成（フォーマッター関数を使用）
+  const capacityText = formatCapacity(capacity, provisionalCapacity);
 
   // 併設施設表示の生成
   const annexText = annexFacilities?.length
