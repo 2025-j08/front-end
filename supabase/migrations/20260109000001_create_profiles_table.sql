@@ -36,31 +36,34 @@ CREATE POLICY "insert_owner_or_admin"
     );
 
 -- 本人が更新する場合は役割以外を変更可能、管理者のみが役割を変更可能
-CREATE POLICY "update_owner_or_admin"
+-- 一般ユーザー（staff）は自分のプロフィールのみ更新可能（roleは'staff'固定）
+CREATE POLICY "update_own_profile_staff"
     ON public.profiles
     FOR UPDATE
     TO authenticated
     USING (
         id = auth.uid()
-        OR EXISTS (
+        AND (
+            SELECT role FROM public.profiles WHERE id = auth.uid()
+        ) = 'staff'
+    )
+    WITH CHECK (
+        id = auth.uid()
+        AND role = 'staff'  -- staffユーザーはroleを'staff'にしか設定できない（権限昇格防止）
+    );
+
+-- 管理者は全てのプロフィールを更新可能（role含む）
+CREATE POLICY "update_any_profile_admin"
+    ON public.profiles
+    FOR UPDATE
+    TO authenticated
+    USING (
+        EXISTS (
             SELECT 1 FROM public.profiles p
             WHERE p.id = auth.uid() AND p.role = 'admin'
         )
     )
-    WITH CHECK (
-        -- 本人が更新する場合は role 変更を禁止
-        (
-            id = auth.uid()
-            AND role = (
-                SELECT role FROM public.profiles WHERE id = auth.uid()
-            )
-        )
-        -- または既存の管理者が他のユーザーを更新する場合は制限なし
-        OR EXISTS (
-            SELECT 1 FROM public.profiles p
-            WHERE p.id = auth.uid() AND p.role = 'admin'
-        )
-    );
+    WITH CHECK (true);  -- 管理者は制限なし
 
 -- 本人または管理者が削除可能
 CREATE POLICY "delete_owner_or_admin"
