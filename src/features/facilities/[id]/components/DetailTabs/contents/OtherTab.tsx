@@ -1,6 +1,7 @@
 import { OtherInfo } from '@/types/facility';
 
 import { EditField } from './EditField';
+import { EditSection } from './EditSection';
 import { TabSaveButton } from './TabSaveButton';
 import styles from './TabContent.module.scss';
 import { TabSection } from './TabSection';
@@ -22,29 +23,34 @@ export const OtherTab = ({
       <>
         <div className={styles.tabContentWrapper}>
           <div className={styles.textSection}>
-            <div className={styles.editGroup}>
+            {/* 他施設とのネットワーク - 編集画面では常に表示 */}
+            <EditSection title="他施設とのネットワークや共同プロジェクト">
               <EditField
                 type="textarea"
                 id="networks"
-                label="他施設とのネットワーク"
+                label="ネットワークや共同プロジェクト"
                 value={otherInfo.networks}
                 onChange={(v) => onFieldChange?.('networks', v)}
                 rows={3}
                 error={getError('otherInfo.networks')}
               />
-            </div>
-            <div className={styles.editGroup}>
+            </EditSection>
+
+            {/* 今後の展望や課題 */}
+            <EditSection title="今後の展望や課題">
               <EditField
                 type="textarea"
                 id="futureOutlook"
-                label="今後の展望や課題"
+                label="展望や課題"
                 value={otherInfo.futureOutlook}
                 onChange={(v) => onFieldChange?.('futureOutlook', v)}
                 rows={3}
                 error={getError('otherInfo.futureOutlook')}
               />
-            </div>
-            <div className={styles.editGroup}>
+            </EditSection>
+
+            {/* 自由記述 */}
+            <EditSection title="自由記述">
               <EditField
                 type="textarea"
                 id="freeText"
@@ -54,7 +60,7 @@ export const OtherTab = ({
                 rows={4}
                 error={getError('otherInfo.freeText')}
               />
-            </div>
+            </EditSection>
           </div>
         </div>
         {onSave && <TabSaveButton onSave={onSave} isSaving={isSaving} isDirty={isDirty} />}
@@ -65,15 +71,18 @@ export const OtherTab = ({
   return (
     <div className={styles.tabContentWrapper}>
       <div className={styles.textSection}>
-        {(otherInfo.title || otherInfo.description) && (
-          <TabSection title={otherInfo.title} content={otherInfo.description} />
+        {otherInfo.networks && (
+          <TabSection
+            title="他施設とのネットワークや共同プロジェクト"
+            content={otherInfo.networks}
+          />
         )}
 
-        <TabSection title="他施設とのネットワークや共同プロジェクト" content={otherInfo.networks} />
+        {otherInfo.futureOutlook && (
+          <TabSection title="今後の展望や課題" content={otherInfo.futureOutlook} />
+        )}
 
-        <TabSection title="今後の展望や課題" content={otherInfo.futureOutlook} />
-
-        <TabSection title="自由記述" content={otherInfo.freeText} />
+        {otherInfo.freeText && <TabSection title="自由記述" content={otherInfo.freeText} />}
       </div>
     </div>
   );

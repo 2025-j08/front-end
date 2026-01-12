@@ -5,7 +5,17 @@
 
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-import type { FacilityDetail, AnnexFacility } from '@/types/facility';
+import type { AnnexFacility } from '@/types/facility';
+
+/** 施設関連テーブル名 */
+type FacilityTableName =
+  | 'facility_access'
+  | 'facility_philosophy'
+  | 'facility_specialty'
+  | 'facility_staff'
+  | 'facility_education'
+  | 'facility_advanced'
+  | 'facility_other';
 
 /**
  * 基本情報の更新データ型
@@ -16,6 +26,8 @@ export type BasicInfoUpdateData = {
   corporation?: string;
   established_year?: number;
   annex_facilities?: AnnexFacility[];
+  /** 施設種類（中間テーブル経由で更新するため別処理） */
+  dormitory_type?: string;
 };
 
 /**
@@ -35,14 +47,15 @@ export type AccessInfoUpdateData = {
  * 理念情報の更新データ型
  */
 export type PhilosophyInfoUpdateData = {
+  message?: string;
   description?: string;
 };
 
 /**
- * 特色情報の更新データ型
+ * 特化領域情報の更新データ型
  */
 export type SpecialtyInfoUpdateData = {
-  features?: string[];
+  features?: string;
   programs?: string;
 };
 
@@ -68,6 +81,7 @@ export type StaffInfoUpdateData = {
  */
 export type EducationInfoUpdateData = {
   graduation_rate?: string;
+  graduation_rate_percentage?: string;
   learning_support?: string;
   career_support?: string;
 };
@@ -95,23 +109,33 @@ export type OtherInfoUpdateData = {
 };
 
 /**
- * 共通のupsertヘルパー関数（正規化されたスキーマ対応）
- * @param supabase - Supabaseクライアント
- * @param tableName - テーブル名
- * @param facilityId - 施設ID
- * @param data - 更新データ（個別カラムのデータ）
- * @param errorMessage - エラーメッセージ
+ * undefinedの値をオブジェクトから除去するヘルパー関数
  */
-async function upsertFacilityData(
+function removeUndefinedValues<T extends Record<string, unknown>>(obj: T): Partial<T> {
+  return Object.fromEntries(
+    Object.entries(obj).filter(([, value]) => value !== undefined),
+  ) as Partial<T>;
+}
+
+/**
+ * 共通のupsertヘルパー関数（正規化されたスキーマ対応）
+ */
+async function upsertFacilityData<T extends Record<string, unknown>>(
   supabase: SupabaseClient,
-  tableName: string,
+  tableName: FacilityTableName,
   facilityId: number,
-  data: Record<string, unknown>,
+  data: T,
   errorMessage: string,
-) {
+): Promise<void> {
+  const cleanedData = removeUndefinedValues(data);
+
+  if (Object.keys(cleanedData).length === 0) {
+    return;
+  }
+
   const { error } = await supabase
     .from(tableName)
-    .upsert({ facility_id: facilityId, ...data }, { onConflict: 'facility_id' });
+    .upsert({ facility_id: facilityId, ...cleanedData }, { onConflict: 'facility_id' });
 
   if (error) {
     throw new Error(`${errorMessage}: ${error.message}`);
@@ -119,162 +143,64 @@ async function upsertFacilityData(
 }
 
 /**
+ * 施設種類を更新（中間テーブル経由）
+ */
+async function updateFacilityDormitoryType(
+  supabase: SupabaseClient,
+  facilityId: number,
+  dormitoryType: string,
+): Promise<void> {
+  const { data: facilityType, error: typeError } = await supabase
+    .from('facility_types')
+    .select('id')
+    .eq('name', dormitoryType)
+    .single();
+
+  if (typeError || !facilityType) {
+    throw new Error(`施設種類 "${dormitoryType}" が見つかりません`);
+  }
+
+  const { error: deleteError } = await supabase
+    .from('facility_facility_types')
+    .delete()
+    .eq('facility_id', facilityId);
+
+  if (deleteError) {
+    throw new Error(`施設種類の削除に失敗しました: ${deleteError.message}`);
+  }
+
+  const { error: insertError } = await supabase.from('facility_facility_types').insert({
+    facility_id: facilityId,
+    facility_type_id: facilityType.id,
+  });
+
+  if (insertError) {
+    throw new Error(`施設種類の更新に失敗しました: ${insertError.message}`);
+  }
+}
+
+/**
  * 施設の基本情報を更新
- * @param supabase - Supabaseクライアント（サーバー側から渡される）
- * @param facilityId - 施設ID
- * @param data - 更新データ
  */
 export async function updateFacilityBasicInfo(
   supabase: SupabaseClient,
   facilityId: number,
   data: BasicInfoUpdateData,
-) {
-  const { error } = await supabase.from('facilities').update(data).eq('id', facilityId);
+): Promise<void> {
+  const { dormitory_type, ...facilitiesData } = data;
+  const cleanedData = removeUndefinedValues(facilitiesData);
 
-  if (error) {
-    throw new Error(`基本情報の更新に失敗しました: ${error.message}`);
+  if (Object.keys(cleanedData).length > 0) {
+    const { error } = await supabase.from('facilities').update(cleanedData).eq('id', facilityId);
+
+    if (error) {
+      throw new Error(`基本情報の更新に失敗しました: ${error.message}`);
+    }
   }
-}
 
-/**
- * アクセス情報を更新（upsert形式）
- * facility_access テーブルの個別カラムを更新
- * @param supabase - Supabaseクライアント
- * @param facilityId - 施設ID
- * @param data - 更新データ
- */
-export async function updateFacilityAccessInfo(
-  supabase: SupabaseClient,
-  facilityId: number,
-  data: AccessInfoUpdateData,
-) {
-  await upsertFacilityData(
-    supabase,
-    'facility_access',
-    facilityId,
-    data,
-    'アクセス情報の更新に失敗しました',
-  );
-}
-
-/**
- * 理念情報を更新（upsert形式）
- * @param supabase - Supabaseクライアント
- * @param facilityId - 施設ID
- * @param data - 更新データ
- */
-export async function updateFacilityPhilosophyInfo(
-  supabase: SupabaseClient,
-  facilityId: number,
-  data: PhilosophyInfoUpdateData,
-) {
-  await upsertFacilityData(
-    supabase,
-    'facility_philosophy',
-    facilityId,
-    data,
-    '理念情報の更新に失敗しました',
-  );
-}
-
-/**
- * 特色情報を更新（upsert形式）
- * @param supabase - Supabaseクライアント
- * @param facilityId - 施設ID
- * @param data - 更新データ
- */
-export async function updateFacilitySpecialtyInfo(
-  supabase: SupabaseClient,
-  facilityId: number,
-  data: SpecialtyInfoUpdateData,
-) {
-  await upsertFacilityData(
-    supabase,
-    'facility_specialty',
-    facilityId,
-    data,
-    '特色情報の更新に失敗しました',
-  );
-}
-
-/**
- * 職員情報を更新（upsert形式）
- * @param supabase - Supabaseクライアント
- * @param facilityId - 施設ID
- * @param data - 更新データ
- */
-export async function updateFacilityStaffInfo(
-  supabase: SupabaseClient,
-  facilityId: number,
-  data: StaffInfoUpdateData,
-) {
-  await upsertFacilityData(
-    supabase,
-    'facility_staff',
-    facilityId,
-    data,
-    '職員情報の更新に失敗しました',
-  );
-}
-
-/**
- * 教育・進路支援情報を更新（upsert形式）
- * @param supabase - Supabaseクライアント
- * @param facilityId - 施設ID
- * @param data - 更新データ
- */
-export async function updateFacilityEducationInfo(
-  supabase: SupabaseClient,
-  facilityId: number,
-  data: EducationInfoUpdateData,
-) {
-  await upsertFacilityData(
-    supabase,
-    'facility_education',
-    facilityId,
-    data,
-    '教育情報の更新に失敗しました',
-  );
-}
-
-/**
- * 高機能化・多機能化情報を更新（upsert形式）
- * @param supabase - Supabaseクライアント
- * @param facilityId - 施設ID
- * @param data - 更新データ
- */
-export async function updateFacilityAdvancedInfo(
-  supabase: SupabaseClient,
-  facilityId: number,
-  data: AdvancedInfoUpdateData,
-) {
-  await upsertFacilityData(
-    supabase,
-    'facility_advanced',
-    facilityId,
-    data,
-    '高機能化情報の更新に失敗しました',
-  );
-}
-
-/**
- * その他情報を更新（upsert形式）
- * @param supabase - Supabaseクライアント
- * @param facilityId - 施設ID
- * @param data - 更新データ
- */
-export async function updateFacilityOtherInfo(
-  supabase: SupabaseClient,
-  facilityId: number,
-  data: OtherInfoUpdateData,
-) {
-  await upsertFacilityData(
-    supabase,
-    'facility_other',
-    facilityId,
-    data,
-    'その他情報の更新に失敗しました',
-  );
+  if (dormitory_type) {
+    await updateFacilityDormitoryType(supabase, facilityId, dormitory_type);
+  }
 }
 
 /**
@@ -290,41 +216,47 @@ export type TabUpdateData =
   | { section: 'advanced'; data: AdvancedInfoUpdateData }
   | { section: 'other'; data: OtherInfoUpdateData };
 
+/** セクション名からテーブル名へのマッピング */
+type SectionTableMap = {
+  [K in Exclude<TabUpdateData['section'], 'basic'>]: FacilityTableName;
+};
+
+const SECTION_TABLE_MAP: SectionTableMap = {
+  access: 'facility_access',
+  philosophy: 'facility_philosophy',
+  specialty: 'facility_specialty',
+  staff: 'facility_staff',
+  education: 'facility_education',
+  advanced: 'facility_advanced',
+  other: 'facility_other',
+} as const;
+
+/** セクション名からエラーメッセージへのマッピング */
+const SECTION_ERROR_MAP: Record<keyof SectionTableMap, string> = {
+  access: 'アクセス情報の更新に失敗しました',
+  philosophy: '理念情報の更新に失敗しました',
+  specialty: '特色情報の更新に失敗しました',
+  staff: '職員情報の更新に失敗しました',
+  education: '教育情報の更新に失敗しました',
+  advanced: '多機能化情報の更新に失敗しました',
+  other: 'その他情報の更新に失敗しました',
+} as const;
+
 /**
  * セクション別に施設情報を更新する統合関数
- * @param supabase - Supabaseクライアント
- * @param facilityId - 施設ID
- * @param updates - セクション別の更新データ
  */
 export async function updateFacilityBySection(
   supabase: SupabaseClient,
   facilityId: number,
   update: TabUpdateData,
-) {
-  switch (update.section) {
-    case 'basic':
-      await updateFacilityBasicInfo(supabase, facilityId, update.data);
-      break;
-    case 'access':
-      await updateFacilityAccessInfo(supabase, facilityId, update.data);
-      break;
-    case 'philosophy':
-      await updateFacilityPhilosophyInfo(supabase, facilityId, update.data);
-      break;
-    case 'specialty':
-      await updateFacilitySpecialtyInfo(supabase, facilityId, update.data);
-      break;
-    case 'staff':
-      await updateFacilityStaffInfo(supabase, facilityId, update.data);
-      break;
-    case 'education':
-      await updateFacilityEducationInfo(supabase, facilityId, update.data);
-      break;
-    case 'advanced':
-      await updateFacilityAdvancedInfo(supabase, facilityId, update.data);
-      break;
-    case 'other':
-      await updateFacilityOtherInfo(supabase, facilityId, update.data);
-      break;
+): Promise<void> {
+  if (update.section === 'basic') {
+    await updateFacilityBasicInfo(supabase, facilityId, update.data);
+    return;
   }
+
+  const tableName = SECTION_TABLE_MAP[update.section];
+  const errorMessage = SECTION_ERROR_MAP[update.section];
+
+  await upsertFacilityData(supabase, tableName, facilityId, update.data, errorMessage);
 }

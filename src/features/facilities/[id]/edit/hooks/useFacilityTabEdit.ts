@@ -181,8 +181,24 @@ export const useFacilityTabEdit = (
       setState((prev) => ({ ...prev, isSaving: true, errors: {} }));
 
       try {
+        // initialDataとformDataをマージして完全なデータを構築
+        const mergedFormData: Partial<FacilityDetail> = initialData
+          ? {
+              ...initialData,
+              ...state.formData,
+              // ネストしたオブジェクトもマージ
+              accessInfo: { ...initialData.accessInfo, ...state.formData.accessInfo },
+              philosophyInfo: { ...initialData.philosophyInfo, ...state.formData.philosophyInfo },
+              specialtyInfo: { ...initialData.specialtyInfo, ...state.formData.specialtyInfo },
+              staffInfo: { ...initialData.staffInfo, ...state.formData.staffInfo },
+              educationInfo: { ...initialData.educationInfo, ...state.formData.educationInfo },
+              advancedInfo: { ...initialData.advancedInfo, ...state.formData.advancedInfo },
+              otherInfo: { ...initialData.otherInfo, ...state.formData.otherInfo },
+            }
+          : state.formData;
+
         // セクション別に更新データを構築
-        const updateData = buildUpdateData(section, state.formData);
+        const updateData = buildUpdateData(section, mergedFormData);
 
         if (!updateData) {
           setState((prev) => ({
@@ -238,7 +254,7 @@ export const useFacilityTabEdit = (
         return false;
       }
     },
-    [facilityId, state.formData, onSaveSuccess],
+    [facilityId, state.formData, onSaveSuccess, initialData],
   );
 
   /** フォームをリセット */
@@ -305,6 +321,7 @@ function buildUpdateData(
             ? parseInt(formData.establishedYear, 10)
             : undefined,
           [toSnakeCase('annexFacilities', basicInfoFieldMapping)]: formData.annexFacilities,
+          dormitory_type: formData.dormitoryType,
         },
       };
 
@@ -314,11 +331,11 @@ function buildUpdateData(
         data: {
           station: formData.accessInfo?.station,
           description: formData.accessInfo?.description,
-          locationAppeal: formData.accessInfo?.locationAppeal,
-          websiteUrl: formData.websiteUrl,
+          location_appeal: formData.accessInfo?.locationAppeal,
+          website_url: formData.websiteUrl,
           capacity: formData.capacity,
-          provisionalCapacity: formData.provisionalCapacity,
-          relationInfo: formData.relationInfo,
+          provisional_capacity: formData.provisionalCapacity,
+          relation_info: formData.relationInfo,
         },
       };
 
@@ -327,6 +344,7 @@ function buildUpdateData(
       return {
         section: 'philosophy',
         data: {
+          message: formData.philosophyInfo.message,
           description: formData.philosophyInfo.description,
         },
       };
@@ -346,17 +364,17 @@ function buildUpdateData(
       return {
         section: 'staff',
         data: {
-          fullTimeStaffCount: formData.staffInfo.fullTimeStaffCount,
-          partTimeStaffCount: formData.staffInfo.partTimeStaffCount,
+          full_time_staff_count: formData.staffInfo.fullTimeStaffCount,
+          part_time_staff_count: formData.staffInfo.partTimeStaffCount,
           specialties: formData.staffInfo.specialties,
-          averageTenure: formData.staffInfo.averageTenure,
-          ageDistribution: formData.staffInfo.ageDistribution,
-          workStyle: formData.staffInfo.workStyle,
-          hasUniversityLecturer: formData.staffInfo.hasUniversityLecturer,
-          lectureSubjects: formData.staffInfo.lectureSubjects,
-          externalActivities: formData.staffInfo.externalActivities,
-          qualificationsAndSkills: formData.staffInfo.qualificationsAndSkills,
-          internshipDetails: formData.staffInfo.internshipDetails,
+          average_tenure: formData.staffInfo.averageTenure,
+          age_distribution: formData.staffInfo.ageDistribution,
+          work_style: formData.staffInfo.workStyle,
+          has_university_lecturer: formData.staffInfo.hasUniversityLecturer,
+          lecture_subjects: formData.staffInfo.lectureSubjects,
+          external_activities: formData.staffInfo.externalActivities,
+          qualifications_and_skills: formData.staffInfo.qualificationsAndSkills,
+          internship_details: formData.staffInfo.internshipDetails,
         },
       };
 
@@ -365,9 +383,10 @@ function buildUpdateData(
       return {
         section: 'education',
         data: {
-          graduationRate: formData.educationInfo.graduationRate,
-          learningSupport: formData.educationInfo.learningSupport,
-          careerSupport: formData.educationInfo.careerSupport,
+          graduation_rate: formData.educationInfo.graduationRate,
+          graduation_rate_percentage: formData.educationInfo.graduationRatePercentage,
+          learning_support: formData.educationInfo.learningSupport,
+          career_support: formData.educationInfo.careerSupport,
         },
       };
 
@@ -392,8 +411,8 @@ function buildUpdateData(
           title: formData.otherInfo.title,
           description: formData.otherInfo.description,
           networks: formData.otherInfo.networks,
-          futureOutlook: formData.otherInfo.futureOutlook,
-          freeText: formData.otherInfo.freeText,
+          future_outlook: formData.otherInfo.futureOutlook,
+          free_text: formData.otherInfo.freeText,
         },
       };
 

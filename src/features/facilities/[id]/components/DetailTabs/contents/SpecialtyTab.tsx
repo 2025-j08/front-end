@@ -1,6 +1,7 @@
 import { SpecialtyInfo } from '@/types/facility';
 
 import { EditField } from './EditField';
+import { EditSection } from './EditSection';
 import { TabSaveButton } from './TabSaveButton';
 import styles from './TabContent.module.scss';
 import { TabSection } from './TabSection';
@@ -22,26 +23,31 @@ export const SpecialtyTab = ({
       <>
         <div className={styles.tabContentWrapper}>
           <div className={styles.textSection}>
-            <div className={styles.editGroup}>
+            {/* 表示画面のタイトルと統一 */}
+            <EditSection title="特に力を入れている取り組み/支援領域">
               <EditField
                 type="textarea"
                 id="features"
-                label="特色"
-                value={specialtyInfo.features?.join('\n')}
-                onChange={(v) => onFieldChange?.('features', v.split('\n'))}
+                label="取り組み内容"
+                value={specialtyInfo.features}
+                onChange={(v) => onFieldChange?.('features', v)}
                 rows={5}
-                placeholder="施設の特色を入力してください（改行で区切る）"
+                placeholder="特に力を入れている取り組み/支援領域を入力してください"
                 error={getError('specialtyInfo.features')}
               />
-            </div>
-            <EditField
-              type="textarea"
-              id="programs"
-              label="特色ある活動や独自プログラム"
-              value={specialtyInfo.programs}
-              onChange={(v) => onFieldChange?.('programs', v)}
-              rows={3}
-            />
+            </EditSection>
+
+            <EditSection title="特色ある活動や独自プログラム">
+              <EditField
+                type="textarea"
+                id="programs"
+                label="プログラム内容"
+                value={specialtyInfo.programs}
+                onChange={(v) => onFieldChange?.('programs', v)}
+                rows={3}
+                placeholder="特色ある活動や独自プログラムを入力してください"
+              />
+            </EditSection>
           </div>
         </div>
         {onSave && <TabSaveButton onSave={onSave} isSaving={isSaving} isDirty={isDirty} />}
@@ -52,13 +58,7 @@ export const SpecialtyTab = ({
   return (
     <div className={styles.tabContentWrapper}>
       <div className={styles.textSection}>
-        <TabSection title="当施設が特に力を入れている取り組み">
-          <ul className={styles.featureList}>
-            {specialtyInfo.features.map((feature) => (
-              <li key={feature}>{feature}</li>
-            ))}
-          </ul>
-        </TabSection>
+        <TabSection title="特に力を入れている取り組み/支援領域" content={specialtyInfo.features} />
 
         <TabSection title="特色ある活動や独自プログラム" content={specialtyInfo.programs} />
       </div>

@@ -43,14 +43,16 @@ export interface AccessInfo {
 
 /** 理念情報 */
 export interface PhilosophyInfo {
+  /** 理念メッセージ */
+  message?: string;
   /** 日々の支援の中で重視している視点 */
   description: string;
 }
 
-/** 生活環境・特色情報 */
+/** 特化領域情報 */
 export interface SpecialtyInfo {
-  /** 当施設が特に力を入れている取り組み */
-  features: string[];
+  /** 特に力を入れている取り組み/支援領域 */
+  features: string;
   /** 特色ある活動や独自プログラム */
   programs?: string;
 }
@@ -85,6 +87,8 @@ export interface StaffInfo {
 export interface EducationInfo {
   /** 進学率（高校、専門、大学）と支援体制 */
   graduationRate?: string;
+  /** 進学率の割合（例: 100%） */
+  graduationRatePercentage?: string;
   /** 学習支援の工夫や外部連携 */
   learningSupport?: string;
   /** 特化した進路支援内容 */
@@ -97,7 +101,7 @@ export interface AdvancedInfo {
   title?: string;
   /** 実施している多機能化の取り組み */
   description: string;
-  /** 経緯と背景 */
+  /** 実現に向けた経緯と背景 */
   background?: string;
   /** 取り組みにあたっての苦労や課題 */
   challenges?: string;
@@ -170,7 +174,7 @@ export interface FacilityDetail {
   relationInfo?: string;
   /** 理念情報 */
   philosophyInfo?: PhilosophyInfo;
-  /** 生活環境情報 */
+  /** 特化領域情報 */
   specialtyInfo?: SpecialtyInfo;
   /** 職員情報 */
   staffInfo?: StaffInfo;

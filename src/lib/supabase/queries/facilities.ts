@@ -194,6 +194,7 @@ export async function getFacilityDetail(id: number): Promise<FacilityDetail | nu
     relationInfo: accessData?.relation_info,
     philosophyInfo: philosophyData
       ? {
+          message: philosophyData.message || undefined,
           description: philosophyData.description,
         }
       : undefined,
@@ -221,6 +222,7 @@ export async function getFacilityDetail(id: number): Promise<FacilityDetail | nu
     educationInfo: educationData
       ? {
           graduationRate: educationData.graduation_rate || undefined,
+          graduationRatePercentage: educationData.graduation_rate_percentage || undefined,
           learningSupport: educationData.learning_support || undefined,
           careerSupport: educationData.career_support || undefined,
         }
