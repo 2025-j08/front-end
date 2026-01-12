@@ -5,7 +5,7 @@
  * 施設詳細ページのメインコンポーネントです。
  * タブごとに独立して編集・保存が可能
  */
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useMemo } from 'react';
 
 import type { FacilityDetail as FacilityDetailType } from '@/types/facility';
 
@@ -57,8 +57,8 @@ export const FacilityDetail = ({ id }: Props) => {
     [updateNestedField],
   );
 
-  // セクション別の保存ハンドラーをRecord型で生成
-  const saveHandlers: Record<TabSection, () => Promise<void>> = useCallback(
+  // セクション別の保存ハンドラーをRecord型で生成（useMemoでメモ化）
+  const saveHandlers: Record<TabSection, () => Promise<void>> = useMemo(
     () => ({
       basic: async () => {
         await saveTab('basic');
@@ -86,7 +86,7 @@ export const FacilityDetail = ({ id }: Props) => {
       },
     }),
     [saveTab],
-  )();
+  );
 
   if (isLoading)
     return (
