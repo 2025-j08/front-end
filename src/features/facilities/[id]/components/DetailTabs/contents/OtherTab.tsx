@@ -65,15 +65,18 @@ export const OtherTab = ({
   return (
     <div className={styles.tabContentWrapper}>
       <div className={styles.textSection}>
-        {(otherInfo.title || otherInfo.description) && (
-          <TabSection title={otherInfo.title} content={otherInfo.description} />
+        {otherInfo.networks && (
+          <TabSection
+            title="他施設とのネットワークや共同プロジェクト"
+            content={otherInfo.networks}
+          />
         )}
 
-        <TabSection title="他施設とのネットワークや共同プロジェクト" content={otherInfo.networks} />
+        {otherInfo.futureOutlook && (
+          <TabSection title="今後の展望や課題" content={otherInfo.futureOutlook} />
+        )}
 
-        <TabSection title="今後の展望や課題" content={otherInfo.futureOutlook} />
-
-        <TabSection title="自由記述" content={otherInfo.freeText} />
+        {otherInfo.freeText && <TabSection title="自由記述" content={otherInfo.freeText} />}
       </div>
     </div>
   );
