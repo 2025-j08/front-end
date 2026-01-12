@@ -152,6 +152,7 @@ export const FacilityEdit = ({ id }: Props) => {
         advancedInfo={mergedData.advancedInfo}
         otherInfo={mergedData.otherInfo}
         isEditMode={true}
+        onFieldChange={updateField}
         onNestedFieldChange={updateNestedField}
         errors={errors}
         getError={getError}

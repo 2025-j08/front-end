@@ -19,12 +19,14 @@ const FacilityMap = dynamic(
 export type AccessTabProps = TabProps<AccessInfo> & {
   facilityName: string;
   relationInfo?: string;
+  onRelationInfoChange?: (value: string) => void;
 };
 
 export const AccessTab = ({
   data: accessInfo,
   facilityName,
   relationInfo,
+  onRelationInfoChange,
   isEditMode = false,
   onFieldChange,
   getError = () => undefined,
@@ -125,13 +127,19 @@ export const AccessTab = ({
             </div>
           </div>
 
-          {/* 地域社会との関係 - 表示画面と同じセクション */}
-          {relationInfo && (
-            <div className={styles.relationSection}>
-              <h3 className={styles.relationTitle}>地域社会との関係や連携状況</h3>
-              <p className={styles.relationText}>{relationInfo}</p>
-            </div>
-          )}
+          {/* 地域社会との関係 - 編集画面では編集可能 */}
+          <div className={styles.relationSection}>
+            <EditField
+              type="textarea"
+              id="relationInfo"
+              label="地域社会との関係や連携状況"
+              value={relationInfo}
+              onChange={(v) => onRelationInfoChange?.(v)}
+              rows={4}
+              error={getError('relationInfo')}
+              placeholder="地域社会との関係や連携状況を入力してください"
+            />
+          </div>
         </div>
         {onSave && <TabSaveButton onSave={onSave} isSaving={isSaving} isDirty={isDirty} />}
       </>

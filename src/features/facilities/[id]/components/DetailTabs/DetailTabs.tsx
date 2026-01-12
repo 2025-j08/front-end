@@ -35,6 +35,11 @@ type DetailTabsProps = {
   otherInfo?: OtherInfo;
   /** 編集モードかどうか */
   isEditMode?: boolean;
+  /** トップレベルフィールドの更新ハンドラー */
+  onFieldChange?: <K extends keyof import('@/types/facility').FacilityDetail>(
+    field: K,
+    value: import('@/types/facility').FacilityDetail[K],
+  ) => void;
   /** ネストしたフィールドの更新ハンドラー */
   onNestedFieldChange?: <K extends keyof import('@/types/facility').FacilityDetail>(
     parent: K,
@@ -73,6 +78,7 @@ export const DetailTabs = ({
   advancedInfo,
   otherInfo,
   isEditMode = false,
+  onFieldChange,
   onNestedFieldChange,
   getError = () => undefined,
   saveHandlers,
@@ -128,6 +134,7 @@ export const DetailTabs = ({
                   data={accessInfo}
                   facilityName={facilityName || ''}
                   relationInfo={relationInfo}
+                  onRelationInfoChange={(value) => onFieldChange?.('relationInfo', value)}
                   isEditMode={isEditMode}
                   onFieldChange={(field, value) =>
                     onNestedFieldChange?.('accessInfo', field, value)
