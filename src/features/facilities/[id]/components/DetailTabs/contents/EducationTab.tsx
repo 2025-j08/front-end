@@ -24,6 +24,16 @@ export const EducationTab = ({
           <div className={styles.textSection}>
             <div className={styles.editGroup}>
               <EditField
+                type="text"
+                id="graduationRatePercentage"
+                label="進学率"
+                value={educationInfo.graduationRatePercentage}
+                onChange={(v) => onFieldChange?.('graduationRatePercentage', v)}
+                error={getError('educationInfo.graduationRatePercentage')}
+              />
+            </div>
+            <div className={styles.editGroup}>
+              <EditField
                 type="textarea"
                 id="graduationRate"
                 label="進学率と支援体制"
@@ -65,7 +75,14 @@ export const EducationTab = ({
   return (
     <div className={styles.tabContentWrapper}>
       <div className={styles.textSection}>
-        <TabSection title="進学率と支援体制" content={educationInfo.graduationRate} />
+        <TabSection title="進学率と支援体制">
+          {educationInfo.graduationRatePercentage && (
+            <p className={styles.textContent}>進学率：{educationInfo.graduationRatePercentage}</p>
+          )}
+          {educationInfo.graduationRate && (
+            <p className={styles.textContent}>{educationInfo.graduationRate}</p>
+          )}
+        </TabSection>
 
         <TabSection title="学習支援の工夫や外部連携" content={educationInfo.learningSupport} />
 
