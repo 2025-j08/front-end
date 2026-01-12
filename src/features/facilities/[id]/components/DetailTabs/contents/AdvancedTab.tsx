@@ -48,6 +48,14 @@ export const AdvancedTab = ({
             />
             <EditField
               type="textarea"
+              id="challenges"
+              label="取り組みにあたっての苦労や課題"
+              value={advancedInfo.challenges}
+              onChange={(v) => onFieldChange?.('challenges', v)}
+              rows={3}
+            />
+            <EditField
+              type="textarea"
               id="solutions"
               label="工夫や成功要因"
               value={advancedInfo.solutions}
