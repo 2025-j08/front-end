@@ -61,11 +61,6 @@ export interface StaffInfo {
   fullTimeStaffCount?: number;
   /** 非常勤職員数 */
   partTimeStaffCount?: number;
-  /**
-   * 職員数（常勤/非常勤、職種別）
-   * @deprecated 将来的に削除予定 - fullTimeStaffCount, partTimeStaffCount に分離
-   */
-  staffCount?: string;
   /** 職員の特徴・専門性 */
   specialties?: string;
   /** 平均勤続年数 */
@@ -94,16 +89,6 @@ export interface EducationInfo {
   learningSupport?: string;
   /** 特化した進路支援内容 */
   careerSupport?: string;
-  /**
-   * 教育方針
-   * @deprecated 将来的に削除予定 - graduationRate に統合
-   */
-  policy?: string;
-  /**
-   * アフターケア
-   * @deprecated 将来的に削除予定 - careerSupport に統合
-   */
-  afterCare?: string;
 }
 
 /** 高機能化・多機能化への取り組み */

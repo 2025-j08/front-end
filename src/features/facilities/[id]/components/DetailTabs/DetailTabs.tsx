@@ -9,6 +9,7 @@ import {
   OtherInfo,
 } from '@/types/facility';
 
+import type { TabSection } from '../../edit/hooks/useFacilityTabEdit';
 import { AccessTab } from './contents/AccessTab';
 import { PhilosophyTab } from './contents/PhilosophyTab';
 import { SpecialtyTab } from './contents/SpecialtyTab';
@@ -44,6 +45,12 @@ type DetailTabsProps = {
   errors?: Record<string, string>;
   /** エラー取得関数 */
   getError?: (field: string) => string | undefined;
+  /** タブセクション別の保存ハンドラー */
+  saveHandlers: Record<TabSection, () => Promise<void>>;
+  /** 保存中フラグ */
+  isSaving?: boolean;
+  /** セクション別の変更状態を取得する関数 */
+  isDirty: (section: TabSection) => boolean;
 };
 
 /**
@@ -67,8 +74,10 @@ export const DetailTabs = ({
   otherInfo,
   isEditMode = false,
   onNestedFieldChange,
-  errors = {},
   getError = () => undefined,
+  saveHandlers,
+  isSaving = false,
+  isDirty,
 }: DetailTabsProps) => {
   // タブIDの配列を生成
   const tabIds = tabs.map((tab) => tab.key);
@@ -119,8 +128,10 @@ export const DetailTabs = ({
                   onFieldChange={(field, value) =>
                     onNestedFieldChange?.('accessInfo', field, value)
                   }
-                  errors={errors}
                   getError={getError}
+                  onSave={saveHandlers.access}
+                  isSaving={isSaving}
+                  isDirty={isDirty('access')}
                 />
               ) : null;
             case 'philosophy':
@@ -131,8 +142,10 @@ export const DetailTabs = ({
                   onFieldChange={(field, value) =>
                     onNestedFieldChange?.('philosophyInfo', field, value)
                   }
-                  errors={errors}
                   getError={getError}
+                  onSave={saveHandlers.philosophy}
+                  isSaving={isSaving}
+                  isDirty={isDirty('philosophy')}
                 />
               ) : null;
             case 'specialty':
@@ -143,8 +156,10 @@ export const DetailTabs = ({
                   onFieldChange={(field, value) =>
                     onNestedFieldChange?.('specialtyInfo', field, value)
                   }
-                  errors={errors}
                   getError={getError}
+                  onSave={saveHandlers.specialty}
+                  isSaving={isSaving}
+                  isDirty={isDirty('specialty')}
                 />
               ) : null;
             case 'staff':
@@ -153,8 +168,10 @@ export const DetailTabs = ({
                   data={staffInfo}
                   isEditMode={isEditMode}
                   onFieldChange={(field, value) => onNestedFieldChange?.('staffInfo', field, value)}
-                  errors={errors}
                   getError={getError}
+                  onSave={saveHandlers.staff}
+                  isSaving={isSaving}
+                  isDirty={isDirty('staff')}
                 />
               ) : null;
             case 'education':
@@ -165,8 +182,10 @@ export const DetailTabs = ({
                   onFieldChange={(field, value) =>
                     onNestedFieldChange?.('educationInfo', field, value)
                   }
-                  errors={errors}
                   getError={getError}
+                  onSave={saveHandlers.education}
+                  isSaving={isSaving}
+                  isDirty={isDirty('education')}
                 />
               ) : null;
             case 'advanced':
@@ -177,8 +196,10 @@ export const DetailTabs = ({
                   onFieldChange={(field, value) =>
                     onNestedFieldChange?.('advancedInfo', field, value)
                   }
-                  errors={errors}
                   getError={getError}
+                  onSave={saveHandlers.advanced}
+                  isSaving={isSaving}
+                  isDirty={isDirty('advanced')}
                 />
               ) : null;
             case 'other':
@@ -187,8 +208,10 @@ export const DetailTabs = ({
                   data={otherInfo}
                   isEditMode={isEditMode}
                   onFieldChange={(field, value) => onNestedFieldChange?.('otherInfo', field, value)}
-                  errors={errors}
                   getError={getError}
+                  onSave={saveHandlers.other}
+                  isSaving={isSaving}
+                  isDirty={isDirty('other')}
                 />
               ) : null;
             default:
