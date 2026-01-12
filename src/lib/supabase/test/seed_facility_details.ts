@@ -115,7 +115,7 @@ async function seedFacilityFacilityTypes(
 
   const { data, error } = await supabase
     .from('facility_facility_types')
-    .insert(associations)
+    .insert(associations as never)
     .select();
 
   if (error) {
@@ -134,31 +134,80 @@ async function seedFacilityDetailTables(
 ) {
   console.log('施設詳細テーブルにデータを挿入しています...');
 
-  // 各テーブルへの挿入データを準備
-  const accessData: Array<{ facility_id: number; data: unknown }> = [];
-  const philosophyData: Array<{ facility_id: number; data: unknown }> = [];
-  const specialtyData: Array<{ facility_id: number; data: unknown }> = [];
-  const staffData: Array<{ facility_id: number; data: unknown }> = [];
-  const educationData: Array<{ facility_id: number; data: unknown }> = [];
-  const advancedData: Array<{ facility_id: number; data: unknown }> = [];
-  const otherData: Array<{ facility_id: number; data: unknown }> = [];
+  // 各テーブルへの挿入データを準備（正規化されたスキーマに対応）
+  const accessData: Array<{
+    facility_id: number;
+    location_address: string;
+    lat: number;
+    lng: number;
+    station?: string;
+    description?: string;
+    location_appeal?: string;
+    website_url?: string;
+    target_age: string;
+    building?: string;
+    capacity?: number;
+    provisional_capacity?: number;
+    relation_info?: string;
+  }> = [];
+  const philosophyData: Array<{ facility_id: number; description: string }> = [];
+  const specialtyData: Array<{ facility_id: number; features: string[]; programs?: string }> = [];
+  const staffData: Array<{
+    facility_id: number;
+    full_time_staff_count?: number;
+    part_time_staff_count?: number;
+    specialties?: string;
+    average_tenure?: string;
+    age_distribution?: string;
+    work_style?: string;
+    has_university_lecturer?: boolean;
+    lecture_subjects?: string;
+    external_activities?: string;
+    qualifications_and_skills?: string;
+    internship_details?: string;
+  }> = [];
+  const educationData: Array<{
+    facility_id: number;
+    graduation_rate?: string;
+    learning_support?: string;
+    career_support?: string;
+  }> = [];
+  const advancedData: Array<{
+    facility_id: number;
+    title?: string;
+    description: string;
+    background?: string;
+    challenges?: string;
+    solutions?: string;
+  }> = [];
+  const otherData: Array<{
+    facility_id: number;
+    title?: string;
+    description?: string;
+    networks?: string;
+    future_outlook?: string;
+    free_text?: string;
+  }> = [];
 
   for (const [facilityIdStr, detail] of Object.entries(facilitiesDetail)) {
     const facilityId = parseInt(facilityIdStr, 10);
 
-    // アクセス情報(accessInfo + relationInfo + その他基本情報)
+    // アクセス情報
     if (detail.accessInfo) {
       accessData.push({
         facility_id: facilityId,
-        data: {
-          ...detail.accessInfo,
-          relationInfo: detail.relationInfo,
-          websiteUrl: detail.websiteUrl,
-          capacity: detail.capacity,
-          provisionalCapacity: detail.provisionalCapacity,
-          targetAge: detail.targetAge,
-          building: detail.building,
-        },
+        location_address: detail.accessInfo.locationAddress,
+        lat: detail.accessInfo.lat,
+        lng: detail.accessInfo.lng,
+        station: detail.accessInfo.station,
+        description: detail.accessInfo.description,
+        location_appeal: detail.accessInfo.locationAppeal,
+        website_url: detail.websiteUrl,
+        target_age: detail.targetAge || '0～18歳',
+        building: detail.building,
+        capacity: detail.capacity,
+        provisional_capacity: detail.provisionalCapacity,
+        relation_info: detail.relationInfo,
       });
     }
 
@@ -166,7 +215,7 @@ async function seedFacilityDetailTables(
     if (detail.philosophyInfo) {
       philosophyData.push({
         facility_id: facilityId,
-        data: detail.philosophyInfo,
+        description: detail.philosophyInfo.description,
       });
     }
 
@@ -174,7 +223,8 @@ async function seedFacilityDetailTables(
     if (detail.specialtyInfo) {
       specialtyData.push({
         facility_id: facilityId,
-        data: detail.specialtyInfo,
+        features: detail.specialtyInfo.features,
+        programs: detail.specialtyInfo.programs,
       });
     }
 
@@ -182,7 +232,17 @@ async function seedFacilityDetailTables(
     if (detail.staffInfo) {
       staffData.push({
         facility_id: facilityId,
-        data: detail.staffInfo,
+        full_time_staff_count: detail.staffInfo.fullTimeStaffCount,
+        part_time_staff_count: detail.staffInfo.partTimeStaffCount,
+        specialties: detail.staffInfo.specialties,
+        average_tenure: detail.staffInfo.averageTenure,
+        age_distribution: detail.staffInfo.ageDistribution,
+        work_style: detail.staffInfo.workStyle,
+        has_university_lecturer: detail.staffInfo.hasUniversityLecturer,
+        lecture_subjects: detail.staffInfo.lectureSubjects,
+        external_activities: detail.staffInfo.externalActivities,
+        qualifications_and_skills: detail.staffInfo.qualificationsAndSkills,
+        internship_details: detail.staffInfo.internshipDetails,
       });
     }
 
@@ -190,7 +250,9 @@ async function seedFacilityDetailTables(
     if (detail.educationInfo) {
       educationData.push({
         facility_id: facilityId,
-        data: detail.educationInfo,
+        graduation_rate: detail.educationInfo.graduationRate,
+        learning_support: detail.educationInfo.learningSupport,
+        career_support: detail.educationInfo.careerSupport,
       });
     }
 
@@ -198,7 +260,11 @@ async function seedFacilityDetailTables(
     if (detail.advancedInfo) {
       advancedData.push({
         facility_id: facilityId,
-        data: detail.advancedInfo,
+        title: detail.advancedInfo.title,
+        description: detail.advancedInfo.description,
+        background: detail.advancedInfo.background,
+        challenges: detail.advancedInfo.challenges,
+        solutions: detail.advancedInfo.solutions,
       });
     }
 
@@ -206,7 +272,11 @@ async function seedFacilityDetailTables(
     if (detail.otherInfo) {
       otherData.push({
         facility_id: facilityId,
-        data: detail.otherInfo,
+        title: detail.otherInfo.title,
+        description: detail.otherInfo.description,
+        networks: detail.otherInfo.networks,
+        future_outlook: detail.otherInfo.futureOutlook,
+        free_text: detail.otherInfo.freeText,
       });
     }
   }
