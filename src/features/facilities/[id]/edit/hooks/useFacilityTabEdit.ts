@@ -365,9 +365,10 @@ function buildUpdateData(
       return {
         section: 'education',
         data: {
-          graduationRate: formData.educationInfo.graduationRate,
-          learningSupport: formData.educationInfo.learningSupport,
-          careerSupport: formData.educationInfo.careerSupport,
+          graduation_rate: formData.educationInfo.graduationRate,
+          graduation_rate_percentage: formData.educationInfo.graduationRatePercentage,
+          learning_support: formData.educationInfo.learningSupport,
+          career_support: formData.educationInfo.careerSupport,
         },
       };
 

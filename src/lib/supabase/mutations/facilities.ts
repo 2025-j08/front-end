@@ -69,6 +69,7 @@ export type StaffInfoUpdateData = {
  */
 export type EducationInfoUpdateData = {
   graduation_rate?: string;
+  graduation_rate_percentage?: string;
   learning_support?: string;
   career_support?: string;
 };

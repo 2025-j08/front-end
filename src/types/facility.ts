@@ -87,6 +87,8 @@ export interface StaffInfo {
 export interface EducationInfo {
   /** 進学率（高校、専門、大学）と支援体制 */
   graduationRate?: string;
+  /** 進学率の割合（例: 100%） */
+  graduationRatePercentage?: string;
   /** 学習支援の工夫や外部連携 */
   learningSupport?: string;
   /** 特化した進路支援内容 */

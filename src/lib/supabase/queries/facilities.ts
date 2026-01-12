@@ -222,6 +222,7 @@ export async function getFacilityDetail(id: number): Promise<FacilityDetail | nu
     educationInfo: educationData
       ? {
           graduationRate: educationData.graduation_rate || undefined,
+          graduationRatePercentage: educationData.graduation_rate_percentage || undefined,
           learningSupport: educationData.learning_support || undefined,
           careerSupport: educationData.career_support || undefined,
         }
