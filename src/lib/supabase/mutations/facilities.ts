@@ -24,11 +24,11 @@ export type BasicInfoUpdateData = {
 export type AccessInfoUpdateData = {
   station?: string;
   description?: string;
-  locationAppeal?: string;
-  websiteUrl?: string;
+  location_appeal?: string;
+  website_url?: string;
   capacity?: number;
-  provisionalCapacity?: number;
-  relationInfo?: string;
+  provisional_capacity?: number;
+  relation_info?: string;
 };
 
 /**
@@ -50,26 +50,26 @@ export type SpecialtyInfoUpdateData = {
  * 職員情報の更新データ型
  */
 export type StaffInfoUpdateData = {
-  fullTimeStaffCount?: number;
-  partTimeStaffCount?: number;
+  full_time_staff_count?: number;
+  part_time_staff_count?: number;
   specialties?: string;
-  averageTenure?: string;
-  ageDistribution?: string;
-  workStyle?: string;
-  hasUniversityLecturer?: boolean;
-  lectureSubjects?: string;
-  externalActivities?: string;
-  qualificationsAndSkills?: string;
-  internshipDetails?: string;
+  average_tenure?: string;
+  age_distribution?: string;
+  work_style?: string;
+  has_university_lecturer?: boolean;
+  lecture_subjects?: string;
+  external_activities?: string;
+  qualifications_and_skills?: string;
+  internship_details?: string;
 };
 
 /**
  * 教育・進路支援情報の更新データ型
  */
 export type EducationInfoUpdateData = {
-  graduationRate?: string;
-  learningSupport?: string;
-  careerSupport?: string;
+  graduation_rate?: string;
+  learning_support?: string;
+  career_support?: string;
 };
 
 /**
@@ -90,16 +90,16 @@ export type OtherInfoUpdateData = {
   title?: string;
   description?: string;
   networks?: string;
-  futureOutlook?: string;
-  freeText?: string;
+  future_outlook?: string;
+  free_text?: string;
 };
 
 /**
- * 共通のupsertヘルパー関数
+ * 共通のupsertヘルパー関数（正規化されたスキーマ対応）
  * @param supabase - Supabaseクライアント
  * @param tableName - テーブル名
  * @param facilityId - 施設ID
- * @param data - 更新データ
+ * @param data - 更新データ（個別カラムのデータ）
  * @param errorMessage - エラーメッセージ
  */
 async function upsertFacilityData(
@@ -111,7 +111,7 @@ async function upsertFacilityData(
 ) {
   const { error } = await supabase
     .from(tableName)
-    .upsert({ facility_id: facilityId, data }, { onConflict: 'facility_id' });
+    .upsert({ facility_id: facilityId, ...data }, { onConflict: 'facility_id' });
 
   if (error) {
     throw new Error(`${errorMessage}: ${error.message}`);
@@ -138,7 +138,7 @@ export async function updateFacilityBasicInfo(
 
 /**
  * アクセス情報を更新（upsert形式）
- * facility_access テーブルの data カラム（JSONB）を更新
+ * facility_access テーブルの個別カラムを更新
  * @param supabase - Supabaseクライアント
  * @param facilityId - 施設ID
  * @param data - 更新データ
