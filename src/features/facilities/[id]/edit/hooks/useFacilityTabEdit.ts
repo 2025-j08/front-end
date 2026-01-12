@@ -70,6 +70,8 @@ type UseFacilityTabEditReturn = {
   formData: Partial<FacilityDetail>;
   /** セクション別の変更状態を取得 */
   isDirty: (section: TabSection) => boolean;
+  /** いずれかのセクションに未保存の変更があるか */
+  hasUnsavedChanges: boolean;
   /** 保存中フラグ */
   isSaving: boolean;
   /** エラー */
@@ -267,9 +269,13 @@ export const useFacilityTabEdit = (
     [state.dirtyMap],
   );
 
+  // いずれかのセクションに未保存の変更があるかチェック
+  const hasUnsavedChanges = Array.from(state.dirtyMap.values()).some((dirty) => dirty);
+
   return {
     formData: state.formData,
     isDirty,
+    hasUnsavedChanges,
     isSaving: state.isSaving,
     errors: state.errors,
     updateField,
