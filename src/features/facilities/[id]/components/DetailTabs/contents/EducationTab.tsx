@@ -1,6 +1,7 @@
 import { EducationInfo } from '@/types/facility';
 
 import { EditField } from './EditField';
+import { EditSection } from './EditSection';
 import { TabSaveButton } from './TabSaveButton';
 import styles from './TabContent.module.scss';
 import { TabSection } from './TabSection';
@@ -22,28 +23,31 @@ export const EducationTab = ({
       <>
         <div className={styles.tabContentWrapper}>
           <div className={styles.textSection}>
-            <div className={styles.editGroup}>
+            {/* 進学率と支援体制セクション - 表示画面と統一 */}
+            <EditSection title="進学率と支援体制">
               <EditField
                 type="text"
                 id="graduationRatePercentage"
                 label="進学率"
                 value={educationInfo.graduationRatePercentage}
                 onChange={(v) => onFieldChange?.('graduationRatePercentage', v)}
+                placeholder="例: 90%"
                 error={getError('educationInfo.graduationRatePercentage')}
               />
-            </div>
-            <div className={styles.editGroup}>
               <EditField
                 type="textarea"
                 id="graduationRate"
-                label="進学率と支援体制"
+                label="支援体制の詳細"
                 value={educationInfo.graduationRate}
                 onChange={(v) => onFieldChange?.('graduationRate', v)}
                 rows={2}
+                placeholder="進学率に関する詳細や支援体制を入力"
                 error={getError('educationInfo.graduationRate')}
               />
-            </div>
-            <div className={styles.editGroup}>
+            </EditSection>
+
+            {/* 学習支援の工夫や外部連携 - 表示画面のタイトルと統一 */}
+            <EditSection title="学習支援の工夫や外部連携">
               <EditField
                 type="textarea"
                 id="learningSupport"
@@ -51,20 +55,24 @@ export const EducationTab = ({
                 value={educationInfo.learningSupport}
                 onChange={(v) => onFieldChange?.('learningSupport', v)}
                 rows={2}
+                placeholder="学習支援の工夫や外部連携について入力"
                 error={getError('educationInfo.learningSupport')}
               />
-            </div>
-            <div className={styles.editGroup}>
+            </EditSection>
+
+            {/* 特化した進路支援内容 */}
+            <EditSection title="特化した進路支援内容">
               <EditField
                 type="textarea"
                 id="careerSupport"
-                label="特化した進路支援内容"
+                label="進路支援の内容"
                 value={educationInfo.careerSupport}
                 onChange={(v) => onFieldChange?.('careerSupport', v)}
                 rows={2}
+                placeholder="特化した進路支援の内容を入力"
                 error={getError('educationInfo.careerSupport')}
               />
-            </div>
+            </EditSection>
           </div>
         </div>
         {onSave && <TabSaveButton onSave={onSave} isSaving={isSaving} isDirty={isDirty} />}
