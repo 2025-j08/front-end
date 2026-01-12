@@ -45,18 +45,6 @@ export const FacilityDetail = ({ id }: Props) => {
     [updateField],
   );
 
-  // ネストしたフィールド更新ハンドラー（タブ用）
-  const handleNestedFieldChange = useCallback(
-    (field: string, value: unknown) => {
-      // フィールド名を解析して親と子に分割
-      const parts = field.split('.');
-      if (parts.length === 2) {
-        updateNestedField(parts[0] as keyof FacilityDetailType, parts[1], value);
-      }
-    },
-    [updateNestedField],
-  );
-
   // セクション別の保存ハンドラーをRecord型で生成（useMemoでメモ化）
   const saveHandlers: Record<TabSection, () => Promise<void>> = useMemo(
     () => ({
@@ -151,7 +139,7 @@ export const FacilityDetail = ({ id }: Props) => {
         advancedInfo={mergedData.advancedInfo}
         otherInfo={mergedData.otherInfo}
         isEditMode={true}
-        onNestedFieldChange={handleNestedFieldChange}
+        onNestedFieldChange={updateNestedField}
         errors={errors}
         getError={getError}
         saveHandlers={saveHandlers}
