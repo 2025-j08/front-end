@@ -20,16 +20,133 @@ type FacilityDetailItem = {
   id: number;
   name: string;
   dormitoryType?: string;
-  accessInfo?: unknown;
+  accessInfo?: {
+    locationAddress: string;
+    lat: number;
+    lng: number;
+    station?: string;
+    description?: string;
+    locationAppeal?: string;
+  };
   relationInfo?: string;
-  philosophyInfo?: unknown;
-  specialtyInfo?: unknown;
-  staffInfo?: unknown;
-  educationInfo?: unknown;
-  advancedInfo?: unknown;
-  otherInfo?: unknown;
+  philosophyInfo?: {
+    description: string;
+    message?: string;
+  };
+  specialtyInfo?: {
+    features: string | string[];
+    programs?: string;
+  };
+  staffInfo?: {
+    fullTimeStaffCount?: number;
+    partTimeStaffCount?: number;
+    specialties?: string;
+    averageTenure?: string;
+    ageDistribution?: string;
+    workStyle?: string;
+    hasUniversityLecturer?: boolean;
+    lectureSubjects?: string;
+    externalActivities?: string;
+    qualificationsAndSkills?: string;
+    internshipDetails?: string;
+  };
+  educationInfo?: {
+    graduationRate?: string;
+    learningSupport?: string;
+    careerSupport?: string;
+  };
+  advancedInfo?: {
+    title?: string;
+    description: string;
+    background?: string;
+    challenges?: string;
+    solutions?: string;
+  };
+  otherInfo?: {
+    title?: string;
+    description?: string;
+    networks?: string;
+    futureOutlook?: string;
+    freeText?: string;
+  };
+  websiteUrl?: string;
+  targetAge?: string;
+  building?: string;
+  capacity?: number;
+  provisionalCapacity?: number;
   [key: string]: unknown;
 };
+
+/**
+ * 施設の基本情報を挿入
+ */
+async function seedFacilities(supabase: any, facilitiesDetail: Record<string, FacilityDetailItem>) {
+  console.log('施設基本情報を挿入しています...');
+
+  const facilitiesData = Object.values(facilitiesDetail).map((detail) => {
+    // fullAddressを解析してpostal_code, prefecture, city, address_detailに分割
+    const fullAddress = (detail as any).fullAddress || '';
+    const postalCodeMatch = fullAddress.match(/〒(\d{3}-\d{4})/);
+    const postalCode = postalCodeMatch ? postalCodeMatch[1] : '000-0000';
+
+    // 都道府県を抽出
+    const prefectureMatch = fullAddress.match(/[都道府県]/);
+    let prefecture = '';
+    let cityAndDetail = '';
+
+    if (prefectureMatch) {
+      const prefectureIndex = fullAddress.indexOf(prefectureMatch[0]);
+      const addressAfterPostalCode = fullAddress
+        .substring(postalCodeMatch ? postalCodeMatch.index! + postalCodeMatch[0].length : 0)
+        .trim();
+      prefecture = addressAfterPostalCode.substring(
+        0,
+        prefectureIndex -
+          (postalCodeMatch ? postalCodeMatch.index! + postalCodeMatch[0].length : 0) +
+          1,
+      );
+      cityAndDetail = addressAfterPostalCode.substring(
+        prefectureIndex -
+          (postalCodeMatch ? postalCodeMatch.index! + postalCodeMatch[0].length : 0) +
+          1,
+      );
+    }
+
+    // 市区町村を抽出（最初の市・区・町・村まで）
+    const cityMatch = cityAndDetail.match(/^(.+?[市区町村])/);
+    const city = cityMatch ? cityMatch[1] : cityAndDetail.split(' ')[0] || '';
+    const addressDetail = cityAndDetail.substring(city.length);
+
+    // established_yearから年数を抽出
+    const establishedYearStr = (detail as any).establishedYear || '';
+    const yearMatch = establishedYearStr.match(/(\d{4})/);
+    const establishedYear = yearMatch ? parseInt(yearMatch[1]) : 2000;
+
+    return {
+      id: detail.id,
+      name: detail.name,
+      corporation: (detail as any).corporation || '',
+      postal_code: postalCode,
+      phone: (detail as any).phone || '',
+      prefecture: prefecture || '',
+      city: city || '',
+      address_detail: addressDetail || '',
+      established_year: establishedYear,
+    };
+  });
+
+  const { data, error } = await supabase
+    .from('facilities')
+    .upsert(facilitiesData as any, { onConflict: 'id' })
+    .select();
+
+  if (error) {
+    throw error;
+  }
+
+  logInfo(`✓ ${data?.length || 0}件の施設基本情報を挿入しました`);
+  return data;
+}
 
 /**
  * 施設種類(dormitoryType)のマスタデータを挿入
@@ -157,8 +274,8 @@ async function seedFacilityDetailTables(
     provisional_capacity?: number;
     relation_info?: string;
   }> = [];
-  const philosophyData: Array<{ facility_id: number; description: string }> = [];
-  const specialtyData: Array<{ facility_id: number; features: string[]; programs?: string }> = [];
+  const philosophyData: Array<{ facility_id: number; description: string; message?: string }> = [];
+  const specialtyData: Array<{ facility_id: number; features: string; programs?: string }> = [];
   const staffData: Array<{
     facility_id: number;
     full_time_staff_count?: number;
@@ -223,14 +340,17 @@ async function seedFacilityDetailTables(
       philosophyData.push({
         facility_id: facilityId,
         description: detail.philosophyInfo.description,
+        message: detail.philosophyInfo.message,
       });
     }
 
-    // 生活環境・特色
+    // 特化領域情報
     if (detail.specialtyInfo) {
       specialtyData.push({
         facility_id: facilityId,
-        features: detail.specialtyInfo.features,
+        features: Array.isArray(detail.specialtyInfo.features)
+          ? detail.specialtyInfo.features.join('')
+          : detail.specialtyInfo.features,
         programs: detail.specialtyInfo.programs,
       });
     }
@@ -342,7 +462,10 @@ async function seedFacilityDetails() {
     const facilitiesDetailJson = readFileSync(FACILITIES_DETAIL_PATH, 'utf-8');
     const facilitiesDetail = JSON.parse(facilitiesDetailJson) as Record<string, FacilityDetailItem>;
 
-    // 1. 施設種類マスタを挿入
+    // 1. 施設基本情報を挿入
+    await seedFacilities(supabase, facilitiesDetail);
+
+    // 2. 施設種類マスタを挿入
     const facilityTypesData = await seedFacilityTypes(supabase);
 
     // 施設種類名 → ID のマップを作成
@@ -353,10 +476,10 @@ async function seedFacilityDetails() {
       }
     }
 
-    // 2. 施設と施設種類の紐づけを挿入
+    // 3. 施設と施設種類の紐づけを挿入
     await seedFacilityFacilityTypes(supabase, facilitiesDetail, facilityTypesMap);
 
-    // 3. 施設詳細テーブル(7つ)にデータを挿入
+    // 4. 施設詳細テーブル(7つ)にデータを挿入
     await seedFacilityDetailTables(supabase, facilitiesDetail);
 
     logInfo('✓ 全ての施設詳細データの挿入が完了しました');
