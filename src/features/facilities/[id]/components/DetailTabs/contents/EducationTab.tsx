@@ -55,17 +55,6 @@ export const EducationTab = ({
                 error={getError('educationInfo.careerSupport')}
               />
             </div>
-            <div className={styles.editGroup}>
-              <EditField
-                type="textarea"
-                id="afterCare"
-                label="アフターケア（旧項目）"
-                value={educationInfo.afterCare}
-                onChange={(v) => onFieldChange?.('afterCare', v)}
-                rows={2}
-                error={getError('educationInfo.afterCare')}
-              />
-            </div>
           </div>
         </div>
         {onSave && <TabSaveButton onSave={onSave} isSaving={isSaving} isDirty={isDirty} />}
@@ -76,17 +65,11 @@ export const EducationTab = ({
   return (
     <div className={styles.tabContentWrapper}>
       <div className={styles.textSection}>
-        <TabSection
-          title="進学率と支援体制"
-          content={educationInfo.graduationRate || educationInfo.policy}
-        />
+        <TabSection title="進学率と支援体制" content={educationInfo.graduationRate} />
 
         <TabSection title="学習支援の工夫や外部連携" content={educationInfo.learningSupport} />
 
-        <TabSection
-          title="特化した進路支援内容"
-          content={educationInfo.careerSupport || educationInfo.afterCare}
-        />
+        <TabSection title="特化した進路支援内容" content={educationInfo.careerSupport} />
       </div>
     </div>
   );
