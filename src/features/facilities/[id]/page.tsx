@@ -57,13 +57,36 @@ export const FacilityDetail = ({ id }: Props) => {
     [updateNestedField],
   );
 
-  // セクション別の保存ハンドラーを生成
-  const createSaveHandler = useCallback(
-    (section: TabSection) => async () => {
-      await saveTab(section);
-    },
+  // セクション別の保存ハンドラーをRecord型で生成
+  const saveHandlers: Record<TabSection, () => Promise<void>> = useCallback(
+    () => ({
+      basic: async () => {
+        await saveTab('basic');
+      },
+      access: async () => {
+        await saveTab('access');
+      },
+      philosophy: async () => {
+        await saveTab('philosophy');
+      },
+      specialty: async () => {
+        await saveTab('specialty');
+      },
+      staff: async () => {
+        await saveTab('staff');
+      },
+      education: async () => {
+        await saveTab('education');
+      },
+      advanced: async () => {
+        await saveTab('advanced');
+      },
+      other: async () => {
+        await saveTab('other');
+      },
+    }),
     [saveTab],
-  );
+  )();
 
   if (isLoading)
     return (
@@ -109,7 +132,7 @@ export const FacilityDetail = ({ id }: Props) => {
         isEditMode={true}
         onFieldChange={handleFieldChange}
         getError={getError}
-        onSave={createSaveHandler('basic')}
+        onSave={saveHandlers.basic}
         isSaving={isSaving}
         isDirty={isDirty}
       />
@@ -131,13 +154,7 @@ export const FacilityDetail = ({ id }: Props) => {
         onNestedFieldChange={handleNestedFieldChange}
         errors={errors}
         getError={getError}
-        onSaveAccess={createSaveHandler('access')}
-        onSavePhilosophy={createSaveHandler('philosophy')}
-        onSaveSpecialty={createSaveHandler('specialty')}
-        onSaveStaff={createSaveHandler('staff')}
-        onSaveEducation={createSaveHandler('education')}
-        onSaveAdvanced={createSaveHandler('advanced')}
-        onSaveOther={createSaveHandler('other')}
+        saveHandlers={saveHandlers}
         isSaving={isSaving}
         isDirty={isDirty}
       />

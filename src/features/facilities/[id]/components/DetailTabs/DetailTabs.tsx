@@ -9,6 +9,7 @@ import {
   OtherInfo,
 } from '@/types/facility';
 
+import type { TabSection } from '../../edit/hooks/useFacilityTabEdit';
 import { AccessTab } from './contents/AccessTab';
 import { PhilosophyTab } from './contents/PhilosophyTab';
 import { SpecialtyTab } from './contents/SpecialtyTab';
@@ -44,14 +45,8 @@ type DetailTabsProps = {
   errors?: Record<string, string>;
   /** エラー取得関数 */
   getError?: (field: string) => string | undefined;
-  /** 各タブの保存ハンドラー */
-  onSaveAccess?: () => Promise<void>;
-  onSavePhilosophy?: () => Promise<void>;
-  onSaveSpecialty?: () => Promise<void>;
-  onSaveStaff?: () => Promise<void>;
-  onSaveEducation?: () => Promise<void>;
-  onSaveAdvanced?: () => Promise<void>;
-  onSaveOther?: () => Promise<void>;
+  /** タブセクション別の保存ハンドラー */
+  saveHandlers: Record<TabSection, () => Promise<void>>;
   /** 保存中フラグ */
   isSaving?: boolean;
   /** 変更されたか */
@@ -79,15 +74,8 @@ export const DetailTabs = ({
   otherInfo,
   isEditMode = false,
   onNestedFieldChange,
-  errors = {},
   getError = () => undefined,
-  onSaveAccess,
-  onSavePhilosophy,
-  onSaveSpecialty,
-  onSaveStaff,
-  onSaveEducation,
-  onSaveAdvanced,
-  onSaveOther,
+  saveHandlers,
   isSaving = false,
   isDirty = false,
 }: DetailTabsProps) => {
@@ -141,7 +129,7 @@ export const DetailTabs = ({
                     onNestedFieldChange?.('accessInfo', field, value)
                   }
                   getError={getError}
-                  onSave={onSaveAccess}
+                  onSave={saveHandlers.access}
                   isSaving={isSaving}
                   isDirty={isDirty}
                 />
@@ -155,7 +143,7 @@ export const DetailTabs = ({
                     onNestedFieldChange?.('philosophyInfo', field, value)
                   }
                   getError={getError}
-                  onSave={onSavePhilosophy}
+                  onSave={saveHandlers.philosophy}
                   isSaving={isSaving}
                   isDirty={isDirty}
                 />
@@ -169,7 +157,7 @@ export const DetailTabs = ({
                     onNestedFieldChange?.('specialtyInfo', field, value)
                   }
                   getError={getError}
-                  onSave={onSaveSpecialty}
+                  onSave={saveHandlers.specialty}
                   isSaving={isSaving}
                   isDirty={isDirty}
                 />
@@ -181,7 +169,7 @@ export const DetailTabs = ({
                   isEditMode={isEditMode}
                   onFieldChange={(field, value) => onNestedFieldChange?.('staffInfo', field, value)}
                   getError={getError}
-                  onSave={onSaveStaff}
+                  onSave={saveHandlers.staff}
                   isSaving={isSaving}
                   isDirty={isDirty}
                 />
@@ -195,7 +183,7 @@ export const DetailTabs = ({
                     onNestedFieldChange?.('educationInfo', field, value)
                   }
                   getError={getError}
-                  onSave={onSaveEducation}
+                  onSave={saveHandlers.education}
                   isSaving={isSaving}
                   isDirty={isDirty}
                 />
@@ -209,7 +197,7 @@ export const DetailTabs = ({
                     onNestedFieldChange?.('advancedInfo', field, value)
                   }
                   getError={getError}
-                  onSave={onSaveAdvanced}
+                  onSave={saveHandlers.advanced}
                   isSaving={isSaving}
                   isDirty={isDirty}
                 />
@@ -221,7 +209,7 @@ export const DetailTabs = ({
                   isEditMode={isEditMode}
                   onFieldChange={(field, value) => onNestedFieldChange?.('otherInfo', field, value)}
                   getError={getError}
-                  onSave={onSaveOther}
+                  onSave={saveHandlers.other}
                   isSaving={isSaving}
                   isDirty={isDirty}
                 />
