@@ -43,6 +43,8 @@ export interface AccessInfo {
 
 /** 理念情報 */
 export interface PhilosophyInfo {
+  /** 理念メッセージ */
+  message?: string;
   /** 日々の支援の中で重視している視点 */
   description: string;
 }

@@ -194,6 +194,7 @@ export async function getFacilityDetail(id: number): Promise<FacilityDetail | nu
     relationInfo: accessData?.relation_info,
     philosophyInfo: philosophyData
       ? {
+          message: philosophyData.message || undefined,
           description: philosophyData.description,
         }
       : undefined,

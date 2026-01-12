@@ -35,6 +35,7 @@ export type AccessInfoUpdateData = {
  * 理念情報の更新データ型
  */
 export type PhilosophyInfoUpdateData = {
+  message?: string;
   description?: string;
 };
 
