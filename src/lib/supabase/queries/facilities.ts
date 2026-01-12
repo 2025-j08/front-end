@@ -63,6 +63,12 @@ async function getFacilityBasicInfo(id: number) {
  * @param id - 施設ID
  * @returns 施設種類（dormitoryType）
  * @throws データ取得エラー時はErrorをスロー
+ *
+ * @remarks
+ * データベース設計では facility_facility_types 中間テーブルを使用しており、
+ * 将来的に1施設が複数の種類を持つ可能性を考慮している。
+ * 現状は最初の1件のみを使用し、1施設1種類として運用。
+ * 複数種類対応が必要になった場合は、戻り値を配列型に変更する。
  */
 async function getFacilityTypes(id: number) {
   const supabase = createClient();
@@ -76,8 +82,9 @@ async function getFacilityTypes(id: number) {
     throw new Error(`施設種類の取得に失敗しました: ${typesError.message}`);
   }
 
-  // 施設種類名を抽出（最初のものを使用）
-  const firstType = facilityTypes?.[0] as { facility_types: { name: string } } | undefined;
+  // 施設種類名を抽出（現状は最初の1件のみを使用）
+  // 注: 複数の種類が登録されている場合、2件目以降は無視される
+  const firstType = facilityTypes?.[0] as { facility_types: { name: string } | null } | undefined;
   const dormitoryType = firstType?.facility_types?.name as
     | '大舎'
     | '中舎'
