@@ -2,7 +2,6 @@ import dynamic from 'next/dynamic';
 
 import { AccessInfo } from '@/types/facility';
 
-import { CommunityRelation } from './CommunityRelation';
 import { EditField } from './EditField';
 import { TabSaveButton } from './TabSaveButton';
 import styles from './TabContent.module.scss';
@@ -115,16 +114,28 @@ export const AccessTab = ({
   }
 
   return (
-    <>
+    <div className={styles.accessTabContainer}>
       <div className={`${styles.tabContentWrapper} ${styles.accessContent}`}>
         <div className={styles.accessInfo}>
-          <p className={styles.accessText}>{accessInfo.locationAddress}</p>
-          {accessInfo.station && <p className={styles.accessText}>{accessInfo.station}</p>}
-          {accessInfo.description && (
-            <p className={styles.accessDescription}>{accessInfo.description}</p>
+          <div className={styles.infoSection}>
+            <h3 className={styles.sectionTitle}>住所</h3>
+            <p className={styles.accessText}>{accessInfo.locationAddress}</p>
+          </div>
+
+          {accessInfo.station && (
+            <div className={styles.infoSection}>
+              <h3 className={styles.sectionTitle}>アクセス</h3>
+              <p className={styles.accessText}>{accessInfo.station}</p>
+              {accessInfo.description && (
+                <p className={styles.accessDescription}>{accessInfo.description}</p>
+              )}
+            </div>
           )}
+
           {accessInfo.locationAppeal && (
-            <p className={styles.accessDescription}>{accessInfo.locationAppeal}</p>
+            <div className={styles.infoSection}>
+              <p className={styles.accessText}>{accessInfo.locationAppeal}</p>
+            </div>
           )}
         </div>
         <div className={styles.mapWrapper}>
@@ -137,7 +148,12 @@ export const AccessTab = ({
         </div>
       </div>
 
-      {relationInfo && <CommunityRelation relationInfo={relationInfo} />}
-    </>
+      {relationInfo && (
+        <div className={styles.relationSection}>
+          <h3 className={styles.relationTitle}>地域社会との関係や連携状況</h3>
+          <p className={styles.relationText}>{relationInfo}</p>
+        </div>
+      )}
+    </div>
   );
 };
