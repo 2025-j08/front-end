@@ -40,9 +40,9 @@ export const FacilityDetail = ({ id }: Props) => {
   // フィールド更新ハンドラー（BasicInfoSection用）
   const handleFieldChange = useCallback(
     (field: string, value: unknown) => {
-      updateField(field as keyof typeof formData, value as never);
+      updateField(field as keyof FacilityDetailType, value as never);
     },
-    [updateField, formData],
+    [updateField],
   );
 
   // ネストしたフィールド更新ハンドラー（タブ用）
