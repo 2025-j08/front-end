@@ -4,7 +4,7 @@
  */
 
 import { createClient } from '@/lib/supabase/client';
-import type { FacilityDetail, AnnexFacility, OtherInfo, OtherInfoObject } from '@/types/facility';
+import type { FacilityDetail, AnnexFacility } from '@/types/facility';
 
 /**
  * 詳細テーブルのエラーチェック用ヘルパー関数
@@ -14,26 +14,6 @@ const checkDetailTableError = (result: { error: unknown }, tableName: string) =>
   if (result.error && (result.error as { code?: string }).code !== 'PGRST116') {
     throw new Error(`${tableName}の取得に失敗しました: ${(result.error as Error).message}`);
   }
-};
-
-/**
- * OtherInfoを正規化する（文字列→オブジェクト変換）
- * 後方互換性のため文字列形式も受け入れるが、必ずOtherInfoObject形式に変換
- */
-const normalizeOtherInfo = (raw: unknown): OtherInfoObject | undefined => {
-  if (!raw) return undefined;
-
-  // 既にオブジェクト形式の場合はそのまま返す
-  if (typeof raw === 'object' && raw !== null) {
-    return raw as OtherInfoObject;
-  }
-
-  // 文字列の場合はオブジェクト形式に変換
-  if (typeof raw === 'string') {
-    return { description: raw };
-  }
-
-  return undefined;
 };
 
 /**
@@ -84,7 +64,9 @@ async function getFacilityTypes(id: number) {
 
   // 施設種類名を抽出（現状は最初の1件のみを使用）
   // 注: 複数の種類が登録されている場合、2件目以降は無視される
-  const firstType = facilityTypes?.[0] as { facility_types: { name: string } | null } | undefined;
+  const firstType = facilityTypes?.[0] as unknown as
+    | { facility_types: { name: string } | null }
+    | undefined;
   const dormitoryType = firstType?.facility_types?.name as
     | '大舎'
     | '中舎'
@@ -114,13 +96,13 @@ async function getFacilityDetailTables(id: number) {
     advancedResult,
     otherResult,
   ] = await Promise.all([
-    supabase.from('facility_access').select('data').eq('facility_id', id).single(),
-    supabase.from('facility_philosophy').select('data').eq('facility_id', id).single(),
-    supabase.from('facility_specialty').select('data').eq('facility_id', id).single(),
-    supabase.from('facility_staff').select('data').eq('facility_id', id).single(),
-    supabase.from('facility_education').select('data').eq('facility_id', id).single(),
-    supabase.from('facility_advanced').select('data').eq('facility_id', id).single(),
-    supabase.from('facility_other').select('data').eq('facility_id', id).single(),
+    supabase.from('facility_access').select('*').eq('facility_id', id).single(),
+    supabase.from('facility_philosophy').select('*').eq('facility_id', id).single(),
+    supabase.from('facility_specialty').select('*').eq('facility_id', id).single(),
+    supabase.from('facility_staff').select('*').eq('facility_id', id).single(),
+    supabase.from('facility_education').select('*').eq('facility_id', id).single(),
+    supabase.from('facility_advanced').select('*').eq('facility_id', id).single(),
+    supabase.from('facility_other').select('*').eq('facility_id', id).single(),
   ]);
 
   // 全テーブルで均等にエラーチェック
@@ -175,16 +157,23 @@ export async function getFacilityDetail(id: number): Promise<FacilityDetail | nu
     ? (facility.annex_facilities as AnnexFacility[])
     : [];
 
-  // 4. facility_access の JSONB データから追加フィールドを取得
-  const accessData = detailTables.accessResult.data?.data || {};
+  // 4. 各詳細テーブルのデータを取得（正規化後のカラムを直接参照）
+  const accessData = detailTables.accessResult.data;
   const accessInfo = {
-    locationAddress: accessData.locationAddress || fullAddress,
-    lat: accessData.lat || 0,
-    lng: accessData.lng || 0,
-    station: accessData.station,
-    description: accessData.description,
-    locationAppeal: accessData.locationAppeal,
+    locationAddress: accessData?.location_address || fullAddress,
+    lat: accessData?.lat || 0,
+    lng: accessData?.lng || 0,
+    station: accessData?.station,
+    description: accessData?.description,
+    locationAppeal: accessData?.location_appeal,
   };
+
+  const philosophyData = detailTables.philosophyResult.data;
+  const specialtyData = detailTables.specialtyResult.data;
+  const staffData = detailTables.staffResult.data;
+  const educationData = detailTables.educationResult.data;
+  const advancedData = detailTables.advancedResult.data;
+  const otherData = detailTables.otherResult.data;
 
   // 5. FacilityDetail 型に整形
   const facilityDetail: FacilityDetail = {
@@ -193,22 +182,67 @@ export async function getFacilityDetail(id: number): Promise<FacilityDetail | nu
     fullAddress,
     phone: facility.phone,
     dormitoryType,
-    targetAge: accessData.targetAge || '0～18歳',
+    targetAge: accessData?.target_age || '0～18歳',
     accessInfo,
     corporation: facility.corporation,
-    websiteUrl: accessData.websiteUrl,
+    websiteUrl: accessData?.website_url,
     establishedYear: facility.established_year?.toString(),
-    building: accessData.building,
-    capacity: accessData.capacity,
-    provisionalCapacity: accessData.provisionalCapacity,
+    building: accessData?.building,
+    capacity: accessData?.capacity || undefined,
+    provisionalCapacity: accessData?.provisional_capacity || undefined,
     annexFacilities,
-    relationInfo: accessData.relationInfo,
-    philosophyInfo: detailTables.philosophyResult.data?.data,
-    specialtyInfo: detailTables.specialtyResult.data?.data,
-    staffInfo: detailTables.staffResult.data?.data,
-    educationInfo: detailTables.educationResult.data?.data,
-    advancedInfo: detailTables.advancedResult.data?.data,
-    otherInfo: normalizeOtherInfo(detailTables.otherResult.data?.data),
+    relationInfo: accessData?.relation_info,
+    philosophyInfo: philosophyData
+      ? {
+          description: philosophyData.description,
+        }
+      : undefined,
+    specialtyInfo: specialtyData
+      ? {
+          features: specialtyData.features || [],
+          programs: specialtyData.programs || undefined,
+        }
+      : undefined,
+    staffInfo: staffData
+      ? {
+          fullTimeStaffCount: staffData.full_time_staff_count || undefined,
+          partTimeStaffCount: staffData.part_time_staff_count || undefined,
+          specialties: staffData.specialties || undefined,
+          averageTenure: staffData.average_tenure || undefined,
+          ageDistribution: staffData.age_distribution || undefined,
+          workStyle: staffData.work_style || undefined,
+          hasUniversityLecturer: staffData.has_university_lecturer || undefined,
+          lectureSubjects: staffData.lecture_subjects || undefined,
+          externalActivities: staffData.external_activities || undefined,
+          qualificationsAndSkills: staffData.qualifications_and_skills || undefined,
+          internshipDetails: staffData.internship_details || undefined,
+        }
+      : undefined,
+    educationInfo: educationData
+      ? {
+          graduationRate: educationData.graduation_rate || undefined,
+          learningSupport: educationData.learning_support || undefined,
+          careerSupport: educationData.career_support || undefined,
+        }
+      : undefined,
+    advancedInfo: advancedData
+      ? {
+          title: advancedData.title || undefined,
+          description: advancedData.description,
+          background: advancedData.background || undefined,
+          challenges: advancedData.challenges || undefined,
+          solutions: advancedData.solutions || undefined,
+        }
+      : undefined,
+    otherInfo: otherData
+      ? {
+          title: otherData.title || undefined,
+          description: otherData.description || undefined,
+          networks: otherData.networks || undefined,
+          futureOutlook: otherData.future_outlook || undefined,
+          freeText: otherData.free_text || undefined,
+        }
+      : undefined,
   };
 
   return facilityDetail;
