@@ -165,7 +165,7 @@ export const StaffTab = ({
               )}
             </div>
           ) : (
-            <p className={styles.textContent}>{staffInfo.staffCount || '-'}</p>
+            <p className={styles.textContent}>-</p>
           )}
         </TabSection>
 
