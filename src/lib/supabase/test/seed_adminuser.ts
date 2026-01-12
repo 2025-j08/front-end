@@ -16,6 +16,9 @@
  * - SEED_ADMIN_PASSWORD (オプション、デフォルト: password12345)
  * - SEED_ADMIN_NAME (オプション、デフォルト: 'Administrator')
  * - SEED_ADMIN_FACILITY_ID (オプション、施設割当を行う場合)
+ *
+ * 実行方法:
+ * node --env-file=.env.local --import tsx src/lib/supabase/test/seed_adminuser.ts
  */
 
 import { createAdminClient } from '@/lib/supabase/server';

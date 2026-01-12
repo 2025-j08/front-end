@@ -46,11 +46,11 @@ type DetailTabsProps = {
   /** エラー取得関数 */
   getError?: (field: string) => string | undefined;
   /** タブセクション別の保存ハンドラー */
-  saveHandlers: Record<TabSection, () => Promise<void>>;
+  saveHandlers?: Record<TabSection, () => Promise<void>>;
   /** 保存中フラグ */
   isSaving?: boolean;
   /** セクション別の変更状態を取得する関数 */
-  isDirty: (section: TabSection) => boolean;
+  isDirty?: (section: TabSection) => boolean;
 };
 
 /**
@@ -84,6 +84,10 @@ export const DetailTabs = ({
 
   // キーボードナビゲーションフックを使用
   const { handleKeyDown } = useTabKeyboardNav(tabIds, onTabChange);
+
+  // 編集モードでない場合のデフォルトハンドラー
+  const noop = async () => {};
+  const noopIsDirty = () => false;
 
   return (
     <section className={styles.detailSection}>
@@ -129,9 +133,9 @@ export const DetailTabs = ({
                     onNestedFieldChange?.('accessInfo', field, value)
                   }
                   getError={getError}
-                  onSave={saveHandlers.access}
+                  onSave={saveHandlers?.access ?? noop}
                   isSaving={isSaving}
-                  isDirty={isDirty('access')}
+                  isDirty={(isDirty ?? noopIsDirty)('access')}
                 />
               ) : null;
             case 'philosophy':
@@ -143,9 +147,9 @@ export const DetailTabs = ({
                     onNestedFieldChange?.('philosophyInfo', field, value)
                   }
                   getError={getError}
-                  onSave={saveHandlers.philosophy}
+                  onSave={saveHandlers?.philosophy ?? noop}
                   isSaving={isSaving}
-                  isDirty={isDirty('philosophy')}
+                  isDirty={(isDirty ?? noopIsDirty)('philosophy')}
                 />
               ) : null;
             case 'specialty':
@@ -157,9 +161,9 @@ export const DetailTabs = ({
                     onNestedFieldChange?.('specialtyInfo', field, value)
                   }
                   getError={getError}
-                  onSave={saveHandlers.specialty}
+                  onSave={saveHandlers?.specialty ?? noop}
                   isSaving={isSaving}
-                  isDirty={isDirty('specialty')}
+                  isDirty={(isDirty ?? noopIsDirty)('specialty')}
                 />
               ) : null;
             case 'staff':
@@ -169,9 +173,9 @@ export const DetailTabs = ({
                   isEditMode={isEditMode}
                   onFieldChange={(field, value) => onNestedFieldChange?.('staffInfo', field, value)}
                   getError={getError}
-                  onSave={saveHandlers.staff}
+                  onSave={saveHandlers?.staff ?? noop}
                   isSaving={isSaving}
-                  isDirty={isDirty('staff')}
+                  isDirty={(isDirty ?? noopIsDirty)('staff')}
                 />
               ) : null;
             case 'education':
@@ -183,9 +187,9 @@ export const DetailTabs = ({
                     onNestedFieldChange?.('educationInfo', field, value)
                   }
                   getError={getError}
-                  onSave={saveHandlers.education}
+                  onSave={saveHandlers?.education ?? noop}
                   isSaving={isSaving}
-                  isDirty={isDirty('education')}
+                  isDirty={(isDirty ?? noopIsDirty)('education')}
                 />
               ) : null;
             case 'advanced':
@@ -197,9 +201,9 @@ export const DetailTabs = ({
                     onNestedFieldChange?.('advancedInfo', field, value)
                   }
                   getError={getError}
-                  onSave={saveHandlers.advanced}
+                  onSave={saveHandlers?.advanced ?? noop}
                   isSaving={isSaving}
-                  isDirty={isDirty('advanced')}
+                  isDirty={(isDirty ?? noopIsDirty)('advanced')}
                 />
               ) : null;
             case 'other':
@@ -209,9 +213,9 @@ export const DetailTabs = ({
                   isEditMode={isEditMode}
                   onFieldChange={(field, value) => onNestedFieldChange?.('otherInfo', field, value)}
                   getError={getError}
-                  onSave={saveHandlers.other}
+                  onSave={saveHandlers?.other ?? noop}
                   isSaving={isSaving}
-                  isDirty={isDirty('other')}
+                  isDirty={(isDirty ?? noopIsDirty)('other')}
                 />
               ) : null;
             default:
