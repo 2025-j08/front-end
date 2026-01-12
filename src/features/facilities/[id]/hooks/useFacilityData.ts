@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 
-import facilitiesDetailData from '@/dummy_data/facilities_detail.json';
-import type { FacilityDetail, FacilityDataMap } from '@/types/facility';
+import { getFacilityDetail } from '@/lib/supabase/queries/facilities';
+import type { FacilityDetail } from '@/types/facility';
 
 /**
  * useFacilityData カスタムフックの戻り値型
@@ -16,7 +16,7 @@ type UseFacilityDataReturn = {
 
 /**
  * useFacilityData カスタムフック
- * 施設IDに基づいて施設詳細データを取得します
+ * 施設IDに基づいてSupabaseから施設詳細データを取得します
  *
  * @param id - 施設ID（文字列形式）
  * @returns オブジェクト { data, isLoading, error }
@@ -30,17 +30,22 @@ export const useFacilityData = (id: string): UseFacilityDataReturn => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchData = () => {
+    const fetchData = async () => {
       setIsLoading(true);
       setError(null);
 
       try {
-        // JSONデータをFacilityDataMap型として扱う
-        // NOTE: 本番環境ではzod等でランタイムバリデーションを推奨
-        const dataMap = facilitiesDetailData as unknown as FacilityDataMap;
+        // IDを数値に変換
+        const numericId = parseInt(id, 10);
 
-        // データ検索
-        const facilityData = dataMap[id];
+        if (isNaN(numericId)) {
+          setError(`無効な施設ID: ${id}`);
+          setData(null);
+          return;
+        }
+
+        // Supabaseから施設詳細データを取得
+        const facilityData = await getFacilityDetail(numericId);
 
         if (!facilityData) {
           setError(`施設ID: ${id} が見つかりません`);

@@ -3,17 +3,12 @@ import { EducationInfo } from '@/types/facility';
 import { EditField } from './EditField';
 import styles from './TabContent.module.scss';
 import { TabSection } from './TabSection';
+import { TabProps } from '../types/tabProps';
 
-export type EducationTabProps = {
-  educationInfo: EducationInfo;
-  isEditMode?: boolean;
-  onFieldChange?: (field: string, value: unknown) => void;
-  errors?: Record<string, string>;
-  getError?: (field: string) => string | undefined;
-};
+export type EducationTabProps = TabProps<EducationInfo>;
 
 export const EducationTab = ({
-  educationInfo,
+  data: educationInfo,
   isEditMode = false,
   onFieldChange,
   errors = {},

@@ -3,17 +3,12 @@ import { PhilosophyInfo } from '@/types/facility';
 import { EditField } from './EditField';
 import styles from './TabContent.module.scss';
 import { TabSection } from './TabSection';
+import { TabProps } from '../types/tabProps';
 
-export type PhilosophyTabProps = {
-  philosophyInfo: PhilosophyInfo;
-  isEditMode?: boolean;
-  onFieldChange?: (field: string, value: unknown) => void;
-  errors?: Record<string, string>;
-  getError?: (field: string) => string | undefined;
-};
+export type PhilosophyTabProps = TabProps<PhilosophyInfo>;
 
 export const PhilosophyTab = ({
-  philosophyInfo,
+  data: philosophyInfo,
   isEditMode = false,
   onFieldChange,
   errors = {},

@@ -3,35 +3,17 @@ import { OtherInfo } from '@/types/facility';
 import { EditField } from './EditField';
 import styles from './TabContent.module.scss';
 import { TabSection } from './TabSection';
+import { TabProps } from '../types/tabProps';
 
-export type OtherTabProps = {
-  otherInfo: OtherInfo;
-  isEditMode?: boolean;
-  onFieldChange?: (field: string, value: unknown) => void;
-  errors?: Record<string, string>;
-  getError?: (field: string) => string | undefined;
-};
+export type OtherTabProps = TabProps<OtherInfo>;
 
 export const OtherTab = ({
-  otherInfo,
+  data: otherInfo,
   isEditMode = false,
   onFieldChange,
   errors = {},
   getError = () => undefined,
 }: OtherTabProps) => {
-  // 文字列の場合は後方互換性のため対応
-  const isString = typeof otherInfo === 'string';
-
-  if (isString) {
-    return (
-      <div className={styles.tabContentWrapper}>
-        <div className={styles.textSection}>
-          <TabSection content={otherInfo} />
-        </div>
-      </div>
-    );
-  }
-
   if (isEditMode) {
     return (
       <div className={styles.tabContentWrapper}>
