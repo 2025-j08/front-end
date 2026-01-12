@@ -49,8 +49,8 @@ type DetailTabsProps = {
   saveHandlers: Record<TabSection, () => Promise<void>>;
   /** 保存中フラグ */
   isSaving?: boolean;
-  /** 変更されたか */
-  isDirty?: boolean;
+  /** セクション別の変更状態を取得する関数 */
+  isDirty: (section: TabSection) => boolean;
 };
 
 /**
@@ -77,7 +77,7 @@ export const DetailTabs = ({
   getError = () => undefined,
   saveHandlers,
   isSaving = false,
-  isDirty = false,
+  isDirty,
 }: DetailTabsProps) => {
   // タブIDの配列を生成
   const tabIds = tabs.map((tab) => tab.key);
@@ -131,7 +131,7 @@ export const DetailTabs = ({
                   getError={getError}
                   onSave={saveHandlers.access}
                   isSaving={isSaving}
-                  isDirty={isDirty}
+                  isDirty={isDirty('access')}
                 />
               ) : null;
             case 'philosophy':
@@ -145,7 +145,7 @@ export const DetailTabs = ({
                   getError={getError}
                   onSave={saveHandlers.philosophy}
                   isSaving={isSaving}
-                  isDirty={isDirty}
+                  isDirty={isDirty('philosophy')}
                 />
               ) : null;
             case 'specialty':
@@ -159,7 +159,7 @@ export const DetailTabs = ({
                   getError={getError}
                   onSave={saveHandlers.specialty}
                   isSaving={isSaving}
-                  isDirty={isDirty}
+                  isDirty={isDirty('specialty')}
                 />
               ) : null;
             case 'staff':
@@ -171,7 +171,7 @@ export const DetailTabs = ({
                   getError={getError}
                   onSave={saveHandlers.staff}
                   isSaving={isSaving}
-                  isDirty={isDirty}
+                  isDirty={isDirty('staff')}
                 />
               ) : null;
             case 'education':
@@ -185,7 +185,7 @@ export const DetailTabs = ({
                   getError={getError}
                   onSave={saveHandlers.education}
                   isSaving={isSaving}
-                  isDirty={isDirty}
+                  isDirty={isDirty('education')}
                 />
               ) : null;
             case 'advanced':
@@ -199,7 +199,7 @@ export const DetailTabs = ({
                   getError={getError}
                   onSave={saveHandlers.advanced}
                   isSaving={isSaving}
-                  isDirty={isDirty}
+                  isDirty={isDirty('advanced')}
                 />
               ) : null;
             case 'other':
@@ -211,7 +211,7 @@ export const DetailTabs = ({
                   getError={getError}
                   onSave={saveHandlers.other}
                   isSaving={isSaving}
-                  isDirty={isDirty}
+                  isDirty={isDirty('other')}
                 />
               ) : null;
             default:

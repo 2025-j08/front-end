@@ -134,7 +134,7 @@ export const FacilityDetail = ({ id }: Props) => {
         getError={getError}
         onSave={saveHandlers.basic}
         isSaving={isSaving}
-        isDirty={isDirty}
+        isDirty={isDirty('basic')}
       />
 
       <DetailTabs

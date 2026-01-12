@@ -9,6 +9,31 @@ import type { TabUpdateData } from '@/lib/supabase/mutations/facilities';
 
 import { toSnakeCase, basicInfoFieldMapping } from '../utils/fieldMapping';
 
+/**
+ * フィールド名からセクション名を取得するヘルパー
+ */
+function getSectionFromField<K extends keyof FacilityDetail>(field: K): TabSection {
+  const basicFields = ['name', 'phone', 'corporation', 'establishedYear', 'annexFacilities'];
+  const accessFields = [
+    'accessInfo',
+    'websiteUrl',
+    'capacity',
+    'provisionalCapacity',
+    'relationInfo',
+  ];
+
+  if (basicFields.includes(String(field))) return 'basic';
+  if (accessFields.includes(String(field))) return 'access';
+  if (field === 'philosophyInfo') return 'philosophy';
+  if (field === 'specialtyInfo') return 'specialty';
+  if (field === 'staffInfo') return 'staff';
+  if (field === 'educationInfo') return 'education';
+  if (field === 'advancedInfo') return 'advanced';
+  if (field === 'otherInfo') return 'other';
+
+  return 'basic'; // デフォルト
+}
+
 /** タブセクション名 */
 export type TabSection =
   | 'basic'
@@ -24,8 +49,8 @@ export type TabSection =
 type TabEditState = {
   /** 編集中のデータ */
   formData: Partial<FacilityDetail>;
-  /** 変更されたか */
-  isDirty: boolean;
+  /** セクション別の変更フラグ */
+  dirtyMap: Map<TabSection, boolean>;
   /** 保存中フラグ */
   isSaving: boolean;
   /** エラー */
@@ -36,8 +61,8 @@ type TabEditState = {
 type UseFacilityTabEditReturn = {
   /** 編集中のフォームデータ */
   formData: Partial<FacilityDetail>;
-  /** 変更されたか */
-  isDirty: boolean;
+  /** セクション別の変更状態を取得 */
+  isDirty: (section: TabSection) => boolean;
   /** 保存中フラグ */
   isSaving: boolean;
   /** エラー */
@@ -71,7 +96,7 @@ export const useFacilityTabEdit = (
 ): UseFacilityTabEditReturn => {
   const [state, setState] = useState<TabEditState>({
     formData: initialData ? { ...initialData } : {},
-    isDirty: false,
+    dirtyMap: new Map(),
     isSaving: false,
     errors: {},
   });
@@ -81,7 +106,7 @@ export const useFacilityTabEdit = (
     if (initialData) {
       setState({
         formData: { ...initialData },
-        isDirty: false,
+        dirtyMap: new Map(),
         isSaving: false,
         errors: {},
       });
@@ -91,18 +116,23 @@ export const useFacilityTabEdit = (
   /** 単一フィールドの更新 */
   const updateField = useCallback(
     <K extends keyof FacilityDetail>(field: K, value: FacilityDetail[K]) => {
-      setState((prev) => ({
-        ...prev,
-        formData: {
-          ...prev.formData,
-          [field]: value,
-        },
-        isDirty: true,
-        errors: {
-          ...prev.errors,
-          [field]: '',
-        },
-      }));
+      const section = getSectionFromField(field);
+      setState((prev) => {
+        const newDirtyMap = new Map(prev.dirtyMap);
+        newDirtyMap.set(section, true);
+        return {
+          ...prev,
+          formData: {
+            ...prev.formData,
+            [field]: value,
+          },
+          dirtyMap: newDirtyMap,
+          errors: {
+            ...prev.errors,
+            [field]: '',
+          },
+        };
+      });
     },
     [],
   );
@@ -110,8 +140,11 @@ export const useFacilityTabEdit = (
   /** ネストしたフィールドの更新 */
   const updateNestedField = useCallback(
     <K extends keyof FacilityDetail>(parent: K, field: string, value: unknown) => {
+      const section = getSectionFromField(parent);
       setState((prev) => {
         const parentObj = prev.formData[parent];
+        const newDirtyMap = new Map(prev.dirtyMap);
+        newDirtyMap.set(section, true);
         return {
           ...prev,
           formData: {
@@ -121,7 +154,7 @@ export const useFacilityTabEdit = (
               [field]: value,
             },
           },
-          isDirty: true,
+          dirtyMap: newDirtyMap,
           errors: {
             ...prev.errors,
             [`${String(parent)}.${field}`]: '',
@@ -165,13 +198,17 @@ export const useFacilityTabEdit = (
           throw new Error(result.error || '保存に失敗しました');
         }
 
-        // 成功時の処理
-        setState((prev) => ({
-          ...prev,
-          isSaving: false,
-          isDirty: false,
-          formData: result.data || prev.formData,
-        }));
+        // 成功時の処理 - 保存したセクションのdirtyフラグをクリア
+        setState((prev) => {
+          const newDirtyMap = new Map(prev.dirtyMap);
+          newDirtyMap.set(section, false);
+          return {
+            ...prev,
+            isSaving: false,
+            dirtyMap: newDirtyMap,
+            formData: result.data || prev.formData,
+          };
+        });
 
         // コールバック実行
         if (onSaveSuccess && result.data) {
@@ -199,7 +236,7 @@ export const useFacilityTabEdit = (
     if (initialData) {
       setState({
         formData: { ...initialData },
-        isDirty: false,
+        dirtyMap: new Map(),
         isSaving: false,
         errors: {},
       });
@@ -214,9 +251,17 @@ export const useFacilityTabEdit = (
     [state.errors],
   );
 
+  /** セクション別のisDirty状態を取得 */
+  const isDirty = useCallback(
+    (section: TabSection): boolean => {
+      return state.dirtyMap.get(section) ?? false;
+    },
+    [state.dirtyMap],
+  );
+
   return {
     formData: state.formData,
-    isDirty: state.isDirty,
+    isDirty,
     isSaving: state.isSaving,
     errors: state.errors,
     updateField,
