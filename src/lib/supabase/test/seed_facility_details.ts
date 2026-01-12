@@ -1,6 +1,10 @@
 // 施設詳細テーブル(7つ)と施設種類テーブルに初期データを追加する
+// 注: facilitiesテーブルにレコードが追加されると、トリガーにより
+// 各詳細テーブルにfacility_idのレコードが自動作成されるため、
+// このスクリプトでは既存レコードを更新します
+//
 // 実行方法:
-// NEXT_PUBLIC_SUPABASE_URL=<url> SUPABASE_SERVICE_ROLE_KEY=<key> tsx src/lib/supabase/test/seed_facility_details.ts
+// node --env-file=.env.local --import tsx src/lib/supabase/test/seed_facility_details.ts
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
@@ -115,24 +119,27 @@ async function seedFacilityFacilityTypes(
 
   const { data, error } = await supabase
     .from('facility_facility_types')
-    .insert(associations as never)
+    .upsert(associations as never, { onConflict: 'facility_id,facility_type_id' })
     .select();
 
   if (error) {
     throw error;
   }
 
-  logInfo(`✓ ${data?.length}件の施設-施設種類紐づけを挿入しました`);
+  logInfo(`✓ ${data?.length}件の施設-施設種類紐づけを更新しました`);
 }
 
 /**
- * 施設詳細テーブル(7つ)にデータを挿入
+ * 施設詳細テーブル(7つ)にデータを更新
+ * 注: facilitiesテーブルにレコードが追加されると、トリガーにより
+ * 各詳細テーブルにfacility_idのレコードが自動作成されるため、
+ * このスクリプトでは既存レコードを更新(upsert)します
  */
 async function seedFacilityDetailTables(
   supabase: ReturnType<typeof createClient>,
   facilitiesDetail: Record<string, FacilityDetailItem>,
 ) {
-  console.log('施設詳細テーブルにデータを挿入しています...');
+  console.log('施設詳細テーブルにデータを更新しています...');
 
   // 各テーブルへの挿入データを準備（正規化されたスキーマに対応）
   const accessData: Array<{
@@ -300,14 +307,14 @@ async function seedFacilityDetailTables(
 
     const { data, error } = await supabase
       .from(table.name)
-      .insert(table.data as never)
+      .upsert(table.data as never, { onConflict: 'facility_id' })
       .select();
 
     if (error) {
-      throw new Error(`${table.name} の挿入に失敗しました: ${error.message}`);
+      throw new Error(`${table.name} の更新に失敗しました: ${error.message}`);
     }
 
-    logInfo(`✓ ${table.name}: ${data?.length}件のデータを挿入しました`);
+    logInfo(`✓ ${table.name}: ${data?.length}件のデータを更新しました`);
   }
 }
 

@@ -1,6 +1,6 @@
 // 施設テーブルに初期データを追加する
 // 実行方法:
-// NEXT_PUBLIC_SUPABASE_URL=<url> SUPABASE_SERVICE_ROLE_KEY=<key> tsx src/lib/supabase/test/seed_facility.ts
+// node --env-file=.env.local --import tsx src/lib/supabase/test/seed_facility.ts
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
