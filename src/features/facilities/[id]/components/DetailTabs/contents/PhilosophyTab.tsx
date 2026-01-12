@@ -1,6 +1,7 @@
 import { PhilosophyInfo } from '@/types/facility';
 
 import { EditField } from './EditField';
+import { EditSection } from './EditSection';
 import { TabSaveButton } from './TabSaveButton';
 import styles from './TabContent.module.scss';
 import { TabSection } from './TabSection';
@@ -20,28 +21,37 @@ export const PhilosophyTab = ({
   if (isEditMode) {
     return (
       <>
-        <div className={styles.tabContentWrapper}>
+        <div className={styles.philosophyTabContainer}>
           <div className={styles.textSection}>
-            <EditField
-              type="textarea"
-              id="message"
-              label="理念メッセージ"
-              value={philosophyInfo.message}
-              onChange={(v) => onFieldChange?.('message', v)}
-              rows={3}
-              placeholder="施設の理念メッセージを入力してください"
-              error={getError('philosophyInfo.message')}
-            />
-            <EditField
-              type="textarea"
-              id="description"
-              label="日々の支援の中で重視している視点"
-              value={philosophyInfo.description}
-              onChange={(v) => onFieldChange?.('description', v)}
-              rows={10}
-              placeholder="日々の支援の中で重視している視点を入力してください"
-              error={getError('philosophyInfo.description')}
-            />
+            {/* 理念セクション - 表示画面の「理念」と統一 */}
+            {philosophyInfo.message !== undefined && (
+              <EditSection title="理念">
+                <EditField
+                  type="textarea"
+                  id="message"
+                  label="理念メッセージ"
+                  value={philosophyInfo.message}
+                  onChange={(v) => onFieldChange?.('message', v)}
+                  rows={3}
+                  placeholder="施設の理念メッセージを入力してください"
+                  error={getError('philosophyInfo.message')}
+                />
+              </EditSection>
+            )}
+
+            {/* 日々の支援の中で重視している視点 - 表示画面と同じタイトル */}
+            <EditSection title="日々の支援の中で重視している視点">
+              <EditField
+                type="textarea"
+                id="description"
+                label="重視している視点"
+                value={philosophyInfo.description}
+                onChange={(v) => onFieldChange?.('description', v)}
+                rows={10}
+                placeholder="日々の支援の中で重視している視点を入力してください"
+                error={getError('philosophyInfo.description')}
+              />
+            </EditSection>
           </div>
         </div>
         {onSave && <TabSaveButton onSave={onSave} isSaving={isSaving} isDirty={isDirty} />}
