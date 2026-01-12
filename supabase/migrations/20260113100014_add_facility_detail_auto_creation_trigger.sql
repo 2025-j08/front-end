@@ -28,13 +28,11 @@ BEGIN
     '' -- 空文字列（NOT NULL制約を満たすため）
   );
 
-  -- facility_specialty: 空のテキストで初期化（TEXT型に変更済み）
+  -- facility_specialty: facility_idのみで初期化（featuresはNULL許容）
   INSERT INTO public.facility_specialty (
-    facility_id,
-    features
+    facility_id
   ) VALUES (
-    NEW.id,
-    ' ' -- 空白1文字（NOT NULL制約とlength > 0制約を満たすため）
+    NEW.id
   );
 
   -- facility_staff: 全フィールドNULLで初期化

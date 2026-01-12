@@ -2,13 +2,10 @@
 -- 生活環境・特色情報を格納
 CREATE TABLE public.facility_specialty (
     facility_id BIGINT PRIMARY KEY REFERENCES public.facilities(id) ON DELETE CASCADE,
-    features TEXT NOT NULL,
+    features TEXT,
     programs TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-
-    -- チェック制約（空文字列を許可しない）
-    CONSTRAINT chk_specialty_features_not_empty CHECK (length(features) > 0)
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 -- RLSを有効化
