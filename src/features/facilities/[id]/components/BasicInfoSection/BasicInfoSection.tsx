@@ -19,6 +19,12 @@ type BasicInfoSectionProps = {
   onFieldChange?: (field: string, value: unknown) => void;
   /** エラー取得関数 */
   getError?: (field: string) => string | undefined;
+  /** 保存ハンドラー */
+  onSave?: () => Promise<void>;
+  /** 保存中フラグ */
+  isSaving?: boolean;
+  /** 変更されたか */
+  isDirty?: boolean;
 };
 
 /**
@@ -35,6 +41,9 @@ export const BasicInfoSection = ({
   isEditMode = false,
   onFieldChange,
   getError = () => undefined,
+  onSave,
+  isSaving = false,
+  isDirty = false,
 }: BasicInfoSectionProps) => {
   // 定員表示の生成（フォーマッター関数を使用）
   const capacityText = formatCapacity(capacity, provisionalCapacity);
@@ -44,8 +53,28 @@ export const BasicInfoSection = ({
     ? annexFacilities.map((f) => `${f.name}（${f.type}）`).join('、')
     : '-';
 
+  // 保存ボタンのクリックハンドラー
+  const handleSave = async () => {
+    if (onSave) {
+      await onSave();
+    }
+  };
+
   return (
     <section className={styles.basicInfoSection}>
+      {isEditMode && (
+        <div className={styles.sectionHeader}>
+          <h3 className={styles.sectionTitle}>基本情報</h3>
+          <button
+            type="button"
+            onClick={handleSave}
+            disabled={!isDirty || isSaving}
+            className={styles.saveButton}
+          >
+            {isSaving ? '保存中...' : '保存する'}
+          </button>
+        </div>
+      )}
       <div className={styles.gridContainer}>
         <InfoCard label="施設の種類" value={dormitoryType || '-'} />
         <InfoCard label="設立年" value={establishedYear || '-'} />

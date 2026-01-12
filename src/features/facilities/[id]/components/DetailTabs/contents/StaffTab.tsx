@@ -1,6 +1,7 @@
 import { StaffInfo } from '@/types/facility';
 
 import { EditField } from './EditField';
+import { TabSaveButton } from './TabSaveButton';
 import styles from './TabContent.module.scss';
 import { TabSection } from './TabSection';
 import { TabProps } from '../types/tabProps';
@@ -12,7 +13,9 @@ export const StaffTab = ({
   data: staffInfo,
   isEditMode = false,
   onFieldChange,
-  errors = {},
+  onSave,
+  isSaving = false,
+  isDirty = false,
   getError = () => undefined,
 }: StaffTabProps) => {
   /**
@@ -118,20 +121,23 @@ export const StaffTab = ({
     );
 
     return (
-      <div className={styles.tabContentWrapper}>
-        <div className={styles.textSection}>
-          {Object.entries(groupedFields).map(([groupId, fields]) => {
-            const isRow = fields.length > 1;
-            const containerClass = isRow ? styles.editRow : '';
+      <>
+        <div className={styles.tabContentWrapper}>
+          <div className={styles.textSection}>
+            {Object.entries(groupedFields).map(([groupId, fields]) => {
+              const isRow = fields.length > 1;
+              const containerClass = isRow ? styles.editRow : '';
 
-            return (
-              <div key={groupId} className={containerClass}>
-                {fields.map((field) => renderEditField(field))}
-              </div>
-            );
-          })}
+              return (
+                <div key={groupId} className={containerClass}>
+                  {fields.map((field) => renderEditField(field))}
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
+        {onSave && <TabSaveButton onSave={onSave} isSaving={isSaving} isDirty={isDirty} />}
+      </>
     );
   }
 

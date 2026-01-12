@@ -8,6 +8,50 @@
   margin-bottom: 24px;
 }
 
+// タブ保存ボタンコンテナ
+.tabSaveButtonContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid colors.$border-gray;
+}
+
+// タブ保存ボタン
+.tabSaveButton {
+  padding: 10px 32px;
+  background-color: colors.$primary-color;
+  color: colors.$white;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+
+  &:hover:not(:disabled) {
+    background-color: darken(colors.$primary-color, 8%);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    background-color: colors.$border-gray;
+    color: colors.$text-secondary;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  &:focus {
+    outline: 2px solid colors.$primary-color;
+    outline-offset: 2px;
+  }
+}
+
 // コンテンツのラッパー (Flexboxレイアウト)
 .tabContentWrapper {
   display: flex;

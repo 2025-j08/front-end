@@ -18,4 +18,10 @@ export type TabProps<T> = {
   errors?: Record<string, string>;
   /** 指定されたフィールドのエラーメッセージを取得する関数 */
   getError?: (field: string) => string | undefined;
+  /** 保存ハンドラー */
+  onSave?: () => Promise<void>;
+  /** 保存中フラグ */
+  isSaving?: boolean;
+  /** 変更されたか */
+  isDirty?: boolean;
 };

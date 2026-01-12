@@ -44,6 +44,18 @@ type DetailTabsProps = {
   errors?: Record<string, string>;
   /** エラー取得関数 */
   getError?: (field: string) => string | undefined;
+  /** 各タブの保存ハンドラー */
+  onSaveAccess?: () => Promise<void>;
+  onSavePhilosophy?: () => Promise<void>;
+  onSaveSpecialty?: () => Promise<void>;
+  onSaveStaff?: () => Promise<void>;
+  onSaveEducation?: () => Promise<void>;
+  onSaveAdvanced?: () => Promise<void>;
+  onSaveOther?: () => Promise<void>;
+  /** 保存中フラグ */
+  isSaving?: boolean;
+  /** 変更されたか */
+  isDirty?: boolean;
 };
 
 /**
@@ -69,6 +81,15 @@ export const DetailTabs = ({
   onNestedFieldChange,
   errors = {},
   getError = () => undefined,
+  onSaveAccess,
+  onSavePhilosophy,
+  onSaveSpecialty,
+  onSaveStaff,
+  onSaveEducation,
+  onSaveAdvanced,
+  onSaveOther,
+  isSaving = false,
+  isDirty = false,
 }: DetailTabsProps) => {
   // タブIDの配列を生成
   const tabIds = tabs.map((tab) => tab.key);
@@ -119,8 +140,10 @@ export const DetailTabs = ({
                   onFieldChange={(field, value) =>
                     onNestedFieldChange?.('accessInfo', field, value)
                   }
-                  errors={errors}
                   getError={getError}
+                  onSave={onSaveAccess}
+                  isSaving={isSaving}
+                  isDirty={isDirty}
                 />
               ) : null;
             case 'philosophy':
@@ -131,8 +154,10 @@ export const DetailTabs = ({
                   onFieldChange={(field, value) =>
                     onNestedFieldChange?.('philosophyInfo', field, value)
                   }
-                  errors={errors}
                   getError={getError}
+                  onSave={onSavePhilosophy}
+                  isSaving={isSaving}
+                  isDirty={isDirty}
                 />
               ) : null;
             case 'specialty':
@@ -143,8 +168,10 @@ export const DetailTabs = ({
                   onFieldChange={(field, value) =>
                     onNestedFieldChange?.('specialtyInfo', field, value)
                   }
-                  errors={errors}
                   getError={getError}
+                  onSave={onSaveSpecialty}
+                  isSaving={isSaving}
+                  isDirty={isDirty}
                 />
               ) : null;
             case 'staff':
@@ -153,8 +180,10 @@ export const DetailTabs = ({
                   data={staffInfo}
                   isEditMode={isEditMode}
                   onFieldChange={(field, value) => onNestedFieldChange?.('staffInfo', field, value)}
-                  errors={errors}
                   getError={getError}
+                  onSave={onSaveStaff}
+                  isSaving={isSaving}
+                  isDirty={isDirty}
                 />
               ) : null;
             case 'education':
@@ -165,8 +194,10 @@ export const DetailTabs = ({
                   onFieldChange={(field, value) =>
                     onNestedFieldChange?.('educationInfo', field, value)
                   }
-                  errors={errors}
                   getError={getError}
+                  onSave={onSaveEducation}
+                  isSaving={isSaving}
+                  isDirty={isDirty}
                 />
               ) : null;
             case 'advanced':
@@ -177,8 +208,10 @@ export const DetailTabs = ({
                   onFieldChange={(field, value) =>
                     onNestedFieldChange?.('advancedInfo', field, value)
                   }
-                  errors={errors}
                   getError={getError}
+                  onSave={onSaveAdvanced}
+                  isSaving={isSaving}
+                  isDirty={isDirty}
                 />
               ) : null;
             case 'other':
@@ -187,8 +220,10 @@ export const DetailTabs = ({
                   data={otherInfo}
                   isEditMode={isEditMode}
                   onFieldChange={(field, value) => onNestedFieldChange?.('otherInfo', field, value)}
-                  errors={errors}
                   getError={getError}
+                  onSave={onSaveOther}
+                  isSaving={isSaving}
+                  isDirty={isDirty}
                 />
               ) : null;
             default:
