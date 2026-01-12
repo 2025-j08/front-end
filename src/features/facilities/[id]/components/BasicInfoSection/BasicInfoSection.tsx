@@ -7,12 +7,23 @@ import { CapacityInput } from './CapacityInput';
 import { AnnexFacilityEditor } from './AnnexFacilityEditor';
 import styles from './BasicInfoSection.module.scss';
 
+/** 施設の種類の選択肢 */
+const DORMITORY_TYPE_OPTIONS = [
+  { value: '', label: '選択してください' },
+  { value: '大舎', label: '大舎' },
+  { value: '中舎', label: '中舎' },
+  { value: '小舎', label: '小舎' },
+  { value: 'グループホーム', label: 'グループホーム' },
+  { value: '地域小規模', label: '地域小規模' },
+] as const;
+
 type BasicInfoSectionProps = {
   dormitoryType?: '大舎' | '中舎' | '小舎' | 'グループホーム' | '地域小規模';
   establishedYear?: string;
   capacity?: number;
   provisionalCapacity?: number;
   annexFacilities?: AnnexFacility[];
+  phone?: string;
   /** 編集モードかどうか */
   isEditMode?: boolean;
   /** フィールド更新ハンドラー */
@@ -38,6 +49,7 @@ export const BasicInfoSection = ({
   capacity,
   provisionalCapacity,
   annexFacilities,
+  phone,
   isEditMode = false,
   onFieldChange,
   getError = () => undefined,
@@ -76,8 +88,45 @@ export const BasicInfoSection = ({
         </div>
       )}
       <div className={styles.gridContainer}>
-        <InfoCard label="施設の種類" value={dormitoryType || '-'} />
-        <InfoCard label="設立年" value={establishedYear || '-'} />
+        {isEditMode ? (
+          <div className={styles.infoCard}>
+            <label className={styles.label} htmlFor="dormitoryType">
+              施設の種類
+            </label>
+            <select
+              id="dormitoryType"
+              className={styles.editInput}
+              value={dormitoryType || ''}
+              onChange={(e) => onFieldChange?.('dormitoryType', e.target.value || undefined)}
+            >
+              {DORMITORY_TYPE_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        ) : (
+          <InfoCard label="施設の種類" value={dormitoryType || '-'} />
+        )}
+
+        {isEditMode ? (
+          <div className={styles.infoCard}>
+            <label className={styles.label} htmlFor="establishedYear">
+              設立年
+            </label>
+            <input
+              type="text"
+              id="establishedYear"
+              className={styles.editInput}
+              value={establishedYear || ''}
+              onChange={(e) => onFieldChange?.('establishedYear', e.target.value)}
+              placeholder="例: 1990年"
+            />
+          </div>
+        ) : (
+          <InfoCard label="設立年" value={establishedYear || '-'} />
+        )}
 
         {isEditMode ? (
           <CapacityInput
@@ -88,6 +137,22 @@ export const BasicInfoSection = ({
           />
         ) : (
           <InfoCard label="施設定員" value={capacityText} />
+        )}
+
+        {isEditMode && (
+          <div className={styles.infoCard}>
+            <label className={styles.label} htmlFor="phone">
+              電話番号
+            </label>
+            <input
+              type="tel"
+              id="phone"
+              className={styles.editInput}
+              value={phone || ''}
+              onChange={(e) => onFieldChange?.('phone', e.target.value)}
+              placeholder="例: 03-1234-5678"
+            />
+          </div>
         )}
 
         {isEditMode ? (

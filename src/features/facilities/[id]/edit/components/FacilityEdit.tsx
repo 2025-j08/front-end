@@ -130,6 +130,7 @@ export const FacilityEdit = ({ id }: Props) => {
         capacity={mergedData.capacity}
         provisionalCapacity={mergedData.provisionalCapacity}
         annexFacilities={mergedData.annexFacilities}
+        phone={mergedData.phone}
         isEditMode={true}
         onFieldChange={handleFieldChange}
         getError={getError}

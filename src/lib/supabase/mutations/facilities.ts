@@ -16,6 +16,8 @@ export type BasicInfoUpdateData = {
   corporation?: string;
   established_year?: number;
   annex_facilities?: AnnexFacility[];
+  /** 施設種類（中間テーブル経由で更新するため別処理） */
+  dormitory_type?: string;
 };
 
 /**
@@ -136,6 +138,49 @@ async function upsertFacilityData(
 }
 
 /**
+ * 施設種類を更新（中間テーブル経由）
+ * @param supabase - Supabaseクライアント
+ * @param facilityId - 施設ID
+ * @param dormitoryType - 施設種類名（大舎, 中舎, 小舎, グループホーム, 地域小規模）
+ */
+async function updateFacilityDormitoryType(
+  supabase: SupabaseClient,
+  facilityId: number,
+  dormitoryType: string,
+) {
+  // 1. facility_types テーブルから該当する種類のIDを取得
+  const { data: facilityType, error: typeError } = await supabase
+    .from('facility_types')
+    .select('id')
+    .eq('name', dormitoryType)
+    .single();
+
+  if (typeError || !facilityType) {
+    throw new Error(`施設種類 "${dormitoryType}" が見つかりません`);
+  }
+
+  // 2. 既存の紐づけを削除
+  const { error: deleteError } = await supabase
+    .from('facility_facility_types')
+    .delete()
+    .eq('facility_id', facilityId);
+
+  if (deleteError) {
+    throw new Error(`施設種類の削除に失敗しました: ${deleteError.message}`);
+  }
+
+  // 3. 新しい紐づけを挿入
+  const { error: insertError } = await supabase.from('facility_facility_types').insert({
+    facility_id: facilityId,
+    facility_type_id: facilityType.id,
+  });
+
+  if (insertError) {
+    throw new Error(`施設種類の更新に失敗しました: ${insertError.message}`);
+  }
+}
+
+/**
  * 施設の基本情報を更新
  * @param supabase - Supabaseクライアント（サーバー側から渡される）
  * @param facilityId - 施設ID
@@ -146,8 +191,11 @@ export async function updateFacilityBasicInfo(
   facilityId: number,
   data: BasicInfoUpdateData,
 ) {
+  // dormitory_type は中間テーブル経由で更新するため、facilities テーブルのデータから除外
+  const { dormitory_type, ...facilitiesData } = data;
+
   // undefinedの値を除去
-  const cleanedData = removeUndefinedValues(data);
+  const cleanedData = removeUndefinedValues(facilitiesData);
 
   // facilities テーブルの更新（データがある場合のみ）
   if (Object.keys(cleanedData).length > 0) {
@@ -156,6 +204,11 @@ export async function updateFacilityBasicInfo(
     if (error) {
       throw new Error(`基本情報の更新に失敗しました: ${error.message}`);
     }
+  }
+
+  // 施設種類の更新（指定された場合のみ）
+  if (dormitory_type) {
+    await updateFacilityDormitoryType(supabase, facilityId, dormitory_type);
   }
 }
 

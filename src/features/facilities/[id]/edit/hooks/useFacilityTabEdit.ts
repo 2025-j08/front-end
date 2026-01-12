@@ -321,6 +321,7 @@ function buildUpdateData(
             ? parseInt(formData.establishedYear, 10)
             : undefined,
           [toSnakeCase('annexFacilities', basicInfoFieldMapping)]: formData.annexFacilities,
+          dormitory_type: formData.dormitoryType,
         },
       };
 
