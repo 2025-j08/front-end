@@ -1,6 +1,7 @@
 import { OtherInfo } from '@/types/facility';
 
 import { EditField } from './EditField';
+import { EditSection } from './EditSection';
 import { TabSaveButton } from './TabSaveButton';
 import styles from './TabContent.module.scss';
 import { TabSection } from './TabSection';
@@ -22,39 +23,50 @@ export const OtherTab = ({
       <>
         <div className={styles.tabContentWrapper}>
           <div className={styles.textSection}>
-            <div className={styles.editGroup}>
-              <EditField
-                type="textarea"
-                id="networks"
-                label="他施設とのネットワーク"
-                value={otherInfo.networks}
-                onChange={(v) => onFieldChange?.('networks', v)}
-                rows={3}
-                error={getError('otherInfo.networks')}
-              />
-            </div>
-            <div className={styles.editGroup}>
-              <EditField
-                type="textarea"
-                id="futureOutlook"
-                label="今後の展望や課題"
-                value={otherInfo.futureOutlook}
-                onChange={(v) => onFieldChange?.('futureOutlook', v)}
-                rows={3}
-                error={getError('otherInfo.futureOutlook')}
-              />
-            </div>
-            <div className={styles.editGroup}>
-              <EditField
-                type="textarea"
-                id="freeText"
-                label="自由記述"
-                value={otherInfo.freeText}
-                onChange={(v) => onFieldChange?.('freeText', v)}
-                rows={4}
-                error={getError('otherInfo.freeText')}
-              />
-            </div>
+            {/* 他施設とのネットワーク - 表示画面と同じタイトル */}
+            {otherInfo.networks !== undefined && (
+              <EditSection title="他施設とのネットワークや共同プロジェクト">
+                <EditField
+                  type="textarea"
+                  id="networks"
+                  label="ネットワークや共同プロジェクト"
+                  value={otherInfo.networks}
+                  onChange={(v) => onFieldChange?.('networks', v)}
+                  rows={3}
+                  error={getError('otherInfo.networks')}
+                />
+              </EditSection>
+            )}
+
+            {/* 今後の展望や課題 */}
+            {otherInfo.futureOutlook !== undefined && (
+              <EditSection title="今後の展望や課題">
+                <EditField
+                  type="textarea"
+                  id="futureOutlook"
+                  label="展望や課題"
+                  value={otherInfo.futureOutlook}
+                  onChange={(v) => onFieldChange?.('futureOutlook', v)}
+                  rows={3}
+                  error={getError('otherInfo.futureOutlook')}
+                />
+              </EditSection>
+            )}
+
+            {/* 自由記述 */}
+            {otherInfo.freeText !== undefined && (
+              <EditSection title="自由記述">
+                <EditField
+                  type="textarea"
+                  id="freeText"
+                  label="自由記述"
+                  value={otherInfo.freeText}
+                  onChange={(v) => onFieldChange?.('freeText', v)}
+                  rows={4}
+                  error={getError('otherInfo.freeText')}
+                />
+              </EditSection>
+            )}
           </div>
         </div>
         {onSave && <TabSaveButton onSave={onSave} isSaving={isSaving} isDirty={isDirty} />}
