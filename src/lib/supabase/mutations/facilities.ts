@@ -40,10 +40,10 @@ export type PhilosophyInfoUpdateData = {
 };
 
 /**
- * 特色情報の更新データ型
+ * 特化領域情報の更新データ型
  */
 export type SpecialtyInfoUpdateData = {
-  features?: string[];
+  features?: string;
   programs?: string;
 };
 

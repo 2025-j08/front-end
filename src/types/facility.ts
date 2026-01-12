@@ -49,10 +49,10 @@ export interface PhilosophyInfo {
   description: string;
 }
 
-/** 生活環境・特色情報 */
+/** 特化領域情報 */
 export interface SpecialtyInfo {
-  /** 当施設が特に力を入れている取り組み */
-  features: string[];
+  /** 特に力を入れている取り組み/支援領域 */
+  features: string;
   /** 特色ある活動や独自プログラム */
   programs?: string;
 }
@@ -172,7 +172,7 @@ export interface FacilityDetail {
   relationInfo?: string;
   /** 理念情報 */
   philosophyInfo?: PhilosophyInfo;
-  /** 生活環境情報 */
+  /** 特化領域情報 */
   specialtyInfo?: SpecialtyInfo;
   /** 職員情報 */
   staffInfo?: StaffInfo;
