@@ -7,6 +7,8 @@ import { useState, useCallback, useEffect } from 'react';
 import type { FacilityDetail } from '@/types/facility';
 import type { TabUpdateData } from '@/lib/supabase/mutations/facilities';
 
+import { toSnakeCase, basicInfoFieldMapping } from '../utils/fieldMapping';
+
 /** タブセクション名 */
 export type TabSection =
   | 'basic'
@@ -240,10 +242,10 @@ function buildUpdateData(
           name: formData.name,
           phone: formData.phone,
           corporation: formData.corporation,
-          established_year: formData.establishedYear
+          [toSnakeCase('establishedYear', basicInfoFieldMapping)]: formData.establishedYear
             ? parseInt(formData.establishedYear, 10)
             : undefined,
-          annex_facilities: formData.annexFacilities,
+          [toSnakeCase('annexFacilities', basicInfoFieldMapping)]: formData.annexFacilities,
         },
       };
 
