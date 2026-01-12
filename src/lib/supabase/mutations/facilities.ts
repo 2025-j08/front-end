@@ -97,6 +97,13 @@ export type OtherInfoUpdateData = {
 };
 
 /**
+ * undefinedの値をオブジェクトから除去するヘルパー関数
+ */
+function removeUndefinedValues(obj: Record<string, unknown>): Record<string, unknown> {
+  return Object.fromEntries(Object.entries(obj).filter(([, value]) => value !== undefined));
+}
+
+/**
  * 共通のupsertヘルパー関数（正規化されたスキーマ対応）
  * @param supabase - Supabaseクライアント
  * @param tableName - テーブル名
@@ -111,9 +118,17 @@ async function upsertFacilityData(
   data: Record<string, unknown>,
   errorMessage: string,
 ) {
+  // undefinedの値を除去
+  const cleanedData = removeUndefinedValues(data);
+
+  // 更新するデータがない場合はスキップ
+  if (Object.keys(cleanedData).length === 0) {
+    return;
+  }
+
   const { error } = await supabase
     .from(tableName)
-    .upsert({ facility_id: facilityId, ...data }, { onConflict: 'facility_id' });
+    .upsert({ facility_id: facilityId, ...cleanedData }, { onConflict: 'facility_id' });
 
   if (error) {
     throw new Error(`${errorMessage}: ${error.message}`);
@@ -131,10 +146,16 @@ export async function updateFacilityBasicInfo(
   facilityId: number,
   data: BasicInfoUpdateData,
 ) {
-  const { error } = await supabase.from('facilities').update(data).eq('id', facilityId);
+  // undefinedの値を除去
+  const cleanedData = removeUndefinedValues(data);
 
-  if (error) {
-    throw new Error(`基本情報の更新に失敗しました: ${error.message}`);
+  // facilities テーブルの更新（データがある場合のみ）
+  if (Object.keys(cleanedData).length > 0) {
+    const { error } = await supabase.from('facilities').update(cleanedData).eq('id', facilityId);
+
+    if (error) {
+      throw new Error(`基本情報の更新に失敗しました: ${error.message}`);
+    }
   }
 }
 
