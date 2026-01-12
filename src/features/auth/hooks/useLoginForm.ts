@@ -12,7 +12,7 @@ import { useFormState } from '@/lib/hooks/useFormState';
 /**
  * ログインフォームのデータ型
  */
-interface LoginFormData {
+interface LoginFormData extends Record<string, string> {
   /** ユーザーID */
   userid: string;
   /** パスワード */
