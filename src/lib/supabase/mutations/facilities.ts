@@ -95,6 +95,30 @@ export type OtherInfoUpdateData = {
 };
 
 /**
+ * 共通のupsertヘルパー関数
+ * @param supabase - Supabaseクライアント
+ * @param tableName - テーブル名
+ * @param facilityId - 施設ID
+ * @param data - 更新データ
+ * @param errorMessage - エラーメッセージ
+ */
+async function upsertFacilityData(
+  supabase: SupabaseClient,
+  tableName: string,
+  facilityId: number,
+  data: Record<string, unknown>,
+  errorMessage: string,
+) {
+  const { error } = await supabase
+    .from(tableName)
+    .upsert({ facility_id: facilityId, data }, { onConflict: 'facility_id' });
+
+  if (error) {
+    throw new Error(`${errorMessage}: ${error.message}`);
+  }
+}
+
+/**
  * 施設の基本情報を更新
  * @param supabase - Supabaseクライアント（サーバー側から渡される）
  * @param facilityId - 施設ID
@@ -124,31 +148,13 @@ export async function updateFacilityAccessInfo(
   facilityId: number,
   data: AccessInfoUpdateData,
 ) {
-  // 既存データを取得
-  const { data: existing, error: fetchError } = await supabase
-    .from('facility_access')
-    .select('data')
-    .eq('facility_id', facilityId)
-    .single();
-
-  if (fetchError && fetchError.code !== 'PGRST116') {
-    throw new Error(`アクセス情報の取得に失敗しました: ${fetchError.message}`);
-  }
-
-  // 既存のJSONBデータとマージ
-  const mergedData = {
-    ...(existing?.data || {}),
-    ...data,
-  };
-
-  // upsert（存在すれば更新、なければ挿入）
-  const { error } = await supabase
-    .from('facility_access')
-    .upsert({ facility_id: facilityId, data: mergedData }, { onConflict: 'facility_id' });
-
-  if (error) {
-    throw new Error(`アクセス情報の更新に失敗しました: ${error.message}`);
-  }
+  await upsertFacilityData(
+    supabase,
+    'facility_access',
+    facilityId,
+    data,
+    'アクセス情報の更新に失敗しました',
+  );
 }
 
 /**
@@ -162,13 +168,13 @@ export async function updateFacilityPhilosophyInfo(
   facilityId: number,
   data: PhilosophyInfoUpdateData,
 ) {
-  const { error } = await supabase
-    .from('facility_philosophy')
-    .upsert({ facility_id: facilityId, data }, { onConflict: 'facility_id' });
-
-  if (error) {
-    throw new Error(`理念情報の更新に失敗しました: ${error.message}`);
-  }
+  await upsertFacilityData(
+    supabase,
+    'facility_philosophy',
+    facilityId,
+    data,
+    '理念情報の更新に失敗しました',
+  );
 }
 
 /**
@@ -182,13 +188,13 @@ export async function updateFacilitySpecialtyInfo(
   facilityId: number,
   data: SpecialtyInfoUpdateData,
 ) {
-  const { error } = await supabase
-    .from('facility_specialty')
-    .upsert({ facility_id: facilityId, data }, { onConflict: 'facility_id' });
-
-  if (error) {
-    throw new Error(`特色情報の更新に失敗しました: ${error.message}`);
-  }
+  await upsertFacilityData(
+    supabase,
+    'facility_specialty',
+    facilityId,
+    data,
+    '特色情報の更新に失敗しました',
+  );
 }
 
 /**
@@ -202,13 +208,13 @@ export async function updateFacilityStaffInfo(
   facilityId: number,
   data: StaffInfoUpdateData,
 ) {
-  const { error } = await supabase
-    .from('facility_staff')
-    .upsert({ facility_id: facilityId, data }, { onConflict: 'facility_id' });
-
-  if (error) {
-    throw new Error(`職員情報の更新に失敗しました: ${error.message}`);
-  }
+  await upsertFacilityData(
+    supabase,
+    'facility_staff',
+    facilityId,
+    data,
+    '職員情報の更新に失敗しました',
+  );
 }
 
 /**
@@ -222,13 +228,13 @@ export async function updateFacilityEducationInfo(
   facilityId: number,
   data: EducationInfoUpdateData,
 ) {
-  const { error } = await supabase
-    .from('facility_education')
-    .upsert({ facility_id: facilityId, data }, { onConflict: 'facility_id' });
-
-  if (error) {
-    throw new Error(`教育情報の更新に失敗しました: ${error.message}`);
-  }
+  await upsertFacilityData(
+    supabase,
+    'facility_education',
+    facilityId,
+    data,
+    '教育情報の更新に失敗しました',
+  );
 }
 
 /**
@@ -242,13 +248,13 @@ export async function updateFacilityAdvancedInfo(
   facilityId: number,
   data: AdvancedInfoUpdateData,
 ) {
-  const { error } = await supabase
-    .from('facility_advanced')
-    .upsert({ facility_id: facilityId, data }, { onConflict: 'facility_id' });
-
-  if (error) {
-    throw new Error(`高機能化情報の更新に失敗しました: ${error.message}`);
-  }
+  await upsertFacilityData(
+    supabase,
+    'facility_advanced',
+    facilityId,
+    data,
+    '高機能化情報の更新に失敗しました',
+  );
 }
 
 /**
@@ -262,13 +268,13 @@ export async function updateFacilityOtherInfo(
   facilityId: number,
   data: OtherInfoUpdateData,
 ) {
-  const { error } = await supabase
-    .from('facility_other')
-    .upsert({ facility_id: facilityId, data }, { onConflict: 'facility_id' });
-
-  if (error) {
-    throw new Error(`その他情報の更新に失敗しました: ${error.message}`);
-  }
+  await upsertFacilityData(
+    supabase,
+    'facility_other',
+    facilityId,
+    data,
+    'その他情報の更新に失敗しました',
+  );
 }
 
 /**
