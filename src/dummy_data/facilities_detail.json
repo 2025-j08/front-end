@@ -41,7 +41,8 @@
     "educationInfo": {
       "graduationRate": "子どもたち一人ひとりの学力や興味に合わせた学習支援を行い、将来の選択肢を広げるための教育を重視しています。",
       "learningSupport": "学習支援ボランティアとの連携、個別学習支援",
-      "careerSupport": "高校卒業後の進学・就職支援はもちろん、退所後も定期的な連絡や相談対応を通じて、継続的なサポートを行っています。"
+      "careerSupport": "高校卒業後の進学・就職支援はもちろん、退所後も定期的な連絡や相談対応を通じて、継続的なサポートを行っています。",
+      "graduationRatePercentage": "100%"
     },
     "advancedInfo": {
       "title": "専門的支援体制",
@@ -104,7 +105,8 @@
     "educationInfo": {
       "graduationRate": "地域の学校と連携し、一人ひとりの学力に応じた学習支援を行っています。進路選択においては、本人の希望を最大限尊重しながら支援しています。",
       "learningSupport": "学習支援ボランティアとの連携、個別学習支援",
-      "careerSupport": "退所後3年間は定期的なフォローアップを行い、困ったときにはいつでも相談できる体制を整えています。"
+      "careerSupport": "退所後3年間は定期的なフォローアップを行い、困ったときにはいつでも相談できる体制を整えています。",
+      "graduationRatePercentage": "100%"
     },
     "advancedInfo": {
       "title": "里親支援・地域連携",
@@ -166,7 +168,8 @@
     "educationInfo": {
       "graduationRate": "地域の学校に通学し、普通の子どもたちと同じ環境で学んでいます。学習の遅れがある子どもには、個別に学習支援を行っています。",
       "learningSupport": "学習支援ボランティアとの連携、個別学習支援",
-      "careerSupport": "退所後も施設との関係を継続し、困ったときには相談に来られる関係を築いています。"
+      "careerSupport": "退所後も施設との関係を継続し、困ったときには相談に来られる関係を築いています。",
+      "graduationRatePercentage": "100%"
     },
     "advancedInfo": {
       "title": "個別支援の充実",
@@ -229,7 +232,8 @@
     "educationInfo": {
       "graduationRate": "様々な事情により家庭で生活することが困難な子どもたち（概ね2歳から18歳）を預かり、養育および自立支援を行っています。",
       "learningSupport": "学習支援ボランティアとの連携、個別学習支援",
-      "careerSupport": "退所した子どもたちに対しても、相談や自立のための援助を継続的に行い、社会へのスムーズな移行をサポートしています。"
+      "careerSupport": "退所した子どもたちに対しても、相談や自立のための援助を継続的に行い、社会へのスムーズな移行をサポートしています。",
+      "graduationRatePercentage": "100%"
     },
     "advancedInfo": {
       "title": "チームアプローチと研修体制",
@@ -291,7 +295,8 @@
     "educationInfo": {
       "graduationRate": "学習の基礎固めを重視し、個別の学習支援を行っています。また、自然体験を通じた学びも大切にしています。",
       "learningSupport": "学習支援ボランティアとの連携、個別学習支援",
-      "careerSupport": "退所後も定期的な交流会を開催し、退所者同士のつながりを支援しています。"
+      "careerSupport": "退所後も定期的な交流会を開催し、退所者同士のつながりを支援しています。",
+      "graduationRatePercentage": "100%"
     },
     "advancedInfo": {
       "title": "自立支援プログラム",
@@ -354,7 +359,8 @@
     "educationInfo": {
       "graduationRate": "学研都市という環境を活かし、学習意欲を高める支援を行っています。塾や家庭教師の利用も積極的に支援しています。",
       "learningSupport": "学習支援ボランティアとの連携、個別学習支援",
-      "careerSupport": "退所後も気軽に立ち寄れる「第二のふるさと」として、継続的なつながりを大切にしています。"
+      "careerSupport": "退所後も気軽に立ち寄れる「第二のふるさと」として、継続的なつながりを大切にしています。",
+      "graduationRatePercentage": "100%"
     },
     "advancedInfo": {
       "title": "学習支援の充実",
@@ -416,7 +422,8 @@
     "educationInfo": {
       "graduationRate": "学校との連携を密にし、一人ひとりの学習状況に合わせた支援を行っています。高校進学率100%を目指して取り組んでいます。",
       "learningSupport": "学習支援ボランティアとの連携、個別学習支援",
-      "careerSupport": "退所後3年間の相談支援と、就職先への定期訪問によるフォローアップを行っています。"
+      "careerSupport": "退所後3年間の相談支援と、就職先への定期訪問によるフォローアップを行っています。",
+      "graduationRatePercentage": "100%"
     },
     "advancedInfo": {
       "title": "スポーツを通じた成長支援",
@@ -478,7 +485,8 @@
     "educationInfo": {
       "graduationRate": "地域の学校と連携し、一人ひとりに合った学習支援を行っています。自然の中での体験学習も教育の一環として大切にしています。",
       "learningSupport": "学習支援ボランティアとの連携、個別学習支援",
-      "careerSupport": "退所後も故郷として帰ってこられる場所でありたいと考え、継続的な関わりを大切にしています。"
+      "careerSupport": "退所後も故郷として帰ってこられる場所でありたいと考え、継続的な関わりを大切にしています。",
+      "graduationRatePercentage": "100%"
     },
     "advancedInfo": {
       "title": "自然体験プログラム",
@@ -541,7 +549,8 @@
     "educationInfo": {
       "graduationRate": "学力向上のための個別学習支援と、体験を通じた学びの両方を大切にしています。進路選択では本人の希望を最大限尊重します。",
       "learningSupport": "学習支援ボランティアとの連携、個別学習支援",
-      "careerSupport": "退所者向けの相談窓口を設置し、いつでも相談できる体制を整えています。退所者同士の交流会も定期的に開催しています。"
+      "careerSupport": "退所者向けの相談窓口を設置し、いつでも相談できる体制を整えています。退所者同士の交流会も定期的に開催しています。",
+      "graduationRatePercentage": "100%"
     },
     "advancedInfo": {
       "title": "琵琶湖環境学習",
@@ -603,7 +612,8 @@
     "educationInfo": {
       "graduationRate": "少人数を活かした個別学習支援を行っています。地域の学校との連携も密で、一人ひとりに合った支援ができています。",
       "learningSupport": "学習支援ボランティアとの連携、個別学習支援",
-      "careerSupport": "退所後も気軽に遊びに来られる関係を大切にしています。近くに来た時には食事を一緒にすることもあります。"
+      "careerSupport": "退所後も気軽に遊びに来られる関係を大切にしています。近くに来た時には食事を一緒にすることもあります。",
+      "graduationRatePercentage": "100%"
     },
     "advancedInfo": {
       "title": "地域資源を活かした体験活動",
@@ -666,7 +676,8 @@
     "educationInfo": {
       "graduationRate": "学校との連携を密にし、学習面での遅れがないよう個別支援を行っています。高校進学はもちろん、大学進学も支援しています。",
       "learningSupport": "学習支援ボランティアとの連携、個別学習支援",
-      "careerSupport": "退所者同士のネットワークづくりを支援し、OB・OG会を定期的に開催しています。"
+      "careerSupport": "退所者同士のネットワークづくりを支援し、OB・OG会を定期的に開催しています。",
+      "graduationRatePercentage": "100%"
     },
     "advancedInfo": {
       "title": "歴史ある支援体制",
@@ -728,7 +739,8 @@
     "educationInfo": {
       "graduationRate": "歴史や文化に触れる体験学習と、基礎学力の定着を両立した教育支援を行っています。進路選択では本人の希望を尊重します。",
       "learningSupport": "学習支援ボランティアとの連携、個別学習支援",
-      "careerSupport": "退所後も相談できる関係を維持し、定期的な連絡や訪問を行っています。"
+      "careerSupport": "退所後も相談できる関係を維持し、定期的な連絡や訪問を行っています。",
+      "graduationRatePercentage": "100%"
     },
     "advancedInfo": {
       "title": "歴史文化体験プログラム",

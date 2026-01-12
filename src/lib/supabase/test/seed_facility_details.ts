@@ -52,6 +52,7 @@ type FacilityDetailItem = {
   };
   educationInfo?: {
     graduationRate?: string;
+    graduationRatePercentage?: string;
     learningSupport?: string;
     careerSupport?: string;
   };
@@ -293,6 +294,7 @@ async function seedFacilityDetailTables(
   const educationData: Array<{
     facility_id: number;
     graduation_rate?: string;
+    graduation_rate_percentage?: string;
     learning_support?: string;
     career_support?: string;
   }> = [];
@@ -378,6 +380,7 @@ async function seedFacilityDetailTables(
       educationData.push({
         facility_id: facilityId,
         graduation_rate: detail.educationInfo.graduationRate,
+        graduation_rate_percentage: detail.educationInfo.graduationRatePercentage,
         learning_support: detail.educationInfo.learningSupport,
         career_support: detail.educationInfo.careerSupport,
       });
