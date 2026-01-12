@@ -23,21 +23,19 @@ export const PhilosophyTab = ({
       <>
         <div className={styles.philosophyTabContainer}>
           <div className={styles.textSection}>
-            {/* 理念セクション - 表示画面の「理念」と統一 */}
-            {philosophyInfo.message !== undefined && (
-              <EditSection title="理念">
-                <EditField
-                  type="textarea"
-                  id="message"
-                  label="理念メッセージ"
-                  value={philosophyInfo.message}
-                  onChange={(v) => onFieldChange?.('message', v)}
-                  rows={3}
-                  placeholder="施設の理念メッセージを入力してください"
-                  error={getError('philosophyInfo.message')}
-                />
-              </EditSection>
-            )}
+            {/* 理念セクション - 編集画面では常に表示 */}
+            <EditSection title="理念">
+              <EditField
+                type="textarea"
+                id="message"
+                label="理念メッセージ"
+                value={philosophyInfo.message}
+                onChange={(v) => onFieldChange?.('message', v)}
+                rows={3}
+                placeholder="施設の理念メッセージを入力してください"
+                error={getError('philosophyInfo.message')}
+              />
+            </EditSection>
 
             {/* 日々の支援の中で重視している視点 - 表示画面と同じタイトル */}
             <EditSection title="日々の支援の中で重視している視点">
