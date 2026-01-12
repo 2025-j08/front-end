@@ -255,7 +255,7 @@ export async function updateFacilityAdvancedInfo(
     'facility_advanced',
     facilityId,
     data,
-    '高機能化情報の更新に失敗しました',
+    '多機能化情報の更新に失敗しました',
   );
 }
 

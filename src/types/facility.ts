@@ -101,7 +101,7 @@ export interface AdvancedInfo {
   title?: string;
   /** 実施している多機能化の取り組み */
   description: string;
-  /** 経緯と背景 */
+  /** 実現に向けた経緯と背景 */
   background?: string;
   /** 取り組みにあたっての苦労や課題 */
   challenges?: string;

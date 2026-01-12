@@ -41,7 +41,7 @@ export const AdvancedTab = ({
             <EditField
               type="textarea"
               id="background"
-              label="経緯と背景"
+              label="実現に向けた経緯と背景"
               value={advancedInfo.background}
               onChange={(v) => onFieldChange?.('background', v)}
               rows={3}
@@ -57,7 +57,7 @@ export const AdvancedTab = ({
             <EditField
               type="textarea"
               id="solutions"
-              label="工夫や成功要因"
+              label="工夫や成功要因・乗り越えた方法"
               value={advancedInfo.solutions}
               onChange={(v) => onFieldChange?.('solutions', v)}
               rows={3}
@@ -73,11 +73,11 @@ export const AdvancedTab = ({
     <div className={styles.tabContentWrapper}>
       <div className={styles.textSection}>
         <TabSection
-          title={advancedInfo.title || '多機能化への取り組み'}
+          title={advancedInfo.title || '実施している多機能化への取り組み'}
           content={advancedInfo.description}
         />
 
-        <TabSection title="経緯と背景" content={advancedInfo.background} />
+        <TabSection title="実現に向けた経緯と背景" content={advancedInfo.background} />
 
         <TabSection title="取り組みにあたっての苦労や課題" content={advancedInfo.challenges} />
 

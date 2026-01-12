@@ -24,7 +24,7 @@ export const TAB_LABELS: Record<TabKey, string> = {
   specialty: '特化領域',
   staff: '職員',
   education: '教育・進路支援',
-  advanced: '高機能化',
+  advanced: '多機能化',
   other: 'その他',
 };
 
