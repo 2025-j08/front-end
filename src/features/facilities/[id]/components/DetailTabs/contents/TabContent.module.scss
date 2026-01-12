@@ -376,3 +376,27 @@
     font-weight: bold;
   }
 }
+
+// 編集セクション用のラッパー (EditSection コンポーネント用)
+.editSectionWrapper {
+  margin-bottom: 32px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  .sectionTitle {
+    font-size: 16px;
+    font-weight: bold;
+    color: colors.$text-primary;
+    margin: 0 0 16px 0;
+    padding: 0 0 8px 0;
+    border-bottom: 2px solid colors.$border-gray;
+  }
+}
+
+.editSectionContent {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
