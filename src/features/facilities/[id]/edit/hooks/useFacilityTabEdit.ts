@@ -11,10 +11,17 @@ import { toSnakeCase, basicInfoFieldMapping } from '../utils/fieldMapping';
 
 /**
  * フィールド名からセクション名を取得するヘルパー
+ * 型安全性を保証するためのマッピング
  */
 function getSectionFromField<K extends keyof FacilityDetail>(field: K): TabSection {
-  const basicFields = ['name', 'phone', 'corporation', 'establishedYear', 'annexFacilities'];
-  const accessFields = [
+  const basicFields: ReadonlyArray<keyof FacilityDetail> = [
+    'name',
+    'phone',
+    'corporation',
+    'establishedYear',
+    'annexFacilities',
+  ];
+  const accessFields: ReadonlyArray<keyof FacilityDetail> = [
     'accessInfo',
     'websiteUrl',
     'capacity',
@@ -22,8 +29,8 @@ function getSectionFromField<K extends keyof FacilityDetail>(field: K): TabSecti
     'relationInfo',
   ];
 
-  if (basicFields.includes(String(field))) return 'basic';
-  if (accessFields.includes(String(field))) return 'access';
+  if (basicFields.includes(field)) return 'basic';
+  if (accessFields.includes(field)) return 'access';
   if (field === 'philosophyInfo') return 'philosophy';
   if (field === 'specialtyInfo') return 'specialty';
   if (field === 'staffInfo') return 'staff';
@@ -111,7 +118,8 @@ export const useFacilityTabEdit = (
         errors: {},
       });
     }
-  }, [initialData?.id]); // idが変わった時のみ更新
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialData?.id]); // idが変わった時のみ更新（initialData全体を含めると無限ループになる）
 
   /** 単一フィールドの更新 */
   const updateField = useCallback(
