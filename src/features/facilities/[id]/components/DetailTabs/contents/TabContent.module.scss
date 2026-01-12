@@ -67,15 +67,20 @@
 
 .accessInfo {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 
   .accessText {
-    margin-bottom: 16px;
+    margin: 0;
     font-size: 16px;
+    line-height: 1.8;
   }
 
   .accessDescription {
-    margin-top: 24px;
-    line-height: 1.6;
+    margin: 8px 0 0 0;
+    line-height: 1.8;
+    font-size: 16px;
   }
 
   .noticeText {
@@ -83,6 +88,13 @@
     font-size: 13px;
     color: colors.$text-secondary;
   }
+}
+
+// 各情報セクション (住所、アクセス、アピールポイント)
+.infoSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 // テキストメインのセクション
@@ -131,20 +143,49 @@
   text-align: justify;
 }
 
-// CommunityRelation 用スタイル
-.relationSection {
-  margin-top: 24px;
+// AccessTab 全体のコンテナ
+.accessTabContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
 
-  .subTitle {
+// PhilosophyTab 全体のコンテナ
+.philosophyTabContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+// セクションタイトル (住所、アクセス)
+.sectionTitle {
+  font-size: 14px;
+  font-weight: bold;
+  color: colors.$text-primary;
+  margin: 0 0 12px 0;
+  padding: 0;
+}
+
+// 地域社会との関係セクション
+.relationSection {
+  margin-top: 16px;
+  padding-top: 32px;
+  border-top: 1px solid colors.$border-gray;
+
+  .relationTitle {
     font-size: 18px;
-    margin-bottom: 16px;
-    font-weight: normal;
+    font-weight: bold;
+    margin: 0 0 16px 0;
+    color: colors.$text-primary;
+    border-left: 4px solid colors.$primary-color;
+    padding-left: 12px;
   }
 
   .relationText {
-    font-size: 14px;
+    font-size: 16px;
     line-height: 1.8;
-    text-align: justify;
+    color: colors.$text-primary;
+    white-space: pre-wrap;
   }
 }
 
