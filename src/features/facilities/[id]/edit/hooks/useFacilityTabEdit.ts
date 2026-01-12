@@ -2,7 +2,7 @@
  * タブ別施設編集用カスタムフック
  * 各タブが独立して編集・保存できるように状態を管理
  */
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 import type { FacilityDetail } from '@/types/facility';
 import type { TabUpdateData } from '@/lib/supabase/mutations/facilities';
@@ -74,20 +74,17 @@ export const useFacilityTabEdit = (
     errors: {},
   });
 
-  // initialDataが変わったらstateを更新
-  const [lastInitialDataId, setLastInitialDataId] = useState<number | null>(
-    initialData?.id ?? null,
-  );
-
-  if (initialData && initialData.id !== lastInitialDataId) {
-    setLastInitialDataId(initialData.id);
-    setState({
-      formData: { ...initialData },
-      isDirty: false,
-      isSaving: false,
-      errors: {},
-    });
-  }
+  // initialDataが変わったらstateを更新（useEffectで副作用として処理）
+  useEffect(() => {
+    if (initialData) {
+      setState({
+        formData: { ...initialData },
+        isDirty: false,
+        isSaving: false,
+        errors: {},
+      });
+    }
+  }, [initialData?.id]); // idが変わった時のみ更新
 
   /** 単一フィールドの更新 */
   const updateField = useCallback(
