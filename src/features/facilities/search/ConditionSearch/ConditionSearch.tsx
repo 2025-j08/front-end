@@ -4,7 +4,11 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import SearchIcon from '@mui/icons-material/Search';
 
-import { KINKI_PREFECTURES, FACILITY_TYPES } from '@/const/searchConditions';
+import {
+  KINKI_PREFECTURES,
+  FACILITY_TYPES,
+  PREFECTURE_TO_CSS_CLASS,
+} from '@/const/searchConditions';
 import { logError } from '@/lib/clientLogger';
 import { useArrayToggle } from '@/lib/hooks/useArrayToggle';
 import { buildFacilitiesListUrl } from '@/lib/search-params';
@@ -12,16 +16,6 @@ import { getPrefectureCities, type PrefectureCitiesMap } from '@/lib/supabase/qu
 
 import { CitySelectModal } from './CitySelectModal';
 import styles from './ConditionSearch.module.scss';
-
-/** 都道府県名からCSSクラス名へのマッピング */
-const PREFECTURE_TO_CLASS: Record<string, string> = {
-  大阪府: 'osaka',
-  京都府: 'kyoto',
-  滋賀県: 'shiga',
-  奈良県: 'nara',
-  兵庫県: 'hyogo',
-  和歌山県: 'wakayama',
-};
 
 export const ConditionSearch = () => {
   const router = useRouter();
@@ -105,7 +99,7 @@ export const ConditionSearch = () => {
           <div className={styles.prefGrid}>
             {KINKI_PREFECTURES.map((pref) => {
               const selectedCount = (selectedCitiesMap[pref] || []).length;
-              const cssClass = PREFECTURE_TO_CLASS[pref];
+              const cssClass = PREFECTURE_TO_CSS_CLASS[pref];
               const ariaLabel = isLoadingAreas
                 ? `${pref}（読み込み中）`
                 : `${pref}の市区町村を選択${selectedCount > 0 ? `（${selectedCount}件選択中）` : ''}`;
@@ -165,7 +159,6 @@ export const ConditionSearch = () => {
       {/* 市区町村選択モーダル */}
       {modalOpen && activePrefecture && (
         <CitySelectModal
-          isOpen={modalOpen}
           prefectureName={activePrefecture}
           cities={activeCitiesList}
           selectedCities={currentSelectedCities}

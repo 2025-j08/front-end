@@ -19,11 +19,8 @@ export const SearchInput = () => {
   const router = useRouter();
   const [keyword, setKeyword] = useState('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setKeyword(e.target.value);
-  };
-
-  const handleSearch = () => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     const trimmedKeyword = keyword.trim();
     if (!trimmedKeyword) {
       return;
@@ -31,14 +28,8 @@ export const SearchInput = () => {
     router.push(buildFacilitiesListUrl({ keyword: trimmedKeyword }));
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
-  };
-
   return (
-    <div className={styles.container}>
+    <form className={styles.container} onSubmit={handleSubmit}>
       <div className={styles.inputWrapper}>
         <input
           type="text"
@@ -46,18 +37,12 @@ export const SearchInput = () => {
           className={styles.input}
           aria-label="施設キーワード検索"
           value={keyword}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
+          onChange={(e) => setKeyword(e.target.value)}
         />
-        <button
-          type="button"
-          aria-label="検索を実行"
-          className={styles.searchButton}
-          onClick={handleSearch}
-        >
+        <button type="submit" aria-label="検索を実行" className={styles.searchButton}>
           検索
         </button>
       </div>
-    </div>
+    </form>
   );
 };
