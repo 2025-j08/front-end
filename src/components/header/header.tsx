@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
@@ -9,6 +9,7 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import type { SvgIconComponent } from '@mui/icons-material';
 
 import { useClickOutside } from '@/hooks/useClickOutside';
+import { useCurrentUser, type UserRole } from '@/hooks/useCurrentUser';
 
 import styles from './header.module.scss';
 
@@ -27,14 +28,19 @@ const NAV_ITEMS: NavItem[] = [
 // 管理メニュー項目の定義
 type AdminMenuItem = {
   label: string;
-  href: string;
+  href: string | ((facilityId: number | null) => string);
+  allowedRoles: UserRole[];
 };
 
 const ADMIN_MENU_ITEMS: AdminMenuItem[] = [
-  { label: 'ユーザー発行', href: '/admin/user-issuance' },
-  { label: 'ユーザー管理', href: '/admin/users' },
-  { label: '施設管理', href: '/admin/facilities' },
-  { label: '施設情報編集', href: '/admin/facilities/edit' },
+  { label: 'ユーザー発行', href: '/admin/user-issuance', allowedRoles: ['admin'] },
+  { label: 'ユーザー管理', href: '/admin/users', allowedRoles: ['admin'] },
+  { label: '施設管理', href: '/admin/facilities', allowedRoles: ['admin'] },
+  {
+    label: '施設情報編集',
+    href: (facilityId) => (facilityId ? `/features/facilities/${facilityId}/edit` : '#'),
+    allowedRoles: ['staff'],
+  },
 ];
 
 // メニューのID定義（aria-controls用）
@@ -52,8 +58,17 @@ export const Header = () => {
   const menuRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null); // トリガーボタンへの参照
 
-  // 管理者権限チェック（現段階では常にtrueとし、将来的に認証ロジックを実装する）
-  const isAdmin = true;
+  // ユーザー情報を取得
+  const { isLoggedIn, role, facilityId } = useCurrentUser();
+
+  // 権限に応じた管理メニュー項目をフィルタリング
+  const filteredMenuItems = useMemo(() => {
+    if (!role) return [];
+    return ADMIN_MENU_ITEMS.filter((item) => item.allowedRoles.includes(role));
+  }, [role]);
+
+  // 管理メニューを表示するかどうか（ログイン済みかつメニュー項目がある場合）
+  const showAdminMenu = isLoggedIn && filteredMenuItems.length > 0;
 
   // カスタムフックを使用してメニュー外クリックを検知して閉じる
   // NOTE: menuRefはトリガーボタンを含むラッパー要素に設定しています。
@@ -160,21 +175,21 @@ export const Header = () => {
             ))}
 
             {/* 管理メニュー（ドロップダウン） */}
-            {isAdmin && (
+            {showAdminMenu && (
               <div
                 className={styles.menuWrapper}
                 ref={menuRef}
-                onKeyDown={handleKeyDown} // キーボードイベントを追加
-                onBlur={handleBlur} // フォーカスイベントを追加
+                onKeyDown={handleKeyDown}
+                onBlur={handleBlur}
               >
                 <button
-                  ref={triggerRef} // Refを追加
+                  ref={triggerRef}
                   type="button"
                   className={`${styles.navItem} ${styles.menuTrigger}`}
                   onClick={toggleMenu}
                   aria-expanded={isMenuOpen}
                   aria-haspopup="menu"
-                  aria-controls={ADMIN_MENU_ID} // 制御対象のIDを指定
+                  aria-controls={ADMIN_MENU_ID}
                   aria-label={isMenuOpen ? '管理メニューを閉じる' : '管理メニューを開く'}
                 >
                   <SettingsOutlinedIcon className={styles.icon} />
@@ -182,23 +197,23 @@ export const Header = () => {
                 </button>
 
                 {isMenuOpen && (
-                  <div
-                    id={ADMIN_MENU_ID} // IDを追加
-                    className={styles.dropdown}
-                    role="menu"
-                  >
-                    {ADMIN_MENU_ITEMS.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className={styles.dropdownItem}
-                        onClick={() => setIsMenuOpen(false)}
-                        role="menuitem"
-                        tabIndex={-1} // 矢印キーで移動するため、Tab移動の順序からは除外
-                      >
-                        {item.label}
-                      </Link>
-                    ))}
+                  <div id={ADMIN_MENU_ID} className={styles.dropdown} role="menu">
+                    {filteredMenuItems.map((item) => {
+                      const href =
+                        typeof item.href === 'function' ? item.href(facilityId) : item.href;
+                      return (
+                        <Link
+                          key={item.label}
+                          href={href}
+                          className={styles.dropdownItem}
+                          onClick={() => setIsMenuOpen(false)}
+                          role="menuitem"
+                          tabIndex={-1}
+                        >
+                          {item.label}
+                        </Link>
+                      );
+                    })}
                   </div>
                 )}
               </div>
