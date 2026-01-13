@@ -8,12 +8,14 @@
 
 .breadcrumb {
   font-size: 0.9rem;
-  color: colors.$text-secondary;
+  color: var(--text-secondary);
   margin-bottom: 16px;
+  transition: color 0.3s ease;
 
   a {
-    color: colors.$text-link;
+    color: var(--primary);
     text-decoration: none;
+    transition: color 0.3s ease;
 
     &:hover {
       text-decoration: underline;
@@ -21,17 +23,21 @@
   }
 
   span {
-    color: colors.$text-primary;
+    color: var(--text-primary);
+    transition: color 0.3s ease;
   }
 }
 
 .title {
   font-size: 1.8rem;
   font-weight: bold;
-  color: colors.$text-primary;
+  color: var(--text-primary);
   margin: 0 0 24px 0;
   padding-bottom: 8px;
-  border-bottom: 2px solid colors.$border-dark;
+  border-bottom: 2px solid var(--border-dark);
+  transition:
+    color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .facilitiesGrid {
@@ -75,7 +81,8 @@
 .errorContainer {
   padding: 2rem;
   text-align: center;
-  color: colors.$error-color;
+  color: var(--error);
+  transition: color 0.3s ease;
 
   p {
     margin: 0.5rem 0;
@@ -85,13 +92,17 @@
     margin-top: 1rem;
     padding: 0.5rem 1rem;
     cursor: pointer;
-    background-color: colors.$bg-white;
-    border: 1px solid colors.$border-gray;
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
-    color: colors.$text-primary;
+    color: var(--text-primary);
+    transition:
+      background-color 0.3s ease,
+      border-color 0.3s ease,
+      color 0.3s ease;
 
     &:hover {
-      background-color: colors.$bg-light-gray;
+      background-color: var(--background-secondary);
     }
   }
 }
@@ -99,7 +110,8 @@
 .loadingContainer {
   padding: 3rem;
   text-align: center;
-  color: colors.$text-secondary;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
 
   p {
     margin: 0;
@@ -110,9 +122,12 @@
 .emptyContainer {
   padding: 3rem;
   text-align: center;
-  color: colors.$text-secondary;
-  background-color: colors.$bg-light-gray;
+  color: var(--text-secondary);
+  background-color: var(--background-secondary);
   border-radius: 8px;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 
   p {
     margin: 0.5rem 0;
@@ -122,6 +137,7 @@
 
 .resultCount {
   font-size: 0.95rem;
-  color: colors.$text-secondary;
+  color: var(--text-secondary);
   margin: 0 0 16px 0;
+  transition: color 0.3s ease;
 }

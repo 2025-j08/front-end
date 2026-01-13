@@ -1,14 +1,16 @@
 @use '@/styles/colors' as colors;
 
 .container {
-  // MapSearchと同じ背景色とボーダーを適用
-  background-color: colors.$condition-search-bg;
-  border: 2px solid colors.$condition-search-border;
+  background-color: var(--background-tertiary);
+  border: 2px solid var(--primary-light);
   border-radius: 20px;
   padding: 40px 20px 20px;
   position: relative;
   height: 100%;
   box-sizing: border-box;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 // 左上の「キーワードから探す」風バッジ
@@ -16,15 +18,19 @@
   position: absolute;
   top: -15px;
   left: 20px;
-  background-color: colors.$border-green;
-  border: 2px solid colors.$border-black;
+  background-color: var(--primary-light);
+  border: 2px solid var(--border-dark);
   border-radius: 20px;
   padding: 8px 24px;
   font-weight: bold;
   font-size: 16px;
-  box-shadow: 3px 3px 0px colors.$border-black;
+  box-shadow: 3px 3px 0px var(--border-dark);
   z-index: 10;
-  color: colors.$black;
+  color: var(--text-on-primary);
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .section {
@@ -35,7 +41,8 @@
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 12px;
-  color: colors.$text-primary;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
 }
 
 /* 都道府県グリッド */
@@ -57,7 +64,7 @@
   justify-content: center;
   align-items: center;
 
-  border: 2px solid colors.$border-black;
+  border: 2px solid var(--border-dark);
   border-radius: 12px;
   padding: 12px 10px;
 
@@ -67,14 +74,15 @@
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 
   cursor: pointer;
-  box-shadow: 4px 4px 0px colors.$border-black;
+  box-shadow: 4px 4px 0px var(--border-dark);
   transition:
     transform 0.1s,
-    box-shadow 0.1s;
+    box-shadow 0.1s,
+    border-color 0.3s ease;
 
   &:active {
     transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0px colors.$border-black;
+    box-shadow: 2px 2px 0px var(--border-dark);
   }
 
   // 右側の三角矢印アイコン
@@ -118,7 +126,7 @@
 
 // 選択中の市町村がある場合
 .hasSelection {
-  border: 3px solid colors.$border-black;
+  border: 3px solid var(--border-dark);
 }
 
 /* 形態（大舎・中舎など）グリッド */
@@ -134,8 +142,8 @@
 
 // 形態ボタン
 .typeButton {
-  background-color: colors.$bg-white;
-  border: 2px solid colors.$border-black;
+  background-color: var(--card-background);
+  border: 2px solid var(--border-dark);
   border-radius: 30px;
   padding: 10px;
   font-size: 16px;
@@ -145,20 +153,20 @@
 
   // 選択されている状態（強調）
   &.selected {
-    background-color: colors.$border-green;
-    color: colors.$black;
-    border-color: colors.$border-black;
+    background-color: var(--primary-light);
+    color: var(--text-on-primary);
+    border-color: var(--border-dark);
     transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 8px var(--shadow-medium);
   }
 
   // 選択されていない状態
   &:not(.selected) {
-    color: colors.$placeholder-color;
-    border-color: colors.$border-black;
+    color: var(--text-muted);
+    border-color: var(--border-dark);
 
     &:hover {
-      background-color: colors.$bg-light-gray;
+      background-color: var(--background-secondary);
       transform: translateY(-2px);
     }
   }
@@ -176,15 +184,18 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background-color: colors.$condition-search-button-bg;
-  border: 2px solid colors.$border-black;
+  background-color: var(--accent-light);
+  border: 2px solid var(--border-dark);
   border-radius: 30px;
   padding: 10px 30px;
   font-weight: bold;
   font-size: 16px;
-  color: colors.$black;
+  color: var(--text-on-primary);
   cursor: pointer;
-  box-shadow: 2px 2px 0px colors.$border-black;
+  box-shadow: 2px 2px 0px var(--border-dark);
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 
   &:hover {
     opacity: 0.9;

@@ -14,14 +14,15 @@
   justify-content: flex-end;
   margin-top: 24px;
   padding-top: 20px;
-  border-top: 1px solid colors.$border-gray;
+  border-top: 1px solid var(--border-color);
+  transition: border-color 0.3s ease;
 }
 
 // タブ保存ボタン
 .tabSaveButton {
   padding: 10px 32px;
-  background-color: colors.$primary-color;
-  color: colors.$white;
+  background-color: var(--primary);
+  color: var(--text-on-primary);
   border: none;
   border-radius: 6px;
   font-size: 15px;
@@ -31,8 +32,8 @@
   min-width: 120px;
 
   &:hover:not(:disabled) {
-    background-color: darken(colors.$primary-color, 8%);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    opacity: 0.9;
+    box-shadow: 0 2px 8px var(--shadow-medium);
   }
 
   &:active:not(:disabled) {
@@ -40,14 +41,14 @@
   }
 
   &:disabled {
-    background-color: colors.$border-gray;
-    color: colors.$text-secondary;
+    background-color: var(--border-color);
+    color: var(--text-secondary);
     cursor: not-allowed;
     opacity: 0.6;
   }
 
   &:focus {
-    outline: 2px solid colors.$primary-color;
+    outline: 2px solid var(--primary);
     outline-offset: 2px;
   }
 }
@@ -57,8 +58,9 @@
   display: flex;
   gap: 40px;
   font-size: 16px;
-  color: colors.$text-primary;
+  color: var(--text-primary);
   line-height: 1.8;
+  transition: color 0.3s ease;
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -86,7 +88,8 @@
   .noticeText {
     margin-top: 8px;
     font-size: 13px;
-    color: colors.$text-secondary;
+    color: var(--text-secondary);
+    transition: color 0.3s ease;
   }
 }
 
@@ -107,9 +110,12 @@
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 16px;
-  color: colors.$text-primary;
-  border-left: 4px solid colors.$primary-color;
+  color: var(--text-primary);
+  border-left: 4px solid var(--accent);
   padding-left: 12px;
+  transition:
+    color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 // リストスタイル (SpecialtyTab用)
@@ -126,7 +132,7 @@
       content: '✔';
       position: absolute;
       left: 0;
-      color: colors.$primary-color;
+      color: var(--accent);
       font-weight: bold;
     }
   }
@@ -161,31 +167,37 @@
 .sectionTitle {
   font-size: 14px;
   font-weight: bold;
-  color: colors.$text-primary;
+  color: var(--text-primary);
   margin: 0 0 12px 0;
   padding: 0;
+  transition: color 0.3s ease;
 }
 
 // 地域社会との関係セクション
 .relationSection {
   margin-top: 16px;
   padding-top: 32px;
-  border-top: 1px solid colors.$border-gray;
+  border-top: 1px solid var(--border-color);
+  transition: border-color 0.3s ease;
 
   .relationTitle {
     font-size: 18px;
     font-weight: bold;
     margin: 0 0 16px 0;
-    color: colors.$text-primary;
-    border-left: 4px solid colors.$primary-color;
+    color: var(--text-primary);
+    border-left: 4px solid var(--accent);
     padding-left: 12px;
+    transition:
+      color 0.3s ease,
+      border-color 0.3s ease;
   }
 
   .relationText {
     font-size: 16px;
     line-height: 1.8;
-    color: colors.$text-primary;
+    color: var(--text-primary);
     white-space: pre-wrap;
+    transition: color 0.3s ease;
   }
 }
 
@@ -198,16 +210,17 @@
 .mapPlaceholder {
   flex: 1;
   height: 200px;
-  background-color: colors.$bg-active;
+  background-color: var(--background-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
+  transition: background-color 0.3s ease;
 
   .pin {
     width: 20px;
     height: 20px;
-    background-color: colors.$text-secondary;
+    background-color: var(--text-secondary);
     border-radius: 50% 50% 50% 0;
     transform: rotate(-45deg);
   }
@@ -217,9 +230,12 @@
 .placeholderContent {
   padding: 40px;
   text-align: center;
-  background-color: colors.$bg-light-gray;
-  color: colors.$text-secondary;
+  background-color: var(--background-secondary);
+  color: var(--text-secondary);
   white-space: normal;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 // -----------------------------------------------------------------------------
@@ -252,21 +268,24 @@
   flex-direction: column;
   gap: 8px;
   padding: 16px 24px;
-  background-color: colors.$bg-light-gray;
+  background-color: var(--background-secondary);
   border-radius: 8px;
   min-width: 120px;
+  transition: background-color 0.3s ease;
 }
 
 .staffCountLabel {
   font-size: 13px;
-  color: colors.$text-secondary;
+  color: var(--text-secondary);
   font-weight: 500;
+  transition: color 0.3s ease;
 }
 
 .staffCountValue {
   font-size: 24px;
   font-weight: bold;
-  color: colors.$primary-color;
+  color: var(--primary);
+  transition: color 0.3s ease;
 }
 
 // -----------------------------------------------------------------------------
@@ -285,8 +304,9 @@
   display: block;
   font-size: 14px;
   font-weight: 500;
-  color: colors.$text-secondary;
+  color: var(--text-secondary);
   margin-bottom: 8px;
+  transition: color 0.3s ease;
 }
 
 .inputWrapper {
@@ -297,40 +317,49 @@
 
 .suffix {
   font-size: 14px;
-  color: colors.$text-primary;
+  color: var(--text-primary);
   white-space: nowrap;
   flex-shrink: 0;
+  transition: color 0.3s ease;
 }
 
 .editInput {
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid colors.$border-gray;
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   font-size: 14px;
-  color: colors.$text-primary;
-  transition: border-color 0.2s ease;
+  color: var(--text-primary);
+  background-color: var(--card-background);
+  transition:
+    border-color 0.2s ease,
+    background-color 0.3s ease,
+    color 0.3s ease;
 
   &:focus {
     outline: none;
-    border-color: colors.$primary-color;
+    border-color: var(--primary);
   }
 }
 
 .editTextarea {
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid colors.$border-gray;
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   font-size: 14px;
-  color: colors.$text-primary;
+  color: var(--text-primary);
+  background-color: var(--card-background);
   resize: vertical;
   min-height: 80px;
-  transition: border-color 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.3s ease,
+    color 0.3s ease;
 
   &:focus {
     outline: none;
-    border-color: colors.$primary-color;
+    border-color: var(--primary);
   }
 }
 
@@ -344,23 +373,24 @@
 }
 
 .errorInput {
-  border-color: colors.$error-color !important;
-  background-color: rgba(211, 47, 47, 0.05);
+  border-color: var(--error) !important;
+  background-color: var(--error-bg);
 
   &:focus {
-    border-color: colors.$error-color !important;
-    box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.2);
+    border-color: var(--error) !important;
+    box-shadow: 0 0 0 2px var(--error-bg);
   }
 }
 
 .errorText {
   margin-top: 6px;
   font-size: 13px;
-  color: colors.$error-color;
+  color: var(--error);
   font-weight: 500;
   display: flex;
   align-items: center;
   gap: 4px;
+  transition: color 0.3s ease;
 
   &::before {
     content: '!';
@@ -370,7 +400,7 @@
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background-color: colors.$error-color;
+    background-color: var(--error);
     color: colors.$white;
     font-size: 11px;
     font-weight: bold;
@@ -388,10 +418,13 @@
   .sectionTitle {
     font-size: 16px;
     font-weight: bold;
-    color: colors.$text-primary;
+    color: var(--text-primary);
     margin: 0 0 16px 0;
     padding: 0 0 8px 0;
-    border-bottom: 2px solid colors.$border-gray;
+    border-bottom: 2px solid var(--border-color);
+    transition:
+      color 0.3s ease,
+      border-color 0.3s ease;
   }
 }
 
