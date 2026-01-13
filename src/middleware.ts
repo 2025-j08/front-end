@@ -2,6 +2,8 @@ import { createServerClient } from '@supabase/ssr';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+import { supabaseConfig } from '@/lib/supabase/config';
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -23,28 +25,24 @@ export async function middleware(request: NextRequest) {
     },
   });
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => {
-            request.cookies.set(name, value);
-            response = NextResponse.next({
-              request: {
-                headers: request.headers,
-              },
-            });
-            response.cookies.set(name, value, options);
+  const supabase = createServerClient(supabaseConfig.url, supabaseConfig.anonKey, {
+    cookies: {
+      getAll() {
+        return request.cookies.getAll();
+      },
+      setAll(cookiesToSet) {
+        cookiesToSet.forEach(({ name, value, options }) => {
+          request.cookies.set(name, value);
+          response = NextResponse.next({
+            request: {
+              headers: request.headers,
+            },
           });
-        },
+          response.cookies.set(name, value, options);
+        });
       },
     },
-  );
+  });
 
   // ユーザー認証状態を確認
   const {
@@ -59,13 +57,13 @@ export async function middleware(request: NextRequest) {
 
   // /admin/* はadminロールのみアクセス可能
   if (isAdminPath) {
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('role')
       .eq('id', user.id)
       .single();
 
-    if (profile?.role !== 'admin') {
+    if (profileError || profile?.role !== 'admin') {
       const redirectUrl = new URL('/', request.url);
       return NextResponse.redirect(redirectUrl);
     }
