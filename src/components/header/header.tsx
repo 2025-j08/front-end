@@ -9,7 +9,7 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import type { SvgIconComponent } from '@mui/icons-material';
 
 import { useClickOutside } from '@/hooks/useClickOutside';
-import { useCurrentUser, type UserRole } from '@/hooks/useCurrentUser';
+import { useCurrentUser } from '@/hooks/useCurrentUser';
 
 import styles from './header.module.scss';
 
