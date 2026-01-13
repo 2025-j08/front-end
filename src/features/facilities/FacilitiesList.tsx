@@ -29,42 +29,42 @@ export const FacilitiesList = () => {
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
   // 施設データを取得
-  const fetchFacilities = useCallback(
-    async (page: number, searchConditions: FacilitySearchConditions) => {
-      setIsLoading(true);
-      setError(null);
+  const fetchFacilities = async (page: number, searchConditions: FacilitySearchConditions) => {
+    setIsLoading(true);
+    setError(null);
 
-      try {
-        const result = await getFacilityList(searchConditions, page, ITEMS_PER_PAGE);
-        setFacilities(result.facilities);
-        setTotalCount(result.totalCount);
-      } catch (err) {
-        logError('施設一覧の取得に失敗しました', {
-          component: 'FacilitiesList',
-          error: err instanceof Error ? err : new Error(String(err)),
-        });
-        setError('施設一覧の取得に失敗しました。しばらく経ってから再度お試しください。');
-        setFacilities([]);
-        setTotalCount(0);
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [],
-  );
+    try {
+      const result = await getFacilityList(searchConditions, page, ITEMS_PER_PAGE);
+      setFacilities(result.facilities);
+      setTotalCount(result.totalCount);
+    } catch (err) {
+      logError('施設一覧の取得に失敗しました', {
+        component: 'FacilitiesList',
+        error: err instanceof Error ? err : new Error(String(err)),
+      });
+      setError('施設一覧の取得に失敗しました。しばらく経ってから再度お試しください。');
+      setFacilities([]);
+      setTotalCount(0);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // 検索条件が変わったらページを1にリセットしてデータを取得
   useEffect(() => {
     setCurrentPage(1);
     fetchFacilities(1, conditions);
-  }, [conditions, fetchFacilities]);
+  }, [conditions]);
 
   // ページ変更時
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    fetchFacilities(page, conditions);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  const handlePageChange = useCallback(
+    (page: number) => {
+      setCurrentPage(page);
+      fetchFacilities(page, conditions);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+    [conditions],
+  );
 
   // ローディング中
   if (isLoading) {

@@ -22,25 +22,23 @@ export function buildSearchParams(conditions: FacilitySearchConditions): URLSear
   const params = new URLSearchParams();
 
   // 都道府県・市区町村
-  if (conditions.cities && Object.keys(conditions.cities).length > 0) {
-    const citiesParam = Object.entries(conditions.cities)
-      .filter(([, cities]) => cities.length > 0)
-      .map(([pref, cities]) => `${pref}:${cities.join(',')}`)
-      .join('|');
-
-    if (citiesParam) {
-      params.set('cities', citiesParam);
-    }
+  const citiesParam = Object.entries(conditions.cities || {})
+    .filter(([, cities]) => cities.length > 0)
+    .map(([pref, cities]) => `${pref}:${cities.join(',')}`)
+    .join('|');
+  if (citiesParam) {
+    params.set('cities', citiesParam);
   }
 
   // 施設形態
-  if (conditions.types && conditions.types.length > 0) {
+  if (conditions.types?.length) {
     params.set('types', conditions.types.join(','));
   }
 
   // キーワード
-  if (conditions.keyword && conditions.keyword.trim()) {
-    params.set('keyword', conditions.keyword.trim());
+  const trimmedKeyword = conditions.keyword?.trim();
+  if (trimmedKeyword) {
+    params.set('keyword', trimmedKeyword);
   }
 
   return params;

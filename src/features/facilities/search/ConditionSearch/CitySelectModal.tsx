@@ -1,6 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
+
+import { useArrayToggle } from '@/lib/hooks/useArrayToggle';
 
 import styles from './CitySelectModal.module.scss';
 
@@ -38,7 +40,8 @@ export const CitySelectModal = ({
 }: Props) => {
   // モーダル内での一時的な選択状態を管理
   // 親側で条件付きレンダリングを行うため、マウント時に props.selectedCities で初期化される
-  const [tempSelectedCities, setTempSelectedCities] = useState<string[]>(selectedCities);
+  const [tempSelectedCities, toggleCity, setTempSelectedCities] =
+    useArrayToggle<string>(selectedCities);
 
   // オーバーレイ上でのマウス操作を追跡するためのRef
   const isMouseDownOnOverlay = useRef(false);
@@ -83,17 +86,6 @@ export const CitySelectModal = ({
   }, [isOpen]);
 
   if (!isOpen) return null;
-
-  // チェックボックス切り替え時はローカルステートのみ更新
-  const handleToggleCity = (city: string) => {
-    setTempSelectedCities((prev) => {
-      if (prev.includes(city)) {
-        return prev.filter((c) => c !== city);
-      } else {
-        return [...prev, city];
-      }
-    });
-  };
 
   // すべて選択
   const handleSelectAll = () => {
@@ -185,7 +177,7 @@ export const CitySelectModal = ({
                         id={inputId}
                         type="checkbox"
                         checked={isChecked}
-                        onChange={() => handleToggleCity(city)}
+                        onChange={() => toggleCity(city)}
                       />
                       <span>{city}</span>
                     </label>

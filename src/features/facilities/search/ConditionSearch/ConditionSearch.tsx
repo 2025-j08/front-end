@@ -6,6 +6,7 @@ import SearchIcon from '@mui/icons-material/Search';
 
 import { KINKI_PREFECTURES, FACILITY_TYPES } from '@/const/searchConditions';
 import { logError } from '@/lib/clientLogger';
+import { useArrayToggle } from '@/lib/hooks/useArrayToggle';
 import { buildFacilitiesListUrl } from '@/lib/search-params';
 import { getPrefectureCities, type PrefectureCitiesMap } from '@/lib/supabase/queries/facilities';
 
@@ -28,6 +29,7 @@ export const ConditionSearch = () => {
   // 都道府県・市区町村データ（Supabaseから取得）
   const [prefectureCities, setPrefectureCities] = useState<PrefectureCitiesMap>({});
   const [isLoadingAreas, setIsLoadingAreas] = useState(true);
+  const [areaError, setAreaError] = useState<string | null>(null);
 
   // モーダル管理用State
   const [modalOpen, setModalOpen] = useState(false);
@@ -37,17 +39,21 @@ export const ConditionSearch = () => {
   const [selectedCitiesMap, setSelectedCitiesMap] = useState<Record<string, string[]>>({});
 
   // 形態（施設タイプ）の選択状態
-  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [selectedTypes, toggleType] = useArrayToggle<string>([]);
 
   // 初回マウント時にSupabaseから都道府県・市区町村データを取得
   useEffect(() => {
     const fetchAreas = async () => {
       try {
+        setAreaError(null);
         const data = await getPrefectureCities();
         setPrefectureCities(data);
       } catch (error) {
-        const err = error instanceof Error ? error : String(error);
-        logError('住所情報の取得に失敗しました', { component: 'ConditionSearch', error: err });
+        setAreaError('住所情報の取得に失敗しました');
+        logError('住所情報の取得に失敗しました', {
+          component: 'ConditionSearch',
+          error: error instanceof Error ? error : new Error(String(error)),
+        });
       } finally {
         setIsLoadingAreas(false);
       }
@@ -72,13 +78,6 @@ export const ConditionSearch = () => {
     }
   };
 
-  // 形態ボタンクリック時の処理
-  const handleTypeClick = (type: string) => {
-    setSelectedTypes((prev) =>
-      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type],
-    );
-  };
-
   // 検索実行時のハンドラー
   const handleSearch = () => {
     const url = buildFacilitiesListUrl({
@@ -100,32 +99,25 @@ export const ConditionSearch = () => {
       {/* 都道府県セクション */}
       <div className={styles.section}>
         <h3 className={styles.sectionTitle}>都道府県</h3>
-        {isLoadingAreas ? (
-          <div className={styles.prefGrid}>
-            {KINKI_PREFECTURES.map((pref) => (
-              <button
-                key={pref}
-                type="button"
-                className={`${styles.prefButton} ${styles[PREFECTURE_TO_CLASS[pref]]}`}
-                disabled
-                aria-label={`${pref}（読み込み中）`}
-              >
-                {pref}
-              </button>
-            ))}
-          </div>
+        {areaError ? (
+          <p className={styles.errorText}>{areaError}</p>
         ) : (
           <div className={styles.prefGrid}>
             {KINKI_PREFECTURES.map((pref) => {
               const selectedCount = (selectedCitiesMap[pref] || []).length;
               const cssClass = PREFECTURE_TO_CLASS[pref];
+              const ariaLabel = isLoadingAreas
+                ? `${pref}（読み込み中）`
+                : `${pref}の市区町村を選択${selectedCount > 0 ? `（${selectedCount}件選択中）` : ''}`;
+
               return (
                 <button
                   key={pref}
                   type="button"
                   className={`${styles.prefButton} ${styles[cssClass]} ${selectedCount > 0 ? styles.hasSelection : ''}`}
+                  disabled={isLoadingAreas}
                   onClick={() => handlePrefectureClick(pref)}
-                  aria-label={`${pref}の市区町村を選択${selectedCount > 0 ? `（${selectedCount}件選択中）` : ''}`}
+                  aria-label={ariaLabel}
                 >
                   {pref}
                 </button>
@@ -148,7 +140,7 @@ export const ConditionSearch = () => {
                 type="button"
                 aria-label={`${type}の施設形態で絞り込み${isSelected ? '（選択中）' : ''}`}
                 aria-pressed={isSelected}
-                onClick={() => handleTypeClick(type)}
+                onClick={() => toggleType(type)}
               >
                 {type}
               </button>
