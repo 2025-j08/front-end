@@ -37,6 +37,14 @@ $header-nav-gap-mobile: 15px;
   transition: opacity 0.2s;
   height: 50px;
   width: auto;
+  padding: 0;
+
+  img {
+    width: auto;
+    height: 100%;
+    object-fit: contain;
+    max-width: 100%;
+  }
 
   &:hover {
     opacity: 0.8;

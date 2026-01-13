@@ -163,7 +163,7 @@ export const Header = () => {
               alt="近畿児童養護施設データベース"
               width={240}
               height={50}
-              style={{ width: 'auto', height: '100%', objectFit: 'contain' }}
+              sizes="(max-width: 600px) 180px, 240px"
               priority
             />
           </Link>
