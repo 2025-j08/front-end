@@ -74,8 +74,9 @@ $header-nav-gap-mobile: 15px;
   transition: opacity 0.2s;
   white-space: nowrap;
 
-  // ボタン要素（管理メニュー）のリセット
-  &.menuTrigger {
+  // ボタン要素のリセット（管理メニュー・認証ボタン共通）
+  &.menuTrigger,
+  &.authButton {
     background: none;
     border: none;
     padding: 0;

@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 
-import { createClient } from '@/lib/supabase/server';
+import { createServerClient } from '@/lib/supabase/server';
 import { updateFacilityBySection, type TabUpdateData } from '@/lib/supabase/mutations/facilities';
 import { getFacilityDetail } from '@/lib/supabase/queries/facilities';
 
@@ -54,7 +54,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     }
 
     // Supabaseクライアントを作成（認証済みユーザーのセッションを使用）
-    const supabase = await createClient();
+    const supabase = await createServerClient();
 
     // ユーザー認証チェック
     const {

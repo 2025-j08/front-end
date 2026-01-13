@@ -1,4 +1,4 @@
-import { createServerClient } from '@supabase/ssr';
+import { createServerClient as createSupabaseServerClient } from '@supabase/ssr';
 import { createClient as createSupabaseClient, type SupabaseClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 
@@ -10,9 +10,9 @@ import { supabaseConfig, getServiceRoleKey } from './config';
  * サーバーサイド用のSupabaseクライアント
  * Cookie経由でユーザーセッションを保持
  */
-export async function createClient(): Promise<SupabaseClient> {
+export async function createServerClient(): Promise<SupabaseClient> {
   const cookieStore = await cookies();
-  return createServerClient(supabaseConfig.url, supabaseConfig.anonKey, {
+  return createSupabaseServerClient(supabaseConfig.url, supabaseConfig.anonKey, {
     cookies: {
       getAll() {
         return cookieStore.getAll();

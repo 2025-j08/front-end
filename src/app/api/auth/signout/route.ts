@@ -1,4 +1,4 @@
-import { createClient as createServerClient, createAdminClient } from '@/lib/supabase/server';
+import { createServerClient, createAdminClient } from '@/lib/supabase/server';
 import { HTTP_STATUS } from '@/const/httpStatus';
 import { logInfo, logWarn, logError, maskEmail } from '@/lib/logger';
 import {

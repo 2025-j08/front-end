@@ -84,6 +84,9 @@ export const useLoginForm = (): UseLoginFormReturn => {
         throw new Error(message);
       }
 
+      // サーバー側でログイン成功時、@supabase/ssrがCookieにセッションを保存するため
+      // クライアント側での再認証は不要（ページ遷移後に自動的にセッションが認識される）
+
       // ロールに応じた遷移（管理者はユーザー発行へ）
       if (body?.role === 'admin') {
         router.push('/admin/user-issuance');

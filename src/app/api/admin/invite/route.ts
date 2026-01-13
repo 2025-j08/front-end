@@ -1,5 +1,5 @@
 import type { InviteUserRequest } from '@/types/api';
-import { createClient as createServerClient, createAdminClient } from '@/lib/supabase/server';
+import { createServerClient, createAdminClient } from '@/lib/supabase/server';
 import { appConfig } from '@/lib/supabase/config';
 import { validateEmail } from '@/lib/validation';
 import { HTTP_STATUS } from '@/const/httpStatus';

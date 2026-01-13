@@ -4,26 +4,14 @@ import { useState, useRef, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import ContactSupportOutlinedIcon from '@mui/icons-material/ContactSupportOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
-import type { SvgIconComponent } from '@mui/icons-material';
 
 import { useClickOutside } from '@/hooks/useClickOutside';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 
 import styles from './header.module.scss';
-
-// ナビゲーション項目の定義
-type NavItem = {
-  label: string;
-  href: string;
-  icon: SvgIconComponent;
-};
-
-const NAV_ITEMS: NavItem[] = [
-  { label: 'ログイン', href: '/features/auth', icon: LoginOutlinedIcon },
-  { label: 'お問い合わせ', href: '/features/contact', icon: ContactSupportOutlinedIcon },
-];
 
 // 管理メニュー項目の定義
 type AdminMenuItem = {
@@ -62,7 +50,7 @@ export const Header = () => {
   const triggerRef = useRef<HTMLButtonElement>(null); // トリガーボタンへの参照
 
   // ユーザー情報を取得
-  const { isLoggedIn, role, facilityId, isLoading } = useCurrentUser();
+  const { isLoggedIn, role, facilityId, isLoading, signOut } = useCurrentUser();
 
   // 権限に応じた管理メニュー項目をフィルタリング
   // facilityIdが必要な項目は、facilityIdがある場合のみ表示
@@ -175,13 +163,29 @@ export const Header = () => {
 
           {/* 右側：ナビゲーション */}
           <nav className={styles.nav}>
-            {/* 通常ナビゲーション項目 */}
-            {NAV_ITEMS.map((item) => (
-              <Link key={item.href} href={item.href} className={styles.navItem}>
-                <item.icon className={styles.icon} />
-                <span>{item.label}</span>
-              </Link>
-            ))}
+            {/* 認証状態に応じてログイン/ログアウトを切り替え */}
+            {!isLoading &&
+              (isLoggedIn ? (
+                <button
+                  type="button"
+                  className={`${styles.navItem} ${styles.authButton}`}
+                  onClick={signOut}
+                >
+                  <LogoutOutlinedIcon className={styles.icon} />
+                  <span>ログアウト</span>
+                </button>
+              ) : (
+                <Link href="/features/auth" className={styles.navItem}>
+                  <LoginOutlinedIcon className={styles.icon} />
+                  <span>ログイン</span>
+                </Link>
+              ))}
+
+            {/* お問い合わせ */}
+            <Link href="/features/contact" className={styles.navItem}>
+              <ContactSupportOutlinedIcon className={styles.icon} />
+              <span>お問い合わせ</span>
+            </Link>
 
             {/* 管理メニュー（ドロップダウン） */}
             {showAdminMenu && (

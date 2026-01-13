@@ -1,5 +1,5 @@
 import type { RegisterRequest } from '@/types/api';
-import { createClient as createServerClient, createAdminClient } from '@/lib/supabase/server';
+import { createServerClient, createAdminClient } from '@/lib/supabase/server';
 import { validateRequired, validatePassword } from '@/lib/validation';
 import { HTTP_STATUS } from '@/const/httpStatus';
 import { logError, logInfo, maskEmail } from '@/lib/logger';
