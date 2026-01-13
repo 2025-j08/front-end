@@ -10,7 +10,6 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 
 import { useClickOutside } from '@/hooks/useClickOutside';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
-import { useAuth } from '@/hooks/useAuth';
 
 import styles from './header.module.scss';
 
@@ -51,8 +50,7 @@ export const Header = () => {
   const triggerRef = useRef<HTMLButtonElement>(null); // トリガーボタンへの参照
 
   // ユーザー情報を取得
-  const { isLoggedIn, role, facilityId, isLoading } = useCurrentUser();
-  const { signOut } = useAuth();
+  const { isLoggedIn, role, facilityId, isLoading, signOut } = useCurrentUser();
 
   // 権限に応じた管理メニュー項目をフィルタリング
   // facilityIdが必要な項目は、facilityIdがある場合のみ表示
