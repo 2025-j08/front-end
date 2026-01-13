@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
 import { FacilityListItem } from '@/types/facility';
+import { logError } from '@/lib/clientLogger';
 import { getFacilityList, FacilitySearchConditions } from '@/lib/supabase/queries/facilities';
 
 import { FacilityCard } from './components/FacilityCard/FacilityCard';
@@ -77,7 +78,10 @@ export const FacilitiesList = () => {
         setFacilities(result.facilities);
         setTotalCount(result.totalCount);
       } catch (err) {
-        console.error('施設一覧の取得に失敗しました:', err);
+        logError('施設一覧の取得に失敗しました', {
+          component: 'FacilitiesList',
+          error: err as Error,
+        });
         setError('施設一覧の取得に失敗しました。しばらく経ってから再度お試しください。');
         setFacilities([]);
         setTotalCount(0);

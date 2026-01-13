@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import SearchIcon from '@mui/icons-material/Search';
 
 import { KINKI_PREFECTURES, FACILITY_TYPES } from '@/const/searchConditions';
+import { logError } from '@/lib/clientLogger';
 import { getPrefectureCities, type PrefectureCitiesMap } from '@/lib/supabase/queries/facilities';
 
 import { CitySelectModal } from './CitySelectModal';
@@ -44,7 +45,7 @@ export const ConditionSearch = () => {
         const data = await getPrefectureCities();
         setPrefectureCities(data);
       } catch (error) {
-        console.error('住所情報の取得に失敗しました:', error);
+        logError('住所情報の取得に失敗しました', { component: 'ConditionSearch', error });
       } finally {
         setIsLoadingAreas(false);
       }
