@@ -4,15 +4,18 @@ import React, { useState } from 'react';
 
 import { FacilityManagementTable } from '@/features/admin/facilities/components/FacilityManagementTable';
 import { AddFacilityButton } from '@/features/admin/facilities/components/AddFacilityButton';
-import { Facility } from '@/types/facility';
+import { Facility, FacilityDetail, FacilityDataMap } from '@/types/facility';
 import facilitiesData from '@/dummy_data/facilities_detail.json';
+import styles from '@/features/admin/facilities/styles/FacilityManagementPage.module.scss';
 
 // ダミーデータをリスト形式に変換
-const initialFacilities: Facility[] = Object.values(facilitiesData).map((detail: any) => ({
+const initialFacilities: Facility[] = Object.values(
+  facilitiesData as unknown as FacilityDataMap,
+).map((detail: FacilityDetail) => ({
   id: detail.id,
   name: detail.name,
   postalCode: '', // 詳細はルートで郵便番号が分割されていませんが、fullAddressに含まれています。今のところダミーで問題ありません。
-  address: detail.locationAddress || detail.fullAddress, // locationAddressは通常accessInfoにあります
+  address: detail.accessInfo.locationAddress || detail.fullAddress, // accessInfoから取得
   phone: detail.phone,
   imagePath: null,
 }));
@@ -39,19 +42,8 @@ export default function FacilityManagementPage() {
   };
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
-      <h1
-        style={{
-          fontSize: '1.5rem',
-          fontWeight: 'bold',
-          marginBottom: '2rem',
-          borderBottom: '2px solid #000',
-          paddingBottom: '0.5rem',
-          width: '100%',
-        }}
-      >
-        施設管理
-      </h1>
+    <div className={styles.container}>
+      <h1 className={styles.title}>施設管理</h1>
 
       <FacilityManagementTable
         facilities={facilities}

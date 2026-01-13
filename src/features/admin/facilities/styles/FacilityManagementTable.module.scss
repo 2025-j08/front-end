@@ -51,54 +51,36 @@
   color: #999;
 }
 
-.editButton {
-  background-color: #90ee90;
-  /* ライトグリーン - 画像に合わせて調整 */
-  border: 1px solid #000;
-  border-radius: 999px;
+@mixin action-button($bg-color) {
+  background-color: $bg-color;
+  border: 1px solid colors.$black;
+  border-radius: 999px; // 丸みのあるボタン
   padding: 0.25rem 1rem;
   font-size: 0.9rem;
   cursor: pointer;
-  width: 80px;
-  white-space: nowrap;
+  white-space: nowrap; // 折り返し防止
+  display: inline-block; // Linkコンポーネント用
+  color: colors.$black; // デフォルト文字色
+  text-decoration: none; // リンクの下線除去
+  text-align: center;
 
   &:hover {
     opacity: 0.8;
   }
+}
+
+.editButton {
+  @include action-button(colors.$action-edit);
+  width: 80px;
 }
 
 .deleteButton {
-  background-color: #ff4444;
-  /* 赤 - 画像に合わせて調整 */
-  color: colors.$white;
-  border: 1px solid #000;
-  border-radius: 999px;
-  padding: 0.25rem 1rem;
-  font-size: 0.9rem;
-  cursor: pointer;
+  @include action-button(colors.$action-delete);
   width: 80px;
-  white-space: nowrap;
-
-  &:hover {
-    opacity: 0.8;
-  }
+  color: colors.$white; // 削除ボタンは文字色白
 }
 
 .detailButton {
-  background-color: #87ceeb;
-  /* スカイブルー - 区別のため */
-  border: 1px solid #000;
-  border-radius: 25px;
-  padding: 0.4rem 1rem;
-  font-size: 0.9rem;
-  cursor: pointer;
-  color: #000;
-  text-decoration: none;
-  display: inline-block;
-  /* Linkコンポーネント用 */
-  white-space: nowrap;
-
-  &:hover {
-    opacity: 0.8;
-  }
+  @include action-button(colors.$action-detail);
+  border-radius: 25px; // 詳細編集は少し形状を変える（元のコード維持）
 }
