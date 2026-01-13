@@ -51,31 +51,40 @@
   color: colors.$text-secondary;
 }
 
-@mixin action-button($bg-color) {
+@mixin action-button($bg-color, $text-color: colors.$black, $border-color: colors.$black) {
   background-color: $bg-color;
-  border: 1px solid colors.$black;
+  color: $text-color;
+  border: 1px solid $border-color;
   border-radius: 999px; // 丸みのあるボタン
   padding: 0.25rem 1rem;
   font-size: 0.9rem;
   cursor: pointer;
   white-space: nowrap; // 折り返し防止
   display: inline-block; // Linkコンポーネント用
-  color: colors.$black; // デフォルト文字色
   text-decoration: none; // リンクの下線除去
   text-align: center;
+  transition: opacity 0.2s ease;
 
   &:hover {
     opacity: 0.8;
   }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
 }
 
-.nameInput {
+.inputField {
   width: 100%;
   padding: 8px;
   border: 1px solid colors.$input-border;
   border-radius: 4px;
   font-size: 0.95rem;
   box-sizing: border-box;
+  transition:
+    border-color 0.2s ease,
+    outline 0.2s ease;
 
   &:focus {
     outline: 2px solid colors.$primary-color;
@@ -83,33 +92,19 @@
   }
 }
 
+.nameInput,
 .addressInput {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid colors.$input-border;
-  border-radius: 4px;
-  font-size: 0.95rem;
-  box-sizing: border-box;
-
-  &:focus {
-    outline: 2px solid colors.$primary-color;
-    border-color: colors.$primary-color;
-  }
+  @extend .inputField;
 }
 
 .saveButton {
-  @include action-button(colors.$bg-light-gray); // Default disabled color state
+  @include action-button(colors.$bg-light-gray, colors.$text-secondary, colors.$border-gray);
   width: 80px;
-  color: colors.$text-secondary;
-  border: 1px solid colors.$border-gray;
-  cursor: not-allowed;
-  opacity: 0.6;
 
-  &.active {
-    background-color: colors.$primary-color; // Highlight color
+  &:not(:disabled) {
+    background-color: colors.$primary-color;
     color: colors.$white;
     border: none;
-    cursor: pointer;
     opacity: 1;
 
     &:hover {
@@ -119,15 +114,12 @@
 }
 
 .deleteButton {
-  @include action-button(colors.$action-delete);
+  @include action-button(colors.$action-delete, colors.$white);
   width: 80px;
-  color: colors.$white; // 削除ボタン文字色を白に
 }
 
 .detailButton {
-  @include action-button(colors.$action-detail);
-  color: colors.$white;
+  @include action-button(colors.$action-detail, colors.$white, transparent);
   width: auto;
-  border-radius: 25px; // 詳細編集は少し形状を変える（元のコード維持）
-  border: none;
+  border-radius: 25px;
 }

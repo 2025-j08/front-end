@@ -66,7 +66,7 @@ const FacilityRow = ({
       </td>
       <td className={styles.actionCol}>
         <button
-          className={`${styles.saveButton} ${isDirty ? styles.active : ''}`}
+          className={styles.saveButton}
           onClick={handleSave}
           disabled={!isDirty}
           aria-label={`${facility.name}の変更を保存`}
@@ -110,11 +110,15 @@ export const FacilityManagementTable: React.FC<FacilityManagementTableProps> = (
       <table className={styles.table}>
         <thead>
           <tr>
-            <th className={styles.facilityNameCol}>施設名</th>
-            <th className={styles.addressCol}>住所</th>
-            <th className={styles.actionCol} aria-label="保存操作"></th>
-            <th className={styles.actionCol} aria-label="詳細編集操作"></th>
-            <th className={styles.actionCol} aria-label="削除操作"></th>
+            <th className={styles.facilityNameCol} scope="col">
+              施設名
+            </th>
+            <th className={styles.addressCol} scope="col">
+              住所
+            </th>
+            <th className={styles.actionCol} scope="col" aria-label="保存操作"></th>
+            <th className={styles.actionCol} scope="col" aria-label="詳細編集操作"></th>
+            <th className={styles.actionCol} scope="col" aria-label="削除操作"></th>
           </tr>
         </thead>
         <tbody>
