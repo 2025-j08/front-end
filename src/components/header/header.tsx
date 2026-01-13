@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-// import Image from 'next/image';
+import Image from 'next/image';
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
 import ContactSupportOutlinedIcon from '@mui/icons-material/ContactSupportOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
@@ -207,16 +207,16 @@ export const Header = () => {
         </div>
       </div>
 
-      {/* 下部：ヒーロー画像エリア (no image) */}
+      {/* 下部：ヒーロー画像エリア */}
       <div className={styles.heroArea}>
-        {/* <Image
-          src="/images/hero.jpg"
+        <Image
+          src="/images/herotest.png"
           alt="メインビジュアル"
           fill
           style={{ objectFit: 'cover' }}
           priority
-        /> */}
-        <span className={styles.noImageText}>no image</span>
+          sizes="100vw"
+        />
       </div>
     </header>
   );
