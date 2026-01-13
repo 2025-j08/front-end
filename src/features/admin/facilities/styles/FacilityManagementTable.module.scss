@@ -83,12 +83,9 @@
 }
 
 .detailButton {
-  @include action-button(
-    colors.$white
-  ); // 詳細編集は白背景に青枠などに変更検討、あるいはリンク色背景
-  background-color: colors.$white;
-  color: colors.$action-detail;
-  border: 1px solid colors.$action-detail;
+  @include action-button(colors.$action-detail);
+  color: colors.$white;
   width: auto;
   border-radius: 25px; // 詳細編集は少し形状を変える（元のコード維持）
+  border: none;
 }

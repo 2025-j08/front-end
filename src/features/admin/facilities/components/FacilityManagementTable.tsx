@@ -25,9 +25,9 @@ export const FacilityManagementTable: React.FC<FacilityManagementTableProps> = (
           <tr>
             <th className={styles.facilityNameCol}>施設名</th>
             <th className={styles.addressCol}>住所</th>
-            <th className={styles.actionCol}></th>
-            <th className={styles.actionCol}></th>
-            <th className={styles.actionCol}></th>
+            <th className={styles.actionCol} aria-label="変更操作"></th>
+            <th className={styles.actionCol} aria-label="詳細編集操作"></th>
+            <th className={styles.actionCol} aria-label="削除操作"></th>
           </tr>
         </thead>
         <tbody>

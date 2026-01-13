@@ -9,6 +9,7 @@ import { Facility, FacilityDetail, FacilityDataMap } from '@/types/facility';
 import facilitiesData from '@/dummy_data/facilities_detail.json';
 import styles from '@/features/admin/facilities/styles/FacilityManagementPage.module.scss';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog/ConfirmDialog';
+import { SuccessOverlay } from '@/components/form/overlay/successOverlay';
 
 // ダミーデータをリスト形式に変換
 const initialFacilities: Facility[] = Object.values(
@@ -30,6 +31,9 @@ export default function FacilityManagementPage() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [facilityToDelete, setFacilityToDelete] = useState<number | null>(null);
 
+  // 完了通知の状態
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+
   const handleEdit = (id: number) => {
     // 編集ページへ遷移
     router.push(`/admin/facilities/${id}/edit`);
@@ -48,6 +52,10 @@ export default function FacilityManagementPage() {
       // ダイアログを閉じてリセット
       setIsDeleteDialogOpen(false);
       setFacilityToDelete(null);
+
+      // 完了通知を表示
+      setIsSuccessOpen(true);
+      setTimeout(() => setIsSuccessOpen(false), 3000); // 3秒後に閉じる
     }
   };
 
@@ -77,6 +85,8 @@ export default function FacilityManagementPage() {
         onConfirm={handleConfirmDelete}
         onCancel={() => setIsDeleteDialogOpen(false)}
       />
+
+      <SuccessOverlay isVisible={isSuccessOpen} text="施設を削除しました" />
     </div>
   );
 }
