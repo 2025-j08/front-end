@@ -13,7 +13,7 @@
 
   th,
   td {
-    border: 1px solid #707070;
+    border: 1px solid colors.$text-secondary;
     padding: 0.75rem;
     vertical-align: middle;
   }
@@ -22,7 +22,7 @@
     background-color: colors.$white;
     font-weight: normal;
     text-align: center;
-    border-bottom: 2px solid #000;
+    border-bottom: 2px solid colors.$black;
   }
 
   td {
@@ -48,7 +48,7 @@
 }
 
 .greyText {
-  color: #999;
+  color: colors.$text-secondary;
 }
 
 @mixin action-button($bg-color) {
@@ -72,15 +72,23 @@
 .editButton {
   @include action-button(colors.$action-edit);
   width: 80px;
+  color: colors.$white; // 変更ボタン文字色を白に
+  border: none; // 背景色が濃いためボーダー削除検討、一旦維持ならそのまま
 }
 
 .deleteButton {
   @include action-button(colors.$action-delete);
   width: 80px;
-  color: colors.$white; // 削除ボタンは文字色白
+  color: colors.$white; // 削除ボタン文字色を白に
 }
 
 .detailButton {
-  @include action-button(colors.$action-detail);
+  @include action-button(
+    colors.$white
+  ); // 詳細編集は白背景に青枠などに変更検討、あるいはリンク色背景
+  background-color: colors.$white;
+  color: colors.$action-detail;
+  border: 1px solid colors.$action-detail;
+  width: auto;
   border-radius: 25px; // 詳細編集は少し形状を変える（元のコード維持）
 }
