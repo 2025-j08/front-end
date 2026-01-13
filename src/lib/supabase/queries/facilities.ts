@@ -6,6 +6,7 @@
 import type { PostgrestError } from '@supabase/supabase-js';
 
 import { createClient } from '@/lib/supabase/client';
+import { extractFirstFromRelation } from '@/lib/supabase/utils/relation-helpers';
 import type {
   FacilityDetail,
   AnnexFacility,
@@ -25,14 +26,11 @@ interface FacilityTypeRelation {
 
 /**
  * リレーション結果から施設種類名を取得するヘルパー
- * Supabaseは1対多/多対1で配列/オブジェクトを返すため両方に対応
  */
 function extractFacilityTypeName(relation: FacilityTypeRelation | null): string | undefined {
   if (!relation?.facility_types) return undefined;
-  if (Array.isArray(relation.facility_types)) {
-    return relation.facility_types[0]?.name;
-  }
-  return relation.facility_types.name;
+  const facilityType = extractFirstFromRelation(relation.facility_types);
+  return facilityType?.name;
 }
 
 /** 施設一覧取得用のselect文（基本フィールド） */
@@ -295,25 +293,20 @@ export async function getFacilityLocations(): Promise<FacilityLocation[]> {
 
   // 緯度経度が設定されている施設のみを返す
   return (data || [])
-    .filter((facility) => {
-      const access = facility.facility_access as AccessData;
-      // 配列の場合は最初の要素を使用
-      const accessItem = Array.isArray(access) ? access[0] : access;
-      return accessItem?.lat && accessItem?.lng;
-    })
     .map((facility) => {
-      const access = facility.facility_access as AccessData;
-      const accessItem = Array.isArray(access) ? access[0] : access;
-      return {
-        id: facility.id,
-        name: facility.name,
-        postalCode: facility.postal_code,
-        address: `${facility.prefecture}${facility.city}${facility.address_detail}`,
-        phone: facility.phone,
-        lat: accessItem!.lat,
-        lng: accessItem!.lng,
-      };
-    });
+      const accessItem = extractFirstFromRelation(facility.facility_access as AccessData);
+      return { facility, accessItem };
+    })
+    .filter(({ accessItem }) => accessItem?.lat && accessItem?.lng)
+    .map(({ facility, accessItem }) => ({
+      id: facility.id,
+      name: facility.name,
+      postalCode: facility.postal_code,
+      address: `${facility.prefecture}${facility.city}${facility.address_detail}`,
+      phone: facility.phone,
+      lat: accessItem!.lat,
+      lng: accessItem!.lng,
+    }));
 }
 
 // ============================================
