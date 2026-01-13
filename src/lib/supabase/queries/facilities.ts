@@ -33,6 +33,19 @@ function extractFacilityTypeName(relation: FacilityTypeRelation | null): string 
   return facilityType?.name;
 }
 
+/**
+ * 都道府県・市区町村マップからSupabase用のOR条件を構築する
+ * @param citiesMap - 都道府県をキー、市区町村配列を値とするマップ
+ * @returns Supabaseのor()に渡す条件文字列の配列
+ */
+function buildCityFilterConditions(citiesMap: Record<string, string[]>): string[] {
+  return Object.entries(citiesMap).flatMap(([prefName, cities]) =>
+    cities.length === 0
+      ? [`prefecture.eq.${prefName}`]
+      : cities.map((city) => `and(prefecture.eq.${prefName},city.eq.${city})`),
+  );
+}
+
 /** 施設一覧取得用のselect文（基本フィールド） */
 const FACILITY_LIST_BASE_FIELDS = `
   id,
@@ -113,23 +126,9 @@ export async function getFacilityList(
 
     // 都道府県・市区町村による絞り込み
     if (conditions.cities && Object.keys(conditions.cities).length > 0) {
-      // 選択された都道府県と市区町村の条件を構築
-      const orConditions: string[] = [];
-
-      Object.entries(conditions.cities).forEach(([prefName, cities]) => {
-        if (cities.length === 0) {
-          // 都道府県のみ選択（市区町村未選択）の場合は、その都道府県全体を対象
-          orConditions.push(`prefecture.eq.${prefName}`);
-        } else {
-          // 市区町村が選択されている場合
-          cities.forEach((city) => {
-            orConditions.push(`and(prefecture.eq.${prefName},city.eq.${city})`);
-          });
-        }
-      });
-
-      if (orConditions.length > 0) {
-        query = query.or(orConditions.join(','));
+      const cityFilters = buildCityFilterConditions(conditions.cities);
+      if (cityFilters.length > 0) {
+        query = query.or(cityFilters.join(','));
       }
     }
 
