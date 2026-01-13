@@ -222,7 +222,7 @@ $header-nav-gap-mobile: 15px;
   }
 
   .nav {
-    font-size: 10px;
+    gap: $header-nav-gap-mobile;
   }
 
   .navItem {
