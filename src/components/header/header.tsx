@@ -165,7 +165,11 @@ export const Header = () => {
               height={50}
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
               sizes="(max-width: 600px) 180px, 240px"
+=======
+              style={{ width: 'auto', height: '100%', objectFit: 'contain' }}
+>>>>>>> 60505af (ロゴの修正)
 =======
               style={{ width: 'auto', height: '100%', objectFit: 'contain' }}
 >>>>>>> 60505af (ロゴの修正)
