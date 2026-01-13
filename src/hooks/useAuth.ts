@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { usePathname } from 'next/navigation';
 
 import { API_ENDPOINTS } from '@/const/api';
 
@@ -27,6 +28,7 @@ interface UseAuthReturn {
 export const useAuth = (): UseAuthReturn => {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
+  const pathname = usePathname();
 
   // 認証状態取得
   const checkAuth = useCallback(async () => {
@@ -51,17 +53,22 @@ export const useAuth = (): UseAuthReturn => {
   const signOut = useCallback(async () => {
     setLoading(true);
     try {
-      await fetch(API_ENDPOINTS.AUTH.SIGNOUT, { method: 'POST', credentials: 'include' });
+      await fetch(API_ENDPOINTS.AUTH.SIGNOUT, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({}),
+      });
       setUser(null);
     } finally {
       setLoading(false);
     }
   }, []);
 
-  // 初回マウント時に認証状態を取得
+  // 初回マウント時およびページ遷移時に認証状態を取得
   useEffect(() => {
     checkAuth();
-  }, [checkAuth]);
+  }, [checkAuth, pathname]);
 
   return {
     user,
