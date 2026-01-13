@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
-import { logDebug } from '@/lib/clientLogger';
+import { buildFacilitiesListUrl } from '@/lib/search-params';
 
 import styles from './SearchInput.module.scss';
 
@@ -15,37 +16,20 @@ import styles from './SearchInput.module.scss';
  * @returns {JSX.Element} 検索キーワード入力フォームを含むJSX要素
  */
 export const SearchInput = () => {
-  // 入力キーワードの状態管理
+  const router = useRouter();
   const [keyword, setKeyword] = useState('');
 
-  /**
-   * 入力変更時のハンドラー
-   * @param {React.ChangeEvent<HTMLInputElement>} e - 入力イベント
-   */
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setKeyword(e.target.value);
-  };
-
-  /**
-   * 検索実行時のハンドラー
-   */
-  const handleSearch = () => {
-    // 実装完了までは開発環境でのみキーワードをログ出力しておく
-    logDebug('キーワード検索実行', { component: 'SearchInput', keyword });
-  };
-
-  /**
-   * Enterキー押下時にも検索を実行できるようにする
-   * @param {React.KeyboardEvent<HTMLInputElement>} e - キーボードイベント
-   */
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleSearch();
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const trimmedKeyword = keyword.trim();
+    if (!trimmedKeyword) {
+      return;
     }
+    router.push(buildFacilitiesListUrl({ keyword: trimmedKeyword }));
   };
 
   return (
-    <div className={styles.container}>
+    <form className={styles.container} onSubmit={handleSubmit}>
       <div className={styles.inputWrapper}>
         <input
           type="text"
@@ -53,18 +37,12 @@ export const SearchInput = () => {
           className={styles.input}
           aria-label="施設キーワード検索"
           value={keyword}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
+          onChange={(e) => setKeyword(e.target.value)}
         />
-        <button
-          type="button"
-          aria-label="検索を実行"
-          className={styles.searchButton}
-          onClick={handleSearch}
-        >
+        <button type="submit" aria-label="検索を実行" className={styles.searchButton}>
           検索
         </button>
       </div>
-    </div>
+    </form>
   );
 };

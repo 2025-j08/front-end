@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
+
+import { useArrayToggle } from '@/lib/hooks/useArrayToggle';
 
 import styles from './CitySelectModal.module.scss';
 
 type Props = {
-  isOpen: boolean;
   prefectureName: string;
   cities: string[];
   selectedCities: string[];
@@ -21,7 +22,6 @@ type Props = {
  * モーダルが表示されている間、背景ページのスクロールは無効化されます。
  *
  * @param {Props} props
- * @param {boolean} props.isOpen - モーダルが表示されているかどうか。
  * @param {string} props.prefectureName - モーダルのヘッダーに表示する都道府県名。
  * @param {string[]} props.cities - 選択肢として表示する全市区町村のリスト。
  * @param {string[]} props.selectedCities - 現在選択されている市区町村のリスト（初期値）。
@@ -29,7 +29,6 @@ type Props = {
  * @param {(cities: string[]) => void} props.onConfirm - 「決定」ボタン押下時のコールバック。
  */
 export const CitySelectModal = ({
-  isOpen,
   prefectureName,
   cities,
   selectedCities,
@@ -38,7 +37,8 @@ export const CitySelectModal = ({
 }: Props) => {
   // モーダル内での一時的な選択状態を管理
   // 親側で条件付きレンダリングを行うため、マウント時に props.selectedCities で初期化される
-  const [tempSelectedCities, setTempSelectedCities] = useState<string[]>(selectedCities);
+  const [tempSelectedCities, toggleCity, setTempSelectedCities] =
+    useArrayToggle<string>(selectedCities);
 
   // オーバーレイ上でのマウス操作を追跡するためのRef
   const isMouseDownOnOverlay = useRef(false);
@@ -70,30 +70,14 @@ export const CitySelectModal = ({
 
     const originalOverflow = document.body.style.overflow;
 
-    // 条件付きレンダリングのため、マウント時は常に isOpen=true のはずだが、念のためチェック
-    if (isOpen) {
-      document.addEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = 'hidden';
-    }
+    document.addEventListener('keydown', handleKeyDown);
+    document.body.style.overflow = 'hidden';
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = originalOverflow;
     };
-  }, [isOpen]);
-
-  if (!isOpen) return null;
-
-  // チェックボックス切り替え時はローカルステートのみ更新
-  const handleToggleCity = (city: string) => {
-    setTempSelectedCities((prev) => {
-      if (prev.includes(city)) {
-        return prev.filter((c) => c !== city);
-      } else {
-        return [...prev, city];
-      }
-    });
-  };
+  }, []);
 
   // すべて選択
   const handleSelectAll = () => {
@@ -185,7 +169,7 @@ export const CitySelectModal = ({
                         id={inputId}
                         type="checkbox"
                         checked={isChecked}
-                        onChange={() => handleToggleCity(city)}
+                        onChange={() => toggleCity(city)}
                       />
                       <span>{city}</span>
                     </label>

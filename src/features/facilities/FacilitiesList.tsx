@@ -6,7 +6,8 @@ import Link from 'next/link';
 
 import { FacilityListItem } from '@/types/facility';
 import { logError } from '@/lib/clientLogger';
-import { getFacilityList, FacilitySearchConditions } from '@/lib/supabase/queries/facilities';
+import { parseSearchParams } from '@/lib/search-params';
+import { getFacilityList, type FacilitySearchConditions } from '@/lib/supabase/queries/facilities';
 
 import { FacilityCard } from './components/FacilityCard/FacilityCard';
 import { Pagination } from './components/Pagination/Pagination';
@@ -14,45 +15,15 @@ import styles from './FacilitiesList.module.scss';
 
 const ITEMS_PER_PAGE = 10;
 
-/**
- * URLクエリパラメータから検索条件を解析する
- * @param searchParams - URLSearchParams
- * @returns FacilitySearchConditions
- */
-function parseSearchConditions(searchParams: URLSearchParams): FacilitySearchConditions {
-  const conditions: FacilitySearchConditions = {};
-
-  // cities パラメータを解析
-  // 形式: cities=大阪府:大阪市,堺市|兵庫県:神戸市
-  const citiesParam = searchParams.get('cities');
-  if (citiesParam) {
-    const citiesMap: Record<string, string[]> = {};
-    citiesParam.split('|').forEach((prefData) => {
-      const [prefName, citiesStr] = prefData.split(':');
-      if (prefName && citiesStr) {
-        citiesMap[prefName] = citiesStr.split(',').filter(Boolean);
-      }
-    });
-    if (Object.keys(citiesMap).length > 0) {
-      conditions.cities = citiesMap;
-    }
-  }
-
-  // types パラメータを解析
-  // 形式: types=大舎,小舎
-  const typesParam = searchParams.get('types');
-  if (typesParam) {
-    conditions.types = typesParam.split(',').filter(Boolean);
-  }
-
-  // keyword パラメータを解析
-  const keywordParam = searchParams.get('keyword');
-  if (keywordParam) {
-    conditions.keyword = keywordParam;
-  }
-
-  return conditions;
-}
+/** ページ共通ヘッダー（パンくずリスト + タイトル） */
+const PageHeader = () => (
+  <>
+    <div className={styles.breadcrumb}>
+      <Link href="/">施設を探す</Link> &gt; <span>施設一覧</span>
+    </div>
+    <h1 className={styles.title}>施設一覧</h1>
+  </>
+);
 
 export const FacilitiesList = () => {
   const searchParams = useSearchParams();
@@ -63,7 +34,7 @@ export const FacilitiesList = () => {
   const [error, setError] = useState<string | null>(null);
 
   // URLクエリパラメータから検索条件を取得
-  const conditions = useMemo(() => parseSearchConditions(searchParams), [searchParams]);
+  const conditions = useMemo(() => parseSearchParams(searchParams), [searchParams]);
 
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
@@ -80,7 +51,7 @@ export const FacilitiesList = () => {
       } catch (err) {
         logError('施設一覧の取得に失敗しました', {
           component: 'FacilitiesList',
-          error: err as Error,
+          error: err instanceof Error ? err : new Error(String(err)),
         });
         setError('施設一覧の取得に失敗しました。しばらく経ってから再度お試しください。');
         setFacilities([]);
@@ -99,20 +70,20 @@ export const FacilitiesList = () => {
   }, [conditions, fetchFacilities]);
 
   // ページ変更時
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    fetchFacilities(page, conditions);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  const handlePageChange = useCallback(
+    (page: number) => {
+      setCurrentPage(page);
+      fetchFacilities(page, conditions);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+    [conditions, fetchFacilities],
+  );
 
   // ローディング中
   if (isLoading) {
     return (
       <div className={styles.container}>
-        <div className={styles.breadcrumb}>
-          <Link href="/">施設を探す</Link> &gt; <span>施設一覧</span>
-        </div>
-        <h1 className={styles.title}>施設一覧</h1>
+        <PageHeader />
         <div className={styles.loadingContainer}>
           <p>読み込み中...</p>
         </div>
@@ -124,10 +95,7 @@ export const FacilitiesList = () => {
   if (error) {
     return (
       <div className={styles.container}>
-        <div className={styles.breadcrumb}>
-          <Link href="/">施設を探す</Link> &gt; <span>施設一覧</span>
-        </div>
-        <h1 className={styles.title}>施設一覧</h1>
+        <PageHeader />
         <div className={styles.errorContainer}>
           <p>{error}</p>
           <button className={styles.errorButton} onClick={() => fetchFacilities(1, conditions)}>
@@ -142,10 +110,7 @@ export const FacilitiesList = () => {
   if (facilities.length === 0) {
     return (
       <div className={styles.container}>
-        <div className={styles.breadcrumb}>
-          <Link href="/">施設を探す</Link> &gt; <span>施設一覧</span>
-        </div>
-        <h1 className={styles.title}>施設一覧</h1>
+        <PageHeader />
         <div className={styles.emptyContainer}>
           <p>該当する施設が見つかりませんでした。</p>
           <p>検索条件を変更して再度お試しください。</p>
@@ -156,11 +121,7 @@ export const FacilitiesList = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.breadcrumb}>
-        <Link href="/">施設を探す</Link> &gt; <span>施設一覧</span>
-      </div>
-
-      <h1 className={styles.title}>施設一覧</h1>
+      <PageHeader />
 
       <p className={styles.resultCount}>{totalCount}件の施設が見つかりました</p>
 

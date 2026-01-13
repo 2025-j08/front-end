@@ -5,6 +5,7 @@
 
 import type { PostgrestError } from '@supabase/supabase-js';
 
+import { KINKI_PREFECTURES } from '@/const/searchConditions';
 import { createClient } from '@/lib/supabase/client';
 import {
   FACILITY_DETAIL_TABLE_LABELS,
@@ -35,6 +36,17 @@ function extractFacilityTypeName(relation: FacilityTypeRelation | null): string 
   if (!relation?.facility_types) return undefined;
   const facilityType = extractFirstFromRelation(relation.facility_types);
   return facilityType?.name;
+}
+
+/**
+ * Supabaseエラーをスローするヘルパー関数
+ * @param error - PostgrestError または null
+ * @param message - エラーメッセージのプレフィックス
+ */
+function throwIfError(error: PostgrestError | null, message: string): void {
+  if (error) {
+    throw new Error(`${message}: ${error.message}`);
+  }
 }
 
 /**
@@ -154,15 +166,15 @@ export async function getFacilityList(
 
   const { data, error, count } = await query;
 
-  if (error) {
-    throw new Error(`施設一覧の取得に失敗しました: ${error.message}`);
-  }
+  throwIfError(error, '施設一覧の取得に失敗しました');
 
   // データを FacilityListItem 型に変換
   const facilities: FacilityListItem[] = (data || []).map((facility) => {
     // 施設種類を取得（最初の1件のみ）
-    const facilityTypes = facility.facility_facility_types as FacilityTypeRelation[];
-    const facilityType = extractFacilityTypeName(facilityTypes?.[0]);
+    const firstRelation = extractFirstFromRelation(
+      facility.facility_facility_types as FacilityTypeRelation[] | FacilityTypeRelation | null,
+    );
+    const facilityType = extractFacilityTypeName(firstRelation ?? null);
 
     return {
       id: facility.id,
@@ -193,9 +205,7 @@ export async function getFacilityTotalCount(): Promise<number> {
     .from('facilities')
     .select('*', { count: 'exact', head: true });
 
-  if (error) {
-    throw new Error(`施設総数の取得に失敗しました: ${error.message}`);
-  }
+  throwIfError(error, '施設総数の取得に失敗しました');
 
   return count || 0;
 }
@@ -203,9 +213,6 @@ export async function getFacilityTotalCount(): Promise<number> {
 // ============================================
 // 住所情報取得（検索画面用）
 // ============================================
-
-/** 関西6府県の一覧（フィルタ用） */
-const KINKI_PREFECTURES = ['大阪府', '京都府', '滋賀県', '奈良県', '兵庫県', '和歌山県'];
 
 /** 都道府県と市区町村のマッピング */
 export interface PrefectureCitiesMap {
@@ -229,9 +236,7 @@ export async function getPrefectureCities(): Promise<PrefectureCitiesMap> {
     .order('prefecture', { ascending: true })
     .order('city', { ascending: true });
 
-  if (error) {
-    throw new Error(`住所情報の取得に失敗しました: ${error.message}`);
-  }
+  throwIfError(error, '住所情報の取得に失敗しました');
 
   // 都道府県ごとに市区町村をグループ化（重複を排除）
   const result: PrefectureCitiesMap = {};
@@ -287,9 +292,7 @@ export async function getFacilityLocations(): Promise<FacilityLocation[]> {
     .order('prefecture', { ascending: true })
     .order('name', { ascending: true });
 
-  if (error) {
-    throw new Error(`施設位置情報の取得に失敗しました: ${error.message}`);
-  }
+  throwIfError(error, '施設位置情報の取得に失敗しました');
 
   // Supabaseのリレーションは配列または単一オブジェクトで返される
   type AccessData = { lat: number; lng: number } | { lat: number; lng: number }[] | null;
@@ -341,9 +344,7 @@ async function getFacilityBasicInfo(id: number) {
     .eq('id', id)
     .single();
 
-  if (facilityError) {
-    throw new Error(`施設基本情報の取得に失敗しました: ${facilityError.message}`);
-  }
+  throwIfError(facilityError, '施設基本情報の取得に失敗しました');
 
   return facility;
 }
@@ -368,9 +369,7 @@ async function getFacilityTypes(id: number): Promise<DormitoryType | undefined> 
     .select('facility_type_id, facility_types(name)')
     .eq('facility_id', id);
 
-  if (typesError) {
-    throw new Error(`施設種類の取得に失敗しました: ${typesError.message}`);
-  }
+  throwIfError(typesError, '施設種類の取得に失敗しました');
 
   // 施設種類名を抽出（現状は最初の1件のみを使用）
   // 注: 複数の種類が登録されている場合、2件目以降は無視される
