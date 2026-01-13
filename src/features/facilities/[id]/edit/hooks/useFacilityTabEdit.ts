@@ -192,20 +192,19 @@ export const useFacilityTabEdit = (
               philosophyInfo:
                 initialData.philosophyInfo || state.formData.philosophyInfo
                   ? {
-                      description: '',
                       ...initialData.philosophyInfo,
                       ...state.formData.philosophyInfo,
                     }
                   : undefined,
               specialtyInfo:
                 initialData.specialtyInfo || state.formData.specialtyInfo
-                  ? { features: '', ...initialData.specialtyInfo, ...state.formData.specialtyInfo }
+                  ? { ...initialData.specialtyInfo, ...state.formData.specialtyInfo }
                   : undefined,
               staffInfo: { ...initialData.staffInfo, ...state.formData.staffInfo },
               educationInfo: { ...initialData.educationInfo, ...state.formData.educationInfo },
               advancedInfo:
                 initialData.advancedInfo || state.formData.advancedInfo
-                  ? { description: '', ...initialData.advancedInfo, ...state.formData.advancedInfo }
+                  ? { ...initialData.advancedInfo, ...state.formData.advancedInfo }
                   : undefined,
               otherInfo: { ...initialData.otherInfo, ...state.formData.otherInfo },
             }
