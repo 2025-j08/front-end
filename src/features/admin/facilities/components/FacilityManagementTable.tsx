@@ -76,7 +76,7 @@ const FacilityRow = ({
       </td>
       <td className={styles.actionCol}>
         <Link
-          href={`/features/facilities/${facility.id}/edit`}
+          href={`/admin/facilities/${facility.id}/edit`}
           className={styles.detailButton}
           aria-label={`${facility.name}の詳細情報を編集`}
         >
