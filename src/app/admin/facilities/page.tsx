@@ -1,12 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { FacilityManagementTable } from '@/features/admin/facilities/components/FacilityManagementTable';
 import { AddFacilityButton } from '@/features/admin/facilities/components/AddFacilityButton';
 import { Facility, FacilityDetail, FacilityDataMap } from '@/types/facility';
 import facilitiesData from '@/dummy_data/facilities_detail.json';
 import styles from '@/features/admin/facilities/styles/FacilityManagementPage.module.scss';
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog/ConfirmDialog';
 
 // ダミーデータをリスト形式に変換
 const initialFacilities: Facility[] = Object.values(
@@ -21,24 +23,37 @@ const initialFacilities: Facility[] = Object.values(
 }));
 
 export default function FacilityManagementPage() {
+  const router = useRouter();
   const [facilities, setFacilities] = useState<Facility[]>(initialFacilities);
 
+  // 削除ダイアログの状態
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [facilityToDelete, setFacilityToDelete] = useState<number | null>(null);
+
   const handleEdit = (id: number) => {
-    alert(`Edit facility ${id}`);
-    // ここで編集ページへの遷移処理を行います
+    // 編集ページへ遷移
+    router.push(`/admin/facilities/${id}/edit`);
   };
 
-  const handleDelete = (id: number) => {
-    if (window.confirm('本当に削除しますか？')) {
-      alert(`Delete facility ${id}`);
-      // ここで削除ロジックを実行します
-      setFacilities((prev) => prev.filter((f) => f.id !== id));
+  const onClickDelete = (id: number) => {
+    setFacilityToDelete(id);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (facilityToDelete !== null) {
+      // 削除ロジック実行
+      setFacilities((prev) => prev.filter((f) => f.id !== facilityToDelete));
+
+      // ダイアログを閉じてリセット
+      setIsDeleteDialogOpen(false);
+      setFacilityToDelete(null);
     }
   };
 
   const handleAdd = () => {
-    alert('Add new facility');
-    // ここで追加ページへの遷移処理を行います
+    // 追加ページへ遷移
+    router.push('/admin/facilities/new');
   };
 
   return (
@@ -48,10 +63,20 @@ export default function FacilityManagementPage() {
       <FacilityManagementTable
         facilities={facilities}
         onEdit={handleEdit}
-        onDelete={handleDelete}
+        onDelete={onClickDelete}
       />
 
       <AddFacilityButton onClick={handleAdd} />
+
+      <ConfirmDialog
+        isOpen={isDeleteDialogOpen}
+        title="施設削除"
+        message="本当にこの施設を削除しますか？この操作は取り消せません。"
+        confirmLabel="削除する"
+        isDanger={true}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setIsDeleteDialogOpen(false)}
+      />
     </div>
   );
 }
