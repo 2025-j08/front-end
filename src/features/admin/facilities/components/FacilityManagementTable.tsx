@@ -116,9 +116,9 @@ export const FacilityManagementTable: React.FC<FacilityManagementTableProps> = (
             <th className={styles.addressCol} scope="col">
               住所
             </th>
-            <th className={styles.actionCol} scope="col" aria-label="保存操作"></th>
-            <th className={styles.actionCol} scope="col" aria-label="詳細編集操作"></th>
-            <th className={styles.actionCol} scope="col" aria-label="削除操作"></th>
+            <th className={styles.actionCol} scope="col"></th>
+            <th className={styles.actionCol} scope="col"></th>
+            <th className={styles.actionCol} scope="col"></th>
           </tr>
         </thead>
         <tbody>
@@ -132,7 +132,7 @@ export const FacilityManagementTable: React.FC<FacilityManagementTableProps> = (
           ))}
           {facilities.length === 0 && (
             <tr>
-              <td colSpan={5} style={{ textAlign: 'center', padding: '2rem' }}>
+              <td colSpan={5} className={styles.emptyRow}>
                 施設データがありません
               </td>
             </tr>
