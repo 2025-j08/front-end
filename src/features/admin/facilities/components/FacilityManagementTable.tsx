@@ -124,7 +124,7 @@ export const FacilityManagementTable: React.FC<FacilityManagementTableProps> = (
         <tbody>
           {facilities.map((facility) => (
             <FacilityRow
-              key={facility.id}
+              key={`${facility.id}-${facility.name}-${facility.address}`}
               facility={facility}
               onSave={onSave}
               onDelete={onDelete}
