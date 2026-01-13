@@ -29,7 +29,9 @@ const NAV_ITEMS: NavItem[] = [
 type AdminMenuItem = {
   label: string;
   href: string | ((facilityId: number | null) => string);
-  allowedRoles: UserRole[];
+  allowedRoles: ('admin' | 'staff')[];
+  /** facilityIdが必要な項目かどうか */
+  requiresFacilityId?: boolean;
 };
 
 const ADMIN_MENU_ITEMS: AdminMenuItem[] = [
@@ -38,8 +40,9 @@ const ADMIN_MENU_ITEMS: AdminMenuItem[] = [
   { label: '施設管理', href: '/admin/facilities', allowedRoles: ['admin'] },
   {
     label: '施設情報編集',
-    href: (facilityId) => (facilityId ? `/features/facilities/${facilityId}/edit` : '#'),
+    href: (facilityId) => `/features/facilities/${facilityId}/edit`,
     allowedRoles: ['staff'],
+    requiresFacilityId: true,
   },
 ];
 
@@ -59,16 +62,22 @@ export const Header = () => {
   const triggerRef = useRef<HTMLButtonElement>(null); // トリガーボタンへの参照
 
   // ユーザー情報を取得
-  const { isLoggedIn, role, facilityId } = useCurrentUser();
+  const { isLoggedIn, role, facilityId, isLoading } = useCurrentUser();
 
   // 権限に応じた管理メニュー項目をフィルタリング
+  // facilityIdが必要な項目は、facilityIdがある場合のみ表示
   const filteredMenuItems = useMemo(() => {
     if (!role) return [];
-    return ADMIN_MENU_ITEMS.filter((item) => item.allowedRoles.includes(role));
-  }, [role]);
+    return ADMIN_MENU_ITEMS.filter((item) => {
+      if (!item.allowedRoles.includes(role)) return false;
+      if (item.requiresFacilityId && !facilityId) return false;
+      return true;
+    });
+  }, [role, facilityId]);
 
-  // 管理メニューを表示するかどうか（ログイン済みかつメニュー項目がある場合）
-  const showAdminMenu = isLoggedIn && filteredMenuItems.length > 0;
+  // 管理メニューを表示するかどうか
+  // ローディング中は非表示にしてちらつきを防止
+  const showAdminMenu = !isLoading && isLoggedIn && filteredMenuItems.length > 0;
 
   // カスタムフックを使用してメニュー外クリックを検知して閉じる
   // NOTE: menuRefはトリガーボタンを含むラッパー要素に設定しています。
