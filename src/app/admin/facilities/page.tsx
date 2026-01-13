@@ -9,7 +9,6 @@ import { Facility, FacilityDetail, FacilityDataMap } from '@/types/facility';
 import facilitiesData from '@/dummy_data/facilities_detail.json';
 import styles from '@/features/admin/facilities/styles/FacilityManagementPage.module.scss';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog/ConfirmDialog';
-import { AddressEditDialog } from '@/components/ui/AddressEditDialog/AddressEditDialog';
 import { SuccessOverlay } from '@/components/form/overlay/successOverlay';
 
 // ダミーデータをリスト形式に変換
@@ -32,42 +31,16 @@ export default function FacilityManagementPage() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [facilityToDelete, setFacilityToDelete] = useState<number | null>(null);
 
-  // 住所編集ダイアログの状態
-  const [isAddressEditOpen, setIsAddressEditOpen] = useState(false);
-  const [editingFacility, setEditingFacility] = useState<{
-    id: number;
-    name: string;
-    address: string;
-  } | null>(null);
-
   // 完了通知の状態
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
 
-  const handleEdit = (id: number) => {
-    const facility = facilities.find((f) => f.id === id);
-    if (facility) {
-      setEditingFacility({
-        id: facility.id,
-        name: facility.name,
-        address: facility.address,
-      });
-      setIsAddressEditOpen(true);
-    }
-  };
+  const handleSave = (id: number, name: string, address: string) => {
+    setFacilities((prev) => prev.map((f) => (f.id === id ? { ...f, name, address } : f)));
 
-  const handleSaveAddress = (newAddress: string) => {
-    if (editingFacility) {
-      setFacilities((prev) =>
-        prev.map((f) => (f.id === editingFacility.id ? { ...f, address: newAddress } : f)),
-      );
-      setIsAddressEditOpen(false);
-      setEditingFacility(null);
-
-      setSuccessMessage('住所を更新しました');
-      setIsSuccessOpen(true);
-      setTimeout(() => setIsSuccessOpen(false), 3000);
-    }
+    setSuccessMessage('施設情報を更新しました');
+    setIsSuccessOpen(true);
+    setTimeout(() => setIsSuccessOpen(false), 3000);
   };
 
   const onClickDelete = (id: number) => {
@@ -102,7 +75,7 @@ export default function FacilityManagementPage() {
 
       <FacilityManagementTable
         facilities={facilities}
-        onEdit={handleEdit}
+        onSave={handleSave}
         onDelete={onClickDelete}
       />
 
@@ -116,15 +89,6 @@ export default function FacilityManagementPage() {
         isDanger={true}
         onConfirm={handleConfirmDelete}
         onCancel={() => setIsDeleteDialogOpen(false)}
-      />
-
-      <AddressEditDialog
-        key={editingFacility?.id}
-        isOpen={isAddressEditOpen}
-        facilityName={editingFacility?.name || ''}
-        currentAddress={editingFacility?.address || ''}
-        onSave={handleSaveAddress}
-        onCancel={() => setIsAddressEditOpen(false)}
       />
 
       <SuccessOverlay isVisible={isSuccessOpen} text={successMessage} />

@@ -69,11 +69,53 @@
   }
 }
 
-.editButton {
-  @include action-button(colors.$action-edit);
+.nameInput {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid colors.$input-border;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: 2px solid colors.$primary-color;
+    border-color: colors.$primary-color;
+  }
+}
+
+.addressInput {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid colors.$input-border;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: 2px solid colors.$primary-color;
+    border-color: colors.$primary-color;
+  }
+}
+
+.saveButton {
+  @include action-button(colors.$bg-light-gray); // Default disabled color state
   width: 80px;
-  color: colors.$white; // 変更ボタン文字色を白に
-  border: none; // 背景色が濃いためボーダー削除検討、一旦維持ならそのまま
+  color: colors.$text-secondary;
+  border: 1px solid colors.$border-gray;
+  cursor: not-allowed;
+  opacity: 0.6;
+
+  &.active {
+    background-color: colors.$primary-color; // Highlight color
+    color: colors.$white;
+    border: none;
+    cursor: pointer;
+    opacity: 1;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
 }
 
 .deleteButton {
