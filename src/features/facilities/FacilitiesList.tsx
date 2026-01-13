@@ -15,6 +15,16 @@ import styles from './FacilitiesList.module.scss';
 
 const ITEMS_PER_PAGE = 10;
 
+/** ページ共通ヘッダー（パンくずリスト + タイトル） */
+const PageHeader = () => (
+  <>
+    <div className={styles.breadcrumb}>
+      <Link href="/">施設を探す</Link> &gt; <span>施設一覧</span>
+    </div>
+    <h1 className={styles.title}>施設一覧</h1>
+  </>
+);
+
 export const FacilitiesList = () => {
   const searchParams = useSearchParams();
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,32 +39,35 @@ export const FacilitiesList = () => {
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
   // 施設データを取得
-  const fetchFacilities = async (page: number, searchConditions: FacilitySearchConditions) => {
-    setIsLoading(true);
-    setError(null);
+  const fetchFacilities = useCallback(
+    async (page: number, searchConditions: FacilitySearchConditions) => {
+      setIsLoading(true);
+      setError(null);
 
-    try {
-      const result = await getFacilityList(searchConditions, page, ITEMS_PER_PAGE);
-      setFacilities(result.facilities);
-      setTotalCount(result.totalCount);
-    } catch (err) {
-      logError('施設一覧の取得に失敗しました', {
-        component: 'FacilitiesList',
-        error: err instanceof Error ? err : new Error(String(err)),
-      });
-      setError('施設一覧の取得に失敗しました。しばらく経ってから再度お試しください。');
-      setFacilities([]);
-      setTotalCount(0);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      try {
+        const result = await getFacilityList(searchConditions, page, ITEMS_PER_PAGE);
+        setFacilities(result.facilities);
+        setTotalCount(result.totalCount);
+      } catch (err) {
+        logError('施設一覧の取得に失敗しました', {
+          component: 'FacilitiesList',
+          error: err instanceof Error ? err : new Error(String(err)),
+        });
+        setError('施設一覧の取得に失敗しました。しばらく経ってから再度お試しください。');
+        setFacilities([]);
+        setTotalCount(0);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [],
+  );
 
   // 検索条件が変わったらページを1にリセットしてデータを取得
   useEffect(() => {
     setCurrentPage(1);
     fetchFacilities(1, conditions);
-  }, [conditions]);
+  }, [conditions, fetchFacilities]);
 
   // ページ変更時
   const handlePageChange = useCallback(
@@ -63,17 +76,14 @@ export const FacilitiesList = () => {
       fetchFacilities(page, conditions);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     },
-    [conditions],
+    [conditions, fetchFacilities],
   );
 
   // ローディング中
   if (isLoading) {
     return (
       <div className={styles.container}>
-        <div className={styles.breadcrumb}>
-          <Link href="/">施設を探す</Link> &gt; <span>施設一覧</span>
-        </div>
-        <h1 className={styles.title}>施設一覧</h1>
+        <PageHeader />
         <div className={styles.loadingContainer}>
           <p>読み込み中...</p>
         </div>
@@ -85,10 +95,7 @@ export const FacilitiesList = () => {
   if (error) {
     return (
       <div className={styles.container}>
-        <div className={styles.breadcrumb}>
-          <Link href="/">施設を探す</Link> &gt; <span>施設一覧</span>
-        </div>
-        <h1 className={styles.title}>施設一覧</h1>
+        <PageHeader />
         <div className={styles.errorContainer}>
           <p>{error}</p>
           <button className={styles.errorButton} onClick={() => fetchFacilities(1, conditions)}>
@@ -103,10 +110,7 @@ export const FacilitiesList = () => {
   if (facilities.length === 0) {
     return (
       <div className={styles.container}>
-        <div className={styles.breadcrumb}>
-          <Link href="/">施設を探す</Link> &gt; <span>施設一覧</span>
-        </div>
-        <h1 className={styles.title}>施設一覧</h1>
+        <PageHeader />
         <div className={styles.emptyContainer}>
           <p>該当する施設が見つかりませんでした。</p>
           <p>検索条件を変更して再度お試しください。</p>
@@ -117,11 +121,7 @@ export const FacilitiesList = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.breadcrumb}>
-        <Link href="/">施設を探す</Link> &gt; <span>施設一覧</span>
-      </div>
-
-      <h1 className={styles.title}>施設一覧</h1>
+      <PageHeader />
 
       <p className={styles.resultCount}>{totalCount}件の施設が見つかりました</p>
 
