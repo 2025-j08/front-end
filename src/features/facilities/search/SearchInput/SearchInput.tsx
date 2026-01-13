@@ -1,8 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-
-import { logDebug } from '@/lib/clientLogger';
+import { useRouter } from 'next/navigation';
 
 import styles from './SearchInput.module.scss';
 
@@ -15,29 +14,23 @@ import styles from './SearchInput.module.scss';
  * @returns {JSX.Element} 検索キーワード入力フォームを含むJSX要素
  */
 export const SearchInput = () => {
-  // 入力キーワードの状態管理
+  const router = useRouter();
   const [keyword, setKeyword] = useState('');
 
-  /**
-   * 入力変更時のハンドラー
-   * @param {React.ChangeEvent<HTMLInputElement>} e - 入力イベント
-   */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
   };
 
-  /**
-   * 検索実行時のハンドラー
-   */
   const handleSearch = () => {
-    // 実装完了までは開発環境でのみキーワードをログ出力しておく
-    logDebug('キーワード検索実行', { component: 'SearchInput', keyword });
+    const trimmedKeyword = keyword.trim();
+    if (!trimmedKeyword) {
+      return;
+    }
+    const searchParams = new URLSearchParams();
+    searchParams.set('keyword', trimmedKeyword);
+    router.push(`/facilities?${searchParams.toString()}`);
   };
 
-  /**
-   * Enterキー押下時にも検索を実行できるようにする
-   * @param {React.KeyboardEvent<HTMLInputElement>} e - キーボードイベント
-   */
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       handleSearch();
