@@ -6,6 +6,10 @@
 import type { PostgrestError } from '@supabase/supabase-js';
 
 import { createClient } from '@/lib/supabase/client';
+import {
+  FACILITY_DETAIL_TABLE_LABELS,
+  type FacilityDetailTableName,
+} from '@/lib/supabase/constants/facility-tables';
 import { extractFirstFromRelation } from '@/lib/supabase/utils/relation-helpers';
 import type {
   FacilityDetail,
@@ -378,19 +382,6 @@ async function getFacilityTypes(id: number): Promise<DormitoryType | undefined> 
   return validTypes.includes(typeName as DormitoryType) ? (typeName as DormitoryType) : undefined;
 }
 
-/** 詳細テーブル名とエラーメッセージのマッピング */
-const DETAIL_TABLE_NAMES = {
-  facility_access: 'アクセス情報',
-  facility_philosophy: '運営方針',
-  facility_specialty: '特色・強み',
-  facility_staff: 'スタッフ情報',
-  facility_education: '教育支援',
-  facility_advanced: '高度な取り組み',
-  facility_other: 'その他情報',
-} as const;
-
-type DetailTableName = keyof typeof DETAIL_TABLE_NAMES;
-
 /**
  * 各詳細テーブルからデータを並列取得
  * @param id - 施設ID
@@ -399,7 +390,7 @@ type DetailTableName = keyof typeof DETAIL_TABLE_NAMES;
  */
 async function getFacilityDetailTables(id: number) {
   const supabase = createClient();
-  const tableNames = Object.keys(DETAIL_TABLE_NAMES) as DetailTableName[];
+  const tableNames = Object.keys(FACILITY_DETAIL_TABLE_LABELS) as FacilityDetailTableName[];
 
   const results = await Promise.all(
     tableNames.map((tableName) =>
@@ -409,7 +400,7 @@ async function getFacilityDetailTables(id: number) {
 
   // エラーチェック
   results.forEach((result, index) => {
-    checkDetailTableError(result, DETAIL_TABLE_NAMES[tableNames[index]]);
+    checkDetailTableError(result, FACILITY_DETAIL_TABLE_LABELS[tableNames[index]]);
   });
 
   // データのみを返す（呼び出し側で .data を参照する必要がなくなる）
