@@ -187,12 +187,25 @@ export const useFacilityTabEdit = (
               ...initialData,
               ...state.formData,
               // ネストしたオブジェクトもマージ
+              // ネストしたオブジェクトもマージ
               accessInfo: { ...initialData.accessInfo, ...state.formData.accessInfo },
-              philosophyInfo: { ...initialData.philosophyInfo, ...state.formData.philosophyInfo },
-              specialtyInfo: { ...initialData.specialtyInfo, ...state.formData.specialtyInfo },
+              philosophyInfo:
+                initialData.philosophyInfo || state.formData.philosophyInfo
+                  ? {
+                      ...initialData.philosophyInfo,
+                      ...state.formData.philosophyInfo,
+                    }
+                  : undefined,
+              specialtyInfo:
+                initialData.specialtyInfo || state.formData.specialtyInfo
+                  ? { ...initialData.specialtyInfo, ...state.formData.specialtyInfo }
+                  : undefined,
               staffInfo: { ...initialData.staffInfo, ...state.formData.staffInfo },
               educationInfo: { ...initialData.educationInfo, ...state.formData.educationInfo },
-              advancedInfo: { ...initialData.advancedInfo, ...state.formData.advancedInfo },
+              advancedInfo:
+                initialData.advancedInfo || state.formData.advancedInfo
+                  ? { ...initialData.advancedInfo, ...state.formData.advancedInfo }
+                  : undefined,
               otherInfo: { ...initialData.otherInfo, ...state.formData.otherInfo },
             }
           : state.formData;

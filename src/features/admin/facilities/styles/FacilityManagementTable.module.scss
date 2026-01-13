@@ -1,0 +1,137 @@
+@use '@/styles/colors' as colors;
+
+.container {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 2rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+
+  th,
+  td {
+    border: 1px solid colors.$text-secondary;
+    padding: 0.75rem;
+    vertical-align: middle;
+  }
+
+  th {
+    background-color: colors.$white;
+    font-weight: normal;
+    text-align: center;
+    border-bottom: 2px solid colors.$black;
+  }
+
+  td {
+    background-color: colors.$white;
+  }
+}
+
+.facilityNameCol {
+  width: 35%;
+  text-align: left;
+  padding-left: 2rem;
+}
+
+.addressCol {
+  width: 35%;
+  text-align: left;
+  padding-left: 2rem;
+}
+
+.actionCol {
+  width: 30%;
+  text-align: center;
+}
+
+.actionButtons {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.greyText {
+  color: colors.$text-secondary;
+}
+
+@mixin action-button($bg-color, $text-color: colors.$black, $border-color: colors.$black) {
+  background-color: $bg-color;
+  color: $text-color;
+  border: 1px solid $border-color;
+  border-radius: 999px; // 丸みのあるボタン
+  padding: 0.25rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  white-space: nowrap; // 折り返し防止
+  display: inline-block; // Linkコンポーネント用
+  text-decoration: none; // リンクの下線除去
+  text-align: center;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+.inputField {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid colors.$input-border;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  transition:
+    border-color 0.2s ease,
+    outline 0.2s ease;
+
+  &:focus {
+    outline: 2px solid colors.$primary-color;
+    border-color: colors.$primary-color;
+  }
+}
+
+.nameInput,
+.addressInput {
+  @extend .inputField;
+}
+
+.saveButton {
+  @include action-button(colors.$bg-light-gray, colors.$text-secondary, colors.$border-gray);
+  min-width: 80px;
+
+  &:not(:disabled) {
+    background-color: colors.$primary-color;
+    color: colors.$white;
+    border: none;
+    opacity: 1;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+}
+
+.deleteButton {
+  @include action-button(colors.$action-delete, colors.$white);
+  min-width: 80px;
+}
+
+.detailButton {
+  @include action-button(colors.$action-detail, colors.$white, transparent);
+  width: auto;
+  border-radius: 25px;
+}
+
+.emptyRow {
+  text-align: center;
+  padding: 2rem;
+}
