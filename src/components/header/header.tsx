@@ -2,13 +2,14 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-// import Image from 'next/image';
+import Image from 'next/image';
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
 import ContactSupportOutlinedIcon from '@mui/icons-material/ContactSupportOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import type { SvgIconComponent } from '@mui/icons-material';
 
 import { useClickOutside } from '@/hooks/useClickOutside';
+import heroImage from '@/dummy_data/herotest.png';
 
 import styles from './header.module.scss';
 
@@ -209,14 +210,13 @@ export const Header = () => {
 
       {/* 下部：ヒーロー画像エリア (no image) */}
       <div className={styles.heroArea}>
-        {/* <Image
-          src="/images/hero.jpg"
+        <Image
+          src={heroImage}
           alt="メインビジュアル"
           fill
           style={{ objectFit: 'cover' }}
           priority
-        /> */}
-        <span className={styles.noImageText}>no image</span>
+        />
       </div>
     </header>
   );
