@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 
 import { API_ENDPOINTS } from '@/const/api';
+import { createClient } from '@/lib/supabase/client';
 
 // ユーザー型（必要に応じて拡張）
 export interface AuthUser {
@@ -53,12 +54,16 @@ export const useAuth = (): UseAuthReturn => {
   const signOut = useCallback(async () => {
     setLoading(true);
     try {
+      // サーバーサイドのセッションをクリア
       await fetch(API_ENDPOINTS.AUTH.SIGNOUT, {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({}),
       });
+      // クライアント側のSupabaseセッションもクリア（onAuthStateChangeを発火させる）
+      const supabase = createClient();
+      await supabase.auth.signOut();
       setUser(null);
     } finally {
       setLoading(false);

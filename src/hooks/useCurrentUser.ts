@@ -39,6 +39,7 @@ export function useCurrentUser(): CurrentUser {
 
   useEffect(() => {
     let isMounted = true;
+    const supabase = createClient();
 
     const updateState = (newState: Partial<CurrentUser>) => {
       if (isMounted) {
@@ -47,14 +48,14 @@ export function useCurrentUser(): CurrentUser {
     };
 
     const fetchCurrentUser = async () => {
-      const supabase = createClient();
+      updateState({ isLoading: true });
 
       const {
         data: { user },
       } = await supabase.auth.getUser();
 
       if (!user) {
-        updateState({ isLoading: false });
+        updateState({ ...INITIAL_STATE, isLoading: false });
         return;
       }
 
@@ -104,8 +105,18 @@ export function useCurrentUser(): CurrentUser {
 
     fetchCurrentUser();
 
+    // 認証状態の変更を監視
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
+        fetchCurrentUser();
+      }
+    });
+
     return () => {
       isMounted = false;
+      subscription.unsubscribe();
     };
   }, []);
 

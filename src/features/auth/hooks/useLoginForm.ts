@@ -8,6 +8,7 @@ import { API_MESSAGES } from '@/const/messages';
 import { API_ENDPOINTS } from '@/const/api';
 import { logError } from '@/lib/clientLogger';
 import { useFormState } from '@/lib/hooks/useFormState';
+import { createClient } from '@/lib/supabase/client';
 
 /**
  * ログインフォームのデータ型
@@ -83,6 +84,13 @@ export const useLoginForm = (): UseLoginFormReturn => {
         });
         throw new Error(message);
       }
+
+      // クライアント側のSupabaseセッションを同期（onAuthStateChangeを発火させる）
+      const supabase = createClient();
+      await supabase.auth.signInWithPassword({
+        email: data.userid.trim(),
+        password: data.password,
+      });
 
       // ロールに応じた遷移（管理者はユーザー発行へ）
       if (body?.role === 'admin') {
