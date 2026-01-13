@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-import { createAdmin } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import { logInfo, logError, logWarn } from '@/lib/logger';
 
 // Supabase の API レスポンスからエラー情報を安全に抽出するユーティリティ
@@ -90,7 +90,7 @@ export async function forceLogoutOnTokenExpiry(
   userId: string,
   adminClient?: SupabaseClient,
 ): Promise<RevokeResult> {
-  const admin = adminClient ?? createAdmin();
+  const admin = adminClient ?? createAdminClient();
   return await revokeRefreshTokens(admin, userId);
 }
 
@@ -99,7 +99,7 @@ export async function forceLogoutOnInactivity(
   userId: string,
   adminClient?: SupabaseClient,
 ): Promise<RevokeResult> {
-  const admin = adminClient ?? createAdmin();
+  const admin = adminClient ?? createAdminClient();
   return await revokeRefreshTokens(admin, userId);
 }
 
@@ -108,7 +108,7 @@ export async function forceLogoutOnRefreshTokenInvalid(
   userId: string,
   adminClient?: SupabaseClient,
 ): Promise<RevokeResult> {
-  const admin = adminClient ?? createAdmin();
+  const admin = adminClient ?? createAdminClient();
   return await revokeRefreshTokens(admin, userId);
 }
 
@@ -117,7 +117,7 @@ export async function forceLogoutOnCredentialChange(
   userId: string,
   adminClient?: SupabaseClient,
 ): Promise<RevokeResult> {
-  const admin = adminClient ?? createAdmin();
+  const admin = adminClient ?? createAdminClient();
   return await revokeRefreshTokens(admin, userId);
 }
 
@@ -128,7 +128,7 @@ export async function invalidateOtherSessionsOnMultiLogin(
   _currentSessionId?: string,
   adminClient?: SupabaseClient,
 ): Promise<RevokeResult> {
-  const admin = adminClient ?? createAdmin();
+  const admin = adminClient ?? createAdminClient();
   return await revokeRefreshTokens(admin, userId);
 }
 
@@ -138,7 +138,7 @@ export async function adminForceLogout(
   performedByAdminId?: string,
   adminClient?: SupabaseClient,
 ): Promise<RevokeResult> {
-  const admin = adminClient ?? createAdmin();
+  const admin = adminClient ?? createAdminClient();
 
   try {
     // 実行者のログを残す（権限チェックは呼び出し元で行うことを想定）
@@ -168,7 +168,7 @@ export async function forceLogoutOnAuthError(
     logWarn('forceLogoutOnAuthError: userId が空です。処理をスキップします');
     return { success: false, reason: 'userId is null' };
   }
-  const admin = adminClient ?? createAdmin();
+  const admin = adminClient ?? createAdminClient();
   return await revokeRefreshTokens(admin, userId);
 }
 

@@ -1,5 +1,5 @@
 import type { RegisterRequest } from '@/types/api';
-import { createServer, createAdmin } from '@/lib/supabase/server';
+import { createServerClient, createAdminClient } from '@/lib/supabase/server';
 import { validateRequired, validatePassword } from '@/lib/validation';
 import { HTTP_STATUS } from '@/const/httpStatus';
 import { logError, logInfo, maskEmail } from '@/lib/logger';
@@ -51,8 +51,8 @@ export async function POST(request: Request) {
     const { name, password } = parsed.data;
 
     // Supabaseクライアント作成
-    const supabaseServer = await createServer();
-    const supabaseAdmin = createAdmin();
+    const supabaseServer = await createServerClient();
+    const supabaseAdmin = createAdminClient();
 
     // 認証検証
     const authResult = await verifyAuthentication(supabaseServer);

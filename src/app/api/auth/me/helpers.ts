@@ -1,4 +1,4 @@
-import { createServer } from '@/lib/supabase/server';
+import { createServerClient } from '@/lib/supabase/server';
 import { logError } from '@/lib/logger';
 
 /**
@@ -8,7 +8,7 @@ import { logError } from '@/lib/logger';
  */
 export async function getCurrentUser() {
   try {
-    const supabase = await createServer();
+    const supabase = await createServerClient();
     const {
       data: { user },
       error,

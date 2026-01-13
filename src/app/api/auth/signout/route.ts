@@ -1,4 +1,4 @@
-import { createServer, createAdmin } from '@/lib/supabase/server';
+import { createServerClient, createAdminClient } from '@/lib/supabase/server';
 import { HTTP_STATUS } from '@/const/httpStatus';
 import { logInfo, logWarn, logError, maskEmail } from '@/lib/logger';
 import {
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     const action = (rawAction as Action) ?? 'signout';
 
     // サーバー用 Supabase クライアント
-    const supabaseServer = await createServer();
+    const supabaseServer = await createServerClient();
 
     if (action === 'signout') {
       const ok = await signOutServerSide(supabaseServer);
@@ -60,7 +60,7 @@ export async function POST(request: Request) {
         return createErrorResponse(AUTH_ERROR_MESSAGES.AUTH_REQUIRED, HTTP_STATUS.UNAUTHORIZED);
       }
 
-      const adminClient = createAdmin();
+      const adminClient = createAdminClient();
       const invalidated = await invalidateOtherSessionsOnMultiLogin(
         user.id,
         undefined,
@@ -128,7 +128,7 @@ export async function POST(request: Request) {
       }
 
       // 強制実行
-      const adminClient = createAdmin();
+      const adminClient = createAdminClient();
       const forced = await adminForceLogout(targetUserId, user.id, adminClient);
       if (!forced.success) {
         logError('管理者強制ログアウトに失敗しました', {
