@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import SearchIcon from '@mui/icons-material/Search';
 
 import { PREFECTURES, FACILITY_TYPES } from '@/const/searchConditions';
@@ -35,6 +36,8 @@ const extractCityFromAddress = (address: string, prefName: string): string => {
 };
 
 export const ConditionSearch = () => {
+  const router = useRouter();
+
   // モーダル管理用State
   const [modalOpen, setModalOpen] = useState(false);
   const [activePrefectureId, setActivePrefectureId] = useState<string | null>(null);
@@ -47,7 +50,6 @@ export const ConditionSearch = () => {
 
   // 施設データから都道府県ごとの市町村リストを動的に生成
   const dynamicAreaData = useMemo(() => {
-
     // パフォーマンス改善: 都道府県名からデータを高速に引くためのMapを作成
     const prefNameMap = new Map<string, (typeof PREFECTURES)[number]>();
     PREFECTURES.forEach((p) => prefNameMap.set(p.name, p));
@@ -61,7 +63,6 @@ export const ConditionSearch = () => {
 
     // 全施設データを走査して市町村を収集
     searchMapData.forEach((facility) => {
-
       // 住所の先頭文字列から都道府県を特定 (4文字または3文字)
       let pref = prefNameMap.get(facility.address.substring(0, 4));
       if (!pref) {
@@ -79,7 +80,6 @@ export const ConditionSearch = () => {
     // Setを配列に変換してソート（漢字コード順）
     const result: Record<string, string[]> = {};
     Object.keys(map).forEach((key) => {
-
       // sensitivity: 'base' を追加して、より自然な日本語ソート順にする
       result[key] = Array.from(map[key]).sort((a, b) =>
         a.localeCompare(b, 'ja', { sensitivity: 'base' }),
@@ -112,18 +112,33 @@ export const ConditionSearch = () => {
     );
   };
 
-
   // 検索実行時のハンドラー
   const handleSearch = () => {
-    // 選択された条件（市区町村、施設形態）を取得
-    const searchConditions = {
-      cities: selectedCitiesMap,
-      types: selectedTypes,
-    };
+    // クエリパラメータを構築
+    const params = new URLSearchParams();
 
-    if (process.env.NODE_ENV === 'development') {
-      console.log('条件絞り込み検索実行:', searchConditions);
+    // 都道府県・市区町村の条件をクエリパラメータに追加
+    // 形式: cities=osaka:大阪市,堺市|hyogo:神戸市
+    const citiesParam = Object.entries(selectedCitiesMap)
+      .filter(([, cities]) => cities.length > 0)
+      .map(([prefId, cities]) => `${prefId}:${cities.join(',')}`)
+      .join('|');
+
+    if (citiesParam) {
+      params.set('cities', citiesParam);
     }
+
+    // 施設形態の条件をクエリパラメータに追加
+    // 形式: types=大舎,小舎
+    if (selectedTypes.length > 0) {
+      params.set('types', selectedTypes.join(','));
+    }
+
+    // 一覧ページに遷移
+    const queryString = params.toString();
+    const url = queryString ? `/features/facilities?${queryString}` : '/features/facilities';
+
+    router.push(url);
   };
 
   // 現在アクティブな都道府県の情報
@@ -195,18 +210,16 @@ export const ConditionSearch = () => {
       </div>
 
       {/* 市区町村選択モーダル */}
-      {
-        modalOpen && (
-          <CitySelectModal
-            isOpen={modalOpen}
-            prefectureName={activePrefName}
-            cities={activeCitiesList}
-            selectedCities={currentSelectedCities}
-            onClose={() => setModalOpen(false)}
-            onConfirm={handleCitiesConfirm}
-          />
-        )
-      }
-    </div >
+      {modalOpen && (
+        <CitySelectModal
+          isOpen={modalOpen}
+          prefectureName={activePrefName}
+          cities={activeCitiesList}
+          selectedCities={currentSelectedCities}
+          onClose={() => setModalOpen(false)}
+          onConfirm={handleCitiesConfirm}
+        />
+      )}
+    </div>
   );
 };
