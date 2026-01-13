@@ -215,6 +215,7 @@ export const Header = () => {
           fill
           style={{ objectFit: 'cover' }}
           priority
+          sizes="100vw"
         />
       </div>
     </header>
