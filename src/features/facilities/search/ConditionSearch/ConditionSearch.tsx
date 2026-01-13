@@ -45,7 +45,8 @@ export const ConditionSearch = () => {
         const data = await getPrefectureCities();
         setPrefectureCities(data);
       } catch (error) {
-        logError('住所情報の取得に失敗しました', { component: 'ConditionSearch', error });
+        const err = error instanceof Error ? error : String(error);
+        logError('住所情報の取得に失敗しました', { component: 'ConditionSearch', error: err });
       } finally {
         setIsLoadingAreas(false);
       }
