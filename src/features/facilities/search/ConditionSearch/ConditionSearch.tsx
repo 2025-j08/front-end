@@ -6,6 +6,7 @@ import SearchIcon from '@mui/icons-material/Search';
 
 import { KINKI_PREFECTURES, FACILITY_TYPES } from '@/const/searchConditions';
 import { logError } from '@/lib/clientLogger';
+import { buildFacilitiesListUrl } from '@/lib/search-params';
 import { getPrefectureCities, type PrefectureCitiesMap } from '@/lib/supabase/queries/facilities';
 
 import { CitySelectModal } from './CitySelectModal';
@@ -80,30 +81,10 @@ export const ConditionSearch = () => {
 
   // 検索実行時のハンドラー
   const handleSearch = () => {
-    // クエリパラメータを構築
-    const params = new URLSearchParams();
-
-    // 都道府県・市区町村の条件をクエリパラメータに追加
-    // 形式: cities=大阪府:大阪市,堺市|兵庫県:神戸市
-    const citiesParam = Object.entries(selectedCitiesMap)
-      .filter(([, cities]) => cities.length > 0)
-      .map(([pref, cities]) => `${pref}:${cities.join(',')}`)
-      .join('|');
-
-    if (citiesParam) {
-      params.set('cities', citiesParam);
-    }
-
-    // 施設形態の条件をクエリパラメータに追加
-    // 形式: types=大舎,小舎
-    if (selectedTypes.length > 0) {
-      params.set('types', selectedTypes.join(','));
-    }
-
-    // 一覧ページに遷移
-    const queryString = params.toString();
-    const url = queryString ? `/features/facilities?${queryString}` : '/features/facilities';
-
+    const url = buildFacilitiesListUrl({
+      cities: selectedCitiesMap,
+      types: selectedTypes,
+    });
     router.push(url);
   };
 

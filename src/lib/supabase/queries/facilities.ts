@@ -5,6 +5,7 @@
 
 import type { PostgrestError } from '@supabase/supabase-js';
 
+import { KINKI_PREFECTURES } from '@/const/searchConditions';
 import { createClient } from '@/lib/supabase/client';
 import {
   FACILITY_DETAIL_TABLE_LABELS,
@@ -161,8 +162,10 @@ export async function getFacilityList(
   // データを FacilityListItem 型に変換
   const facilities: FacilityListItem[] = (data || []).map((facility) => {
     // 施設種類を取得（最初の1件のみ）
-    const facilityTypes = facility.facility_facility_types as FacilityTypeRelation[];
-    const facilityType = extractFacilityTypeName(facilityTypes?.[0]);
+    const firstRelation = extractFirstFromRelation(
+      facility.facility_facility_types as FacilityTypeRelation[] | FacilityTypeRelation | null,
+    );
+    const facilityType = extractFacilityTypeName(firstRelation ?? null);
 
     return {
       id: facility.id,
@@ -203,9 +206,6 @@ export async function getFacilityTotalCount(): Promise<number> {
 // ============================================
 // 住所情報取得（検索画面用）
 // ============================================
-
-/** 関西6府県の一覧（フィルタ用） */
-const KINKI_PREFECTURES = ['大阪府', '京都府', '滋賀県', '奈良県', '兵庫県', '和歌山県'];
 
 /** 都道府県と市区町村のマッピング */
 export interface PrefectureCitiesMap {

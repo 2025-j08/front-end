@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+import { buildFacilitiesListUrl } from '@/lib/search-params';
+
 import styles from './SearchInput.module.scss';
 
 /**
@@ -26,9 +28,7 @@ export const SearchInput = () => {
     if (!trimmedKeyword) {
       return;
     }
-    const searchParams = new URLSearchParams();
-    searchParams.set('keyword', trimmedKeyword);
-    router.push(`/facilities?${searchParams.toString()}`);
+    router.push(buildFacilitiesListUrl({ keyword: trimmedKeyword }));
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

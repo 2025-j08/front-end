@@ -6,53 +6,14 @@ import Link from 'next/link';
 
 import { FacilityListItem } from '@/types/facility';
 import { logError } from '@/lib/clientLogger';
-import { getFacilityList, FacilitySearchConditions } from '@/lib/supabase/queries/facilities';
+import { parseSearchParams } from '@/lib/search-params';
+import { getFacilityList, type FacilitySearchConditions } from '@/lib/supabase/queries/facilities';
 
 import { FacilityCard } from './components/FacilityCard/FacilityCard';
 import { Pagination } from './components/Pagination/Pagination';
 import styles from './FacilitiesList.module.scss';
 
 const ITEMS_PER_PAGE = 10;
-
-/**
- * URLクエリパラメータから検索条件を解析する
- * @param searchParams - URLSearchParams
- * @returns FacilitySearchConditions
- */
-function parseSearchConditions(searchParams: URLSearchParams): FacilitySearchConditions {
-  const conditions: FacilitySearchConditions = {};
-
-  // cities パラメータを解析
-  // 形式: cities=大阪府:大阪市,堺市|兵庫県:神戸市
-  const citiesParam = searchParams.get('cities');
-  if (citiesParam) {
-    const citiesMap: Record<string, string[]> = {};
-    citiesParam.split('|').forEach((prefData) => {
-      const [prefName, citiesStr] = prefData.split(':');
-      if (prefName && citiesStr) {
-        citiesMap[prefName] = citiesStr.split(',').filter(Boolean);
-      }
-    });
-    if (Object.keys(citiesMap).length > 0) {
-      conditions.cities = citiesMap;
-    }
-  }
-
-  // types パラメータを解析
-  // 形式: types=大舎,小舎
-  const typesParam = searchParams.get('types');
-  if (typesParam) {
-    conditions.types = typesParam.split(',').filter(Boolean);
-  }
-
-  // keyword パラメータを解析
-  const keywordParam = searchParams.get('keyword');
-  if (keywordParam) {
-    conditions.keyword = keywordParam;
-  }
-
-  return conditions;
-}
 
 export const FacilitiesList = () => {
   const searchParams = useSearchParams();
@@ -63,7 +24,7 @@ export const FacilitiesList = () => {
   const [error, setError] = useState<string | null>(null);
 
   // URLクエリパラメータから検索条件を取得
-  const conditions = useMemo(() => parseSearchConditions(searchParams), [searchParams]);
+  const conditions = useMemo(() => parseSearchParams(searchParams), [searchParams]);
 
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
@@ -80,7 +41,7 @@ export const FacilitiesList = () => {
       } catch (err) {
         logError('施設一覧の取得に失敗しました', {
           component: 'FacilitiesList',
-          error: err as Error,
+          error: err instanceof Error ? err : new Error(String(err)),
         });
         setError('施設一覧の取得に失敗しました。しばらく経ってから再度お試しください。');
         setFacilities([]);
