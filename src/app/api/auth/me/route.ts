@@ -15,16 +15,13 @@ import { getCurrentUser } from './helpers';
 export async function GET(_req: NextRequest) {
   try {
     const user = await getCurrentUser();
-    if (!user) {
-      // 未認証
-      return createErrorResponse(AUTH_ERROR_MESSAGES.AUTH_REQUIRED, HTTP_STATUS.UNAUTHORIZED);
-    }
-    return new Response(JSON.stringify({ user }), {
+    // 未認証でも認証済みでも200で返す（認証状態確認APIのため）
+    return new Response(JSON.stringify({ user: user ?? null }), {
       status: HTTP_STATUS.OK,
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (e) {
-    // サーバーエラー
+    console.error('GET /api/auth/me error:', e);
     return createErrorResponse(AUTH_ERROR_MESSAGES.SERVER_ERROR, HTTP_STATUS.INTERNAL_SERVER_ERROR);
   }
 }
