@@ -12,6 +12,7 @@ import type {
   FacilityListItem,
   DormitoryType,
 } from '@/types/facility';
+import type { FacilityLocation } from '@/types/facilityLocation';
 
 // ============================================
 // 型定義
@@ -250,6 +251,74 @@ export async function getPrefectureCities(): Promise<PrefectureCitiesMap> {
 
   return result;
 }
+
+// ============================================
+// 地図表示用データ取得
+// ============================================
+
+/**
+ * 地図表示用の施設位置情報を取得する
+ * 関西6府県の施設のみを取得し、緯度経度が設定されているもののみを返す
+ *
+ * @returns 施設位置情報の配列
+ */
+export async function getFacilityLocations(): Promise<FacilityLocation[]> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from('facilities')
+    .select(
+      `
+      id,
+      name,
+      postal_code,
+      phone,
+      prefecture,
+      city,
+      address_detail,
+      facility_access (
+        lat,
+        lng
+      )
+    `,
+    )
+    .in('prefecture', KINKI_PREFECTURES)
+    .order('prefecture', { ascending: true })
+    .order('name', { ascending: true });
+
+  if (error) {
+    throw new Error(`施設位置情報の取得に失敗しました: ${error.message}`);
+  }
+
+  // Supabaseのリレーションは配列または単一オブジェクトで返される
+  type AccessData = { lat: number; lng: number } | { lat: number; lng: number }[] | null;
+
+  // 緯度経度が設定されている施設のみを返す
+  return (data || [])
+    .filter((facility) => {
+      const access = facility.facility_access as AccessData;
+      // 配列の場合は最初の要素を使用
+      const accessItem = Array.isArray(access) ? access[0] : access;
+      return accessItem?.lat && accessItem?.lng;
+    })
+    .map((facility) => {
+      const access = facility.facility_access as AccessData;
+      const accessItem = Array.isArray(access) ? access[0] : access;
+      return {
+        id: facility.id,
+        name: facility.name,
+        postalCode: facility.postal_code,
+        address: `${facility.prefecture}${facility.city}${facility.address_detail}`,
+        phone: facility.phone,
+        lat: accessItem!.lat,
+        lng: accessItem!.lng,
+      };
+    });
+}
+
+// ============================================
+// 施設詳細取得
+// ============================================
 
 /**
  * 詳細テーブルのエラーチェック用ヘルパー関数
