@@ -46,7 +46,7 @@ export function useCurrentUser(): CurrentUser {
     let isMounted = true;
     const supabase = createClient();
 
-    const updateState = (newState: Partial<CurrentUser>) => {
+    const updateState = (newState: Partial<CurrentUserState>) => {
       if (isMounted) {
         setState((prev) => ({ ...prev, ...newState }));
       }
