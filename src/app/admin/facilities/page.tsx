@@ -9,6 +9,7 @@ import { Facility, FacilityDetail, FacilityDataMap } from '@/types/facility';
 import facilitiesData from '@/dummy_data/facilities_detail.json';
 import styles from '@/features/admin/facilities/styles/FacilityManagementPage.module.scss';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog/ConfirmDialog';
+import { AddressEditDialog } from '@/components/ui/AddressEditDialog/AddressEditDialog';
 import { SuccessOverlay } from '@/components/form/overlay/successOverlay';
 
 // ダミーデータをリスト形式に変換
@@ -17,7 +18,7 @@ const initialFacilities: Facility[] = Object.values(
 ).map((detail: FacilityDetail) => ({
   id: detail.id,
   name: detail.name,
-  postalCode: '', // 詳細はルートで郵便番号が分割されていませんが、fullAddressに含まれています。今のところダミーで問題ありません。
+  postalCode: '', // TODO: facilities_detail.json では郵便番号が独立した項目として存在せず fullAddress 内に含まれているため、現在は空文字を設定している。郵便番号を使用する要件が追加された場合はデータ構造や変換処理を見直すこと。
   address: detail.accessInfo.locationAddress || detail.fullAddress, // accessInfoから取得
   phone: detail.phone,
   imagePath: null,
@@ -31,12 +32,42 @@ export default function FacilityManagementPage() {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [facilityToDelete, setFacilityToDelete] = useState<number | null>(null);
 
+  // 住所編集ダイアログの状態
+  const [isAddressEditOpen, setIsAddressEditOpen] = useState(false);
+  const [editingFacility, setEditingFacility] = useState<{
+    id: number;
+    name: string;
+    address: string;
+  } | null>(null);
+
   // 完了通知の状態
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleEdit = (id: number) => {
-    // 編集ページへ遷移
-    router.push(`/admin/facilities/${id}/edit`);
+    const facility = facilities.find((f) => f.id === id);
+    if (facility) {
+      setEditingFacility({
+        id: facility.id,
+        name: facility.name,
+        address: facility.address,
+      });
+      setIsAddressEditOpen(true);
+    }
+  };
+
+  const handleSaveAddress = (newAddress: string) => {
+    if (editingFacility) {
+      setFacilities((prev) =>
+        prev.map((f) => (f.id === editingFacility.id ? { ...f, address: newAddress } : f)),
+      );
+      setIsAddressEditOpen(false);
+      setEditingFacility(null);
+
+      setSuccessMessage('住所を更新しました');
+      setIsSuccessOpen(true);
+      setTimeout(() => setIsSuccessOpen(false), 3000);
+    }
   };
 
   const onClickDelete = (id: number) => {
@@ -54,6 +85,7 @@ export default function FacilityManagementPage() {
       setFacilityToDelete(null);
 
       // 完了通知を表示
+      setSuccessMessage('施設を削除しました');
       setIsSuccessOpen(true);
       setTimeout(() => setIsSuccessOpen(false), 3000); // 3秒後に閉じる
     }
@@ -86,7 +118,16 @@ export default function FacilityManagementPage() {
         onCancel={() => setIsDeleteDialogOpen(false)}
       />
 
-      <SuccessOverlay isVisible={isSuccessOpen} text="施設を削除しました" />
+      <AddressEditDialog
+        key={editingFacility?.id}
+        isOpen={isAddressEditOpen}
+        facilityName={editingFacility?.name || ''}
+        currentAddress={editingFacility?.address || ''}
+        onSave={handleSaveAddress}
+        onCancel={() => setIsAddressEditOpen(false)}
+      />
+
+      <SuccessOverlay isVisible={isSuccessOpen} text={successMessage} />
     </div>
   );
 }
