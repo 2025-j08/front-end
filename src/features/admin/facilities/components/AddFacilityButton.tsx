@@ -20,7 +20,7 @@ interface AddFacilityButtonProps {
 export const AddFacilityButton: React.FC<AddFacilityButtonProps> = ({ onClick }) => {
   return (
     <div className={styles.container}>
-      <button onClick={onClick} className={styles.button}>
+      <button onClick={onClick} className={styles.button} aria-label="新しい施設を追加">
         追加
       </button>
     </div>
