@@ -1,0 +1,104 @@
+@use '@/styles/colors' as colors;
+
+.container {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 2rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+
+  th,
+  td {
+    border: 1px solid #707070;
+    padding: 0.75rem;
+    vertical-align: middle;
+  }
+
+  th {
+    background-color: colors.$white;
+    font-weight: normal;
+    text-align: center;
+    border-bottom: 2px solid #000;
+  }
+
+  td {
+    background-color: colors.$white;
+  }
+}
+
+.facilityNameCol {
+  width: 40%;
+  text-align: left;
+  padding-left: 2rem;
+}
+
+.addressCol {
+  width: 40%;
+  text-align: left;
+  padding-left: 2rem;
+}
+
+.actionCol {
+  width: 10%;
+  text-align: center;
+}
+
+.greyText {
+  color: #999;
+}
+
+.editButton {
+  background-color: #90ee90;
+  /* ライトグリーン - 画像に合わせて調整 */
+  border: 1px solid #000;
+  border-radius: 999px;
+  padding: 0.25rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  width: 80px;
+  white-space: nowrap;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.deleteButton {
+  background-color: #ff4444;
+  /* 赤 - 画像に合わせて調整 */
+  color: colors.$white;
+  border: 1px solid #000;
+  border-radius: 999px;
+  padding: 0.25rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  width: 80px;
+  white-space: nowrap;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.detailButton {
+  background-color: #87ceeb;
+  /* スカイブルー - 区別のため */
+  border: 1px solid #000;
+  border-radius: 25px;
+  padding: 0.4rem 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: #000;
+  text-decoration: none;
+  display: inline-block;
+  /* Linkコンポーネント用 */
+  white-space: nowrap;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
