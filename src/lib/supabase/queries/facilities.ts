@@ -36,6 +36,37 @@ function extractFacilityTypeName(relation: FacilityTypeRelation | null): string 
   return relation.facility_types.name;
 }
 
+/** 施設一覧取得用のselect文（基本フィールド） */
+const FACILITY_LIST_BASE_FIELDS = `
+  id,
+  name,
+  postal_code,
+  phone,
+  prefecture,
+  city,
+  address_detail
+`;
+
+/** 施設一覧取得用のselect文（通常） */
+const FACILITY_LIST_SELECT = `
+  ${FACILITY_LIST_BASE_FIELDS},
+  facility_facility_types (
+    facility_types (
+      name
+    )
+  )
+`;
+
+/** 施設一覧取得用のselect文（施設形態フィルタあり、inner join） */
+const FACILITY_LIST_SELECT_WITH_TYPE_FILTER = `
+  ${FACILITY_LIST_BASE_FIELDS},
+  facility_facility_types!inner (
+    facility_types!inner (
+      name
+    )
+  )
+`;
+
 /** 施設一覧取得時の検索条件 */
 export interface FacilitySearchConditions {
   /** 都道府県ごとの市区町村マップ (例: { 'osaka': ['大阪市', '堺市'] }) */
@@ -73,38 +104,8 @@ export async function getFacilityList(
   const hasTypeFilter = conditions?.types && conditions.types.length > 0;
 
   // 基本クエリ: 施設基本情報 + 施設種類を取得
-  let query = supabase.from('facilities').select(
-    hasTypeFilter
-      ? `
-      id,
-      name,
-      postal_code,
-      phone,
-      prefecture,
-      city,
-      address_detail,
-      facility_facility_types!inner (
-        facility_types!inner (
-          name
-        )
-      )
-    `
-      : `
-      id,
-      name,
-      postal_code,
-      phone,
-      prefecture,
-      city,
-      address_detail,
-      facility_facility_types (
-        facility_types (
-          name
-        )
-      )
-    `,
-    { count: 'exact' },
-  );
+  const selectQuery = hasTypeFilter ? FACILITY_LIST_SELECT_WITH_TYPE_FILTER : FACILITY_LIST_SELECT;
+  let query = supabase.from('facilities').select(selectQuery, { count: 'exact' });
 
   // 検索条件によるフィルタリング
   if (conditions) {
@@ -268,55 +269,46 @@ async function getFacilityTypes(id: number): Promise<DormitoryType | undefined> 
   return validTypes.includes(typeName as DormitoryType) ? (typeName as DormitoryType) : undefined;
 }
 
+/** 詳細テーブル名とエラーメッセージのマッピング */
+const DETAIL_TABLE_NAMES = {
+  facility_access: 'アクセス情報',
+  facility_philosophy: '運営方針',
+  facility_specialty: '特色・強み',
+  facility_staff: 'スタッフ情報',
+  facility_education: '教育支援',
+  facility_advanced: '高度な取り組み',
+  facility_other: 'その他情報',
+} as const;
+
+type DetailTableName = keyof typeof DETAIL_TABLE_NAMES;
+
 /**
  * 各詳細テーブルからデータを並列取得
  * @param id - 施設ID
- * @returns 7つの詳細情報（access, philosophy, specialty, staff, education, advanced, other）
+ * @returns 各詳細情報のデータ（存在しない場合はnull）
  * @throws データ取得エラー時はErrorをスロー（データが存在しない場合は除く）
  */
 async function getFacilityDetailTables(id: number) {
   const supabase = createClient();
+  const tableNames = Object.keys(DETAIL_TABLE_NAMES) as DetailTableName[];
 
-  const [
-    accessResult,
-    philosophyResult,
-    specialtyResult,
-    staffResult,
-    educationResult,
-    advancedResult,
-    otherResult,
-  ] = await Promise.all([
-    supabase.from('facility_access').select('*').eq('facility_id', id).single(),
-    supabase.from('facility_philosophy').select('*').eq('facility_id', id).single(),
-    supabase.from('facility_specialty').select('*').eq('facility_id', id).single(),
-    supabase.from('facility_staff').select('*').eq('facility_id', id).single(),
-    supabase.from('facility_education').select('*').eq('facility_id', id).single(),
-    supabase.from('facility_advanced').select('*').eq('facility_id', id).single(),
-    supabase.from('facility_other').select('*').eq('facility_id', id).single(),
-  ]);
+  const results = await Promise.all(
+    tableNames.map((tableName) =>
+      supabase.from(tableName).select('*').eq('facility_id', id).single(),
+    ),
+  );
 
-  // 全テーブルで均等にエラーチェック
-  const detailTables = [
-    { result: accessResult, name: 'アクセス情報' },
-    { result: philosophyResult, name: '運営方針' },
-    { result: specialtyResult, name: '特色・強み' },
-    { result: staffResult, name: 'スタッフ情報' },
-    { result: educationResult, name: '教育支援' },
-    { result: advancedResult, name: '高度な取り組み' },
-    { result: otherResult, name: 'その他情報' },
-  ];
+  // エラーチェック
+  results.forEach((result, index) => {
+    checkDetailTableError(result, DETAIL_TABLE_NAMES[tableNames[index]]);
+  });
 
-  detailTables.forEach(({ result, name }) => checkDetailTableError(result, name));
+  // データのみを返す（呼び出し側で .data を参照する必要がなくなる）
+  const [access, philosophy, specialty, staff, education, advanced, other] = results.map(
+    (r) => r.data,
+  );
 
-  return {
-    accessResult,
-    philosophyResult,
-    specialtyResult,
-    staffResult,
-    educationResult,
-    advancedResult,
-    otherResult,
-  };
+  return { access, philosophy, specialty, staff, education, advanced, other };
 }
 
 /**
@@ -347,23 +339,17 @@ export async function getFacilityDetail(id: number): Promise<FacilityDetail | nu
     ? (facility.annex_facilities as AnnexFacility[])
     : [];
 
-  // 4. 各詳細テーブルのデータを取得（正規化後のカラムを直接参照）
-  const accessData = detailTables.accessResult.data;
-  const accessInfo = {
-    locationAddress: accessData?.location_address || fullAddress,
-    lat: accessData?.lat || 0,
-    lng: accessData?.lng || 0,
-    station: accessData?.station,
-    description: accessData?.description,
-    locationAppeal: accessData?.location_appeal,
-  };
+  // 4. 各詳細テーブルのデータを展開
+  const { access, philosophy, specialty, staff, education, advanced, other } = detailTables;
 
-  const philosophyData = detailTables.philosophyResult.data;
-  const specialtyData = detailTables.specialtyResult.data;
-  const staffData = detailTables.staffResult.data;
-  const educationData = detailTables.educationResult.data;
-  const advancedData = detailTables.advancedResult.data;
-  const otherData = detailTables.otherResult.data;
+  const accessInfo = {
+    locationAddress: access?.location_address || fullAddress,
+    lat: access?.lat || 0,
+    lng: access?.lng || 0,
+    station: access?.station,
+    description: access?.description,
+    locationAppeal: access?.location_appeal,
+  };
 
   // 5. FacilityDetail 型に整形
   const facilityDetail: FacilityDetail = {
@@ -372,67 +358,67 @@ export async function getFacilityDetail(id: number): Promise<FacilityDetail | nu
     fullAddress,
     phone: facility.phone,
     dormitoryType,
-    targetAge: accessData?.target_age || '0～18歳',
+    targetAge: access?.target_age || '0～18歳',
     accessInfo,
     corporation: facility.corporation,
-    websiteUrl: accessData?.website_url,
+    websiteUrl: access?.website_url,
     establishedYear: facility.established_year?.toString(),
-    building: accessData?.building,
-    capacity: accessData?.capacity || undefined,
-    provisionalCapacity: accessData?.provisional_capacity || undefined,
+    building: access?.building,
+    capacity: access?.capacity || undefined,
+    provisionalCapacity: access?.provisional_capacity || undefined,
     annexFacilities,
-    relationInfo: accessData?.relation_info,
-    philosophyInfo: philosophyData
+    relationInfo: access?.relation_info,
+    philosophyInfo: philosophy
       ? {
-          message: philosophyData.message || undefined,
-          description: philosophyData.description,
+          message: philosophy.message || undefined,
+          description: philosophy.description,
         }
       : undefined,
-    specialtyInfo: specialtyData
+    specialtyInfo: specialty
       ? {
-          features: specialtyData.features || [],
-          programs: specialtyData.programs || undefined,
+          features: specialty.features || [],
+          programs: specialty.programs || undefined,
         }
       : undefined,
-    staffInfo: staffData
+    staffInfo: staff
       ? {
-          fullTimeStaffCount: staffData.full_time_staff_count || undefined,
-          partTimeStaffCount: staffData.part_time_staff_count || undefined,
-          specialties: staffData.specialties || undefined,
-          averageTenure: staffData.average_tenure || undefined,
-          ageDistribution: staffData.age_distribution || undefined,
-          workStyle: staffData.work_style || undefined,
-          hasUniversityLecturer: staffData.has_university_lecturer || undefined,
-          lectureSubjects: staffData.lecture_subjects || undefined,
-          externalActivities: staffData.external_activities || undefined,
-          qualificationsAndSkills: staffData.qualifications_and_skills || undefined,
-          internshipDetails: staffData.internship_details || undefined,
+          fullTimeStaffCount: staff.full_time_staff_count || undefined,
+          partTimeStaffCount: staff.part_time_staff_count || undefined,
+          specialties: staff.specialties || undefined,
+          averageTenure: staff.average_tenure || undefined,
+          ageDistribution: staff.age_distribution || undefined,
+          workStyle: staff.work_style || undefined,
+          hasUniversityLecturer: staff.has_university_lecturer || undefined,
+          lectureSubjects: staff.lecture_subjects || undefined,
+          externalActivities: staff.external_activities || undefined,
+          qualificationsAndSkills: staff.qualifications_and_skills || undefined,
+          internshipDetails: staff.internship_details || undefined,
         }
       : undefined,
-    educationInfo: educationData
+    educationInfo: education
       ? {
-          graduationRate: educationData.graduation_rate || undefined,
-          graduationRatePercentage: educationData.graduation_rate_percentage || undefined,
-          learningSupport: educationData.learning_support || undefined,
-          careerSupport: educationData.career_support || undefined,
+          graduationRate: education.graduation_rate || undefined,
+          graduationRatePercentage: education.graduation_rate_percentage || undefined,
+          learningSupport: education.learning_support || undefined,
+          careerSupport: education.career_support || undefined,
         }
       : undefined,
-    advancedInfo: advancedData
+    advancedInfo: advanced
       ? {
-          title: advancedData.title || undefined,
-          description: advancedData.description,
-          background: advancedData.background || undefined,
-          challenges: advancedData.challenges || undefined,
-          solutions: advancedData.solutions || undefined,
+          title: advanced.title || undefined,
+          description: advanced.description,
+          background: advanced.background || undefined,
+          challenges: advanced.challenges || undefined,
+          solutions: advanced.solutions || undefined,
         }
       : undefined,
-    otherInfo: otherData
+    otherInfo: other
       ? {
-          title: otherData.title || undefined,
-          description: otherData.description || undefined,
-          networks: otherData.networks || undefined,
-          futureOutlook: otherData.future_outlook || undefined,
-          freeText: otherData.free_text || undefined,
+          title: other.title || undefined,
+          description: other.description || undefined,
+          networks: other.networks || undefined,
+          futureOutlook: other.future_outlook || undefined,
+          freeText: other.free_text || undefined,
         }
       : undefined,
   };
