@@ -19,6 +19,13 @@ type CurrentUser = {
   isLoading: boolean;
 };
 
+const INITIAL_STATE: CurrentUser = {
+  isLoggedIn: false,
+  role: null,
+  facilityId: null,
+  isLoading: true,
+};
+
 /**
  * 現在ログイン中のユーザー情報を取得するカスタムフック
  *
@@ -27,13 +34,16 @@ type CurrentUser = {
  * - 紐づけられた施設ID（staffの場合）
  */
 export function useCurrentUser(): CurrentUser {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [role, setRole] = useState<UserRole>(null);
-  const [facilityId, setFacilityId] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [state, setState] = useState<CurrentUser>(INITIAL_STATE);
 
   useEffect(() => {
     let isMounted = true;
+
+    const updateState = (newState: Partial<CurrentUser>) => {
+      if (isMounted) {
+        setState((prev) => ({ ...prev, ...newState }));
+      }
+    };
 
     const fetchCurrentUser = async () => {
       const supabase = createClient();
@@ -43,18 +53,11 @@ export function useCurrentUser(): CurrentUser {
       } = await supabase.auth.getUser();
 
       if (!user) {
-        if (isMounted) {
-          setIsLoggedIn(false);
-          setRole(null);
-          setFacilityId(null);
-          setIsLoading(false);
-        }
+        updateState({ isLoading: false });
         return;
       }
 
-      if (isMounted) {
-        setIsLoggedIn(true);
-      }
+      updateState({ isLoggedIn: true });
 
       // プロフィールから権限を取得
       const { data: profile, error: profileError } = await supabase
@@ -65,20 +68,14 @@ export function useCurrentUser(): CurrentUser {
 
       if (profileError) {
         console.error('Failed to fetch user profile:', profileError);
-        if (isMounted) {
-          setRole(null);
-          setFacilityId(null);
-          setIsLoading(false);
-        }
+        updateState({ isLoading: false });
         return;
       }
 
       // 型安全性のためランタイムバリデーション
       const userRole: UserRole = isValidRole(profile?.role) ? profile.role : null;
 
-      if (isMounted) {
-        setRole(userRole);
-      }
+      updateState({ role: userRole });
 
       // staffの場合は施設IDを取得
       if (userRole === 'staff') {
@@ -92,14 +89,10 @@ export function useCurrentUser(): CurrentUser {
           console.error('Failed to fetch facility profile:', facilityError);
         }
 
-        if (isMounted) {
-          setFacilityId(facilityProfile?.facility_id ?? null);
-        }
+        updateState({ facilityId: facilityProfile?.facility_id ?? null });
       }
 
-      if (isMounted) {
-        setIsLoading(false);
-      }
+      updateState({ isLoading: false });
     };
 
     fetchCurrentUser();
@@ -109,5 +102,5 @@ export function useCurrentUser(): CurrentUser {
     };
   }, []);
 
-  return { isLoggedIn, role, facilityId, isLoading };
+  return state;
 }
