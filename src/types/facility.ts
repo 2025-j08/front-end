@@ -4,6 +4,26 @@
  */
 
 // ============================================
+// 共通の型定義
+// ============================================
+
+/** 施設形態（舎の区分） */
+export type DormitoryType = '大舎' | '中舎' | '小舎' | 'グループホーム' | '地域小規模';
+
+/** 都道府県ID */
+export type PrefectureId = 'osaka' | 'kyoto' | 'shiga' | 'nara' | 'hyogo' | 'wakayama';
+
+/** 都道府県IDから都道府県名へのマッピング */
+export const PREFECTURE_ID_TO_NAME: Record<PrefectureId, string> = {
+  osaka: '大阪府',
+  kyoto: '京都府',
+  shiga: '滋賀県',
+  nara: '奈良県',
+  hyogo: '兵庫県',
+  wakayama: '和歌山県',
+} as const;
+
+// ============================================
 // 施設一覧用の型
 // ============================================
 
@@ -156,7 +176,7 @@ export interface FacilityDetail {
   /** 電話番号（必須） */
   phone: string;
   /** 舎の区分（大舎・中舎・小舎・グループホーム・地域小規模） */
-  dormitoryType?: '大舎' | '中舎' | '小舎' | 'グループホーム' | '地域小規模';
+  dormitoryType?: DormitoryType;
   /** 対象年齢（必須） */
   targetAge: string;
   /** アクセス情報（必須） */

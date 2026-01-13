@@ -3,8 +3,38 @@
  * 施設の詳細情報を各テーブルから取得する関数群
  */
 
+import type { PostgrestError } from '@supabase/supabase-js';
+
 import { createClient } from '@/lib/supabase/client';
-import type { FacilityDetail, AnnexFacility, FacilityListItem } from '@/types/facility';
+import type {
+  FacilityDetail,
+  AnnexFacility,
+  FacilityListItem,
+  DormitoryType,
+  PrefectureId,
+} from '@/types/facility';
+import { PREFECTURE_ID_TO_NAME } from '@/types/facility';
+
+// ============================================
+// 型定義
+// ============================================
+
+/** Supabaseのリレーション結果の型（facility_facility_types経由） */
+interface FacilityTypeRelation {
+  facility_types: { name: string }[] | { name: string } | null;
+}
+
+/**
+ * リレーション結果から施設種類名を取得するヘルパー
+ * Supabaseは1対多/多対1で配列/オブジェクトを返すため両方に対応
+ */
+function extractFacilityTypeName(relation: FacilityTypeRelation | null): string | undefined {
+  if (!relation?.facility_types) return undefined;
+  if (Array.isArray(relation.facility_types)) {
+    return relation.facility_types[0]?.name;
+  }
+  return relation.facility_types.name;
+}
 
 /** 施設一覧取得時の検索条件 */
 export interface FacilitySearchConditions {
@@ -85,21 +115,11 @@ export async function getFacilityList(
 
     // 都道府県・市区町村による絞り込み
     if (conditions.cities && Object.keys(conditions.cities).length > 0) {
-      // 都道府県IDから都道府県名に変換するマップ
-      const prefIdToName: Record<string, string> = {
-        osaka: '大阪府',
-        kyoto: '京都府',
-        shiga: '滋賀県',
-        nara: '奈良県',
-        hyogo: '兵庫県',
-        wakayama: '和歌山県',
-      };
-
       // 選択された都道府県と市区町村の条件を構築
       const orConditions: string[] = [];
 
       Object.entries(conditions.cities).forEach(([prefId, cities]) => {
-        const prefName = prefIdToName[prefId];
+        const prefName = PREFECTURE_ID_TO_NAME[prefId as PrefectureId];
         if (!prefName) return;
 
         if (cities.length === 0) {
@@ -143,10 +163,8 @@ export async function getFacilityList(
   // データを FacilityListItem 型に変換
   const facilities: FacilityListItem[] = (data || []).map((facility) => {
     // 施設種類を取得（最初の1件のみ）
-    const facilityTypes = facility.facility_facility_types as unknown as Array<{
-      facility_types: { name: string } | null;
-    }>;
-    const facilityType = facilityTypes?.[0]?.facility_types?.name;
+    const facilityTypes = facility.facility_facility_types as FacilityTypeRelation[];
+    const facilityType = extractFacilityTypeName(facilityTypes?.[0]);
 
     return {
       id: facility.id,
@@ -188,11 +206,11 @@ export async function getFacilityTotalCount(): Promise<number> {
  * 詳細テーブルのエラーチェック用ヘルパー関数
  * PGRST116（データが存在しない）以外のエラーをスロー
  */
-const checkDetailTableError = (result: { error: unknown }, tableName: string) => {
-  if (result.error && (result.error as { code?: string }).code !== 'PGRST116') {
-    throw new Error(`${tableName}の取得に失敗しました: ${(result.error as Error).message}`);
+function checkDetailTableError(result: { error: PostgrestError | null }, tableName: string): void {
+  if (result.error && result.error.code !== 'PGRST116') {
+    throw new Error(`${tableName}の取得に失敗しました: ${result.error.message}`);
   }
-};
+}
 
 /**
  * 施設基本情報を取得
@@ -228,7 +246,7 @@ async function getFacilityBasicInfo(id: number) {
  * 現状は最初の1件のみを使用し、1施設1種類として運用。
  * 複数種類対応が必要になった場合は、戻り値を配列型に変更する。
  */
-async function getFacilityTypes(id: number) {
+async function getFacilityTypes(id: number): Promise<DormitoryType | undefined> {
   const supabase = createClient();
 
   const { data: facilityTypes, error: typesError } = await supabase
@@ -242,18 +260,12 @@ async function getFacilityTypes(id: number) {
 
   // 施設種類名を抽出（現状は最初の1件のみを使用）
   // 注: 複数の種類が登録されている場合、2件目以降は無視される
-  const firstType = facilityTypes?.[0] as unknown as
-    | { facility_types: { name: string } | null }
-    | undefined;
-  const dormitoryType = firstType?.facility_types?.name as
-    | '大舎'
-    | '中舎'
-    | '小舎'
-    | 'グループホーム'
-    | '地域小規模'
-    | undefined;
+  const firstType = facilityTypes?.[0] as FacilityTypeRelation | undefined;
+  const typeName = extractFacilityTypeName(firstType ?? null);
 
-  return dormitoryType;
+  // DormitoryType として有効な値かチェック
+  const validTypes: DormitoryType[] = ['大舎', '中舎', '小舎', 'グループホーム', '地域小規模'];
+  return validTypes.includes(typeName as DormitoryType) ? (typeName as DormitoryType) : undefined;
 }
 
 /**
