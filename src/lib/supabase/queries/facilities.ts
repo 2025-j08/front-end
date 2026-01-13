@@ -39,6 +39,17 @@ function extractFacilityTypeName(relation: FacilityTypeRelation | null): string 
 }
 
 /**
+ * Supabaseエラーをスローするヘルパー関数
+ * @param error - PostgrestError または null
+ * @param message - エラーメッセージのプレフィックス
+ */
+function throwIfError(error: PostgrestError | null, message: string): void {
+  if (error) {
+    throw new Error(`${message}: ${error.message}`);
+  }
+}
+
+/**
  * 都道府県・市区町村マップからSupabase用のOR条件を構築する
  * @param citiesMap - 都道府県をキー、市区町村配列を値とするマップ
  * @returns Supabaseのor()に渡す条件文字列の配列
@@ -155,9 +166,7 @@ export async function getFacilityList(
 
   const { data, error, count } = await query;
 
-  if (error) {
-    throw new Error(`施設一覧の取得に失敗しました: ${error.message}`);
-  }
+  throwIfError(error, '施設一覧の取得に失敗しました');
 
   // データを FacilityListItem 型に変換
   const facilities: FacilityListItem[] = (data || []).map((facility) => {
@@ -196,9 +205,7 @@ export async function getFacilityTotalCount(): Promise<number> {
     .from('facilities')
     .select('*', { count: 'exact', head: true });
 
-  if (error) {
-    throw new Error(`施設総数の取得に失敗しました: ${error.message}`);
-  }
+  throwIfError(error, '施設総数の取得に失敗しました');
 
   return count || 0;
 }
@@ -229,9 +236,7 @@ export async function getPrefectureCities(): Promise<PrefectureCitiesMap> {
     .order('prefecture', { ascending: true })
     .order('city', { ascending: true });
 
-  if (error) {
-    throw new Error(`住所情報の取得に失敗しました: ${error.message}`);
-  }
+  throwIfError(error, '住所情報の取得に失敗しました');
 
   // 都道府県ごとに市区町村をグループ化（重複を排除）
   const result: PrefectureCitiesMap = {};
@@ -287,9 +292,7 @@ export async function getFacilityLocations(): Promise<FacilityLocation[]> {
     .order('prefecture', { ascending: true })
     .order('name', { ascending: true });
 
-  if (error) {
-    throw new Error(`施設位置情報の取得に失敗しました: ${error.message}`);
-  }
+  throwIfError(error, '施設位置情報の取得に失敗しました');
 
   // Supabaseのリレーションは配列または単一オブジェクトで返される
   type AccessData = { lat: number; lng: number } | { lat: number; lng: number }[] | null;
@@ -341,9 +344,7 @@ async function getFacilityBasicInfo(id: number) {
     .eq('id', id)
     .single();
 
-  if (facilityError) {
-    throw new Error(`施設基本情報の取得に失敗しました: ${facilityError.message}`);
-  }
+  throwIfError(facilityError, '施設基本情報の取得に失敗しました');
 
   return facility;
 }
@@ -368,9 +369,7 @@ async function getFacilityTypes(id: number): Promise<DormitoryType | undefined> 
     .select('facility_type_id, facility_types(name)')
     .eq('facility_id', id);
 
-  if (typesError) {
-    throw new Error(`施設種類の取得に失敗しました: ${typesError.message}`);
-  }
+  throwIfError(typesError, '施設種類の取得に失敗しました');
 
   // 施設種類名を抽出（現状は最初の1件のみを使用）
   // 注: 複数の種類が登録されている場合、2件目以降は無視される
