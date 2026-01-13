@@ -61,17 +61,6 @@ export const SIGNOUT_MESSAGES = {
 export type SignoutMessageKey = keyof typeof SIGNOUT_MESSAGES;
 
 /**
- * サインイン用のメッセージ定数
- */
-export const SIGNIN_MESSAGES = {
-  INVALID_CREDENTIALS: 'メールまたはパスワードが不正です',
-  INVALID_EMAIL: '有効なメールアドレスを指定してください',
-  INVALID_PASSWORD: 'パスワードが不正です',
-} as const;
-
-export type SigninMessageKey = keyof typeof SIGNIN_MESSAGES;
-
-/**
  * 認証に関する共通エラーメッセージ
  * サインイン / サインアウトで使われる共通メッセージはここに置く
  */

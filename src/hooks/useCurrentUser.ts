@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { API_ENDPOINTS } from '@/const/api';
 import { logError } from '@/lib/clientLogger';
@@ -41,6 +42,7 @@ const INITIAL_STATE: CurrentUserState = {
  */
 export function useCurrentUser(): CurrentUser {
   const [state, setState] = useState<CurrentUserState>(INITIAL_STATE);
+  const router = useRouter();
 
   useEffect(() => {
     let isMounted = true;
@@ -155,6 +157,9 @@ export function useCurrentUser(): CurrentUser {
 
       // 状態をリセット
       setState({ ...INITIAL_STATE, isLoading: false });
+
+      // ホーム画面へリダイレクト
+      router.push('/');
     } catch (error) {
       logError('サインアウト処理に失敗しました', {
         component: 'useCurrentUser',
@@ -167,7 +172,7 @@ export function useCurrentUser(): CurrentUser {
       // ユーザーに通知（エラーを再スローして呼び出し元で処理可能にする）
       throw error;
     }
-  }, []);
+  }, [router]);
 
   return {
     ...state,

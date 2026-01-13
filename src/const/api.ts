@@ -16,9 +16,6 @@ export const API_ENDPOINTS = {
     /** 認証状態確認API */
     ME: '/api/auth/me',
 
-    /** サインインAPI */
-    SIGNIN: '/api/auth/signin',
-
     /** サインアウトAPI */
     SIGNOUT: '/api/auth/signout',
 

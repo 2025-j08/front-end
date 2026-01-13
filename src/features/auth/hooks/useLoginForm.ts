@@ -5,9 +5,9 @@ import type { FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { API_MESSAGES } from '@/const/messages';
-import { API_ENDPOINTS } from '@/const/api';
 import { logError } from '@/lib/clientLogger';
 import { useFormState } from '@/lib/hooks/useFormState';
+import { createClient } from '@/lib/supabase/client';
 
 /**
  * ログインフォームのデータ型
@@ -59,40 +59,27 @@ export const useLoginForm = (): UseLoginFormReturn => {
    */
   const handleLoginSubmit = useCallback(
     async (data: LoginFormData) => {
-      const payload = {
+      const supabase = createClient();
+
+      // クライアント側のSupabaseで直接ログイン
+      // @supabase/ssrによりCookieも自動で設定され、onAuthStateChangeも発火する
+      const { data: authData, error } = await supabase.auth.signInWithPassword({
         email: data.userid.trim(),
         password: data.password,
-      };
-
-      type SignInResponse = { success?: boolean; error?: string; role?: string | null };
-
-      const response = await fetch(API_ENDPOINTS.AUTH.SIGNIN, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
       });
 
-      const body: SignInResponse | null = await response.json().catch(() => null);
-
-      if (!response.ok || body?.success !== true) {
-        const message = body?.error ?? API_MESSAGES.LOGIN_FAILED;
+      if (error || !authData.user) {
+        const message = error?.message ?? API_MESSAGES.LOGIN_FAILED;
         logError('ログインエラー', {
           component: 'useLoginForm',
           action: 'handleSubmit',
           error: message,
         });
-        throw new Error(message);
+        throw new Error(API_MESSAGES.LOGIN_FAILED);
       }
 
-      // サーバー側でログイン成功時、@supabase/ssrがCookieにセッションを保存するため
-      // クライアント側での再認証は不要（ページ遷移後に自動的にセッションが認識される）
-
-      // ロールに応じた遷移（管理者はユーザー発行へ）
-      if (body?.role === 'admin') {
-        router.push('/admin/user-issuance');
-      } else {
-        router.push('/');
-      }
+      // ログイン成功後はホーム画面へ遷移
+      router.push('/');
     },
     [router],
   );
