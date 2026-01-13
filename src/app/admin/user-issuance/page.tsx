@@ -1,4 +1,4 @@
-import { createAdminClient } from '@/lib/supabase/server';
+import { createAdmin } from '@/lib/supabase/server';
 import { UserIssuanceForm } from '@/features/admin/userIssuance/UserIssuanceForm';
 import searchMapData from '@/dummy_data/searchmap_data.json';
 import { logError } from '@/lib/logger';
@@ -25,7 +25,7 @@ export default async function AdminUserIssuancePage() {
   try {
     // Server Componentでデータベースから施設一覧を取得
     // 認証不要のデータ取得なのでAdminClientを使用（ISR対応）
-    const supabase = createAdminClient();
+    const supabase = createAdmin();
     const { data, error } = await supabase.from('facilities').select('id, name').order('name');
 
     if (error) {
