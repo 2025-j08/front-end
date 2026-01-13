@@ -17,7 +17,17 @@ export interface Facility {
   imagePath: string | null;
 }
 
-/** ページネーション対応の施設リストデータ */
+/** 施設一覧用の拡張情報（ソート・フィルタリング用） */
+export interface FacilityListItem extends Facility {
+  /** 都道府県 */
+  prefecture: string;
+  /** 市区町村 */
+  city: string;
+  /** 施設形態（大舎・中舎・小舎・グループホーム・地域小規模） */
+  facilityType?: string;
+}
+
+/** ページネーション対応の施設リストデータ（レガシー: モックデータ用） */
 export interface FacilitiesData {
   totalCount: number;
   limit: number;
@@ -46,13 +56,13 @@ export interface PhilosophyInfo {
   /** 理念メッセージ */
   message?: string;
   /** 日々の支援の中で重視している視点 */
-  description: string;
+  description?: string;
 }
 
 /** 特化領域情報 */
 export interface SpecialtyInfo {
   /** 特に力を入れている取り組み/支援領域 */
-  features: string;
+  features?: string;
   /** 特色ある活動や独自プログラム */
   programs?: string;
 }
@@ -100,7 +110,7 @@ export interface AdvancedInfo {
   /** タイトル */
   title?: string;
   /** 実施している多機能化の取り組み */
-  description: string;
+  description?: string;
   /** 実現に向けた経緯と背景 */
   background?: string;
   /** 取り組みにあたっての苦労や課題 */

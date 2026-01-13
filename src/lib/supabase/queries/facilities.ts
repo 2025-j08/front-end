@@ -4,7 +4,185 @@
  */
 
 import { createClient } from '@/lib/supabase/client';
-import type { FacilityDetail, AnnexFacility } from '@/types/facility';
+import type { FacilityDetail, AnnexFacility, FacilityListItem } from '@/types/facility';
+
+/** 施設一覧取得時の検索条件 */
+export interface FacilitySearchConditions {
+  /** 都道府県ごとの市区町村マップ (例: { 'osaka': ['大阪市', '堺市'] }) */
+  cities?: Record<string, string[]>;
+  /** 施設形態 (例: ['大舎', '小舎']) */
+  types?: string[];
+  /** キーワード検索 */
+  keyword?: string;
+}
+
+/** 施設一覧取得結果 */
+export interface FacilityListResult {
+  facilities: FacilityListItem[];
+  totalCount: number;
+}
+
+/**
+ * 施設一覧を取得する
+ * 検索条件に基づいてフィルタリングし、県→市→施設名の五十音順でソート
+ *
+ * @param conditions - 検索条件（省略時は全施設を取得）
+ * @param page - ページ番号（1始まり）
+ * @param limit - 1ページあたりの件数
+ * @returns 施設一覧と総件数
+ */
+export async function getFacilityList(
+  conditions?: FacilitySearchConditions,
+  page: number = 1,
+  limit: number = 10,
+): Promise<FacilityListResult> {
+  const supabase = createClient();
+
+  // 施設形態フィルタの有無でクエリを分岐
+  // !inner を使うとそのリレーションが存在する行のみに絞り込める
+  const hasTypeFilter = conditions?.types && conditions.types.length > 0;
+
+  // 基本クエリ: 施設基本情報 + 施設種類を取得
+  let query = supabase.from('facilities').select(
+    hasTypeFilter
+      ? `
+      id,
+      name,
+      postal_code,
+      phone,
+      prefecture,
+      city,
+      address_detail,
+      facility_facility_types!inner (
+        facility_types!inner (
+          name
+        )
+      )
+    `
+      : `
+      id,
+      name,
+      postal_code,
+      phone,
+      prefecture,
+      city,
+      address_detail,
+      facility_facility_types (
+        facility_types (
+          name
+        )
+      )
+    `,
+    { count: 'exact' },
+  );
+
+  // 検索条件によるフィルタリング
+  if (conditions) {
+    // 施設形態による絞り込み
+    if (hasTypeFilter) {
+      query = query.in('facility_facility_types.facility_types.name', conditions.types!);
+    }
+
+    // 都道府県・市区町村による絞り込み
+    if (conditions.cities && Object.keys(conditions.cities).length > 0) {
+      // 都道府県IDから都道府県名に変換するマップ
+      const prefIdToName: Record<string, string> = {
+        osaka: '大阪府',
+        kyoto: '京都府',
+        shiga: '滋賀県',
+        nara: '奈良県',
+        hyogo: '兵庫県',
+        wakayama: '和歌山県',
+      };
+
+      // 選択された都道府県と市区町村の条件を構築
+      const orConditions: string[] = [];
+
+      Object.entries(conditions.cities).forEach(([prefId, cities]) => {
+        const prefName = prefIdToName[prefId];
+        if (!prefName) return;
+
+        if (cities.length === 0) {
+          // 都道府県のみ選択（市区町村未選択）の場合は、その都道府県全体を対象
+          orConditions.push(`prefecture.eq.${prefName}`);
+        } else {
+          // 市区町村が選択されている場合
+          cities.forEach((city) => {
+            orConditions.push(`and(prefecture.eq.${prefName},city.eq.${city})`);
+          });
+        }
+      });
+
+      if (orConditions.length > 0) {
+        query = query.or(orConditions.join(','));
+      }
+    }
+
+    // キーワード検索（施設名で部分一致）
+    if (conditions.keyword && conditions.keyword.trim()) {
+      query = query.ilike('name', `%${conditions.keyword.trim()}%`);
+    }
+  }
+
+  // ソート: 都道府県 → 市区町村 → 施設名（すべて五十音順）
+  query = query.order('prefecture', { ascending: true });
+  query = query.order('city', { ascending: true });
+  query = query.order('name', { ascending: true });
+
+  // ページネーション
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+  query = query.range(from, to);
+
+  const { data, error, count } = await query;
+
+  if (error) {
+    throw new Error(`施設一覧の取得に失敗しました: ${error.message}`);
+  }
+
+  // データを FacilityListItem 型に変換
+  const facilities: FacilityListItem[] = (data || []).map((facility) => {
+    // 施設種類を取得（最初の1件のみ）
+    const facilityTypes = facility.facility_facility_types as unknown as Array<{
+      facility_types: { name: string } | null;
+    }>;
+    const facilityType = facilityTypes?.[0]?.facility_types?.name;
+
+    return {
+      id: facility.id,
+      name: facility.name,
+      postalCode: facility.postal_code,
+      address: `${facility.prefecture}${facility.city}${facility.address_detail}`,
+      phone: facility.phone,
+      imagePath: null, // 画像は現状未対応
+      prefecture: facility.prefecture,
+      city: facility.city,
+      facilityType,
+    };
+  });
+
+  return {
+    facilities,
+    totalCount: count || 0,
+  };
+}
+
+/**
+ * 施設の総数を取得する（検索条件なし）
+ */
+export async function getFacilityTotalCount(): Promise<number> {
+  const supabase = createClient();
+
+  const { count, error } = await supabase
+    .from('facilities')
+    .select('*', { count: 'exact', head: true });
+
+  if (error) {
+    throw new Error(`施設総数の取得に失敗しました: ${error.message}`);
+  }
+
+  return count || 0;
+}
 
 /**
  * 詳細テーブルのエラーチェック用ヘルパー関数
