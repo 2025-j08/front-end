@@ -208,7 +208,7 @@ export const Header = () => {
         </div>
       </div>
 
-      {/* 下部：ヒーロー画像エリア (no image) */}
+      {/* 下部：ヒーロー画像エリア */}
       <div className={styles.heroArea}>
         <Image
           src={heroImage}
