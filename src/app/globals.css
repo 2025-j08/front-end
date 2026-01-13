@@ -1,8 +1,126 @@
 /* src/app/globals.css */
+/* ダークモード対応カラーシステム */
 
 :root {
+  /* 背景・前景 */
   --background: #ffffff;
   --foreground: #171717;
+  --background-secondary: #f5faf7;
+  --background-tertiary: #e8f5e9;
+
+  /* プライマリカラー（グリーン系） */
+  --primary: #4a9f7e;
+  --primary-light: #6db899;
+  --primary-lighter: #80d5b5;
+  --primary-dark: #357a5e;
+
+  /* アクセントカラー（オレンジ） */
+  --accent: #eb8b4f;
+  --accent-light: #f4a673;
+  --accent-dark: #d47540;
+
+  /* テキスト */
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-muted: #999999;
+  --text-on-primary: #ffffff;
+
+  /* ボーダー */
+  --border-color: #b8d4c4;
+  --border-light: #d4e8dc;
+  --border-dark: #333333;
+
+  /* カード・サーフェス */
+  --card-background: #ffffff;
+  --card-border: #e0e0e0;
+
+  /* フォーム */
+  --input-background: #f5faf7;
+  --input-border: #b8d4c4;
+  --input-focus-border: #4a9f7e;
+  --focus-glow: rgba(74, 159, 126, 0.2);
+
+  /* シャドウ */
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --shadow-medium: rgba(0, 0, 0, 0.15);
+
+  /* ステータス */
+  --error: #d32f2f;
+  --error-bg: rgba(211, 47, 47, 0.1);
+  --success: #4caf50;
+  --success-bg: rgba(76, 175, 80, 0.1);
+  --warning: #f9a825;
+  --warning-bg: #fffbe6;
+
+  /* フッター */
+  --footer-background: #357a5e;
+  --footer-text: #ffffff;
+
+  /* ヘッダー */
+  --header-background: #ffffff;
+  --header-border: #e0e0e0;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* 背景・前景 */
+    --background: #0f1512;
+    --foreground: #ededed;
+    --background-secondary: #1a2420;
+    --background-tertiary: #243029;
+
+    /* プライマリカラー（ダークモード用に明るめ） */
+    --primary: #6db899;
+    --primary-light: #80d5b5;
+    --primary-lighter: #a3e4c9;
+    --primary-dark: #4a9f7e;
+
+    /* アクセントカラー */
+    --accent: #f4a673;
+    --accent-light: #f9be96;
+    --accent-dark: #eb8b4f;
+
+    /* テキスト */
+    --text-primary: #ededed;
+    --text-secondary: #b0b0b0;
+    --text-muted: #808080;
+    --text-on-primary: #0f1512;
+
+    /* ボーダー */
+    --border-color: #3d5347;
+    --border-light: #2d3d35;
+    --border-dark: #4a6355;
+
+    /* カード・サーフェス */
+    --card-background: #1a2420;
+    --card-border: #3d5347;
+
+    /* フォーム */
+    --input-background: #1a2420;
+    --input-border: #3d5347;
+    --input-focus-border: #6db899;
+    --focus-glow: rgba(109, 184, 153, 0.3);
+
+    /* シャドウ */
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --shadow-medium: rgba(0, 0, 0, 0.4);
+
+    /* ステータス */
+    --error: #ef5350;
+    --error-bg: rgba(239, 83, 80, 0.15);
+    --success: #66bb6a;
+    --success-bg: rgba(102, 187, 106, 0.15);
+    --warning: #ffca28;
+    --warning-bg: rgba(255, 202, 40, 0.15);
+
+    /* フッター */
+    --footer-background: #1a2420;
+    --footer-text: #ededed;
+
+    /* ヘッダー */
+    --header-background: #1a2420;
+    --header-border: #3d5347;
+  }
 }
 
 @theme inline {
@@ -10,13 +128,6 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
@@ -28,8 +139,10 @@ body {
   padding: 0;
 
   display: flex;
-  /* Flexboxを使う */
   flex-direction: column;
-  /* 縦並びにする */
   min-height: 100vh;
+
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
