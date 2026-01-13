@@ -382,6 +382,17 @@ async function getFacilityTypes(id: number): Promise<DormitoryType | undefined> 
   return validTypes.includes(typeName as DormitoryType) ? (typeName as DormitoryType) : undefined;
 }
 
+/** 詳細テーブル取得用のキー（順序を明示的に定義） */
+const DETAIL_TABLE_KEYS = [
+  'facility_access',
+  'facility_philosophy',
+  'facility_specialty',
+  'facility_staff',
+  'facility_education',
+  'facility_advanced',
+  'facility_other',
+] as const satisfies FacilityDetailTableName[];
+
 /**
  * 各詳細テーブルからデータを並列取得
  * @param id - 施設ID
@@ -390,25 +401,28 @@ async function getFacilityTypes(id: number): Promise<DormitoryType | undefined> 
  */
 async function getFacilityDetailTables(id: number) {
   const supabase = createClient();
-  const tableNames = Object.keys(FACILITY_DETAIL_TABLE_LABELS) as FacilityDetailTableName[];
 
   const results = await Promise.all(
-    tableNames.map((tableName) =>
+    DETAIL_TABLE_KEYS.map((tableName) =>
       supabase.from(tableName).select('*').eq('facility_id', id).single(),
     ),
   );
 
   // エラーチェック
   results.forEach((result, index) => {
-    checkDetailTableError(result, FACILITY_DETAIL_TABLE_LABELS[tableNames[index]]);
+    checkDetailTableError(result, FACILITY_DETAIL_TABLE_LABELS[DETAIL_TABLE_KEYS[index]]);
   });
 
-  // データのみを返す（呼び出し側で .data を参照する必要がなくなる）
-  const [access, philosophy, specialty, staff, education, advanced, other] = results.map(
-    (r) => r.data,
-  );
-
-  return { access, philosophy, specialty, staff, education, advanced, other };
+  // 明示的なキーでオブジェクトを構築（配列順序への依存を排除）
+  return {
+    access: results[0].data,
+    philosophy: results[1].data,
+    specialty: results[2].data,
+    staff: results[3].data,
+    education: results[4].data,
+    advanced: results[5].data,
+    other: results[6].data,
+  };
 }
 
 /**
