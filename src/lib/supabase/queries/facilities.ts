@@ -493,7 +493,7 @@ export async function getFacilityDetail(id: number): Promise<FacilityDetail | nu
       : undefined,
     specialtyInfo: specialty
       ? {
-          features: specialty.features || [],
+          features: specialty.features || undefined,
           programs: specialty.programs || undefined,
         }
       : undefined,
