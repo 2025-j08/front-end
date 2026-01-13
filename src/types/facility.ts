@@ -10,18 +10,8 @@
 /** 施設形態（舎の区分） */
 export type DormitoryType = '大舎' | '中舎' | '小舎' | 'グループホーム' | '地域小規模';
 
-/** 都道府県ID */
-export type PrefectureId = 'osaka' | 'kyoto' | 'shiga' | 'nara' | 'hyogo' | 'wakayama';
-
-/** 都道府県IDから都道府県名へのマッピング */
-export const PREFECTURE_ID_TO_NAME: Record<PrefectureId, string> = {
-  osaka: '大阪府',
-  kyoto: '京都府',
-  shiga: '滋賀県',
-  nara: '奈良県',
-  hyogo: '兵庫県',
-  wakayama: '和歌山県',
-} as const;
+/** 関西6府県 */
+export type KinkiPrefecture = '大阪府' | '京都府' | '滋賀県' | '奈良県' | '兵庫県' | '和歌山県';
 
 // ============================================
 // 施設一覧用の型

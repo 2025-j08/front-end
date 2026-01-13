@@ -11,9 +11,7 @@ import type {
   AnnexFacility,
   FacilityListItem,
   DormitoryType,
-  PrefectureId,
 } from '@/types/facility';
-import { PREFECTURE_ID_TO_NAME } from '@/types/facility';
 
 // ============================================
 // 型定義
@@ -69,7 +67,7 @@ const FACILITY_LIST_SELECT_WITH_TYPE_FILTER = `
 
 /** 施設一覧取得時の検索条件 */
 export interface FacilitySearchConditions {
-  /** 都道府県ごとの市区町村マップ (例: { 'osaka': ['大阪市', '堺市'] }) */
+  /** 都道府県ごとの市区町村マップ (例: { '大阪府': ['大阪市', '堺市'] }) */
   cities?: Record<string, string[]>;
   /** 施設形態 (例: ['大舎', '小舎']) */
   types?: string[];
@@ -119,10 +117,7 @@ export async function getFacilityList(
       // 選択された都道府県と市区町村の条件を構築
       const orConditions: string[] = [];
 
-      Object.entries(conditions.cities).forEach(([prefId, cities]) => {
-        const prefName = PREFECTURE_ID_TO_NAME[prefId as PrefectureId];
-        if (!prefName) return;
-
+      Object.entries(conditions.cities).forEach(([prefName, cities]) => {
         if (cities.length === 0) {
           // 都道府県のみ選択（市区町村未選択）の場合は、その都道府県全体を対象
           orConditions.push(`prefecture.eq.${prefName}`);
@@ -201,6 +196,59 @@ export async function getFacilityTotalCount(): Promise<number> {
   }
 
   return count || 0;
+}
+
+// ============================================
+// 住所情報取得（検索画面用）
+// ============================================
+
+/** 関西6府県の一覧（フィルタ用） */
+const KINKI_PREFECTURES = ['大阪府', '京都府', '滋賀県', '奈良県', '兵庫県', '和歌山県'];
+
+/** 都道府県と市区町村のマッピング */
+export interface PrefectureCitiesMap {
+  [prefecture: string]: string[];
+}
+
+/**
+ * Supabaseから都道府県・市区町村の選択肢を取得する
+ * 関西6府県のみにフィルタリングし、都道府県ごとに市区町村をグループ化
+ *
+ * @returns 都道府県をキー、市区町村配列を値とするマップ
+ */
+export async function getPrefectureCities(): Promise<PrefectureCitiesMap> {
+  const supabase = createClient();
+
+  // 都道府県と市区町村のユニークな組み合わせを取得
+  const { data, error } = await supabase
+    .from('facilities')
+    .select('prefecture, city')
+    .in('prefecture', KINKI_PREFECTURES)
+    .order('prefecture', { ascending: true })
+    .order('city', { ascending: true });
+
+  if (error) {
+    throw new Error(`住所情報の取得に失敗しました: ${error.message}`);
+  }
+
+  // 都道府県ごとに市区町村をグループ化（重複を排除）
+  const result: PrefectureCitiesMap = {};
+
+  // 関西6府県を初期化（データがなくても空配列で表示するため）
+  KINKI_PREFECTURES.forEach((pref) => {
+    result[pref] = [];
+  });
+
+  // データをグループ化
+  (data || []).forEach((row) => {
+    if (row.prefecture && row.city) {
+      if (!result[row.prefecture].includes(row.city)) {
+        result[row.prefecture].push(row.city);
+      }
+    }
+  });
+
+  return result;
 }
 
 /**

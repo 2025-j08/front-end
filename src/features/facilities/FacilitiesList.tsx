@@ -22,14 +22,14 @@ function parseSearchConditions(searchParams: URLSearchParams): FacilitySearchCon
   const conditions: FacilitySearchConditions = {};
 
   // cities パラメータを解析
-  // 形式: cities=osaka:大阪市,堺市|hyogo:神戸市
+  // 形式: cities=大阪府:大阪市,堺市|兵庫県:神戸市
   const citiesParam = searchParams.get('cities');
   if (citiesParam) {
     const citiesMap: Record<string, string[]> = {};
     citiesParam.split('|').forEach((prefData) => {
-      const [prefId, citiesStr] = prefData.split(':');
-      if (prefId && citiesStr) {
-        citiesMap[prefId] = citiesStr.split(',').filter(Boolean);
+      const [prefName, citiesStr] = prefData.split(':');
+      if (prefName && citiesStr) {
+        citiesMap[prefName] = citiesStr.split(',').filter(Boolean);
       }
     });
     if (Object.keys(citiesMap).length > 0) {
