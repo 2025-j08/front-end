@@ -158,7 +158,14 @@ export const Header = () => {
         <div className={styles.container}>
           {/* 左側：ロゴ */}
           <Link href="/" className={styles.logoWrapper} aria-label="トップページへ">
-            <span className={styles.logoText}>logo</span>
+            <Image
+              src="/icons/logo.jpg"
+              alt="近畿児童養護施設データベース"
+              width={240}
+              height={50}
+              style={{ width: 'auto', height: '100%', objectFit: 'contain' }}
+              priority
+            />
           </Link>
 
           {/* 右側：ナビゲーション */}
