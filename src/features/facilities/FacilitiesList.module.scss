@@ -95,3 +95,33 @@
     }
   }
 }
+
+.loadingContainer {
+  padding: 3rem;
+  text-align: center;
+  color: colors.$text-secondary;
+
+  p {
+    margin: 0;
+    font-size: 1rem;
+  }
+}
+
+.emptyContainer {
+  padding: 3rem;
+  text-align: center;
+  color: colors.$text-secondary;
+  background-color: colors.$bg-light-gray;
+  border-radius: 8px;
+
+  p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+  }
+}
+
+.resultCount {
+  font-size: 0.95rem;
+  color: colors.$text-secondary;
+  margin: 0 0 16px 0;
+}

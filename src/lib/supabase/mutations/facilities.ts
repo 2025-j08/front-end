@@ -5,17 +5,12 @@
 
 import type { SupabaseClient } from '@supabase/supabase-js';
 
+import {
+  SECTION_TO_TABLE_MAP,
+  type FacilityDetailTableName,
+  type FacilitySectionName,
+} from '@/lib/supabase/constants/facility-tables';
 import type { AnnexFacility } from '@/types/facility';
-
-/** 施設関連テーブル名 */
-type FacilityTableName =
-  | 'facility_access'
-  | 'facility_philosophy'
-  | 'facility_specialty'
-  | 'facility_staff'
-  | 'facility_education'
-  | 'facility_advanced'
-  | 'facility_other';
 
 /**
  * 基本情報の更新データ型
@@ -122,7 +117,7 @@ function removeUndefinedValues<T extends Record<string, unknown>>(obj: T): Parti
  */
 async function upsertFacilityData<T extends Record<string, unknown>>(
   supabase: SupabaseClient,
-  tableName: FacilityTableName,
+  tableName: FacilityDetailTableName,
   facilityId: number,
   data: T,
   errorMessage: string,
@@ -216,23 +211,8 @@ export type TabUpdateData =
   | { section: 'advanced'; data: AdvancedInfoUpdateData }
   | { section: 'other'; data: OtherInfoUpdateData };
 
-/** セクション名からテーブル名へのマッピング */
-type SectionTableMap = {
-  [K in Exclude<TabUpdateData['section'], 'basic'>]: FacilityTableName;
-};
-
-const SECTION_TABLE_MAP: SectionTableMap = {
-  access: 'facility_access',
-  philosophy: 'facility_philosophy',
-  specialty: 'facility_specialty',
-  staff: 'facility_staff',
-  education: 'facility_education',
-  advanced: 'facility_advanced',
-  other: 'facility_other',
-} as const;
-
 /** セクション名からエラーメッセージへのマッピング */
-const SECTION_ERROR_MAP: Record<keyof SectionTableMap, string> = {
+const SECTION_ERROR_MAP: Record<FacilitySectionName, string> = {
   access: 'アクセス情報の更新に失敗しました',
   philosophy: '理念情報の更新に失敗しました',
   specialty: '特色情報の更新に失敗しました',
@@ -255,7 +235,7 @@ export async function updateFacilityBySection(
     return;
   }
 
-  const tableName = SECTION_TABLE_MAP[update.section];
+  const tableName = SECTION_TO_TABLE_MAP[update.section];
   const errorMessage = SECTION_ERROR_MAP[update.section];
 
   await upsertFacilityData(supabase, tableName, facilityId, update.data, errorMessage);

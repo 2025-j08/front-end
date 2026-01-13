@@ -60,6 +60,39 @@
   overflow-y: auto;
 }
 
+.selectAllArea {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid colors.$bg-gray;
+}
+
+.selectAllButton {
+  padding: 6px 16px;
+  border-radius: 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid colors.$primary-color;
+  background-color: colors.$white;
+  color: colors.$primary-color;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+
+  &:hover {
+    background-color: colors.$primary-color;
+    color: colors.$white;
+  }
+}
+
+.selectionCount {
+  font-size: 0.85rem;
+  color: colors.$text-secondary;
+}
+
 .cityGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));

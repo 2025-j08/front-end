@@ -95,6 +95,19 @@ export const CitySelectModal = ({
     });
   };
 
+  // すべて選択
+  const handleSelectAll = () => {
+    setTempSelectedCities([...cities]);
+  };
+
+  // すべて解除
+  const handleDeselectAll = () => {
+    setTempSelectedCities([]);
+  };
+
+  // 全選択状態かどうか
+  const isAllSelected = cities.length > 0 && tempSelectedCities.length === cities.length;
+
   // 「決定」ボタン押下時に親へ変更を通知して閉じる
   const handleConfirmClick = () => {
     onConfirm(tempSelectedCities);
@@ -148,24 +161,38 @@ export const CitySelectModal = ({
 
         <div className={styles.content}>
           {cities.length > 0 ? (
-            <div className={styles.cityGrid}>
-              {cities.map((city) => {
-                const isChecked = tempSelectedCities.includes(city);
-                const inputId = `city-${city}`;
+            <>
+              <div className={styles.selectAllArea}>
+                <button
+                  type="button"
+                  className={styles.selectAllButton}
+                  onClick={isAllSelected ? handleDeselectAll : handleSelectAll}
+                >
+                  {isAllSelected ? 'すべて解除' : 'すべて選択'}
+                </button>
+                <span className={styles.selectionCount}>
+                  {tempSelectedCities.length} / {cities.length} 件選択中
+                </span>
+              </div>
+              <div className={styles.cityGrid}>
+                {cities.map((city) => {
+                  const isChecked = tempSelectedCities.includes(city);
+                  const inputId = `city-${city}`;
 
-                return (
-                  <label key={city} className={styles.cityItem} htmlFor={inputId}>
-                    <input
-                      id={inputId}
-                      type="checkbox"
-                      checked={isChecked}
-                      onChange={() => handleToggleCity(city)}
-                    />
-                    <span>{city}</span>
-                  </label>
-                );
-              })}
-            </div>
+                  return (
+                    <label key={city} className={styles.cityItem} htmlFor={inputId}>
+                      <input
+                        id={inputId}
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={() => handleToggleCity(city)}
+                      />
+                      <span>{city}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            </>
           ) : (
             <p>施設データが見つかりませんでした。</p>
           )}
