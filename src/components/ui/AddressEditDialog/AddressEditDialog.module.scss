@@ -16,6 +16,7 @@
 
 // ダイアログボックス
 .dialogBox {
+  box-sizing: border-box;
   background-color: colors.$bg-white;
   border-radius: 8px;
   padding: 24px;
@@ -58,6 +59,7 @@
 }
 
 .input {
+  box-sizing: border-box;
   padding: 10px;
   border: 1px solid colors.$input-border;
   border-radius: 4px;
