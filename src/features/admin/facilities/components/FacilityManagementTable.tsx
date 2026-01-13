@@ -36,10 +36,10 @@ const FacilityRow = ({
   const [address, setAddress] = useState(facility.address);
 
   // 変更があるかどうか判定
-  const isDirty = name !== facility.name || address !== facility.address;
+  const hasChanges = name !== facility.name || address !== facility.address;
 
   const handleSave = () => {
-    if (isDirty) {
+    if (hasChanges) {
       onSave(facility.id, name, address);
     }
   };
@@ -65,32 +65,32 @@ const FacilityRow = ({
         />
       </td>
       <td className={styles.actionCol}>
-        <button
-          className={styles.saveButton}
-          onClick={handleSave}
-          disabled={!isDirty}
-          aria-label={`${facility.name}の変更を保存`}
-        >
-          保存
-        </button>
-      </td>
-      <td className={styles.actionCol}>
-        <Link
-          href={`/admin/facilities/${facility.id}/edit`}
-          className={styles.detailButton}
-          aria-label={`${facility.name}の詳細情報を編集`}
-        >
-          詳細編集
-        </Link>
-      </td>
-      <td className={styles.actionCol}>
-        <button
-          className={styles.deleteButton}
-          onClick={() => onDelete(facility.id)}
-          aria-label={`${facility.name}を削除`}
-        >
-          削除
-        </button>
+        <div className={styles.actionButtons}>
+          <button
+            type="button"
+            className={styles.saveButton}
+            onClick={handleSave}
+            disabled={!hasChanges}
+            aria-label={`${facility.name}の変更を保存`}
+          >
+            保存
+          </button>
+          <Link
+            href={`/admin/facilities/${facility.id}/edit`}
+            className={styles.detailButton}
+            aria-label={`${facility.name}の詳細情報を編集`}
+          >
+            詳細編集
+          </Link>
+          <button
+            type="button"
+            className={styles.deleteButton}
+            onClick={() => onDelete(facility.id)}
+            aria-label={`${facility.name}を削除`}
+          >
+            削除
+          </button>
+        </div>
       </td>
     </tr>
   );
@@ -116,9 +116,9 @@ export const FacilityManagementTable: React.FC<FacilityManagementTableProps> = (
             <th className={styles.addressCol} scope="col">
               住所
             </th>
-            <th className={styles.actionCol} scope="col"></th>
-            <th className={styles.actionCol} scope="col"></th>
-            <th className={styles.actionCol} scope="col"></th>
+            <th className={styles.actionCol} scope="col">
+              操作
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -132,7 +132,7 @@ export const FacilityManagementTable: React.FC<FacilityManagementTableProps> = (
           ))}
           {facilities.length === 0 && (
             <tr>
-              <td colSpan={5} className={styles.emptyRow}>
+              <td colSpan={3} className={styles.emptyRow}>
                 施設データがありません
               </td>
             </tr>
