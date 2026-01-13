@@ -37,7 +37,6 @@ $header-nav-gap-mobile: 15px;
   transition: opacity 0.2s;
   height: 50px;
   width: auto;
-<<<<<<< HEAD
   padding: 0;
 
   img {
@@ -46,8 +45,6 @@ $header-nav-gap-mobile: 15px;
     object-fit: contain;
     max-width: 100%;
   }
-=======
->>>>>>> 60505af (ロゴの修正)
 
   &:hover {
     opacity: 0.8;
@@ -215,7 +212,9 @@ $header-nav-gap-mobile: 15px;
   }
 
   .logoWrapper {
-    padding: 6px 15px;
+    height: 35px;
+    padding: 0;
+    margin-right: 8px;
 
     .logoText {
       font-size: 20px;
@@ -223,7 +222,7 @@ $header-nav-gap-mobile: 15px;
   }
 
   .nav {
-    gap: $header-nav-gap-mobile;
+    font-size: 10px;
   }
 
   .navItem {
