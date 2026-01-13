@@ -70,11 +70,31 @@ function parseAddress(address: string): {
   const prefecture = prefectureMatch[1];
   const remaining = address.substring(prefecture.length);
 
-  // 市区町村の正規表現パターン（市、区、町、村）
-  const cityPattern = /^(.+?[市区町村])/;
-  const cityMatch = remaining.match(cityPattern);
+  // 市区町村の正規表現パターン
+  // 1. 市（政令指定都市含む）: 大阪市、神戸市など
+  // 2. 郡+町/村: 相楽郡精華町など
+  // 3. 区（東京23区）: 港区など
+  // 4. 町/村（郡なし）: 直接町村名の場合
+  const cityPatterns = [
+    /^(.+?市)/, // 市
+    /^(.+?郡.+?[町村])/, // 郡+町/村
+    /^(.+?区)/, // 区（東京23区）
+    /^(.+?[町村])/, // 町/村（郡なし）
+  ];
 
-  if (!cityMatch) {
+  let city = '';
+  let address_detail = remaining;
+
+  for (const pattern of cityPatterns) {
+    const match = remaining.match(pattern);
+    if (match) {
+      city = match[1];
+      address_detail = remaining.substring(city.length);
+      break;
+    }
+  }
+
+  if (!city) {
     // 市区町村が見つからない場合は警告ログを出力してデフォルト値を返す
     console.warn(`市区町村が見つかりません（住所: ${address}）デフォルト値「不明」を使用します`);
     return {
@@ -83,9 +103,6 @@ function parseAddress(address: string): {
       address_detail: remaining,
     };
   }
-
-  const city = cityMatch[1];
-  const address_detail = remaining.substring(city.length);
 
   return {
     prefecture,
