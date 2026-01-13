@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 
+import { logError } from '@/lib/clientLogger';
 import { createClient } from '@/lib/supabase/client';
 
 const VALID_ROLES = ['admin', 'staff'] as const;
@@ -67,7 +68,10 @@ export function useCurrentUser(): CurrentUser {
         .single();
 
       if (profileError) {
-        console.error('Failed to fetch user profile:', profileError);
+        logError('Failed to fetch user profile', {
+          component: 'useCurrentUser',
+          error: profileError.message,
+        });
         updateState({ isLoading: false });
         return;
       }
@@ -86,7 +90,10 @@ export function useCurrentUser(): CurrentUser {
           .single();
 
         if (facilityError) {
-          console.error('Failed to fetch facility profile:', facilityError);
+          logError('Failed to fetch facility profile', {
+            component: 'useCurrentUser',
+            error: facilityError.message,
+          });
         }
 
         updateState({ facilityId: facilityProfile?.facility_id ?? null });
