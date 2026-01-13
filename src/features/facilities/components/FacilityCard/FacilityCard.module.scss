@@ -12,6 +12,11 @@
   box-sizing: border-box;
 }
 
+.link {
+  text-decoration: none;
+  color: inherit;
+}
+
 .content {
   display: flex;
   justify-content: space-between;
