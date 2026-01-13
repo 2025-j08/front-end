@@ -7,12 +7,22 @@ import { Facility } from '@/types/facility';
 
 import styles from '../styles/FacilityManagementTable.module.scss';
 
+/**
+ * FacilityManagementTableコンポーネントのProps
+ */
 interface FacilityManagementTableProps {
+  /** 表示する施設のリスト */
   facilities: Facility[];
+  /** 変更ボタン押下時のハンドラ */
   onEdit: (id: number) => void;
+  /** 削除ボタン押下時のハンドラ */
   onDelete: (id: number) => void;
 }
 
+/**
+ * 施設一覧を表示するテーブルコンポーネント
+ * 施設名、住所の表示に加え、編集・詳細編集・削除のアクションを提供します
+ */
 export const FacilityManagementTable: React.FC<FacilityManagementTableProps> = ({
   facilities,
   onEdit,
