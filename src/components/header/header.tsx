@@ -9,7 +9,6 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import type { SvgIconComponent } from '@mui/icons-material';
 
 import { useClickOutside } from '@/hooks/useClickOutside';
-import heroImage from '@/dummy_data/herotest.png';
 
 import styles from './header.module.scss';
 
@@ -211,7 +210,7 @@ export const Header = () => {
       {/* 下部：ヒーロー画像エリア */}
       <div className={styles.heroArea}>
         <Image
-          src={heroImage}
+          src="/images/herotest.png"
           alt="メインビジュアル"
           fill
           style={{ objectFit: 'cover' }}
