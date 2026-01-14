@@ -26,10 +26,20 @@ async function fetchApi<T>(
 ): Promise<T> {
   const response = await fetch(url, options);
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error || defaultErrorMessage);
+    let errorMessage = defaultErrorMessage;
+    try {
+      const errorData = await response.json();
+      errorMessage = errorData.error || defaultErrorMessage;
+    } catch {
+      // JSONパース失敗時はデフォルトメッセージを使用
+    }
+    throw new Error(errorMessage);
   }
-  return response.json();
+  try {
+    return await response.json();
+  } catch {
+    throw new Error(defaultErrorMessage);
+  }
 }
 
 export default function FacilityManagementPage() {
