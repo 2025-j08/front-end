@@ -33,6 +33,8 @@ export type BasicInfoUpdateData = {
   corporation?: string;
   established_year?: number;
   annex_facilities?: AnnexFacility[];
+  /** 住所詳細（番地・建物名など） */
+  address_detail?: string;
   /** 施設種類（中間テーブル経由で更新するため別処理）複数選択可 */
   dormitory_type?: string[];
 };
@@ -498,4 +500,32 @@ export async function manageFacilityImages(
   }
 
   return data as ManageFacilityImagesResult;
+}
+
+// ============================================
+// 施設管理画面用 Mutation
+// ============================================
+
+/** Mutation結果 */
+export interface MutationResult {
+  success: boolean;
+  error?: string;
+}
+
+/**
+ * 施設を削除する
+ * @param supabase - Supabaseクライアント
+ * @param id - 施設ID
+ * @returns 成功/失敗とエラーメッセージ
+ */
+export async function deleteFacility(
+  supabase: SupabaseClient,
+  id: number,
+): Promise<MutationResult> {
+  const { error } = await supabase.from('facilities').delete().eq('id', id);
+
+  if (error) {
+    return { success: false, error: error.message };
+  }
+  return { success: true };
 }

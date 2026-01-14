@@ -283,6 +283,46 @@ export async function getFacilityTotalCount(): Promise<number> {
 }
 
 // ============================================
+// 施設管理画面用
+// ============================================
+
+/** 管理画面用施設リストの項目 */
+export interface FacilityAdminListItem {
+  id: number;
+  name: string;
+  prefecture: string;
+  city: string;
+  addressDetail: string;
+}
+
+/**
+ * 管理画面用の施設一覧を取得する
+ * 全施設を取得し、住所フィールドを分割して返す
+ *
+ * @returns 施設リスト（管理画面用）
+ */
+export async function getFacilityAdminList(): Promise<FacilityAdminListItem[]> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from('facilities')
+    .select('id, name, prefecture, city, address_detail')
+    .order('prefecture', { ascending: true })
+    .order('city', { ascending: true })
+    .order('name', { ascending: true });
+
+  throwIfError(error, '施設一覧の取得に失敗しました');
+
+  return (data || []).map((facility) => ({
+    id: facility.id,
+    name: facility.name,
+    prefecture: facility.prefecture,
+    city: facility.city,
+    addressDetail: facility.address_detail,
+  }));
+}
+
+// ============================================
 // 住所情報取得（検索画面用）
 // ============================================
 

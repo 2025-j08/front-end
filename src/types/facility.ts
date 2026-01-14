@@ -37,6 +37,18 @@ export interface FacilityListItem extends Facility {
   facilityType?: string;
 }
 
+/** 施設管理画面用のリスト項目（住所を分割して保持） */
+export interface FacilityAdminListItem {
+  id: number;
+  name: string;
+  /** 都道府県（読み取り専用） */
+  prefecture: string;
+  /** 市区町村（読み取り専用） */
+  city: string;
+  /** 住所詳細（編集可能） */
+  addressDetail: string;
+}
+
 /** ページネーション対応の施設リストデータ（レガシー: モックデータ用） */
 export interface FacilitiesData {
   totalCount: number;
