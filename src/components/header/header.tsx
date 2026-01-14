@@ -5,7 +5,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
-import ContactSupportOutlinedIcon from '@mui/icons-material/ContactSupportOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 
 import { useClickOutside } from '@/hooks/useClickOutside';
@@ -187,12 +186,6 @@ export const Header = () => {
                   <span>ログイン</span>
                 </Link>
               ))}
-
-            {/* お問い合わせ */}
-            <Link href="/features/contact" className={styles.navItem}>
-              <ContactSupportOutlinedIcon className={styles.icon} />
-              <span>お問い合わせ</span>
-            </Link>
 
             {/* 管理メニュー（ドロップダウン） */}
             {showAdminMenu && (
