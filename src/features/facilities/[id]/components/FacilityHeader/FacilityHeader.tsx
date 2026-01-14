@@ -86,7 +86,7 @@ export const FacilityHeader = ({
             <input
               type="text"
               className={styles.urlInput}
-              value={websiteUrl && websiteUrl.trim() ? websiteUrl : ''}
+              value={websiteUrl ?? ''}
               onChange={(e) => onUrlChange?.(e.target.value)}
               placeholder="https://example.com"
               aria-label="施設WebサイトURL"
