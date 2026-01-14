@@ -189,27 +189,6 @@ export const ImagesTab = ({
     return (
       <div className={styles.tabContentWrapper}>
         <div className={imageStyles.imagesContainer}>
-          {/* サムネイル */}
-          <section className={imageStyles.section}>
-            <h3 className={styles.contentTitle}>一覧画面用サムネイル</h3>
-            {thumbnail ? (
-              <div className={imageStyles.thumbnailWrapper}>
-                <Image
-                  src={thumbnail.imageUrl}
-                  alt="施設サムネイル"
-                  fill
-                  sizes="(max-width: 768px) 100vw, 400px"
-                  className={imageStyles.thumbnailImage}
-                  unoptimized
-                />
-              </div>
-            ) : (
-              <div className={imageStyles.noImage}>
-                <span>サムネイル画像がありません</span>
-              </div>
-            )}
-          </section>
-
           {/* ギャラリー */}
           <section className={imageStyles.section}>
             <h3 className={styles.contentTitle}>詳細画面用ギャラリー</h3>
