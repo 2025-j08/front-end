@@ -1,7 +1,7 @@
 import type { UpdateUserRequest } from '@/types/api';
 import { createServerClient, createAdminClient } from '@/lib/supabase/server';
 import { HTTP_STATUS } from '@/const/httpStatus';
-import { logError, logInfo, maskEmail } from '@/lib/logger';
+import { logError, logInfo } from '@/lib/logger';
 import { createErrorResponse, createSuccessResponse } from '@/lib/api/validators';
 import { AUTH_ERROR_MESSAGES, USER_MANAGEMENT_MESSAGES } from '@/const/messages';
 import { createValidator, stringField } from '@/lib/api/createValidator';
