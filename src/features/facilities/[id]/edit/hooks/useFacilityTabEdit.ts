@@ -5,9 +5,11 @@
 import { useState, useCallback, useEffect } from 'react';
 
 import type { FacilityDetail } from '@/types/facility';
-import type { TabUpdateData } from '@/lib/supabase/mutations/facilities';
 
-import { toSnakeCase, basicInfoFieldMapping } from '../utils/fieldMapping';
+import { buildUpdateData, TAB_SECTIONS, type TabSection } from '../utils/fieldMapping';
+
+// 型とTAB_SECTIONSを再エクスポート
+export { TAB_SECTIONS, type TabSection };
 
 /**
  * フィールド名からセクション名を取得するヘルパー
@@ -40,21 +42,6 @@ function getSectionFromField<K extends keyof FacilityDetail>(field: K): TabSecti
 
   return 'basic'; // デフォルト
 }
-
-/** タブセクション名の配列（動的生成用） */
-export const TAB_SECTIONS = [
-  'basic',
-  'access',
-  'philosophy',
-  'specialty',
-  'staff',
-  'education',
-  'advanced',
-  'other',
-] as const;
-
-/** タブセクション名 */
-export type TabSection = (typeof TAB_SECTIONS)[number];
 
 /** 編集フォームの状態（タブごと） */
 type TabEditState = {
@@ -318,122 +305,3 @@ export const useFacilityTabEdit = (
     getError,
   };
 };
-
-/**
- * セクション別に更新データを構築するヘルパー関数
- */
-function buildUpdateData(
-  section: TabSection,
-  formData: Partial<FacilityDetail>,
-): TabUpdateData | null {
-  switch (section) {
-    case 'basic':
-      return {
-        section: 'basic',
-        data: {
-          name: formData.name,
-          phone: formData.phone,
-          corporation: formData.corporation,
-          [toSnakeCase('establishedYear', basicInfoFieldMapping)]: formData.establishedYear
-            ? parseInt(formData.establishedYear, 10)
-            : undefined,
-          [toSnakeCase('annexFacilities', basicInfoFieldMapping)]: formData.annexFacilities,
-          dormitory_type: formData.dormitoryType,
-        },
-      };
-
-    case 'access':
-      return {
-        section: 'access',
-        data: {
-          station: formData.accessInfo?.station,
-          description: formData.accessInfo?.description,
-          location_appeal: formData.accessInfo?.locationAppeal,
-          website_url: formData.websiteUrl,
-          capacity: formData.capacity,
-          provisional_capacity: formData.provisionalCapacity,
-          relation_info: formData.relationInfo,
-        },
-      };
-
-    case 'philosophy':
-      if (!formData.philosophyInfo) return null;
-      return {
-        section: 'philosophy',
-        data: {
-          message: formData.philosophyInfo.message,
-          description: formData.philosophyInfo.description,
-        },
-      };
-
-    case 'specialty':
-      if (!formData.specialtyInfo) return null;
-      return {
-        section: 'specialty',
-        data: {
-          features: formData.specialtyInfo.features,
-          programs: formData.specialtyInfo.programs,
-        },
-      };
-
-    case 'staff':
-      if (!formData.staffInfo) return null;
-      return {
-        section: 'staff',
-        data: {
-          full_time_staff_count: formData.staffInfo.fullTimeStaffCount,
-          part_time_staff_count: formData.staffInfo.partTimeStaffCount,
-          specialties: formData.staffInfo.specialties,
-          average_tenure: formData.staffInfo.averageTenure,
-          age_distribution: formData.staffInfo.ageDistribution,
-          work_style: formData.staffInfo.workStyle,
-          has_university_lecturer: formData.staffInfo.hasUniversityLecturer,
-          lecture_subjects: formData.staffInfo.lectureSubjects,
-          external_activities: formData.staffInfo.externalActivities,
-          qualifications_and_skills: formData.staffInfo.qualificationsAndSkills,
-          internship_details: formData.staffInfo.internshipDetails,
-        },
-      };
-
-    case 'education':
-      if (!formData.educationInfo) return null;
-      return {
-        section: 'education',
-        data: {
-          graduation_rate: formData.educationInfo.graduationRate,
-          graduation_rate_percentage: formData.educationInfo.graduationRatePercentage,
-          learning_support: formData.educationInfo.learningSupport,
-          career_support: formData.educationInfo.careerSupport,
-        },
-      };
-
-    case 'advanced':
-      if (!formData.advancedInfo) return null;
-      return {
-        section: 'advanced',
-        data: {
-          title: formData.advancedInfo.title,
-          description: formData.advancedInfo.description,
-          background: formData.advancedInfo.background,
-          challenges: formData.advancedInfo.challenges,
-          solutions: formData.advancedInfo.solutions,
-        },
-      };
-
-    case 'other':
-      if (!formData.otherInfo) return null;
-      return {
-        section: 'other',
-        data: {
-          title: formData.otherInfo.title,
-          description: formData.otherInfo.description,
-          networks: formData.otherInfo.networks,
-          future_outlook: formData.otherInfo.futureOutlook,
-          free_text: formData.otherInfo.freeText,
-        },
-      };
-
-    default:
-      return null;
-  }
-}
