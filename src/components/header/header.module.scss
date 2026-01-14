@@ -238,14 +238,16 @@ $header-nav-gap-mobile: 15px;
 
   .nav {
     gap: $header-nav-gap-mobile;
+    min-width: 0; // 子要素の縮小を許可
   }
 
   .navItem {
     font-size: 10px;
+    min-width: 0; // 省略表示が効くように
   }
 
   .icon {
-    font-size: 24px;
+    font-size: 22px; // アイコンをやや小さく
     margin-bottom: 2px;
   }
 
@@ -265,7 +267,58 @@ $header-nav-gap-mobile: 15px;
     }
   }
 
+  // 管理メニューのラベルは表示しつつ幅を抑制（省略表示）
+  .menuTrigger {
+    span {
+      display: inline;
+      max-width: 72px; // ラベルの最大幅を少し抑制
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
   .noImageText {
     font-size: 32px;
+  }
+}
+
+// より狭い端末向けの微調整
+@media (max-width: 480px) {
+  .nav {
+    gap: 8px;
+  }
+
+  .navItem {
+    font-size: 9px;
+  }
+
+  .navItem span {
+    max-width: 64px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .icon {
+    font-size: 20px;
+  }
+
+  .menuTrigger span {
+    max-width: 60px;
+  }
+}
+
+@media (max-width: 360px) {
+  .nav {
+    gap: 6px;
+  }
+
+  .icon {
+    font-size: 18px;
+  }
+
+  .navItem span {
+    max-width: 54px;
   }
 }
