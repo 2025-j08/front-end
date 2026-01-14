@@ -24,6 +24,8 @@ export interface ConfirmDialogProps {
   onConfirm: () => void;
   /** キャンセル時のハンドラ */
   onCancel: () => void;
+  /** キャンセルボタンを表示するかどうか（デフォルト: true） */
+  showCancel?: boolean;
 }
 
 /**
@@ -39,6 +41,7 @@ export const ConfirmDialog = ({
   isDanger = false,
   onConfirm,
   onCancel,
+  showCancel = true,
 }: ConfirmDialogProps) => {
   const confirmButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -83,9 +86,11 @@ export const ConfirmDialog = ({
           {message}
         </div>
         <div className={styles.actions}>
-          <button type="button" className={styles.cancelButton} onClick={onCancel}>
-            {cancelLabel}
-          </button>
+          {showCancel && (
+            <button type="button" className={styles.cancelButton} onClick={onCancel}>
+              {cancelLabel}
+            </button>
+          )}
           <button
             type="button"
             ref={confirmButtonRef}
