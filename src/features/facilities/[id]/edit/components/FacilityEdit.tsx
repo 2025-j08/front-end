@@ -5,7 +5,11 @@
  * 施設編集ページのメインコンポーネント（編集専用）です。
  * タブごとに独立して編集・保存が可能
  */
+<<<<<<< HEAD
 import { useCallback, useState, useMemo, useRef, useEffect } from 'react';
+=======
+import { useCallback, useEffect, useMemo, useState } from 'react';
+>>>>>>> 5022721 (デフォのURL中身を削除)
 
 import type { FacilityDetail as FacilityDetailType, FacilityImageType } from '@/types/facility';
 
@@ -55,6 +59,7 @@ export const FacilityEdit = ({ id }: Props) => {
     getError,
   } = useFacilityTabEdit(displayData, id, handleSaveSuccess);
 
+<<<<<<< HEAD
   // 画像アップロードフック
   const { saveAllImages } = useFacilityImageUpload(id);
 
@@ -81,6 +86,15 @@ export const FacilityEdit = ({ id }: Props) => {
     },
     [saveAllImages],
   );
+=======
+  // 既存のWebサイトURLは初期表示時に空にする（他項目へ影響なし）
+  useEffect(() => {
+    if (displayData?.websiteUrl) {
+      updateField('websiteUrl', '' as FacilityDetailType['websiteUrl']);
+    }
+    // displayDataのfacility idが変わったときのみ実行
+  }, [displayData?.id, displayData?.websiteUrl, updateField]);
+>>>>>>> 5022721 (デフォのURL中身を削除)
 
   // 未保存の変更がある場合の離脱警告
   useUnsavedChangesWarning(hasUnsavedChanges);
