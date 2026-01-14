@@ -350,18 +350,16 @@ async function getFacilityBasicInfo(id: number) {
 }
 
 /**
- * 施設種類を取得
+ * 施設種類を取得（複数対応）
  * @param id - 施設ID
- * @returns 施設種類（dormitoryType）
+ * @returns 施設種類の配列（dormitoryType[]）
  * @throws データ取得エラー時はErrorをスロー
  *
  * @remarks
  * データベース設計では facility_facility_types 中間テーブルを使用しており、
- * 将来的に1施設が複数の種類を持つ可能性を考慮している。
- * 現状は最初の1件のみを使用し、1施設1種類として運用。
- * 複数種類対応が必要になった場合は、戻り値を配列型に変更する。
+ * 1施設が複数の種類を持つことが可能。
  */
-async function getFacilityTypes(id: number): Promise<DormitoryType | undefined> {
+async function getFacilityTypes(id: number): Promise<DormitoryType[] | undefined> {
   const supabase = createClient();
 
   const { data: facilityTypes, error: typesError } = await supabase
@@ -371,14 +369,22 @@ async function getFacilityTypes(id: number): Promise<DormitoryType | undefined> 
 
   throwIfError(typesError, '施設種類の取得に失敗しました');
 
-  // 施設種類名を抽出（現状は最初の1件のみを使用）
-  // 注: 複数の種類が登録されている場合、2件目以降は無視される
-  const firstType = facilityTypes?.[0] as FacilityTypeRelation | undefined;
-  const typeName = extractFacilityTypeName(firstType ?? null);
+  if (!facilityTypes || facilityTypes.length === 0) {
+    return undefined;
+  }
 
-  // DormitoryType として有効な値かチェック
+  // 有効なDormitoryTypeの値
   const validTypes: DormitoryType[] = ['大舎', '中舎', '小舎', 'グループホーム', '地域小規模'];
-  return validTypes.includes(typeName as DormitoryType) ? (typeName as DormitoryType) : undefined;
+
+  // 全ての施設種類を抽出
+  const types = facilityTypes
+    .map((item) => {
+      const relation = item as FacilityTypeRelation;
+      return extractFacilityTypeName(relation);
+    })
+    .filter((name): name is DormitoryType => validTypes.includes(name as DormitoryType));
+
+  return types.length > 0 ? types : undefined;
 }
 
 /** 詳細テーブル取得用のキー（順序を明示的に定義） */

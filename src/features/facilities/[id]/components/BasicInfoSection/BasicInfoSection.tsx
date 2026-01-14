@@ -1,4 +1,4 @@
-import type { AnnexFacility } from '@/types/facility';
+import type { AnnexFacility, DormitoryType } from '@/types/facility';
 
 import { formatCapacity } from '../../utils/formatters';
 import { InfoCard } from './InfoCard';
@@ -18,7 +18,7 @@ const DORMITORY_TYPE_OPTIONS = [
 ] as const;
 
 type BasicInfoSectionProps = {
-  dormitoryType?: '大舎' | '中舎' | '小舎' | 'グループホーム' | '地域小規模';
+  dormitoryType?: DormitoryType[];
   establishedYear?: string;
   capacity?: number;
   provisionalCapacity?: number;
@@ -90,24 +90,48 @@ export const BasicInfoSection = ({
       <div className={styles.gridContainer}>
         {isEditMode ? (
           <div className={styles.infoCard}>
-            <label className={styles.label} htmlFor="dormitoryType">
-              施設の種類
-            </label>
-            <select
-              id="dormitoryType"
-              className={styles.editInput}
-              value={dormitoryType || ''}
-              onChange={(e) => onFieldChange?.('dormitoryType', e.target.value || undefined)}
-            >
-              {DORMITORY_TYPE_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+            <span className={styles.label}>施設の種類</span>
+            <div className={styles.checkboxGroup} role="group" aria-label="施設の種類">
+              {DORMITORY_TYPE_OPTIONS.filter((opt) => opt.value !== '').map((option) => {
+                const isChecked = dormitoryType?.includes(option.value as DormitoryType) || false;
+                const checkboxId = `dormitoryType-${option.value}`;
+                return (
+                  <label key={option.value} className={styles.checkboxLabel} htmlFor={checkboxId}>
+                    <input
+                      type="checkbox"
+                      id={checkboxId}
+                      name="dormitoryType"
+                      className={styles.checkbox}
+                      checked={isChecked}
+                      onChange={(e) => {
+                        const current = dormitoryType || [];
+                        const newValue = e.target.checked
+                          ? [...current, option.value as DormitoryType]
+                          : current.filter((t) => t !== option.value);
+                        onFieldChange?.('dormitoryType', newValue);
+                      }}
+                    />
+                    {option.label}
+                  </label>
+                );
+              })}
+            </div>
           </div>
         ) : (
-          <InfoCard label="施設の種類" value={dormitoryType || '-'} />
+          <div className={styles.infoCard}>
+            <span className={styles.label}>施設の種類</span>
+            {dormitoryType && dormitoryType.length > 0 ? (
+              <ul className={styles.dormitoryTypeList}>
+                {dormitoryType.map((type) => (
+                  <li key={type} className={styles.dormitoryTypeItem}>
+                    {type}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <span className={styles.value}>-</span>
+            )}
+          </div>
         )}
 
         {isEditMode ? (
