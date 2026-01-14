@@ -16,6 +16,10 @@ type FacilityHeaderProps = {
   onSave?: () => void;
   /** キャンセルハンドラー */
   onCancel?: () => void;
+  /** URL変更ハンドラー */
+  onUrlChange?: (url: string) => void;
+  /** URLエラーメッセージ */
+  urlError?: string;
 };
 
 /**
@@ -47,6 +51,8 @@ export const FacilityHeader = ({
   isDirty = false,
   onSave,
   onCancel,
+  onUrlChange,
+  urlError,
 }: FacilityHeaderProps) => {
   const hasValidWebsite = isValidUrl(websiteUrl);
 
@@ -66,40 +72,27 @@ export const FacilityHeader = ({
         <p className={styles.tel}>TEL {phone}</p>
       </div>
       <div className={styles.headerAction}>
-        {hasValidWebsite && !isEditMode && (
-          <a
-            href={websiteUrl ?? undefined}
-            className={styles.webButton}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="施設Webサイトを新しいタブで開く"
-          >
-            施設Webサイト
-          </a>
-        )}
+        <a
+          href={websiteUrl ?? undefined}
+          className={styles.webButton}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="施設Webサイトを新しいタブで開く"
+        >
+          施設Webサイト
+        </a>
         {isEditMode && (
-          <>
-            <button
-              type="button"
-              className={styles.cancelButton}
-              onClick={onCancel}
-              disabled={isSaving}
-              aria-disabled={isSaving}
-            >
-              キャンセル
-            </button>
-            <button
-              type="button"
-              className={styles.saveButton}
-              onClick={onSave}
-              disabled={isSaving || !isDirty}
-              aria-disabled={isSaving || !isDirty}
-              aria-busy={isSaving}
-              aria-live="polite"
-            >
-              {isSaving ? '⏳ 保存中...' : '保存する'}
-            </button>
-          </>
+          <div className={styles.websiteWrapper}>
+            <input
+              type="text"
+              className={styles.urlInput}
+              value={websiteUrl && websiteUrl.trim() ? websiteUrl : ''}
+              onChange={(e) => onUrlChange?.(e.target.value)}
+              placeholder="https://example.com"
+              aria-label="施設WebサイトURL"
+            />
+            {urlError && <span className={styles.errorText}>{urlError}</span>}
+          </div>
         )}
       </div>
     </header>

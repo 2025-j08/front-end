@@ -135,9 +135,12 @@ export const FacilityEdit = ({ id }: Props) => {
         fullAddress={mergedData.fullAddress}
         phone={mergedData.phone}
         websiteUrl={mergedData.websiteUrl}
-        isEditMode={false}
-        isSaving={false}
-        isDirty={false}
+        isEditMode={true}
+        isSaving={isSaving}
+        isDirty={isDirty('access')}
+        onSave={saveHandlers.access}
+        onUrlChange={(url) => updateField('websiteUrl', url)}
+        urlError={getError('websiteUrl')}
       />
 
       <BasicInfoSection

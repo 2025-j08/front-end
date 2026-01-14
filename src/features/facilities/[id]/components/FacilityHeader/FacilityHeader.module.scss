@@ -34,8 +34,37 @@
 
 .headerAction {
   display: flex;
+  flex-direction: column;
   gap: 12px;
-  align-items: center;
+  align-items: flex-start;
+
+  .websiteWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .urlInput {
+    padding: 10px 12px;
+    border: 1px solid colors.$input-border;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 300px;
+    background-color: colors.$white;
+    color: colors.$text-primary;
+
+    &:focus {
+      outline: none;
+      border-color: colors.$primary-color;
+      box-shadow: 0 0 0 2px rgba(74, 159, 126, 0.15);
+    }
+  }
+
+  .errorText {
+    font-size: 12px;
+    color: colors.$error-color;
+  }
 
   .webButton {
     display: inline-block;
