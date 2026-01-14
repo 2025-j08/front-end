@@ -12,6 +12,15 @@ import { buildUpdateData, TAB_SECTIONS, type TabSection } from '../utils/fieldMa
 export { TAB_SECTIONS, type TabSection };
 
 /**
+ * ネストしたオブジェクトをマージするヘルパー関数
+ * 両方undefinedの場合はundefinedを返す
+ */
+function mergeNested<T>(base: T | undefined, override: Partial<T> | undefined): T | undefined {
+  if (!base && !override) return undefined;
+  return { ...base, ...override } as T;
+}
+
+/**
  * フィールド名からセクション名を取得するヘルパー
  * 型安全性を保証するためのマッピング
  */
@@ -177,27 +186,17 @@ export const useFacilityTabEdit = (
           ? {
               ...initialData,
               ...state.formData,
-              // ネストしたオブジェクトもマージ
-              // ネストしたオブジェクトもマージ
-              accessInfo: { ...initialData.accessInfo, ...state.formData.accessInfo },
-              philosophyInfo:
-                initialData.philosophyInfo || state.formData.philosophyInfo
-                  ? {
-                      ...initialData.philosophyInfo,
-                      ...state.formData.philosophyInfo,
-                    }
-                  : undefined,
-              specialtyInfo:
-                initialData.specialtyInfo || state.formData.specialtyInfo
-                  ? { ...initialData.specialtyInfo, ...state.formData.specialtyInfo }
-                  : undefined,
-              staffInfo: { ...initialData.staffInfo, ...state.formData.staffInfo },
-              educationInfo: { ...initialData.educationInfo, ...state.formData.educationInfo },
-              advancedInfo:
-                initialData.advancedInfo || state.formData.advancedInfo
-                  ? { ...initialData.advancedInfo, ...state.formData.advancedInfo }
-                  : undefined,
-              otherInfo: { ...initialData.otherInfo, ...state.formData.otherInfo },
+              // ネストしたオブジェクトもマージ（mergeNestedで統一）
+              accessInfo: mergeNested(initialData.accessInfo, state.formData.accessInfo),
+              philosophyInfo: mergeNested(
+                initialData.philosophyInfo,
+                state.formData.philosophyInfo,
+              ),
+              specialtyInfo: mergeNested(initialData.specialtyInfo, state.formData.specialtyInfo),
+              staffInfo: mergeNested(initialData.staffInfo, state.formData.staffInfo),
+              educationInfo: mergeNested(initialData.educationInfo, state.formData.educationInfo),
+              advancedInfo: mergeNested(initialData.advancedInfo, state.formData.advancedInfo),
+              otherInfo: mergeNested(initialData.otherInfo, state.formData.otherInfo),
             }
           : state.formData;
 

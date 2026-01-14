@@ -1,10 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { FormField, LoadingOverlay, SuccessOverlay } from '@/components/form';
+import { FACILITY_MESSAGES } from '@/const/messages';
 import { KINKI_PREFECTURES } from '@/const/searchConditions';
+import { UI_TIMEOUTS } from '@/const/ui';
 import type { KinkiPrefecture } from '@/types/facility';
 
 import styles from '../styles/AddFacilityForm.module.scss';
@@ -106,16 +108,16 @@ export const AddFacilityForm: React.FC = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || '施設の追加に失敗しました');
+        throw new Error(errorData.error || FACILITY_MESSAGES.ADD_FAILED);
       }
 
       // 成功表示
       setIsSuccess(true);
       setTimeout(() => {
         router.push('/admin/facilities');
-      }, 1500);
+      }, UI_TIMEOUTS.SUCCESS_REDIRECT);
     } catch (err) {
-      setSubmitError(err instanceof Error ? err.message : '施設の追加に失敗しました');
+      setSubmitError(err instanceof Error ? err.message : FACILITY_MESSAGES.ADD_FAILED);
     } finally {
       setIsSubmitting(false);
     }

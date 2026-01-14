@@ -4,6 +4,12 @@
  */
 import { useState, useCallback } from 'react';
 
+import {
+  isValidLatitude,
+  isValidLongitude,
+  isValidPhoneNumber,
+  isValidUrl,
+} from '@/const/validation';
 import { FacilityDetail } from '@/types/facility';
 
 /** 編集フォームの状態 */
@@ -40,37 +46,6 @@ type UseFacilityEditReturn = {
   resetForm: () => void;
   /** 特定フィールドのエラー取得 */
   getError: (field: string) => string | undefined;
-};
-
-/**
- * 施設編集フック
- * @param initialData 初期データ（既存の施設情報）
- * @param facilityId 施設ID
- */
-// バリデーションヘルパー関数（純粋関数）
-const isValidPhoneNumber = (phone: string): boolean => {
-  const phoneRegex = /^0\d{1,4}[-]?\d{1,4}[-]?\d{3,4}$/;
-  return phoneRegex.test(phone.replace(/\s/g, ''));
-};
-
-const isValidUrl = (url: string): boolean => {
-  if (!url) return true;
-  try {
-    const parsed = new URL(url);
-    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
-  } catch {
-    return false;
-  }
-};
-
-const isValidLatitude = (lat: number | undefined): boolean => {
-  if (lat === undefined) return true;
-  return lat >= -90 && lat <= 90;
-};
-
-const isValidLongitude = (lng: number | undefined): boolean => {
-  if (lng === undefined) return true;
-  return lng >= -180 && lng <= 180;
 };
 
 // バリデーションロジック（純粋関数）

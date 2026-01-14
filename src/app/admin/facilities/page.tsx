@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 
 import {
@@ -15,6 +15,22 @@ import {
 import styles from '@/features/admin/facilities/styles/FacilityManagementPage.module.scss';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog/ConfirmDialog';
 import { SuccessOverlay } from '@/components/form/overlay/successOverlay';
+import { UI_TIMEOUTS } from '@/const/ui';
+import { FACILITY_MESSAGES } from '@/const/messages';
+
+/** APIリクエスト用のヘルパー関数 */
+async function fetchApi<T>(
+  url: string,
+  options: RequestInit,
+  defaultErrorMessage: string,
+): Promise<T> {
+  const response = await fetch(url, options);
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error || defaultErrorMessage);
+  }
+  return response.json();
+}
 
 export default function FacilityManagementPage() {
   const router = useRouter();
@@ -27,9 +43,23 @@ export default function FacilityManagementPage() {
   const [facilityToDelete, setFacilityToDelete] = useState<number | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // 完了通知の状態
+  // 通知の状態
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  /** 成功通知を表示 */
+  const showSuccess = useCallback((message: string) => {
+    setSuccessMessage(message);
+    setIsSuccessOpen(true);
+    setTimeout(() => setIsSuccessOpen(false), UI_TIMEOUTS.SUCCESS_OVERLAY);
+  }, []);
+
+  /** エラー通知を表示 */
+  const showError = useCallback((message: string) => {
+    setErrorMessage(message);
+    setTimeout(() => setErrorMessage(null), UI_TIMEOUTS.SUCCESS_OVERLAY);
+  }, []);
 
   // 施設名検索の状態管理
   const [searchQuery, setSearchQuery] = useState('');
@@ -51,7 +81,7 @@ export default function FacilityManagementPage() {
       const data = await getFacilityManagementList();
       setFacilities(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : '施設一覧の取得に失敗しました');
+      setError(err instanceof Error ? err.message : FACILITY_MESSAGES.FETCH_FAILED);
     } finally {
       setIsLoading(false);
     }
@@ -63,25 +93,24 @@ export default function FacilityManagementPage() {
 
   const handleSave = async (id: number, data: FacilityUpdateData) => {
     try {
-      const response = await fetch(`/api/facilities/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          section: 'management',
-          data: {
-            name: data.name,
-            postal_code: data.postalCode,
-            prefecture: data.prefecture,
-            city: data.city,
-            address_detail: data.addressDetail,
-          },
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || '更新に失敗しました');
-      }
+      await fetchApi(
+        `/api/facilities/${id}`,
+        {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            section: 'management',
+            data: {
+              name: data.name,
+              postal_code: data.postalCode,
+              prefecture: data.prefecture,
+              city: data.city,
+              address_detail: data.addressDetail,
+            },
+          }),
+        },
+        FACILITY_MESSAGES.UPDATE_FAILED,
+      );
 
       // ローカルの状態を更新
       setFacilities((prev) =>
@@ -99,11 +128,9 @@ export default function FacilityManagementPage() {
         ),
       );
 
-      setSuccessMessage('施設情報を更新しました');
-      setIsSuccessOpen(true);
-      setTimeout(() => setIsSuccessOpen(false), 3000);
+      showSuccess(FACILITY_MESSAGES.UPDATE_SUCCESS);
     } catch (err) {
-      alert(err instanceof Error ? err.message : '更新に失敗しました');
+      showError(err instanceof Error ? err.message : FACILITY_MESSAGES.UPDATE_FAILED);
     }
   };
 
@@ -117,14 +144,11 @@ export default function FacilityManagementPage() {
 
     setIsDeleting(true);
     try {
-      const response = await fetch(`/api/facilities/${facilityToDelete}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || '削除に失敗しました');
-      }
+      await fetchApi(
+        `/api/facilities/${facilityToDelete}`,
+        { method: 'DELETE' },
+        FACILITY_MESSAGES.DELETE_FAILED,
+      );
 
       // ローカルの状態を更新
       setFacilities((prev) => prev.filter((f) => f.id !== facilityToDelete));
@@ -132,11 +156,9 @@ export default function FacilityManagementPage() {
       setIsDeleteDialogOpen(false);
       setFacilityToDelete(null);
 
-      setSuccessMessage('施設を削除しました');
-      setIsSuccessOpen(true);
-      setTimeout(() => setIsSuccessOpen(false), 3000);
+      showSuccess(FACILITY_MESSAGES.DELETE_SUCCESS);
     } catch (err) {
-      alert(err instanceof Error ? err.message : '削除に失敗しました');
+      showError(err instanceof Error ? err.message : FACILITY_MESSAGES.DELETE_FAILED);
     } finally {
       setIsDeleting(false);
     }
@@ -204,6 +226,12 @@ export default function FacilityManagementPage() {
       />
 
       <SuccessOverlay isVisible={isSuccessOpen} text={successMessage} />
+
+      {errorMessage && (
+        <div role="alert" className={styles.errorToast}>
+          {errorMessage}
+        </div>
+      )}
     </div>
   );
 }
