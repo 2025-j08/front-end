@@ -1,6 +1,6 @@
 /**
  * FormField 共通コンポーネント
- * auth/contact共通の入力フィールド
+ * 認証フォーム共通の入力フィールド
  */
 import type { ChangeEvent } from 'react';
 

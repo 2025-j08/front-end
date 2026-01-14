@@ -11,11 +11,28 @@ CREATE TABLE public.profiles (
 -- RLSを有効化
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
--- ユーザー自身のプロフィールのみ閲覧可能
-CREATE POLICY "select_owner"
+-- 管理者判定関数（RLSポリシー内での循環参照を回避するため SECURITY DEFINER を使用）
+CREATE FUNCTION public.is_admin()
+RETURNS BOOLEAN
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = ''
+STABLE
+AS $$
+    SELECT EXISTS (
+        SELECT 1 FROM public.profiles
+        WHERE id = auth.uid() AND role = 'admin'
+    );
+$$;
+
+-- ユーザー自身または管理者がプロフィールを閲覧可能
+CREATE POLICY "select_owner_or_admin"
     ON public.profiles
     FOR SELECT
-    USING (id = auth.uid());
+    USING (
+        id = auth.uid()
+        OR public.is_admin()
+    );
 
 -- 本人が挿入する場合は role を 'staff' に制限、管理者は任意のロールで挿入可能
 CREATE POLICY "insert_owner_or_admin"
@@ -29,10 +46,7 @@ CREATE POLICY "insert_owner_or_admin"
             AND role = 'staff'
         )
         -- または既存の管理者が他のユーザーを作成する場合は制限なし
-        OR EXISTS (
-            SELECT 1 FROM public.profiles p
-            WHERE p.id = auth.uid() AND p.role = 'admin'
-        )
+        OR public.is_admin()
     );
 
 -- 本人が更新する場合は役割以外を変更可能、管理者のみが役割を変更可能
@@ -43,9 +57,7 @@ CREATE POLICY "update_own_profile_staff"
     TO authenticated
     USING (
         id = auth.uid()
-        AND (
-            SELECT role FROM public.profiles WHERE id = auth.uid()
-        ) = 'staff'
+        AND NOT public.is_admin()
     )
     WITH CHECK (
         id = auth.uid()
@@ -57,12 +69,7 @@ CREATE POLICY "update_any_profile_admin"
     ON public.profiles
     FOR UPDATE
     TO authenticated
-    USING (
-        EXISTS (
-            SELECT 1 FROM public.profiles p
-            WHERE p.id = auth.uid() AND p.role = 'admin'
-        )
-    )
+    USING (public.is_admin())
     WITH CHECK (true);  -- 管理者は制限なし
 
 -- 本人または管理者が削除可能
@@ -72,10 +79,7 @@ CREATE POLICY "delete_owner_or_admin"
     TO authenticated
     USING (
         id = auth.uid()
-        OR EXISTS (
-            SELECT 1 FROM public.profiles p
-            WHERE p.id = auth.uid() AND p.role = 'admin'
-        )
+        OR public.is_admin()
     );
 
 -- メール確認完了時のプロフィール自動生成

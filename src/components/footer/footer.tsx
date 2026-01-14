@@ -28,9 +28,6 @@ export const Footer = () => {
           <Link href="/features/auth" className={styles.navLink}>
             ログイン
           </Link>
-          <Link href="/features/contact" className={styles.navLink}>
-            お問い合わせ
-          </Link>
         </nav>
       </div>
     </footer>

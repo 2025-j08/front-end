@@ -71,3 +71,16 @@ export const AUTH_ERROR_MESSAGES = {
 } as const;
 
 export type AuthErrorMessageKey = keyof typeof AUTH_ERROR_MESSAGES;
+
+/**
+ * ユーザー管理関連のメッセージ定数
+ */
+export const USER_MANAGEMENT_MESSAGES = {
+  FETCH_FAILED: 'ユーザー一覧の取得に失敗しました',
+  DELETE_FAILED: 'ユーザーの削除に失敗しました',
+  UPDATE_FAILED: 'ユーザー情報の更新に失敗しました',
+  SELF_OPERATION_FORBIDDEN: '自分自身の操作はできません',
+  USER_NOT_FOUND: 'ユーザーが見つかりません',
+} as const;
+
+export type UserManagementMessageKey = keyof typeof USER_MANAGEMENT_MESSAGES;

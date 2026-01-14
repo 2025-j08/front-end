@@ -1,6 +1,6 @@
 /**
  * FormButton 共通コンポーネント
- * auth/contact共通の送信ボタン
+ * 認証フォーム共通の送信ボタン
  */
 import styles from './formButton.module.scss';
 
