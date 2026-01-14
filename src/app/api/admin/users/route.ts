@@ -55,7 +55,7 @@ export async function GET() {
 
     // 施設紐付け情報を取得
     const staffIds = (staffProfiles ?? []).map((p) => p.id);
-    const { data: facilityProfiles } = await supabaseServer
+    const { data: facilityProfiles, error: facilityError } = await supabaseServer
       .from('facility_profiles')
       .select(
         `
@@ -67,6 +67,17 @@ export async function GET() {
       `,
       )
       .in('user_id', staffIds.length > 0 ? staffIds : ['']);
+
+    if (facilityError) {
+      logError('施設情報取得に失敗しました', {
+        error: facilityError.message,
+        code: facilityError.code,
+      });
+      return createErrorResponse(
+        USER_MANAGEMENT_MESSAGES.FETCH_FAILED,
+        HTTP_STATUS.INTERNAL_SERVER_ERROR,
+      );
+    }
 
     // Auth APIからメールアドレスを取得
     const { data: authUsers, error: authError } = await supabaseAdmin.auth.admin.listUsers();
