@@ -118,8 +118,8 @@ function loadImageFromFile(file: File): Promise<HTMLImageElement> {
  * @returns Promise<Blob>
  */
 async function canvasToWebP(canvas: HTMLCanvasElement, maxSizeBytes: number): Promise<Blob> {
-  // 品質を段階的に下げて試行
-  const qualities = [0.9, 0.8, 0.7, 0.6, 0.5, 0.4];
+  // 品質を段階的に下げて試行（最低品質0.5）
+  const qualities = [0.9, 0.8, 0.7, 0.6, 0.5];
 
   for (const quality of qualities) {
     const blob = await new Promise<Blob | null>((resolve) => {
@@ -132,7 +132,9 @@ async function canvasToWebP(canvas: HTMLCanvasElement, maxSizeBytes: number): Pr
   }
 
   throw new Error(
-    `画像を${Math.round(maxSizeBytes / 1024 / 1024)}MB以内に圧縮できませんでした。より小さい画像を使用してください。`,
+    `画像を${Math.round(
+      maxSizeBytes / 1024 / 1024,
+    )}MB以内に圧縮できませんでした。\nより小さい解像度の画像か、別のアスペクト比の画像を試してください。`,
   );
 }
 

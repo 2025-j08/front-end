@@ -57,8 +57,17 @@ export const useFacilityImageUpload = (facilityId: string) => {
 
         // 3. 孤立ファイルのクリーンアップ（バックグラウンドで実行）
         // アップロード成功後に実行することで、過去の失敗/中断によるゴミファイルを削除
-        cleanupOrphanedImages(supabase, numericFacilityId).catch((err) => {
-          console.warn('孤立ファイルのクリーンアップに失敗:', err);
+        cleanupOrphanedImages(supabase, numericFacilityId).then(({ error: cleanupError }) => {
+          if (cleanupError) {
+            console.warn('孤立ファイルのクリーンアップに失敗:', cleanupError);
+            // サーバーログにも記録
+            import('@/app/actions/system').then(({ logSystemError }) => {
+              logSystemError('孤立ファイルのクリーンアップ失敗', {
+                facilityId: numericFacilityId,
+                error: cleanupError.message,
+              });
+            });
+          }
         });
       } catch (err) {
         const message = err instanceof Error ? err.message : '画像のアップロードに失敗しました';

@@ -133,7 +133,7 @@ export async function listFacilityImages(
 export async function cleanupOrphanedImages(
   supabase: SupabaseClient,
   facilityId: number,
-): Promise<{ deletedCount: number }> {
+): Promise<{ deletedCount: number; error?: Error }> {
   try {
     // 1. DB に登録されている画像 URL 一覧を取得
     const { data: dbImages, error: dbError } = await supabase
@@ -142,8 +142,9 @@ export async function cleanupOrphanedImages(
       .eq('facility_id', facilityId);
 
     if (dbError) {
-      console.warn('DB からの画像一覧取得に失敗:', dbError.message);
-      return { deletedCount: 0 };
+      const error = new Error(`DB からの画像一覧取得に失敗: ${dbError.message}`);
+      console.warn(error.message);
+      return { deletedCount: 0, error };
     }
 
     const dbUrls = new Set(dbImages?.map((img) => img.image_url) || []);
@@ -151,6 +152,7 @@ export async function cleanupOrphanedImages(
     // 2. Storage 内のファイル一覧を取得（thumbnail と gallery の両方）
     const imageTypes: ('thumbnail' | 'gallery')[] = ['thumbnail', 'gallery'];
     const orphanedPaths: string[] = [];
+    const errors: string[] = [];
 
     for (const imageType of imageTypes) {
       const folderPath = `${facilityId}/${imageType}`;
@@ -159,7 +161,9 @@ export async function cleanupOrphanedImages(
         .list(folderPath);
 
       if (listError) {
-        console.warn(`Storage 一覧取得に失敗 (${folderPath}):`, listError.message);
+        const msg = `Storage 一覧取得に失敗 (${folderPath}): ${listError.message}`;
+        console.warn(msg);
+        errors.push(msg);
         continue;
       }
 
@@ -180,13 +184,18 @@ export async function cleanupOrphanedImages(
       }
     }
 
+    if (errors.length > 0) {
+      return { deletedCount: 0, error: new Error(errors.join(', ')) };
+    }
+
     // 4. 孤立ファイルを削除
     if (orphanedPaths.length > 0) {
       const { error: removeError } = await supabase.storage.from(BUCKET_NAME).remove(orphanedPaths);
 
       if (removeError) {
-        console.warn('孤立ファイルの削除に失敗:', removeError.message);
-        return { deletedCount: 0 };
+        const error = new Error(`孤立ファイルの削除に失敗: ${removeError.message}`);
+        console.warn(error.message);
+        return { deletedCount: 0, error };
       }
 
       console.info(`孤立ファイルを ${orphanedPaths.length} 件削除しました`);
@@ -195,7 +204,9 @@ export async function cleanupOrphanedImages(
 
     return { deletedCount: 0 };
   } catch (err) {
-    console.warn('孤立ファイルのクリーンアップ中にエラー:', err);
-    return { deletedCount: 0 };
+    const error =
+      err instanceof Error ? err : new Error('孤立ファイルのクリーンアップ中に不明なエラーが発生');
+    console.warn('孤立ファイルのクリーンアップ中にエラー:', error);
+    return { deletedCount: 0, error };
   }
 }
