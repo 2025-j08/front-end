@@ -111,3 +111,55 @@ export interface RegisterResponseError {
  * }
  */
 export type RegisterResponse = RegisterResponseSuccess | RegisterResponseError;
+
+/**
+ * ユーザー情報の型定義
+ * GET /api/admin/users のレスポンスおよびフロントエンドのユーザー管理で使用
+ */
+export interface User {
+  /** ユーザーID */
+  id: string;
+  /** 所属施設ID（再発行時に使用） */
+  facilityId: number;
+  /** 所属施設名 */
+  facilityName: string;
+  /** ユーザー氏名 */
+  name: string;
+  /** メールアドレス */
+  email: string;
+}
+
+/**
+ * PATCH /api/admin/users/[id] のリクエスト型
+ * ユーザー情報更新API
+ */
+export interface UpdateUserRequest {
+  /** 更新後の氏名 */
+  name: string;
+}
+
+/**
+ * ユーザー操作成功時のレスポンス
+ */
+export interface UserOperationResponseSuccess {
+  /** 操作が成功したことを示す */
+  success: true;
+  /** エラーフィールドは存在しない */
+  error?: never;
+}
+
+/**
+ * ユーザー操作失敗時のレスポンス
+ */
+export interface UserOperationResponseError {
+  /** 操作が失敗したことを示す */
+  success: false;
+  /** エラーメッセージは必須 */
+  error: string;
+}
+
+/**
+ * ユーザー操作（削除・更新）のレスポンス型
+ * success フィールドの値によって型が自動的に絞り込まれる
+ */
+export type UserOperationResponse = UserOperationResponseSuccess | UserOperationResponseError;

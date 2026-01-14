@@ -9,6 +9,8 @@ export const API_ENDPOINTS = {
   ADMIN: {
     /** ユーザー招待API */
     INVITE: '/api/admin/invite',
+    /** ユーザー管理API */
+    USERS: '/api/admin/users',
   },
 
   /** 認証関連API */

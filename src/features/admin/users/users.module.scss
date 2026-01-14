@@ -47,6 +47,48 @@
 }
 
 // ====================================
+// エラー状態
+// ====================================
+
+.errorState {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  padding: 60px 20px;
+  background-color: colors.$bg-light-gray;
+  border-radius: 8px;
+  border: 1px solid colors.$error-color;
+}
+
+.errorMessage {
+  font-size: 1rem;
+  color: colors.$error-color;
+  margin: 0;
+}
+
+.retryButton {
+  background-color: colors.$primary-color;
+  color: colors.$white;
+  border: none;
+  padding: 8px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &:focus {
+    outline: 2px solid colors.$primary-color;
+    outline-offset: 2px;
+  }
+}
+
+// ====================================
 // テーブルスタイル
 // ====================================
 
@@ -80,15 +122,66 @@
   color: colors.$text-primary;
 }
 
-// 操作列（削除ボタン）
-.actionCell {
-  text-align: center;
-  width: 100px;
+// ====================================
+// インライン編集用入力フィールド
+// ====================================
+
+.nameInput {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid colors.$border-gray;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  color: colors.$text-primary;
+  background-color: colors.$bg-white;
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: colors.$primary-color;
+  }
 }
 
 // ====================================
-// 削除ボタン
+// 操作ボタン
 // ====================================
+
+.actionCell {
+  text-align: center;
+  width: 180px;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.saveButton {
+  background-color: colors.$primary-color;
+  color: colors.$white;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: opacity 0.2s ease;
+
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+
+  &:focus {
+    outline: 2px solid colors.$primary-color;
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    background-color: colors.$border-gray;
+    cursor: not-allowed;
+  }
+}
 
 .deleteButton {
   background-color: colors.$error-color;
@@ -107,6 +200,101 @@
   &:focus {
     outline: 2px solid colors.$error-color;
     outline-offset: 2px;
+  }
+}
+
+.cancelButton {
+  background-color: colors.$bg-white;
+  color: colors.$text-primary;
+  border: 1px solid colors.$border-gray;
+  padding: 12px 48px;
+  border-radius: 24px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+
+  &:hover {
+    background-color: colors.$bg-light-gray;
+    transform: translateY(-1px);
+  }
+
+  &:focus {
+    outline: 2px solid colors.$border-gray;
+    outline-offset: 2px;
+  }
+}
+
+// ====================================
+// モーダルスタイル
+// ====================================
+
+.modal {
+  border: none;
+  border-radius: 8px;
+  padding: 0;
+  max-width: 480px;
+  width: 90%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+}
+
+.modalContent {
+  position: relative;
+  padding: 24px;
+}
+
+.modalTitle {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: colors.$text-primary;
+  margin: 0 0 16px 0;
+}
+
+.modalDescription {
+  font-size: 0.9rem;
+  color: colors.$text-secondary;
+  margin: 0 0 20px 0;
+}
+
+.modalActions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.modalSubmitButton {
+  background-color: colors.$primary-color;
+  color: colors.$white;
+  border: none;
+  padding: 12px 48px;
+  border-radius: 24px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  &:focus {
+    outline: 2px solid colors.$primary-color;
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 }
 
@@ -134,5 +322,21 @@
   .tableRow td {
     padding: 8px 12px;
     font-size: 0.875rem;
+  }
+
+  .actionCell {
+    width: 160px;
+  }
+
+  .actionButtons {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .saveButton,
+  .deleteButton {
+    width: 100%;
+    padding: 4px 8px;
+    font-size: 0.75rem;
   }
 }
