@@ -108,9 +108,10 @@ export const UserList = () => {
 
   /**
    * 保存ボタンクリック時（氏名更新）
+   * @returns 成功した場合はtrue
    */
-  const handleSave = async (userId: string, name: string) => {
-    await updateUser(userId, name);
+  const handleSave = async (userId: string, name: string): Promise<boolean> => {
+    return await updateUser(userId, name);
   };
 
   /**

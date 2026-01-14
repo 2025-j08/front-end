@@ -12,8 +12,8 @@ import styles from '../users.module.scss';
 interface UserRowProps {
   /** ユーザーデータ */
   user: User;
-  /** 保存ボタンクリック時のハンドラ（氏名更新） */
-  onSave?: (userId: string, name: string) => void;
+  /** 保存ボタンクリック時のハンドラ（氏名更新）。成功時はtrue、失敗時はfalseを返す */
+  onSave?: (userId: string, name: string) => Promise<boolean>;
   /** 削除ボタンクリック時のハンドラ */
   onDelete?: (userId: string) => void;
 }
@@ -25,6 +25,10 @@ interface UserRowProps {
 export const UserRow = ({ user, onSave, onDelete }: UserRowProps) => {
   // 編集中の氏名を管理
   const [name, setName] = useState(user.name);
+  // 保存中の状態
+  const [isSaving, setIsSaving] = useState(false);
+  // エラーメッセージ
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   // バリデーション：空文字やホワイトスペースのみは無効
   const isValidName = name.trim().length > 0;
@@ -35,9 +39,18 @@ export const UserRow = ({ user, onSave, onDelete }: UserRowProps) => {
   /**
    * 保存ボタンクリック時
    */
-  const handleSave = () => {
-    if (hasChanges && onSave) {
-      onSave(user.id, name);
+  const handleSave = async () => {
+    if (!hasChanges || !onSave) return;
+
+    setIsSaving(true);
+    setSaveError(null);
+
+    const success = await onSave(user.id, name);
+
+    setIsSaving(false);
+
+    if (!success) {
+      setSaveError('保存に失敗しました');
     }
   };
 
@@ -58,9 +71,18 @@ export const UserRow = ({ user, onSave, onDelete }: UserRowProps) => {
           type="text"
           className={styles.nameInput}
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => {
+            setName(e.target.value);
+            setSaveError(null);
+          }}
+          disabled={isSaving}
           aria-label={`${user.facilityName}の氏名`}
         />
+        {saveError && (
+          <span className={styles.saveError} role="alert">
+            {saveError}
+          </span>
+        )}
       </td>
       <td>{user.email}</td>
       <td className={styles.actionCell}>
@@ -69,15 +91,16 @@ export const UserRow = ({ user, onSave, onDelete }: UserRowProps) => {
             type="button"
             className={styles.saveButton}
             onClick={handleSave}
-            disabled={!hasChanges}
+            disabled={!hasChanges || isSaving}
             aria-label={`${user.facilityName}の氏名変更を保存`}
           >
-            保存
+            {isSaving ? '保存中...' : '保存'}
           </button>
           <button
             type="button"
             className={styles.deleteButton}
             onClick={handleDelete}
+            disabled={isSaving}
             aria-label={`${user.facilityName}のユーザーを削除`}
           >
             削除

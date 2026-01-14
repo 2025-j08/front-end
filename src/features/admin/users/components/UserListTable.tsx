@@ -13,8 +13,8 @@ export interface UserListTableProps {
   users: User[];
   /** 削除ボタンクリック時のハンドラ */
   onDelete?: (userId: string) => void;
-  /** 保存ボタンクリック時のハンドラ（氏名更新） */
-  onSave?: (userId: string, name: string) => void;
+  /** 保存ボタンクリック時のハンドラ（氏名更新）。成功時はtrue、失敗時はfalseを返す */
+  onSave?: (userId: string, name: string) => Promise<boolean>;
 }
 
 /**
