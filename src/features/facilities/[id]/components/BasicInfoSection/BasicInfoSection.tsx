@@ -94,10 +94,13 @@ export const BasicInfoSection = ({
             <div className={styles.checkboxGroup} role="group" aria-label="施設の種類">
               {DORMITORY_TYPE_OPTIONS.filter((opt) => opt.value !== '').map((option) => {
                 const isChecked = dormitoryType?.includes(option.value as DormitoryType) || false;
+                const checkboxId = `dormitoryType-${option.value}`;
                 return (
-                  <label key={option.value} className={styles.checkboxLabel}>
+                  <label key={option.value} className={styles.checkboxLabel} htmlFor={checkboxId}>
                     <input
                       type="checkbox"
+                      id={checkboxId}
+                      name="dormitoryType"
                       className={styles.checkbox}
                       checked={isChecked}
                       onChange={(e) => {
@@ -105,10 +108,7 @@ export const BasicInfoSection = ({
                         const newValue = e.target.checked
                           ? [...current, option.value as DormitoryType]
                           : current.filter((t) => t !== option.value);
-                        onFieldChange?.(
-                          'dormitoryType',
-                          newValue.length > 0 ? newValue : undefined,
-                        );
+                        onFieldChange?.('dormitoryType', newValue);
                       }}
                     />
                     {option.label}

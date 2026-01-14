@@ -216,7 +216,9 @@ export async function updateFacilityBasicInfo(
     }
   }
 
-  if (dormitory_type && dormitory_type.length > 0) {
+  // dormitory_typeが配列として渡された場合（空配列含む）に更新処理を実行
+  // 空配列の場合は既存の紐付けを全て削除する
+  if (Array.isArray(dormitory_type)) {
     await updateFacilityDormitoryType(supabase, facilityId, dormitory_type);
   }
 }
