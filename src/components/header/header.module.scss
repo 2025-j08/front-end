@@ -5,6 +5,12 @@ $header-max-width: 1200px;
 $header-nav-gap: 32px;
 $header-nav-gap-mobile: 15px;
 
+// ラベルの最大幅（レスポンシブ）
+$menu-label-max-width-tablet: 72px; // 768px以下
+$nav-label-max-width-mobile: 64px; // 480px以下
+$menu-label-max-width-mobile: 60px; // 480px以下
+$nav-label-max-width-small: 54px; // 360px以下
+
 .header {
   width: 100%;
 }
@@ -247,7 +253,7 @@ $header-nav-gap-mobile: 15px;
   }
 
   .icon {
-    font-size: 22px; // アイコンをやや小さく
+    font-size: 22px;
     margin-bottom: 2px;
   }
 
@@ -271,7 +277,7 @@ $header-nav-gap-mobile: 15px;
   .menuTrigger {
     span {
       display: inline;
-      max-width: 72px; // ラベルの最大幅を少し抑制
+      max-width: $menu-label-max-width-tablet;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -301,7 +307,7 @@ $header-nav-gap-mobile: 15px;
   }
 
   .navItem span {
-    max-width: 64px;
+    max-width: $nav-label-max-width-mobile;
   }
 
   .icon {
@@ -309,7 +315,7 @@ $header-nav-gap-mobile: 15px;
   }
 
   .menuTrigger span {
-    max-width: 60px;
+    max-width: $menu-label-max-width-mobile;
   }
 }
 
@@ -323,6 +329,6 @@ $header-nav-gap-mobile: 15px;
   }
 
   .navItem span {
-    max-width: 54px;
+    max-width: $nav-label-max-width-small;
   }
 }
