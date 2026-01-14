@@ -245,7 +245,7 @@ export const Header = () => {
       {/* 下部：ヒーロー画像エリア */}
       <div className={styles.heroArea}>
         <Image
-          src="/images/herotest.png"
+          src="/images/herotest.webp"
           alt="メインビジュアル"
           fill
           style={{ objectFit: 'cover' }}
