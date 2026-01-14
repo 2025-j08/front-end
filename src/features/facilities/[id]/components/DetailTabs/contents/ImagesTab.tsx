@@ -35,6 +35,11 @@ type ImagesTabProps = {
 /**
  * 画像タブコンポーネント
  * 施設のサムネイルとギャラリー画像を表示・管理
+ *
+ * 遅延保存方式:
+ * - 画像選択時: プレビュー表示のみ（通信なし）
+ * - 削除ボタン: UIから非表示にするのみ（通信なし）
+ * - 保存ボタン: 一括でアップロード・削除を実行
  */
 export const ImagesTab = ({
   images = [],
@@ -43,127 +48,101 @@ export const ImagesTab = ({
   onDelete,
   onSave,
   isSaving = false,
-  isDirty = false,
 }: ImagesTabProps) => {
   // 画像タブには常にデータが存在する（空配列でも表示可能）ため、
-  // 他のタブと異なり条件分岐は不要ですが、一貫性のために理由を明記しています。
-  // (isEditMode || images)
+  // 他のタブと異なり条件分岐は不要
 
+  // 保存待ちの新規画像
   const [pendingImages, setPendingImages] = useState<PendingImage[]>([]);
+  // 削除待ちの画像ID
   const [deleteIds, setDeleteIds] = useState<number[]>([]);
+  // ドラッグ状態
   const [dragOver, setDragOver] = useState<FacilityImageType | null>(null);
+  // 保存中フラグ
+  const [isBatchSaving, setIsBatchSaving] = useState(false);
 
-  // ダイアログ管理（カスタムフック）
-  const { dialogConfig, showDialog, closeDialog, showError } = useConfirmDialog();
+  // ダイアログ管理
+  const { dialogConfig, closeDialog, showError } = useConfirmDialog();
 
-  // 保存ハンドラー（一括実行用）
-  // 既存の onSave (TabSaveButtonから呼ばれる) はこの内部ロジックを使用しない（Props経由で上位から呼ばれるため）
-  // ここでは上位コンポーネントがこれらのStateを受け取って処理することを想定しているが、
-  // 現在の実装では onSave は親から渡される無名関数（saveHandlers.images）である。
-  // そのため、pendingImages と deleteIds を親に渡すか、
-  // あるいはここで saveHandlers.images の中身をオーバーライドする必要がある。
-  // しかし、TabSaveButton は onSave を実行するだけ。
-
-  // NOTE: ここでは「保存ボタンが押されたとき」に実行されるアクションとして
-  // ImagesTab内部で pending 状態を解決するロジックを実装したいが、
-  // TabSaveButton は単に props.onSave を呼ぶだけである。
-  // "上位コンポーネントで一括保存" という要件であれば、上位で state を持つべきだが、
-  // 今回は "ImagesTabの保存ボタン" で完結させるため、
-  // 親から渡された onSave をラップする形にするか、
-  // あるいは useFacilityImageUpload の saveAllImages をここで直接使う形にリファクタリングする。
-
-  // しかし、ImagesTabのProps定義を変えずに実装するには、
-  // 親からの onSave が呼ばれる前に、ここでの処理を割り込ませる必要がある。
-  // TabSaveButton の onSave に、ここでの handleSave を渡せばよい。
-
-  // 既存画像を取得（削除対象を除外）
+  // 削除対象を除外した有効な画像
   const validImages = images.filter((img) => !deleteIds.includes(img.id));
-
   const thumbnail = validImages.find((img) => img.imageType === 'thumbnail');
   const galleryImages = validImages
     .filter((img) => img.imageType === 'gallery')
     .sort((a, b) => a.displayOrder - b.displayOrder);
 
-  // ファイル選択ハンドラー
+  // 変更があるかどうか
+  const hasChanges = pendingImages.length > 0 || deleteIds.length > 0;
+
+  // ファイル選択ハンドラー（プレビュー追加のみ、アップロードしない）
   const handleFileSelect = useCallback(
     async (files: FileList | null, imageType: FacilityImageType) => {
-      if (!files || files.length === 0 || !onUpload) return;
+      if (!files || files.length === 0) return;
 
-      const file = files[0];
-      const validation = validateImageFile(file);
+      const fileArray = Array.from(files);
+      const newPendings: PendingImage[] = [];
 
-      if (!validation.isValid) {
-        showError(validation.error || '無効なファイルです');
-        return;
-      }
+      for (const file of fileArray) {
+        const validation = validateImageFile(file);
+        if (!validation.isValid) {
+          showError(validation.error || '無効なファイルです');
+          continue;
+        }
 
-      // 表示順序を決定
-      let displayOrder = 0;
-      if (imageType === 'gallery') {
-        const usedOrders = new Set([
-          ...galleryImages.map((img) => img.displayOrder),
-          ...pendingImages.filter((p) => p.imageType === 'gallery').map((p) => p.displayOrder),
-        ]);
-
-        // 0, 1, 2 の順で空きを探す
-        let found = false;
-        for (let i = 0; i < 3; i++) {
-          if (!usedOrders.has(i)) {
-            displayOrder = i;
-            found = true;
-            break;
+        // サムネイルの場合、既存またはpendingがあればスキップ
+        if (imageType === 'thumbnail') {
+          const hasThumbnail =
+            thumbnail ||
+            pendingImages.some((p) => p.imageType === 'thumbnail') ||
+            newPendings.some((p) => p.imageType === 'thumbnail');
+          if (hasThumbnail) {
+            showError('サムネイルは1枚のみです。既存を削除してから追加してください。');
+            continue;
           }
         }
 
-        if (!found) {
-          showError('ギャラリー画像は最大3枚までです。');
-          return;
+        // ギャラリーの場合、表示順序を決定
+        let displayOrder = 0;
+        if (imageType === 'gallery') {
+          const usedOrders = new Set([
+            ...galleryImages.map((img) => img.displayOrder),
+            ...pendingImages.filter((p) => p.imageType === 'gallery').map((p) => p.displayOrder),
+            ...newPendings.filter((p) => p.imageType === 'gallery').map((p) => p.displayOrder),
+          ]);
+
+          let found = false;
+          for (let i = 0; i < 3; i++) {
+            if (!usedOrders.has(i)) {
+              displayOrder = i;
+              found = true;
+              break;
+            }
+          }
+
+          if (!found) {
+            showError('ギャラリー画像は最大3枚までです。');
+            continue;
+          }
         }
-      }
 
-      const pendingId = `pending-${Date.now()}`;
-      const previewUrl = await createImagePreview(file);
+        const pendingId = `pending-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        const previewUrl = await createImagePreview(file);
 
-      // プレビュー追加
-      setPendingImages((prev) => [
-        ...prev,
-        {
+        newPendings.push({
           id: pendingId,
           imageType,
           displayOrder,
           previewUrl,
           file,
-          isUploading: true,
-        },
-      ]);
-
-      try {
-        // WebP変換してアップロード
-        const webpBlob = await convertToWebP(file, imageType);
-        const webpFile = new File([webpBlob], file.name.replace(/\.[^.]+$/, '.webp'), {
-          type: 'image/webp',
+          isUploading: false, // まだアップロードしない
         });
+      }
 
-        await onUpload(imageType, webpFile, displayOrder);
-
-        // 成功したら pending から削除
-        setPendingImages((prev) => prev.filter((p) => p.id !== pendingId));
-      } catch (error) {
-        // エラー表示
-        setPendingImages((prev) =>
-          prev.map((p) =>
-            p.id === pendingId
-              ? {
-                  ...p,
-                  isUploading: false,
-                  error: error instanceof Error ? error.message : 'アップロードに失敗しました',
-                }
-              : p,
-          ),
-        );
+      if (newPendings.length > 0) {
+        setPendingImages((prev) => [...prev, ...newPendings]);
       }
     },
-    [onUpload, galleryImages, pendingImages, showError],
+    [thumbnail, galleryImages, pendingImages, showError],
   );
 
   // ドラッグ&ドロップハンドラー
@@ -186,41 +165,80 @@ export const ImagesTab = ({
     [handleFileSelect],
   );
 
-  // 画像削除ハンドラー
-  const handleDelete = useCallback(
-    (imageId: number) => {
-      if (!onDelete) return;
+  // 既存画像の削除予約（UIから非表示にするだけ）
+  const handleDelete = useCallback((imageId: number) => {
+    setDeleteIds((prev) => [...prev, imageId]);
+  }, []);
 
-      showDialog({
-        title: '削除の確認',
-        message: 'この画像を削除しますか？',
-        isDanger: true,
-        confirmLabel: '削除する',
-        onConfirm: async () => {
-          try {
-            await onDelete(imageId);
-            closeDialog();
-          } catch (error) {
-            closeDialog();
-            showError(error instanceof Error ? error.message : '削除に失敗しました');
-          }
-        },
-      });
-    },
-    [onDelete, showDialog, closeDialog, showError],
-  );
-
-  // pending画像の削除
+  // pending画像の削除（まだアップロードしていないので単純に削除）
   const handlePendingDelete = useCallback((pendingId: string) => {
     setPendingImages((prev) => prev.filter((p) => p.id !== pendingId));
   }, []);
+
+  // 削除のキャンセル（復元）
+  const handleRestoreDelete = useCallback((imageId: number) => {
+    setDeleteIds((prev) => prev.filter((id) => id !== imageId));
+  }, []);
+
+  // 一括保存処理
+  const handleBatchSave = useCallback(async () => {
+    if (!hasChanges) {
+      // 変更がなければ親のonSaveだけ呼ぶ
+      if (onSave) await onSave();
+      return;
+    }
+
+    setIsBatchSaving(true);
+
+    try {
+      // 1. 削除処理
+      if (deleteIds.length > 0 && onDelete) {
+        for (const id of deleteIds) {
+          await onDelete(id);
+        }
+      }
+
+      // 2. アップロード処理
+      if (pendingImages.length > 0 && onUpload) {
+        // アップロード中表示
+        setPendingImages((prev) => prev.map((p) => ({ ...p, isUploading: true })));
+
+        for (const pending of pendingImages) {
+          try {
+            // WebP変換
+            const webpBlob = await convertToWebP(pending.file, pending.imageType);
+            const webpFile = new File([webpBlob], pending.file.name.replace(/\.[^.]+$/, '.webp'), {
+              type: 'image/webp',
+            });
+
+            await onUpload(pending.imageType, webpFile, pending.displayOrder);
+          } catch (e) {
+            console.error(`Upload failed for ${pending.file.name}`, e);
+            throw e;
+          }
+        }
+      }
+
+      // 3. 成功したらステートをクリア
+      setDeleteIds([]);
+      setPendingImages([]);
+
+      // 4. 親の保存処理
+      if (onSave) await onSave();
+    } catch (error) {
+      showError(error instanceof Error ? error.message : '保存処理中にエラーが発生しました');
+      // エラー時はアップロード中フラグを戻す
+      setPendingImages((prev) => prev.map((p) => ({ ...p, isUploading: false })));
+    } finally {
+      setIsBatchSaving(false);
+    }
+  }, [hasChanges, deleteIds, pendingImages, onDelete, onUpload, onSave, showError]);
 
   // 閲覧モード
   if (!isEditMode) {
     return (
       <div className={styles.tabContentWrapper}>
         <div className={imageStyles.imagesContainer}>
-          {/* ギャラリー */}
           <section className={imageStyles.section}>
             <h3 className={styles.contentTitle}>詳細画面用ギャラリー</h3>
             {galleryImages.length > 0 ? (
@@ -233,7 +251,7 @@ export const ImagesTab = ({
                       fill
                       sizes="(max-width: 768px) 100vw, 400px"
                       className={imageStyles.galleryImage}
-                      unoptimized
+                      unoptimized={process.env.NODE_ENV === 'development'}
                     />
                   </div>
                 ))}
@@ -254,7 +272,7 @@ export const ImagesTab = ({
     <>
       <div className={styles.tabContentWrapper}>
         <div className={imageStyles.imagesContainer}>
-          {/* サムネイルアップロード */}
+          {/* サムネイルセクション */}
           <section className={imageStyles.section}>
             <h3 className={styles.contentTitle}>一覧画面用サムネイル（1枚）</h3>
             <p className={imageStyles.helpText}>
@@ -271,19 +289,19 @@ export const ImagesTab = ({
                     fill
                     sizes="(max-width: 768px) 100vw, 400px"
                     className={imageStyles.thumbnailImage}
-                    unoptimized
+                    unoptimized={process.env.NODE_ENV === 'development'}
                   />
                 </div>
                 <button
                   type="button"
                   className={imageStyles.deleteButton}
                   onClick={() => handleDelete(thumbnail.id)}
-                  aria-label="サムネイル画像を削除"
+                  aria-label="サムネイル画像を削除予約"
                 >
-                  削除
+                  削除（保存時に反映）
                 </button>
               </div>
-            ) : (
+            ) : pendingImages.some((p) => p.imageType === 'thumbnail') ? null : (
               <ImageDropZone
                 isDragOver={dragOver === 'thumbnail'}
                 onFileSelect={(files) => handleFileSelect(files, 'thumbnail')}
@@ -306,9 +324,39 @@ export const ImagesTab = ({
                   imageClassName={imageStyles.thumbnailImage}
                 />
               ))}
+
+            {/* 削除予約中のサムネイル（復元可能） */}
+            {images
+              .filter((img) => img.imageType === 'thumbnail' && deleteIds.includes(img.id))
+              .map((img) => (
+                <div
+                  key={img.id}
+                  className={`${imageStyles.uploadedItem} ${imageStyles.deletePending}`}
+                >
+                  <div className={imageStyles.thumbnailWrapper}>
+                    <Image
+                      src={img.imageUrl}
+                      alt="削除予定: 施設サムネイル"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 400px"
+                      className={imageStyles.thumbnailImage}
+                      style={{ opacity: 0.5 }}
+                      unoptimized={process.env.NODE_ENV === 'development'}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    className={imageStyles.restoreButton}
+                    onClick={() => handleRestoreDelete(img.id)}
+                    aria-label="サムネイル画像の削除を取り消し"
+                  >
+                    削除を取り消す
+                  </button>
+                </div>
+              ))}
           </section>
 
-          {/* ギャラリーアップロード */}
+          {/* ギャラリーセクション */}
           <section className={imageStyles.section}>
             <h3 className={styles.contentTitle}>詳細画面用ギャラリー（最大3枚）</h3>
             <p className={imageStyles.helpText}>
@@ -327,19 +375,49 @@ export const ImagesTab = ({
                       fill
                       sizes="(max-width: 768px) 100vw, 300px"
                       className={imageStyles.galleryImage}
-                      unoptimized
+                      unoptimized={process.env.NODE_ENV === 'development'}
                     />
                   </div>
                   <button
                     type="button"
                     className={imageStyles.deleteButton}
                     onClick={() => handleDelete(img.id)}
-                    aria-label={`ギャラリー画像${img.displayOrder + 1}を削除`}
+                    aria-label={`ギャラリー画像${img.displayOrder + 1}を削除予約`}
                   >
-                    削除
+                    削除（保存時に反映）
                   </button>
                 </div>
               ))}
+
+              {/* 削除予約の画像（復元可能） */}
+              {images
+                .filter((img) => img.imageType === 'gallery' && deleteIds.includes(img.id))
+                .map((img) => (
+                  <div
+                    key={img.id}
+                    className={`${imageStyles.uploadedItem} ${imageStyles.deletePending}`}
+                  >
+                    <div className={imageStyles.galleryItemWrapper}>
+                      <Image
+                        src={img.imageUrl}
+                        alt={`削除予定: 施設画像 ${img.displayOrder + 1}`}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 300px"
+                        className={imageStyles.galleryImage}
+                        style={{ opacity: 0.5 }}
+                        unoptimized={process.env.NODE_ENV === 'development'}
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      className={imageStyles.restoreButton}
+                      onClick={() => handleRestoreDelete(img.id)}
+                      aria-label={`ギャラリー画像${img.displayOrder + 1}の削除を取り消し`}
+                    >
+                      削除を取り消す
+                    </button>
+                  </div>
+                ))}
 
               {/* pending のギャラリー画像 */}
               {pendingImages
@@ -366,13 +444,20 @@ export const ImagesTab = ({
                   onDragLeave={handleDragLeave}
                   onDrop={(e) => handleDrop(e, 'gallery')}
                   ariaLabel="ギャラリー画像を追加"
+                  multiple
                 />
               )}
             </div>
           </section>
         </div>
       </div>
-      {onSave && <TabSaveButton onSave={onSave} isSaving={isSaving} isDirty={isDirty} />}
+
+      {/* 保存ボタン */}
+      <TabSaveButton
+        onSave={handleBatchSave}
+        isSaving={isSaving || isBatchSaving}
+        isDirty={hasChanges}
+      />
 
       <ConfirmDialog
         isOpen={dialogConfig.isOpen}

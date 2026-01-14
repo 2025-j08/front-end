@@ -25,21 +25,30 @@ export const PendingImageItem = ({
       <div className={wrapperClassName}>
         <Image
           src={pending.previewUrl}
-          alt="アップロード中"
+          alt="追加予定の画像"
           fill
           sizes={sizes}
           className={imageClassName}
-          unoptimized
+          unoptimized={process.env.NODE_ENV === 'development'}
         />
         {pending.isUploading && <div className={styles.uploadingOverlay}>アップロード中...</div>}
       </div>
-      {pending.error && (
+      {pending.error ? (
         <div className={styles.errorMessage}>
           <span>{pending.error}</span>
           <button type="button" onClick={() => onDelete(pending.id)}>
             削除
           </button>
         </div>
+      ) : (
+        <button
+          type="button"
+          className={styles.deleteButton}
+          onClick={() => onDelete(pending.id)}
+          aria-label="追加予定の画像を取り消し"
+        >
+          追加を取り消す
+        </button>
       )}
     </div>
   );

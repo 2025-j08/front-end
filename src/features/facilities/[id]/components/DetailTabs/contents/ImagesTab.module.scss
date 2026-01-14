@@ -229,3 +229,32 @@
     }
   }
 }
+
+// 削除予約中の画像
+.deletePending {
+  opacity: 0.6;
+}
+
+// 復元ボタン
+.restoreButton {
+  padding: 8px 16px;
+  background-color: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+
+  &:hover {
+    background-color: var(--primary);
+    color: colors.$white;
+  }
+
+  &:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
