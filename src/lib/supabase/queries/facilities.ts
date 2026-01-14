@@ -17,6 +17,7 @@ import type {
   AnnexFacility,
   FacilityListItem,
   DormitoryType,
+  FacilityImage,
 } from '@/types/facility';
 import type { FacilityLocation } from '@/types/facilityLocation';
 
@@ -101,6 +102,10 @@ const FACILITY_LIST_SELECT = `
     facility_types (
       name
     )
+  ),
+  facility_images (
+    image_url,
+    image_type
   )
 `;
 
@@ -111,6 +116,10 @@ const FACILITY_LIST_SELECT_WITH_TYPE_FILTER = `
     facility_types!inner (
       name
     )
+  ),
+  facility_images (
+    image_url,
+    image_type
   )
 `;
 
@@ -234,13 +243,18 @@ export async function getFacilityList(
       : null;
     const facilityType = extractFacilityTypeName(firstRelation ?? null);
 
+    // サムネイル画像を取得（image_type='thumbnail' のもののみ）
+    type ImageData = { image_url: string; image_type: string };
+    const images = facility.facility_images as ImageData[] | null;
+    const thumbnailImage = images?.find((img) => img.image_type === 'thumbnail');
+
     return {
       id: facility.id,
       name: facility.name,
       postalCode: facility.postal_code,
       address: `${facility.prefecture}${facility.city}${facility.address_detail}`,
       phone: facility.phone,
-      imagePath: null, // 画像は現状未対応
+      imagePath: thumbnailImage?.image_url || null,
       prefecture: facility.prefecture,
       city: facility.city,
       facilityType,
@@ -516,6 +530,35 @@ async function getFacilityDetailTables(id: number) {
 }
 
 /**
+ * 施設画像を取得
+ * @param id - 施設ID
+ * @returns 施設画像の配列
+ */
+async function getFacilityImageData(id: number): Promise<FacilityImage[]> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from('facility_images')
+    .select('id, image_type, image_url, display_order')
+    .eq('facility_id', id)
+    .order('image_type')
+    .order('display_order');
+
+  if (error) {
+    // 画像取得失敗は致命的ではないので空配列を返す
+    console.warn('施設画像の取得に失敗しました:', error.message);
+    return [];
+  }
+
+  return (data || []).map((img) => ({
+    id: img.id,
+    imageUrl: img.image_url,
+    imageType: img.image_type as 'thumbnail' | 'gallery',
+    displayOrder: img.display_order,
+  }));
+}
+
+/**
  * 施設の詳細情報を取得する
  * facilities テーブルと各詳細テーブルを結合して1つのオブジェクトにまとめる
  *
@@ -524,11 +567,12 @@ async function getFacilityDetailTables(id: number) {
  * @throws データ取得エラー時は Error をスロー
  */
 export async function getFacilityDetail(id: number): Promise<FacilityDetail | null> {
-  // 1. 基本情報、施設種類、詳細テーブルを並列取得
-  const [facility, dormitoryType, detailTables] = await Promise.all([
+  // 1. 基本情報、施設種類、詳細テーブル、画像を並列取得
+  const [facility, dormitoryType, detailTables, images] = await Promise.all([
     getFacilityBasicInfo(id),
     getFacilityTypes(id),
     getFacilityDetailTables(id),
+    getFacilityImageData(id),
   ]);
 
   if (!facility) {
@@ -625,6 +669,7 @@ export async function getFacilityDetail(id: number): Promise<FacilityDetail | nu
           freeText: other.free_text || undefined,
         }
       : undefined,
+    images: images.length > 0 ? images : undefined,
   };
 
   return facilityDetail;
