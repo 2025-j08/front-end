@@ -106,7 +106,12 @@ export const useFacilityTabEdit = (
   onSaveSuccess?: (updatedData: FacilityDetail) => void,
 ): UseFacilityTabEditReturn => {
   const [state, setState] = useState<TabEditState>({
-    formData: initialData ? { ...initialData } : {},
+    formData: initialData
+      ? (() => {
+          const { images, ...rest } = initialData;
+          return rest;
+        })()
+      : {},
     dirtyMap: new Map(),
     isSaving: false,
     errors: {},
@@ -116,7 +121,10 @@ export const useFacilityTabEdit = (
   useEffect(() => {
     if (initialData) {
       setState({
-        formData: { ...initialData },
+        formData: (() => {
+          const { images, ...rest } = initialData;
+          return rest;
+        })(),
         dirtyMap: new Map(),
         isSaving: false,
         errors: {},

@@ -132,7 +132,7 @@ export const FacilityEdit = ({ id }: Props) => {
 
   // 編集中のデータとマージ
   // 注意: images は formData ではなく displayData から取得（画像は別途管理されるため）
-  const mergedData = { ...displayData, ...formData, images: displayData.images };
+  const mergedData = { ...displayData, ...formData };
 
   return (
     <div className={styles.container}>
