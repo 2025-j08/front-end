@@ -111,6 +111,7 @@ export const FacilityEdit = ({ id }: Props) => {
         provisionalCapacity={mergedData.provisionalCapacity}
         annexFacilities={mergedData.annexFacilities}
         phone={mergedData.phone}
+        corporation={mergedData.corporation}
         isEditMode={true}
         onFieldChange={handleFieldChange}
         getError={getError}

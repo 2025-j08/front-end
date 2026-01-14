@@ -15,6 +15,7 @@ type BasicInfoSectionProps = {
   provisionalCapacity?: number;
   annexFacilities?: AnnexFacility[];
   phone?: string;
+  corporation?: string;
   /** 編集モードかどうか */
   isEditMode?: boolean;
   /** フィールド更新ハンドラー */
@@ -41,6 +42,7 @@ export const BasicInfoSection = ({
   provisionalCapacity,
   annexFacilities,
   phone,
+  corporation,
   isEditMode = false,
   onFieldChange,
   getError = () => undefined,
@@ -166,6 +168,22 @@ export const BasicInfoSection = ({
               value={phone || ''}
               onChange={(e) => onFieldChange?.('phone', e.target.value)}
               placeholder="例: 03-1234-5678"
+            />
+          </div>
+        )}
+
+        {isEditMode && (
+          <div className={styles.infoCard}>
+            <label className={styles.label} htmlFor="corporation">
+              法人名
+            </label>
+            <input
+              type="text"
+              id="corporation"
+              className={styles.editInput}
+              value={corporation || ''}
+              onChange={(e) => onFieldChange?.('corporation', e.target.value)}
+              placeholder="例: 社会福祉法人○○会"
             />
           </div>
         )}
