@@ -168,3 +168,19 @@
   text-align: center;
   padding: 2rem;
 }
+
+.inputError {
+  border-color: colors.$action-delete;
+
+  &:focus {
+    outline-color: colors.$action-delete;
+    border-color: colors.$action-delete;
+  }
+}
+
+.errorMessage {
+  display: block;
+  color: colors.$action-delete;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}

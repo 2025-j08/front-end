@@ -5,8 +5,16 @@ import Link from 'next/link';
 
 import type { FacilityManagementItem } from '@/lib/supabase/queries/facilities';
 import { KINKI_PREFECTURES } from '@/const/searchConditions';
+import { VALIDATION_PATTERNS } from '@/const/validation';
 
 import styles from '../styles/FacilityManagementTable.module.scss';
+
+/** バリデーションエラーの型 */
+interface ValidationErrors {
+  name?: string;
+  postalCode?: string;
+  city?: string;
+}
 
 /** 更新データの型 */
 export interface FacilityUpdateData {
@@ -48,6 +56,7 @@ const FacilityRow = ({
   const [city, setCity] = useState(facility.city);
   const [addressDetail, setAddressDetail] = useState(facility.addressDetail);
   const [isSaving, setIsSaving] = useState(false);
+  const [errors, setErrors] = useState<ValidationErrors>({});
 
   // 変更があるかどうか判定
   const hasChanges =
@@ -57,18 +66,40 @@ const FacilityRow = ({
     city !== facility.city ||
     addressDetail !== facility.addressDetail;
 
+  // バリデーション
+  const validate = (): boolean => {
+    const newErrors: ValidationErrors = {};
+
+    if (!name.trim()) {
+      newErrors.name = '施設名を入力してください';
+    }
+    if (!postalCode.trim()) {
+      newErrors.postalCode = '郵便番号を入力してください';
+    } else if (!VALIDATION_PATTERNS.POSTAL_CODE.test(postalCode.trim())) {
+      newErrors.postalCode = '郵便番号の形式が正しくありません（例: 123-4567）';
+    }
+    if (!city.trim()) {
+      newErrors.city = '市区町村を入力してください';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSave = async () => {
     if (!hasChanges || isSaving) return;
+    if (!validate()) return;
 
     setIsSaving(true);
     try {
       await onSave(facility.id, {
-        name,
-        postalCode,
+        name: name.trim(),
+        postalCode: postalCode.trim(),
         prefecture,
-        city,
-        addressDetail,
+        city: city.trim(),
+        addressDetail: addressDetail.trim(),
       });
+      setErrors({});
     } finally {
       setIsSaving(false);
     }
@@ -79,21 +110,25 @@ const FacilityRow = ({
       <td className={styles.facilityNameCol}>
         <input
           type="text"
-          className={styles.nameInput}
+          className={`${styles.nameInput} ${errors.name ? styles.inputError : ''}`}
           value={name}
           onChange={(e) => setName(e.target.value)}
           aria-label={`${facility.name}の施設名`}
+          aria-invalid={!!errors.name}
         />
+        {errors.name && <span className={styles.errorMessage}>{errors.name}</span>}
       </td>
       <td className={styles.postalCodeCol}>
         <input
           type="text"
-          className={styles.postalCodeInput}
+          className={`${styles.postalCodeInput} ${errors.postalCode ? styles.inputError : ''}`}
           value={postalCode}
           onChange={(e) => setPostalCode(e.target.value)}
           placeholder="000-0000"
           aria-label={`${facility.name}の郵便番号`}
+          aria-invalid={!!errors.postalCode}
         />
+        {errors.postalCode && <span className={styles.errorMessage}>{errors.postalCode}</span>}
       </td>
       <td className={styles.prefectureCol}>
         <select
@@ -112,12 +147,14 @@ const FacilityRow = ({
       <td className={styles.cityCol}>
         <input
           type="text"
-          className={styles.cityInput}
+          className={`${styles.cityInput} ${errors.city ? styles.inputError : ''}`}
           value={city}
           onChange={(e) => setCity(e.target.value)}
           placeholder="市区町村"
           aria-label={`${facility.name}の市区町村`}
+          aria-invalid={!!errors.city}
         />
+        {errors.city && <span className={styles.errorMessage}>{errors.city}</span>}
       </td>
       <td className={styles.addressDetailCol}>
         <input
