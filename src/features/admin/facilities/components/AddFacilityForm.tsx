@@ -4,18 +4,10 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { FormField, LoadingOverlay, SuccessOverlay } from '@/components/form';
+import { KINKI_PREFECTURES } from '@/const/searchConditions';
 import type { KinkiPrefecture } from '@/types/facility';
 
 import styles from '../styles/AddFacilityForm.module.scss';
-
-const KINKI_PREFECTURES: KinkiPrefecture[] = [
-  '大阪府',
-  '京都府',
-  '滋賀県',
-  '奈良県',
-  '兵庫県',
-  '和歌山県',
-];
 
 interface FormData {
   name: string;

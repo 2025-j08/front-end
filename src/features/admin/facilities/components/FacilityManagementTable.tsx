@@ -4,18 +4,9 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 
 import type { FacilityManagementItem } from '@/lib/supabase/queries/facilities';
-import type { KinkiPrefecture } from '@/types/facility';
+import { KINKI_PREFECTURES } from '@/const/searchConditions';
 
 import styles from '../styles/FacilityManagementTable.module.scss';
-
-const KINKI_PREFECTURES: KinkiPrefecture[] = [
-  '大阪府',
-  '京都府',
-  '滋賀県',
-  '奈良県',
-  '兵庫県',
-  '和歌山県',
-];
 
 /** 更新データの型 */
 export interface FacilityUpdateData {

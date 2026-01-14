@@ -7,16 +7,8 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { createServerClient } from '@/lib/supabase/server';
 import { createFacility, type CreateFacilityData } from '@/lib/supabase/mutations/facilities';
+import { KINKI_PREFECTURES } from '@/const/searchConditions';
 import type { KinkiPrefecture } from '@/types/facility';
-
-const KINKI_PREFECTURES: KinkiPrefecture[] = [
-  '大阪府',
-  '京都府',
-  '滋賀県',
-  '奈良県',
-  '兵庫県',
-  '和歌山県',
-];
 
 /**
  * リクエストボディの検証
