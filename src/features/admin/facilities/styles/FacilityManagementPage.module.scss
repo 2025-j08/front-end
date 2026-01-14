@@ -14,3 +14,37 @@
   padding-bottom: 0.5rem;
   width: 100%;
 }
+
+.searchContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.searchInput {
+  flex: 1;
+  max-width: 400px;
+  padding: 10px 16px;
+  border: 1px solid colors.$border-gray;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: colors.$text-primary;
+  background-color: colors.$bg-white;
+  transition: border-color 0.2s ease;
+
+  &::placeholder {
+    color: colors.$text-secondary;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: colors.$primary-color;
+  }
+}
+
+.searchResult {
+  font-size: 0.875rem;
+  color: colors.$text-secondary;
+  white-space: nowrap;
+}

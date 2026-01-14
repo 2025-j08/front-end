@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 
 import {
@@ -30,6 +30,18 @@ export default function FacilityManagementPage() {
   // 完了通知の状態
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+
+  // 施設名検索の状態管理
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // 施設名でフィルタリングされた施設一覧
+  const filteredFacilities = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return facilities;
+    }
+    const query = searchQuery.toLowerCase();
+    return facilities.filter((facility) => facility.name.toLowerCase().includes(query));
+  }, [facilities, searchQuery]);
 
   // 施設一覧を取得
   const fetchFacilities = useCallback(async () => {
@@ -157,8 +169,24 @@ export default function FacilityManagementPage() {
     <div className={styles.container}>
       <h1 className={styles.title}>施設管理</h1>
 
+      <div className={styles.searchContainer}>
+        <input
+          type="text"
+          className={styles.searchInput}
+          placeholder="施設名で検索..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          aria-label="施設名で検索"
+        />
+        {searchQuery && (
+          <span className={styles.searchResult}>
+            {filteredFacilities.length}件 / {facilities.length}件
+          </span>
+        )}
+      </div>
+
       <FacilityManagementTable
-        facilities={facilities}
+        facilities={filteredFacilities}
         onSave={handleSave}
         onDelete={onClickDelete}
       />
