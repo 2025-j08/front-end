@@ -11,47 +11,72 @@ import { KINKI_PREFECTURES } from '@/const/searchConditions';
 import type { KinkiPrefecture } from '@/types/facility';
 
 /**
+ * オブジェクトかどうかを判定する型ガード
+ */
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+/**
+ * 文字列かつ空でないかを判定する型ガード
+ */
+function isNonEmptyString(value: unknown): value is string {
+  return typeof value === 'string' && value.trim() !== '';
+}
+
+/**
+ * 関西6府県かを判定する型ガード
+ */
+function isKinkiPrefecture(value: unknown): value is KinkiPrefecture {
+  return typeof value === 'string' && (KINKI_PREFECTURES as readonly string[]).includes(value);
+}
+
+/**
  * リクエストボディの検証
  */
 function validateCreateFacilityRequest(
   body: unknown,
 ): { valid: true; data: CreateFacilityData } | { valid: false; error: string } {
-  if (!body || typeof body !== 'object') {
+  if (!isRecord(body)) {
     return { valid: false, error: 'リクエストボディが不正です' };
   }
 
-  const data = body as Record<string, unknown>;
+  // 必須フィールドの検証
+  const { name, corporation, postal_code, prefecture, city, address_detail } = body;
 
-  // 必須項目のチェック
-  const requiredFields = [
-    'name',
-    'corporation',
-    'postal_code',
-    'prefecture',
-    'city',
-    'address_detail',
-  ] as const;
-
-  for (const field of requiredFields) {
-    if (!data[field] || typeof data[field] !== 'string' || data[field].trim() === '') {
-      return { valid: false, error: `${field}は必須です` };
-    }
+  if (!isNonEmptyString(name)) {
+    return { valid: false, error: 'nameは必須です' };
+  }
+  if (!isNonEmptyString(corporation)) {
+    return { valid: false, error: 'corporationは必須です' };
+  }
+  if (!isNonEmptyString(postal_code)) {
+    return { valid: false, error: 'postal_codeは必須です' };
+  }
+  if (!isNonEmptyString(prefecture)) {
+    return { valid: false, error: 'prefectureは必須です' };
+  }
+  if (!isNonEmptyString(city)) {
+    return { valid: false, error: 'cityは必須です' };
+  }
+  if (!isNonEmptyString(address_detail)) {
+    return { valid: false, error: 'address_detailは必須です' };
   }
 
   // 都道府県の検証
-  if (!KINKI_PREFECTURES.includes(data.prefecture as KinkiPrefecture)) {
+  if (!isKinkiPrefecture(prefecture)) {
     return { valid: false, error: '都道府県は関西6府県から選択してください' };
   }
 
   return {
     valid: true,
     data: {
-      name: (data.name as string).trim(),
-      corporation: (data.corporation as string).trim(),
-      postal_code: (data.postal_code as string).trim(),
-      prefecture: data.prefecture as KinkiPrefecture,
-      city: (data.city as string).trim(),
-      address_detail: (data.address_detail as string).trim(),
+      name: name.trim(),
+      corporation: corporation.trim(),
+      postal_code: postal_code.trim(),
+      prefecture,
+      city: city.trim(),
+      address_detail: address_detail.trim(),
     },
   };
 }

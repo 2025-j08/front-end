@@ -30,6 +30,27 @@ interface FacilityTypeRelation {
 }
 
 /**
+ * FacilityTypeRelation かどうかを判定する型ガード
+ */
+function isFacilityTypeRelation(value: unknown): value is FacilityTypeRelation {
+  if (typeof value !== 'object' || value === null) return false;
+  return 'facility_types' in value;
+}
+
+/**
+ * FacilityTypeRelation の配列かどうかを判定する型ガード
+ */
+function isFacilityTypeRelationArray(
+  value: unknown,
+): value is FacilityTypeRelation[] | FacilityTypeRelation | null {
+  if (value === null) return true;
+  if (Array.isArray(value)) {
+    return value.every(isFacilityTypeRelation);
+  }
+  return isFacilityTypeRelation(value);
+}
+
+/**
  * リレーション結果から施設種類名を取得するヘルパー
  */
 function extractFacilityTypeName(relation: FacilityTypeRelation | null): string | undefined {
@@ -207,9 +228,10 @@ export async function getFacilityList(
   // データを FacilityListItem 型に変換
   const facilities: FacilityListItem[] = (data || []).map((facility) => {
     // 施設種類を取得（最初の1件のみ）
-    const firstRelation = extractFirstFromRelation(
-      facility.facility_facility_types as FacilityTypeRelation[] | FacilityTypeRelation | null,
-    );
+    const relationData = facility.facility_facility_types;
+    const firstRelation = isFacilityTypeRelationArray(relationData)
+      ? extractFirstFromRelation(relationData)
+      : null;
     const facilityType = extractFacilityTypeName(firstRelation ?? null);
 
     return {
@@ -333,10 +355,37 @@ export async function getFacilityLocations(): Promise<FacilityLocation[]> {
   // Supabaseのリレーションは配列または単一オブジェクトで返される
   type AccessData = { lat: number; lng: number } | { lat: number; lng: number }[] | null;
 
+  /**
+   * AccessData かどうかを判定する型ガード
+   */
+  function isAccessData(value: unknown): value is AccessData {
+    if (value === null) return true;
+    if (Array.isArray(value)) {
+      return value.every(
+        (item) =>
+          typeof item === 'object' &&
+          item !== null &&
+          'lat' in item &&
+          'lng' in item &&
+          typeof item.lat === 'number' &&
+          typeof item.lng === 'number',
+      );
+    }
+    return (
+      typeof value === 'object' &&
+      value !== null &&
+      'lat' in value &&
+      'lng' in value &&
+      typeof (value as { lat: unknown }).lat === 'number' &&
+      typeof (value as { lng: unknown }).lng === 'number'
+    );
+  }
+
   // 緯度経度が設定されている施設のみを返す
   return (data || [])
     .map((facility) => {
-      const accessItem = extractFirstFromRelation(facility.facility_access as AccessData);
+      const accessData = facility.facility_access;
+      const accessItem = isAccessData(accessData) ? extractFirstFromRelation(accessData) : null;
       return { facility, accessItem };
     })
     .filter(({ accessItem }) => accessItem?.lat && accessItem?.lng)
@@ -415,7 +464,7 @@ async function getFacilityTypes(id: number): Promise<DormitoryType[] | undefined
   // 全ての施設種類を抽出
   const types = facilityTypes
     .map((item) => {
-      const relation = item as FacilityTypeRelation;
+      const relation = isFacilityTypeRelation(item) ? item : null;
       return extractFacilityTypeName(relation);
     })
     .filter((name): name is DormitoryType => validTypes.includes(name as DormitoryType));
