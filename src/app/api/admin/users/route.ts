@@ -53,8 +53,13 @@ export async function GET() {
       );
     }
 
-    // 施設紐付け情報を取得
+    // staffユーザーがいない場合は空配列を返す
     const staffIds = (staffProfiles ?? []).map((p) => p.id);
+    if (staffIds.length === 0) {
+      return createSuccessResponse([]);
+    }
+
+    // 施設紐付け情報を取得
     const { data: facilityProfiles, error: facilityError } = await supabaseServer
       .from('facility_profiles')
       .select(
@@ -66,7 +71,7 @@ export async function GET() {
         )
       `,
       )
-      .in('user_id', staffIds.length > 0 ? staffIds : ['']);
+      .in('user_id', staffIds);
 
     if (facilityError) {
       logError('施設情報取得に失敗しました', {
