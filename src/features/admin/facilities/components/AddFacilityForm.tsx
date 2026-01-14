@@ -7,6 +7,7 @@ import { FormField, LoadingOverlay, SuccessOverlay } from '@/components/form';
 import { FACILITY_MESSAGES } from '@/const/messages';
 import { KINKI_PREFECTURES } from '@/const/searchConditions';
 import { UI_TIMEOUTS } from '@/const/ui';
+import { VALIDATION_PATTERNS } from '@/const/validation';
 import type { KinkiPrefecture } from '@/types/facility';
 
 import styles from '../styles/AddFacilityForm.module.scss';
@@ -58,7 +59,7 @@ export const AddFacilityForm: React.FC = () => {
     }
     if (!formData.postalCode.trim()) {
       newErrors.postalCode = '郵便番号を入力してください';
-    } else if (!/^\d{3}-?\d{4}$/.test(formData.postalCode.trim())) {
+    } else if (!VALIDATION_PATTERNS.POSTAL_CODE.test(formData.postalCode.trim())) {
       newErrors.postalCode = '郵便番号の形式が正しくありません（例: 123-4567）';
     }
     if (!formData.city.trim()) {
