@@ -19,6 +19,7 @@
 
 .tabNav {
   display: flex;
+  flex-wrap: wrap; // 折り返しを有効化
   border-bottom: 1px solid var(--border-color);
   margin-bottom: 30px;
   overflow-x: auto;
