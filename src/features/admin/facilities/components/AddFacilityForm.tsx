@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+import { FormField, LoadingOverlay, SuccessOverlay } from '@/components/form';
 import type { KinkiPrefecture } from '@/types/facility';
 
 import styles from '../styles/AddFacilityForm.module.scss';
@@ -49,6 +50,7 @@ export const AddFacilityForm: React.FC = () => {
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const validateForm = (): boolean => {
@@ -76,11 +78,14 @@ export const AddFacilityForm: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleChange = (field: keyof FormData, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
     // 入力時にエラーをクリア
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: undefined }));
+    if (errors[name as keyof FormErrors]) {
+      setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
   };
 
@@ -112,8 +117,11 @@ export const AddFacilityForm: React.FC = () => {
         throw new Error(errorData.error || '施設の追加に失敗しました');
       }
 
-      // 成功したら施設管理画面に戻る
-      router.push('/admin/facilities');
+      // 成功表示
+      setIsSuccess(true);
+      setTimeout(() => {
+        router.push('/admin/facilities');
+      }, 1500);
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : '施設の追加に失敗しました');
     } finally {
@@ -126,123 +134,117 @@ export const AddFacilityForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className={styles.form}>
-      <div className={styles.formGroup}>
-        <label htmlFor="name" className={styles.label}>
-          施設名 <span className={styles.required}>*</span>
-        </label>
-        <input
+    <div className={styles.container}>
+      <LoadingOverlay isVisible={isSubmitting} text="登録処理中..." />
+      <SuccessOverlay isVisible={isSuccess} text="施設を追加しました" />
+
+      <form onSubmit={handleSubmit} noValidate>
+        <FormField
+          label="施設名"
           type="text"
           id="name"
-          className={`${styles.input} ${errors.name ? styles.inputError : ''}`}
-          value={formData.name}
-          onChange={(e) => handleChange('name', e.target.value)}
+          name="name"
           placeholder="施設名を入力"
+          required
+          value={formData.name}
+          onChange={handleChange}
+          error={errors.name}
         />
-        {errors.name && <p className={styles.errorText}>{errors.name}</p>}
-      </div>
 
-      <div className={styles.formGroup}>
-        <label htmlFor="corporation" className={styles.label}>
-          運営法人名 <span className={styles.required}>*</span>
-        </label>
-        <input
+        <FormField
+          label="運営法人名"
           type="text"
           id="corporation"
-          className={`${styles.input} ${errors.corporation ? styles.inputError : ''}`}
-          value={formData.corporation}
-          onChange={(e) => handleChange('corporation', e.target.value)}
+          name="corporation"
           placeholder="運営法人名を入力"
+          required
+          value={formData.corporation}
+          onChange={handleChange}
+          error={errors.corporation}
         />
-        {errors.corporation && <p className={styles.errorText}>{errors.corporation}</p>}
-      </div>
 
-      <div className={styles.formGroup}>
-        <label htmlFor="postalCode" className={styles.label}>
-          郵便番号 <span className={styles.required}>*</span>
-        </label>
-        <input
+        <FormField
+          label="郵便番号"
           type="text"
           id="postalCode"
-          className={`${styles.input} ${styles.postalCodeInput} ${errors.postalCode ? styles.inputError : ''}`}
-          value={formData.postalCode}
-          onChange={(e) => handleChange('postalCode', e.target.value)}
+          name="postalCode"
           placeholder="123-4567"
+          required
+          value={formData.postalCode}
+          onChange={handleChange}
+          error={errors.postalCode}
         />
-        {errors.postalCode && <p className={styles.errorText}>{errors.postalCode}</p>}
-      </div>
 
-      <div className={styles.addressGroup}>
-        <p className={styles.addressLabel}>
-          住所 <span className={styles.required}>*</span>
-        </p>
+        {/* 住所セクション */}
+        <div className={styles.addressSection}>
+          <p className={styles.addressLabel}>住所</p>
 
-        <div className={styles.addressRow}>
-          <div className={styles.formGroupInline}>
-            <label htmlFor="prefecture" className={styles.subLabel}>
-              都道府県
-            </label>
-            <select
-              id="prefecture"
-              className={styles.select}
-              value={formData.prefecture}
-              onChange={(e) => handleChange('prefecture', e.target.value)}
-            >
-              {KINKI_PREFECTURES.map((pref) => (
-                <option key={pref} value={pref}>
-                  {pref}
-                </option>
-              ))}
-            </select>
+          <div className={styles.selectWrapper}>
+            <label htmlFor="prefecture">都道府県</label>
+            <div className={styles.selectContainer}>
+              <select
+                id="prefecture"
+                name="prefecture"
+                className={styles.select}
+                value={formData.prefecture}
+                onChange={handleChange}
+              >
+                {KINKI_PREFECTURES.map((pref) => (
+                  <option key={pref} value={pref}>
+                    {pref}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
-          <div className={styles.formGroupInline}>
-            <label htmlFor="city" className={styles.subLabel}>
-              市区町村
-            </label>
-            <input
-              type="text"
-              id="city"
-              className={`${styles.input} ${errors.city ? styles.inputError : ''}`}
-              value={formData.city}
-              onChange={(e) => handleChange('city', e.target.value)}
-              placeholder="大阪市北区"
-            />
-            {errors.city && <p className={styles.errorText}>{errors.city}</p>}
-          </div>
+          <FormField
+            label="市区町村"
+            type="text"
+            id="city"
+            name="city"
+            placeholder="大阪市北区"
+            required
+            value={formData.city}
+            onChange={handleChange}
+            error={errors.city}
+          />
 
-          <div className={styles.formGroupInline}>
-            <label htmlFor="addressDetail" className={styles.subLabel}>
-              番地など
-            </label>
-            <input
-              type="text"
-              id="addressDetail"
-              className={`${styles.input} ${errors.addressDetail ? styles.inputError : ''}`}
-              value={formData.addressDetail}
-              onChange={(e) => handleChange('addressDetail', e.target.value)}
-              placeholder="天神橋1-2-3"
-            />
-            {errors.addressDetail && <p className={styles.errorText}>{errors.addressDetail}</p>}
-          </div>
+          <FormField
+            label="番地など"
+            type="text"
+            id="addressDetail"
+            name="addressDetail"
+            placeholder="天神橋1-2-3"
+            required
+            value={formData.addressDetail}
+            onChange={handleChange}
+            error={errors.addressDetail}
+          />
         </div>
-      </div>
 
-      {submitError && <p className={styles.submitError}>{submitError}</p>}
+        {/* 送信エラーメッセージ */}
+        {submitError && (
+          <div role="alert" className={styles.submitErrorMessage}>
+            {submitError}
+          </div>
+        )}
 
-      <div className={styles.buttonGroup}>
-        <button
-          type="button"
-          className={styles.cancelButton}
-          onClick={handleCancel}
-          disabled={isSubmitting}
-        >
-          キャンセル
-        </button>
-        <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
-          {isSubmitting ? '追加中...' : '追加する'}
-        </button>
-      </div>
-    </form>
+        {/* ボタン */}
+        <div className={styles.buttonGroup}>
+          <button
+            type="button"
+            className={styles.cancelButton}
+            onClick={handleCancel}
+            disabled={isSubmitting}
+          >
+            キャンセル
+          </button>
+          <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
+            {isSubmitting ? '追加中...' : '追加する'}
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };

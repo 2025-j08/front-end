@@ -1,12 +1,18 @@
+/**
+ * 施設追加ページ固有スタイル
+ * 共通スタイルは formLayout.module.scss を使用
+ */
+@use '@/styles/colors' as colors;
+
 .container {
+  composes: formContainer from '@/components/form/layout/formLayout.module.scss';
   max-width: 800px;
-  margin: 0 auto;
-  padding: 32px 24px;
+  margin: 60px auto;
+  background-color: transparent;
 }
 
 .title {
-  margin-bottom: 24px;
-  font-size: 24px;
-  font-weight: 700;
-  color: #1f2937;
+  composes: formTitle from '@/components/form/layout/formLayout.module.scss';
+  margin-bottom: 40px;
+  border-bottom-color: colors.$border-black;
 }
