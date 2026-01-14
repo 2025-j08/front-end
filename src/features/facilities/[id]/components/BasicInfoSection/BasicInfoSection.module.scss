@@ -31,7 +31,10 @@
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
 
   &:hover:not(:disabled) {
     opacity: 0.9;
@@ -306,7 +309,10 @@
   cursor: pointer;
   padding: 8px 16px;
   border-radius: 4px;
-  transition: all 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    background-color 0.2s ease;
 
   &:hover {
     border-color: var(--primary);
