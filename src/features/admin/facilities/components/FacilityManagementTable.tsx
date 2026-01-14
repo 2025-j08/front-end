@@ -7,6 +7,7 @@ import type { FacilityManagementItem } from '@/lib/supabase/queries/facilities';
 import { KINKI_PREFECTURES } from '@/const/searchConditions';
 import { VALIDATION_PATTERNS } from '@/const/validation';
 
+import { FACILITY_ADMIN_ROUTES, FACILITY_FORM_VALIDATION } from '../constants';
 import styles from '../styles/FacilityManagementTable.module.scss';
 
 /** バリデーションエラーの型 */
@@ -71,15 +72,15 @@ const FacilityRow = ({
     const newErrors: ValidationErrors = {};
 
     if (!name.trim()) {
-      newErrors.name = '施設名を入力してください';
+      newErrors.name = FACILITY_FORM_VALIDATION.NAME_REQUIRED;
     }
     if (!postalCode.trim()) {
-      newErrors.postalCode = '郵便番号を入力してください';
+      newErrors.postalCode = FACILITY_FORM_VALIDATION.POSTAL_CODE_REQUIRED;
     } else if (!VALIDATION_PATTERNS.POSTAL_CODE.test(postalCode.trim())) {
-      newErrors.postalCode = '郵便番号の形式が正しくありません（例: 123-4567）';
+      newErrors.postalCode = FACILITY_FORM_VALIDATION.POSTAL_CODE_INVALID;
     }
     if (!city.trim()) {
-      newErrors.city = '市区町村を入力してください';
+      newErrors.city = FACILITY_FORM_VALIDATION.CITY_REQUIRED;
     }
 
     setErrors(newErrors);
@@ -178,7 +179,7 @@ const FacilityRow = ({
             {isSaving ? '保存中...' : '保存'}
           </button>
           <Link
-            href={`/admin/facilities/${facility.id}/edit`}
+            href={FACILITY_ADMIN_ROUTES.EDIT(facility.id)}
             className={styles.detailButton}
             aria-label={`${facility.name}の詳細情報を編集`}
           >

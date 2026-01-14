@@ -9,6 +9,7 @@ import { KINKI_PREFECTURES } from '@/const/searchConditions';
 import { UI_TIMEOUTS } from '@/const/ui';
 import type { KinkiPrefecture } from '@/types/facility';
 
+import { FACILITY_ADMIN_ROUTES, FACILITY_FORM_VALIDATION } from '../constants';
 import styles from '../styles/AddFacilityForm.module.scss';
 
 interface FormData {
@@ -55,26 +56,26 @@ export const AddFacilityForm: React.FC = () => {
     const newErrors: FormErrors = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = '施設名を入力してください';
+      newErrors.name = FACILITY_FORM_VALIDATION.NAME_REQUIRED;
     }
     if (!formData.corporation.trim()) {
-      newErrors.corporation = '運営法人名を入力してください';
+      newErrors.corporation = FACILITY_FORM_VALIDATION.CORPORATION_REQUIRED;
     }
     if (!formData.postalCode1.trim()) {
-      newErrors.postalCode1 = '郵便番号（前半）を入力してください';
+      newErrors.postalCode1 = FACILITY_FORM_VALIDATION.POSTAL_CODE_FIRST_REQUIRED;
     } else if (!/^\d{3}$/.test(formData.postalCode1.trim())) {
-      newErrors.postalCode1 = '3桁の数字を入力してください';
+      newErrors.postalCode1 = FACILITY_FORM_VALIDATION.POSTAL_CODE_FIRST_INVALID;
     }
     if (!formData.postalCode2.trim()) {
-      newErrors.postalCode2 = '郵便番号（後半）を入力してください';
+      newErrors.postalCode2 = FACILITY_FORM_VALIDATION.POSTAL_CODE_SECOND_REQUIRED;
     } else if (!/^\d{4}$/.test(formData.postalCode2.trim())) {
-      newErrors.postalCode2 = '4桁の数字を入力してください';
+      newErrors.postalCode2 = FACILITY_FORM_VALIDATION.POSTAL_CODE_SECOND_INVALID;
     }
     if (!formData.city.trim()) {
-      newErrors.city = '市区町村を入力してください';
+      newErrors.city = FACILITY_FORM_VALIDATION.CITY_REQUIRED;
     }
     if (!formData.addressDetail.trim()) {
-      newErrors.addressDetail = '番地などを入力してください';
+      newErrors.addressDetail = FACILITY_FORM_VALIDATION.ADDRESS_DETAIL_REQUIRED;
     }
 
     setErrors(newErrors);
@@ -143,7 +144,7 @@ export const AddFacilityForm: React.FC = () => {
       // 成功表示
       setIsSuccess(true);
       setTimeout(() => {
-        router.push('/admin/facilities');
+        router.push(FACILITY_ADMIN_ROUTES.LIST);
       }, UI_TIMEOUTS.SUCCESS_REDIRECT);
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : FACILITY_MESSAGES.ADD_FAILED);
@@ -153,7 +154,7 @@ export const AddFacilityForm: React.FC = () => {
   };
 
   const handleCancel = () => {
-    router.push('/admin/facilities');
+    router.push(FACILITY_ADMIN_ROUTES.LIST);
   };
 
   return (

@@ -17,6 +17,7 @@ import { ConfirmDialog } from '@/components/ui/ConfirmDialog/ConfirmDialog';
 import { SuccessOverlay } from '@/components/form/overlay/successOverlay';
 import { UI_TIMEOUTS } from '@/const/ui';
 import { FACILITY_MESSAGES } from '@/const/messages';
+import { FACILITY_ADMIN_ROUTES } from '@/features/admin/facilities/constants';
 
 /** APIリクエスト用のヘルパー関数 */
 async function fetchApi<T>(
@@ -175,7 +176,7 @@ export default function FacilityManagementPage() {
   };
 
   const handleAdd = () => {
-    router.push('/admin/facilities/new');
+    router.push(FACILITY_ADMIN_ROUTES.NEW);
   };
 
   if (isLoading) {
