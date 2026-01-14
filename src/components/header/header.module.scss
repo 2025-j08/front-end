@@ -278,6 +278,13 @@ $header-nav-gap-mobile: 15px;
     }
   }
 
+  // ナビゲーション項目のテキストラベル省略表示（共通）
+  .navItem span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   .noImageText {
     font-size: 32px;
   }
@@ -295,9 +302,6 @@ $header-nav-gap-mobile: 15px;
 
   .navItem span {
     max-width: 64px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 
   .icon {
