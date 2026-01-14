@@ -30,6 +30,7 @@ export const FacilityCard = ({ facility }: FacilityCardProps) => {
                 fill
                 className={styles.image}
                 sizes="(max-width: 768px) 100vw, 120px"
+                unoptimized
               />
             ) : (
               <div className={styles.imagePlaceholder}>no image</div>
