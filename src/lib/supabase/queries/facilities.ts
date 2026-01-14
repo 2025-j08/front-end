@@ -244,8 +244,8 @@ export async function getFacilityList(
     const facilityType = extractFacilityTypeName(firstRelation ?? null);
 
     // サムネイル画像を取得（image_type='thumbnail' のもののみ）
-    type ImageData = { image_url: string; image_type: string };
-    const images = facility.facility_images as ImageData[] | null;
+    type FacilityImageQueryData = { image_url: string; image_type: string };
+    const images = facility.facility_images as FacilityImageQueryData[] | null;
     const thumbnailImage = images?.find((img) => img.image_type === 'thumbnail');
 
     return {
