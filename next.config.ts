@@ -1,21 +1,28 @@
 import type { NextConfig } from 'next';
 
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+const getRemotePatterns = () => {
+  if (!supabaseUrl) return [];
+  try {
+    const url = new URL(supabaseUrl);
+    return [
+      {
+        protocol: url.protocol.replace(':', '') as 'http' | 'https',
+        hostname: url.hostname,
+        port: url.port || undefined,
+        pathname: '/storage/v1/object/public/**',
+      },
+    ];
+  } catch (e) {
+    console.error('Invalid NEXT_PUBLIC_SUPABASE_URL:', e);
+    return [];
+  }
+};
+
 const nextConfig: NextConfig = {
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**.supabase.co',
-      },
-      {
-        protocol: 'http',
-        hostname: '127.0.0.1',
-      },
-      {
-        protocol: 'http',
-        hostname: 'localhost',
-      },
-    ],
+    remotePatterns: getRemotePatterns(),
   },
 };
 
