@@ -11,6 +11,7 @@ export type FacilityDetailTableName =
   | 'facility_staff'
   | 'facility_education'
   | 'facility_advanced'
+  | 'facility_images'
   | 'facility_other';
 
 /** 詳細テーブル名と日本語名のマッピング */
@@ -21,6 +22,7 @@ export const FACILITY_DETAIL_TABLE_LABELS: Record<FacilityDetailTableName, strin
   facility_staff: 'スタッフ情報',
   facility_education: '教育支援',
   facility_advanced: '高度な取り組み',
+  facility_images: '施設画像',
   facility_other: 'その他情報',
 } as const;
 
@@ -32,6 +34,7 @@ export type FacilitySectionName =
   | 'staff'
   | 'education'
   | 'advanced'
+  | 'images'
   | 'other';
 
 export const SECTION_TO_TABLE_MAP: Record<FacilitySectionName, FacilityDetailTableName> = {
@@ -41,6 +44,7 @@ export const SECTION_TO_TABLE_MAP: Record<FacilitySectionName, FacilityDetailTab
   staff: 'facility_staff',
   education: 'facility_education',
   advanced: 'facility_advanced',
+  images: 'facility_images',
   other: 'facility_other',
 } as const;
 

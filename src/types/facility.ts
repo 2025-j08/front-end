@@ -155,6 +155,21 @@ export interface AnnexFacility {
   type: string;
 }
 
+/** 画像タイプ */
+export type FacilityImageType = 'thumbnail' | 'gallery';
+
+/** 施設画像情報 */
+export interface FacilityImage {
+  /** 画像ID */
+  id: number;
+  /** 画像URL */
+  imageUrl: string;
+  /** 画像タイプ: thumbnail(一覧用) / gallery(詳細用) */
+  imageType: FacilityImageType;
+  /** 表示順序（ギャラリーのみ: 0-2） */
+  displayOrder: number;
+}
+
 /** 施設詳細情報 */
 export interface FacilityDetail {
   /** 施設ID */
@@ -204,6 +219,8 @@ export interface FacilityDetail {
   advancedInfo?: AdvancedInfo;
   /** その他情報 */
   otherInfo?: OtherInfo;
+  /** 施設画像 */
+  images?: FacilityImage[];
 }
 
 /** ID→施設詳細のマップ型 */
