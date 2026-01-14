@@ -63,6 +63,10 @@ function resizeImage(
 ): HTMLCanvasElement {
   let { width, height } = img;
 
+  if (width <= 0 || height <= 0) {
+    throw new Error('画像の幅または高さが正しくありません');
+  }
+
   // アスペクト比を維持してリサイズ
   if (width > maxWidth || height > maxHeight) {
     const ratio = Math.min(maxWidth / width, maxHeight / height);
