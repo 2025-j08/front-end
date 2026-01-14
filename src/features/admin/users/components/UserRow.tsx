@@ -26,8 +26,11 @@ export const UserRow = ({ user, onSave, onDelete }: UserRowProps) => {
   // 編集中の氏名を管理
   const [name, setName] = useState(user.name);
 
-  // 変更があるかどうか
-  const hasChanges = name !== user.name;
+  // バリデーション：空文字やホワイトスペースのみは無効
+  const isValidName = name.trim().length > 0;
+
+  // 変更があり、かつ有効な値かどうか
+  const hasChanges = name !== user.name && isValidName;
 
   /**
    * 保存ボタンクリック時
@@ -67,7 +70,7 @@ export const UserRow = ({ user, onSave, onDelete }: UserRowProps) => {
             className={styles.saveButton}
             onClick={handleSave}
             disabled={!hasChanges}
-            aria-label={`${user.name}の変更を保存`}
+            aria-label={`${user.facilityName}の氏名変更を保存`}
           >
             保存
           </button>
@@ -75,7 +78,7 @@ export const UserRow = ({ user, onSave, onDelete }: UserRowProps) => {
             type="button"
             className={styles.deleteButton}
             onClick={handleDelete}
-            aria-label={`${user.name}を削除`}
+            aria-label={`${user.facilityName}のユーザーを削除`}
           >
             削除
           </button>
