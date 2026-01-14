@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog/ConfirmDialog';
 import { LoadingOverlay } from '@/components/form';
@@ -17,6 +17,9 @@ import styles from './users.module.scss';
 export const UserList = () => {
   // ユーザー一覧のデータ取得・操作
   const { users, isLoading, error, deleteUser, updateUser, refetch } = useUserList();
+
+  // 施設名検索の状態管理
+  const [searchQuery, setSearchQuery] = useState('');
 
   // 削除確認ダイアログの状態管理
   const [deleteTarget, setDeleteTarget] = useState<User | null>(null);
@@ -110,6 +113,17 @@ export const UserList = () => {
     await updateUser(userId, name);
   };
 
+  /**
+   * 施設名でフィルタリングされたユーザー一覧
+   */
+  const filteredUsers = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return users;
+    }
+    const query = searchQuery.toLowerCase();
+    return users.filter((user) => user.facilityName.toLowerCase().includes(query));
+  }, [users, searchQuery]);
+
   // ローディング中
   if (isLoading) {
     return (
@@ -139,10 +153,27 @@ export const UserList = () => {
     <div className={styles.container}>
       <h1 className={styles.title}>ユーザー管理</h1>
 
+      {/* 施設名検索 */}
+      <div className={styles.searchContainer}>
+        <input
+          type="text"
+          className={styles.searchInput}
+          placeholder="施設名で検索..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          aria-label="施設名で検索"
+        />
+        {searchQuery && (
+          <span className={styles.searchResult}>
+            {filteredUsers.length}件 / {users.length}件
+          </span>
+        )}
+      </div>
+
       {/* 削除処理中のオーバーレイ */}
       <LoadingOverlay isVisible={isDeleting} text="削除中..." />
 
-      <UserListTable users={users} onDelete={handleDeleteClick} onSave={handleSave} />
+      <UserListTable users={filteredUsers} onDelete={handleDeleteClick} onSave={handleSave} />
 
       {/* 削除確認ダイアログ */}
       <ConfirmDialog
