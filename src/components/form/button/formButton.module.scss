@@ -11,8 +11,8 @@
 }
 
 .formButton {
-  background: linear-gradient(135deg, colors.$form-primary 0%, colors.$form-primary-light 100%);
-  color: colors.$white;
+  background: linear-gradient(135deg, var(--primary-lighter) 0%, var(--primary-light) 100%);
+  color: var(--text-on-primary);
   font-size: 1.1rem;
   font-weight: 600;
   letter-spacing: 0.5px;
@@ -20,7 +20,7 @@
   border-radius: 12px;
   padding: 14px 70px;
   cursor: pointer;
-  box-shadow: 0 6px 20px colors.$form-button-shadow;
+  box-shadow: 0 6px 20px var(--focus-glow);
   transition:
     transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
     box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
@@ -31,13 +31,13 @@
 
   &:hover:not(:disabled) {
     transform: translateY(-3px);
-    box-shadow: 0 10px 30px colors.$form-button-shadow-hover;
-    background: linear-gradient(135deg, colors.$form-primary-light 0%, colors.$form-primary 100%);
+    box-shadow: 0 10px 30px var(--focus-glow);
+    background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-lighter) 100%);
   }
 
   &:active:not(:disabled) {
     transform: translateY(-1px);
-    box-shadow: 0 4px 15px colors.$form-button-shadow;
+    box-shadow: 0 4px 15px var(--focus-glow);
   }
 
   &:disabled {
@@ -46,7 +46,7 @@
   }
 
   &:focus-visible {
-    outline: 3px solid colors.$form-primary-light;
+    outline: 3px solid var(--primary-light);
     outline-offset: 3px;
   }
 }

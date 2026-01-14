@@ -3,13 +3,16 @@
 .card {
   display: flex;
   flex-direction: column;
-  background-color: colors.$bg-light-green;
-  border: 2px solid colors.$border-dark;
+  background-color: var(--card-background);
+  border: 2px solid var(--border-color);
   border-radius: 12px;
   padding: 16px;
   gap: 12px;
   width: 100%;
   box-sizing: border-box;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .link {
@@ -35,33 +38,40 @@
   font-size: 1.1rem;
   font-weight: bold;
   margin: 0;
-  color: colors.$text-primary;
-  border-bottom: 1px solid colors.$border-dark;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color);
   padding-bottom: 8px;
+  transition:
+    color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .label {
   font-size: 0.85rem;
   margin: 0;
-  color: colors.$text-secondary;
+  color: var(--text-secondary);
+  transition: color 0.3s ease;
 }
 
 .postalCode {
   font-size: 0.9rem;
   margin: 0;
-  color: colors.$text-primary;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
 }
 
 .address {
   font-size: 0.9rem;
   margin: 0;
-  color: colors.$text-primary;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
 }
 
 .phone {
   font-size: 0.9rem;
   margin: 0;
-  color: colors.$text-primary;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
 }
 
 .imageWrapper {
@@ -82,13 +92,17 @@
 .imagePlaceholder {
   width: 100%;
   height: 100%;
-  background-color: colors.$bg-gray;
-  border: 1px solid colors.$border-gray;
+  background-color: var(--background-secondary);
+  border: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.9rem;
-  color: colors.$text-secondary;
+  color: var(--text-secondary);
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
 }
 
 @media screen and (max-width: 768px) {

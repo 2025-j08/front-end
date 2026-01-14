@@ -4,13 +4,17 @@
   padding: 8px 30px;
   font-size: 1.2rem;
   font-weight: bolder;
-  color: colors.$primary-text-color;
-  background-color: colors.$primary-color;
+  color: var(--text-on-primary);
+  background-color: var(--primary);
 
-  border: 3px solid colors.$primary-color;
+  border: 3px solid var(--primary);
   border-radius: 100px;
 
   cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
 
   @media screen and (max-width: 768px) {
     padding: 6px 20px;
@@ -19,11 +23,11 @@
 }
 
 .button:hover {
-  color: colors.$primary-color;
-  background-color: colors.$primary-text-color;
+  color: var(--primary);
+  background-color: var(--background);
 }
 
 .button:active {
-  color: colors.$primary-color;
-  background-color: colors.$bg-active;
+  color: var(--primary);
+  background-color: var(--background-secondary);
 }

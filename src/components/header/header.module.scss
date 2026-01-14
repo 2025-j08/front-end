@@ -13,9 +13,12 @@ $header-nav-gap-mobile: 15px;
 // 上部エリア（ロゴ・ナビ）
 // ============================================
 .headerTop {
-  background-color: colors.$white;
-  border-bottom: 2px solid colors.$border-black;
+  background-color: var(--header-background);
+  border-bottom: 2px solid var(--border-dark);
   padding: 10px 0;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .container {
@@ -52,7 +55,7 @@ $header-nav-gap-mobile: 15px;
 
   // ロゴのフォーカススタイル
   &:focus-visible {
-    outline: 2px solid colors.$text-link;
+    outline: 2px solid var(--primary);
     outline-offset: 2px;
   }
 }
@@ -69,10 +72,12 @@ $header-nav-gap-mobile: 15px;
   flex-direction: column;
   align-items: center;
   text-decoration: none;
-  color: colors.$text-primary;
+  color: var(--text-primary);
   font-size: 15px;
   cursor: pointer;
-  transition: opacity 0.2s;
+  transition:
+    opacity 0.2s,
+    color 0.3s ease;
   white-space: nowrap;
 
   // ボタン要素のリセット（管理メニュー・認証ボタン共通）
@@ -90,7 +95,7 @@ $header-nav-gap-mobile: 15px;
 
   // キーボードフォーカス時のスタイル (指摘事項1対応)
   &:focus-visible {
-    outline: 2px solid colors.$text-link;
+    outline: 2px solid var(--primary);
     outline-offset: 4px;
     border-radius: 4px;
   }
@@ -99,7 +104,8 @@ $header-nav-gap-mobile: 15px;
 .icon {
   font-size: 35px;
   margin-bottom: 4px;
-  color: colors.$text-primary;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
 }
 
 // ============================================
@@ -113,11 +119,10 @@ $header-nav-gap-mobile: 15px;
   position: absolute;
   top: 100%;
   right: 0;
-  background-color: colors.$bg-white;
-  border: 1px solid colors.$border-gray;
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
-  // 指摘事項2対応: colors.scssの変数を使用
-  box-shadow: 0 4px 12px colors.$shadow-medium;
+  box-shadow: 0 4px 12px var(--shadow-medium);
   min-width: 180px;
   z-index: 1000;
   padding: 8px 0;
@@ -126,6 +131,9 @@ $header-nav-gap-mobile: 15px;
   margin-top: 10px;
   // フェードインアニメーション
   animation: fadeIn 0.2s ease-out;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 
   // 吹き出しの矢印
   &::before {
@@ -135,21 +143,26 @@ $header-nav-gap-mobile: 15px;
     right: 24px;
     width: 12px;
     height: 12px;
-    background-color: colors.$bg-white;
-    border-top: 1px solid colors.$border-gray;
-    border-left: 1px solid colors.$border-gray;
+    background-color: var(--card-background);
+    border-top: 1px solid var(--border-color);
+    border-left: 1px solid var(--border-color);
     transform: rotate(45deg);
+    transition:
+      background-color 0.3s ease,
+      border-color 0.3s ease;
   }
 }
 
 .dropdownItem {
   padding: 12px 16px;
   text-decoration: none;
-  color: colors.$text-primary;
+  color: var(--text-primary);
   font-size: 14px;
-  transition: background-color 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.3s ease;
   text-align: left;
-  border-bottom: 1px solid colors.$bg-light-gray;
+  border-bottom: 1px solid var(--border-light);
   white-space: nowrap;
 
   &:last-child {
@@ -157,13 +170,13 @@ $header-nav-gap-mobile: 15px;
   }
 
   &:hover {
-    background-color: colors.$bg-light-green;
+    background-color: var(--background-tertiary);
   }
 
   // キーボードフォーカス時のスタイル (指摘事項1対応)
   &:focus-visible {
-    background-color: colors.$bg-light-green;
-    outline: 2px solid colors.$text-link;
+    background-color: var(--background-tertiary);
+    outline: 2px solid var(--primary);
     outline-offset: -2px; // 内側に表示
     position: relative; // z-index調整用
     z-index: 1;
@@ -190,17 +203,19 @@ $header-nav-gap-mobile: 15px;
   margin: 0 auto;
   padding: 0 5%;
   aspect-ratio: 6 / 1;
-  background-color: colors.$hero-bg;
+  background-color: var(--background-secondary);
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
+  transition: background-color 0.3s ease;
 }
 
 .noImageText {
   font-size: 64px;
   font-family: serif;
-  color: colors.$black;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
 }
 
 // ============================================

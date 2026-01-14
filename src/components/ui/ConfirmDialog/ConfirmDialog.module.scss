@@ -16,13 +16,14 @@
 
 // ダイアログボックス
 .dialogBox {
-  background-color: colors.$bg-white;
+  background-color: var(--card-background);
   border-radius: 8px;
   padding: 24px;
   max-width: 400px;
   width: 90%;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 20px var(--shadow-medium);
   animation: fadeIn 0.2s ease-out;
+  transition: background-color 0.3s ease;
 }
 
 @keyframes fadeIn {
@@ -41,17 +42,19 @@
 .title {
   font-size: 1.25rem;
   font-weight: bold;
-  color: colors.$text-primary;
+  color: var(--text-primary);
   margin: 0 0 16px 0;
+  transition: color 0.3s ease;
 }
 
 // メッセージ
 .message {
   font-size: 1rem;
-  color: colors.$text-secondary;
+  color: var(--text-secondary);
   margin: 0 0 24px 0;
   line-height: 1.6;
   white-space: pre-wrap; // 改行を反映
+  transition: color 0.3s ease;
 }
 
 // アクションボタンエリア
@@ -67,23 +70,23 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.875rem;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease;
   border: none;
 }
 
 // キャンセルボタン
 .cancelButton {
   @include button-base;
-  background-color: colors.$bg-light-gray;
-  color: colors.$text-primary;
-  border: 1px solid colors.$border-gray;
+  background-color: var(--background-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
 
   &:hover {
-    background-color: colors.$bg-gray;
+    background-color: var(--background-tertiary);
   }
 
   &:focus {
-    outline: 2px solid colors.$border-gray;
+    outline: 2px solid var(--border-color);
     outline-offset: 2px;
   }
 }
@@ -91,24 +94,24 @@
 // 確定ボタン (通常/危険)
 .confirmButton {
   @include button-base;
-  background-color: colors.$primary-color;
-  color: colors.$white;
+  background-color: var(--primary);
+  color: var(--text-on-primary);
 
   &:hover {
     opacity: 0.9;
   }
 
   &:focus {
-    outline: 2px solid colors.$primary-color;
+    outline: 2px solid var(--primary);
     outline-offset: 2px;
   }
 
   // 危険なアクション（削除など）の場合
   &.danger {
-    background-color: colors.$error-color;
+    background-color: var(--error);
 
     &:focus {
-      outline-color: colors.$error-color;
+      outline-color: var(--error);
     }
   }
 }

@@ -12,40 +12,43 @@
   label {
     width: 150px;
     font-size: 0.95rem;
-    color: colors.$dark-gray;
+    color: var(--text-primary);
     flex-shrink: 0;
     font-weight: 500;
     padding-top: 10px;
+    transition: color 0.3s ease;
   }
 
   input,
   textarea {
     flex-grow: 1;
     padding: 12px 14px;
-    border: 1.5px solid colors.$form-input-border;
+    border: 1.5px solid var(--input-border);
     border-radius: 8px;
-    background-color: colors.$form-input-bg;
+    background-color: var(--input-background);
     font-size: 1rem;
-    color: colors.$dark-gray;
+    color: var(--text-primary);
     transition:
       border-color 0.3s ease,
       box-shadow 0.3s ease,
-      transform 0.2s ease;
+      transform 0.2s ease,
+      background-color 0.3s ease,
+      color 0.3s ease;
     font-family: inherit;
 
     &::placeholder {
-      color: colors.$form-placeholder;
+      color: var(--text-muted);
     }
 
     &:focus {
       outline: none;
-      border-color: colors.$form-primary;
-      box-shadow: 0 0 0 4px colors.$form-focus-glow;
+      border-color: var(--input-focus-border);
+      box-shadow: 0 0 0 4px var(--focus-glow);
       transform: translateY(-1px);
     }
 
     &:hover:not(:focus) {
-      border-color: colors.$form-primary-light;
+      border-color: var(--primary-light);
     }
   }
 
@@ -73,10 +76,10 @@
 
 // エラー状態の入力フィールド
 .inputError {
-  border-color: colors.$error-color !important;
+  border-color: var(--error) !important;
 
   &:focus {
-    box-shadow: 0 0 0 4px rgba(colors.$error-color, 0.15) !important;
+    box-shadow: 0 0 0 4px var(--error-bg) !important;
   }
 }
 
@@ -86,8 +89,9 @@
   margin: 8px 0 0 150px;
   padding: 0;
   font-size: 0.85rem;
-  color: colors.$error-color;
+  color: var(--error);
   line-height: 1.4;
+  transition: color 0.3s ease;
 
   @media (max-width: 600px) {
     margin-left: 0;
