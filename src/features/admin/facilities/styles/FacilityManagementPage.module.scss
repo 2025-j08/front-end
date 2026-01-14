@@ -15,11 +15,18 @@
   width: 100%;
 }
 
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
 .searchContainer {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 20px;
 }
 
 .searchInput {

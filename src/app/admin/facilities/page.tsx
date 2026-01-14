@@ -201,20 +201,23 @@ export default function FacilityManagementPage() {
     <div className={styles.container}>
       <h1 className={styles.title}>施設管理</h1>
 
-      <div className={styles.searchContainer}>
-        <input
-          type="text"
-          className={styles.searchInput}
-          placeholder="施設名で検索..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          aria-label="施設名で検索"
-        />
-        {searchQuery && (
-          <span className={styles.searchResult}>
-            {filteredFacilities.length}件 / {facilities.length}件
-          </span>
-        )}
+      <div className={styles.toolbar}>
+        <div className={styles.searchContainer}>
+          <input
+            type="text"
+            className={styles.searchInput}
+            placeholder="施設名で検索..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            aria-label="施設名で検索"
+          />
+          {searchQuery && (
+            <span className={styles.searchResult}>
+              {filteredFacilities.length}件 / {facilities.length}件
+            </span>
+          )}
+        </div>
+        <AddFacilityButton onClick={handleAdd} />
       </div>
 
       <FacilityManagementTable
@@ -222,8 +225,6 @@ export default function FacilityManagementPage() {
         onSave={handleSave}
         onDelete={onClickDelete}
       />
-
-      <AddFacilityButton onClick={handleAdd} />
 
       <ConfirmDialog
         isOpen={isDeleteDialogOpen}
