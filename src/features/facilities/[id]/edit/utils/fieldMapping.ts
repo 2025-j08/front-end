@@ -81,7 +81,11 @@ const SECTION_FIELD_CONFIGS: Record<TabSection, FieldConfig[]> = {
     {
       source: 'establishedYear',
       target: 'established_year',
-      transform: (v) => (v ? parseInt(v as string, 10) : undefined),
+      transform: (v) => {
+        if (!v) return undefined;
+        const parsed = parseInt(v as string, 10);
+        return isNaN(parsed) ? undefined : parsed;
+      },
     },
     { source: 'annexFacilities', target: 'annex_facilities' },
     { source: 'dormitoryType', target: 'dormitory_type' },
