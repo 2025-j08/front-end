@@ -14,6 +14,7 @@ import {
   type TabUpdateData,
   type FacilityManagementUpdateData,
 } from '@/lib/supabase/mutations/facilities';
+import { VALID_API_SECTIONS, type ValidApiSection } from '@/lib/supabase/constants/facility-tables';
 import { getFacilityDetail } from '@/lib/supabase/queries/facilities';
 
 /**
@@ -43,18 +44,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     const body: UpdateFacilityRequest = await request.json();
 
     // セクション名の検証
-    const validSections = [
-      'basic',
-      'access',
-      'philosophy',
-      'specialty',
-      'staff',
-      'education',
-      'advanced',
-      'other',
-      'management',
-    ];
-    if (!validSections.includes(body.section)) {
+    if (!VALID_API_SECTIONS.includes(body.section as ValidApiSection)) {
       return NextResponse.json({ error: '無効なセクション名です' }, { status: 400 });
     }
 
