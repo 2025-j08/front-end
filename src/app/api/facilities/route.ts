@@ -85,9 +85,15 @@ function validateCreateFacilityRequest(
  * 新規施設を作成する
  */
 export async function POST(request: NextRequest) {
+  // JSONパースエラーは400で返す
+  let body: unknown;
   try {
-    const body = await request.json();
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: 'リクエストボディのJSONが不正です' }, { status: 400 });
+  }
 
+  try {
     // バリデーション
     const validation = validateCreateFacilityRequest(body);
     if (!validation.valid) {
