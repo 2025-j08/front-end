@@ -2308,7 +2308,15 @@ WHERE facility_id = 104;
 
 
 -- ============================================================================
--- 7. 開発用管理者ユーザー
+-- 7. シーケンスのリセット
+-- ============================================================================
+-- IDを明示的に指定してINSERTした場合、シーケンスが追従しないため、
+-- 新規追加時にIDが衝突する問題を防ぐためリセットする
+SELECT setval('facilities_id_seq', (SELECT COALESCE(MAX(id), 1) FROM public.facilities));
+SELECT setval('facility_types_id_seq', (SELECT COALESCE(MAX(id), 1) FROM public.facility_types));
+
+-- ============================================================================
+-- 8. 開発用管理者ユーザー
 -- ============================================================================
 -- 注: 実際の管理者作成は TypeScript スクリプトを使用してください
 -- node --env-file=.env.local --import tsx src/lib/supabase/test/seed_adminuser.ts

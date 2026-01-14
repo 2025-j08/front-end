@@ -15,6 +15,7 @@ import {
   createSeedClient,
   parseFullAddress,
   parseEstablishedYear,
+  resetFacilitySequences,
   runSeedScript,
 } from '@/lib/supabase/utils/seed';
 
@@ -505,6 +506,9 @@ async function main(): Promise<void> {
 
   // 4. 施設詳細テーブル(7つ)にデータを挿入
   await seedFacilityDetailTables(supabase, facilitiesDetail);
+
+  // 5. シーケンスをリセット（IDを明示指定したためシーケンスが追従していない）
+  await resetFacilitySequences(supabase);
 
   logInfo('✓ 全ての施設詳細データの挿入が完了しました');
 }

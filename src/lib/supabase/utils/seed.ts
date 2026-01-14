@@ -7,7 +7,7 @@
 
 import { SupabaseClient, createClient } from '@supabase/supabase-js';
 
-import { logWarn } from '@/lib/logger';
+import { logInfo, logWarn } from '@/lib/logger';
 
 // ============================================
 // 環境変数関連
@@ -164,6 +164,42 @@ export function parseEstablishedYear(yearString: string | undefined, facilityId:
   }
 
   return parseInt(match[1], 10);
+}
+
+// ============================================
+// シーケンスリセット関連
+// ============================================
+
+/**
+ * 施設関連テーブルのシーケンスをリセットする
+ *
+ * IDを明示的に指定してINSERTした場合、シーケンスが追従しないため、
+ * 新規追加時にIDが衝突する問題を防ぐためリセットする
+ *
+ * @param supabase Supabaseクライアント
+ */
+export async function resetFacilitySequences(supabase: SupabaseClient): Promise<void> {
+  logInfo('シーケンスをリセットしています...');
+
+  // facilities テーブルのシーケンスをリセット
+  const { error: facilitiesError } = await supabase.rpc('reset_facilities_sequence');
+  if (facilitiesError) {
+    logWarn(
+      `facilities シーケンスのリセットに失敗しました: ${facilitiesError.message}。` +
+        `seed.sql実行時に自動リセットされます。`,
+    );
+  }
+
+  // facility_types テーブルのシーケンスをリセット
+  const { error: typesError } = await supabase.rpc('reset_facility_types_sequence');
+  if (typesError) {
+    logWarn(
+      `facility_types シーケンスのリセットに失敗しました: ${typesError.message}。` +
+        `seed.sql実行時に自動リセットされます。`,
+    );
+  }
+
+  logInfo('✓ シーケンスリセット処理が完了しました');
 }
 
 // ============================================
