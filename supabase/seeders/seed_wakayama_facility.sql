@@ -20,24 +20,24 @@ VALUES
     (86, 'くすのき', '社会福祉法人 真寿会', '646-1323', '0739-62-8600', '和歌山県', '田辺市 ', '向山395-1', 2010, '[]'),
     (87, 'こばと学園', '社会福祉法人 和歌山県社会施設事業会', '640-8481', '0734-61-0072', '和歌山県', '和歌山市', '直川1437', 1954, '[]'),
     (88, 'つつじが丘学舎', '社会福祉法人 虎伏学園', '640-0115', '073-480-1043', '和歌山県', '和歌山市', 'つつじが丘7丁目2-1', 1962, '[]'),
-    (89, '丹生学園', '社会福祉法人  丹生学園', '649-6523', '0736-73-5840', '和歌山県', '紀ノ川市', '下丹生谷101', 1954, '[]'),
+    (89, '丹生学園', '社会福祉法人  丹生学園', '649-6523', '0736-73-5840', '和歌山県', '紀の川市', '下丹生谷101', 1954, '[]'),
     (90, 'ひまわり寮', '社会福祉法人  和歌山県福祉事業団', '646-0217', '0739-25-3500', '和歌山県', '田辺市', '城山台5-1', 1955, '[]'),
     (91, '六地学園', '社会福祉法人 紀北和楽会', '648-0095', '0736-37-0823', '和歌山県', '橋本市', '橋谷325', 1949, '[]')
 ON CONFLICT (id) DO NOTHING;
 
--- 奈良県 児童養護施設 詳細データ（id:84〜91）
+-- 和歌山県 児童養護施設 詳細データ（id:84〜91）
 UPDATE public.facility_access
 SET
     location_address = '和歌山県和歌山市冬野155',
-    lat = ,
-    lng = ,
+    lat = 34.190039,
+    lng = 135.214798,
     station = '',
     description = '',
     location_appeal = '',
-    website_url = '',
+    website_url = 'https://wsj-kyoukai.or.jp/',
     target_age = '2～18歳',
     building = '',
-    capacity = ,
+    capacity = 36,
     provisional_capacity = NULL,
     relation_info = ''
 WHERE facility_id = 84;
@@ -45,15 +45,15 @@ WHERE facility_id = 84;
 UPDATE public.facility_access
 SET
     location_address = '和歌山県新宮市新宮8018',
-    lat = ,
-    lng = ,
+    lat = 33.711317,
+    lng = 135.99707,
     station = '',
     description = '',
     location_appeal = '',
     website_url = '',
     target_age = '2～18歳',
     building = '',
-    capacity = ,
+    capacity = 30,
     provisional_capacity = NULL,
     relation_info = ''
 WHERE facility_id = 85;
@@ -61,63 +61,63 @@ WHERE facility_id = 85;
 UPDATE public.facility_access
 SET
     location_address = '和歌山県田辺市向山395-1',
-    lat = ,
-    lng = ,
+    lat = 33.749371,
+    lng = 135.339386,
     station = '',
     description = '',
     location_appeal = '',
     website_url = '',
     target_age = '2～18歳',
     building = '',
-    capacity = ,
+    capacity = 18,
     provisional_capacity = NULL,
     relation_info = ''
 WHERE facility_id = 86;
 
 UPDATE public.facility_access
 SET
-    location_address = '和歌山県和歌山市直川1437 ',
-    lat = ,
-    lng = ,
+    location_address = '和歌山県和歌山市直川1437',
+    lat = 34.266812,
+    lng = 135.214879,
     station = '',
     description = '',
     location_appeal = '',
     website_url = '',
     target_age = '2～18歳',
     building = '',
-    capacity = ,
+    capacity = 45,
     provisional_capacity = NULL,
     relation_info = ''
 WHERE facility_id = 87;
 
 UPDATE public.facility_access
 SET
-    location_address = '和歌山県和歌山市つつじが丘7丁目2-1',
-    lat = ,
-    lng = ,
+    location_address = '和歌山県和歌山市つつじが丘7-2-1',
+    lat = 34.265423,
+    lng = 135.09801,
     station = '',
     description = '',
     location_appeal = '',
-    website_url = '',
+    website_url = 'https://www.torafusugakuen.jp/',
     target_age = '2～18歳',
     building = '',
-    capacity = ,
+    capacity = 45,
     provisional_capacity = NULL,
     relation_info = ''
 WHERE facility_id = 88;
 
 UPDATE public.facility_access
 SET
-    location_address = '和歌山県紀ノ川市下丹生谷101',
-    lat = ,
-    lng = ,
+    location_address = '和歌山県紀の川市下丹生谷101',
+    lat = 34.291337,
+    lng = 135.418937,
     station = '',
     description = '',
     location_appeal = '',
-    website_url = '',
+    website_url = 'https://nyuugakuen.jp/',
     target_age = '2～18歳',
     building = '',
-    capacity = ,
+    capacity = 36,
     provisional_capacity = NULL,
     relation_info = ''
 WHERE facility_id = 89;
@@ -125,15 +125,15 @@ WHERE facility_id = 89;
 UPDATE public.facility_access
 SET
     location_address = '和歌山県田辺市城山台5-1',
-    lat = ,
-    lng = ,
+    lat = 33.72465,
+    lng = 135.427939,
     station = '',
     description = '',
     location_appeal = '',
-    website_url = '',
+    website_url = 'https://www.wfj.or.jp/facilities/275',
     target_age = '2～18歳',
     building = '',
-    capacity = ,
+    capacity = 26,
     provisional_capacity = NULL,
     relation_info = ''
 WHERE facility_id = 90;
@@ -141,15 +141,15 @@ WHERE facility_id = 90;
 UPDATE public.facility_access
 SET
     location_address = '和歌山県橋本市橋谷325',
-    lat = ,
-    lng = ,
+    lat = 34.346461,
+    lng = 135.604719,
     station = '',
     description = '',
     location_appeal = '',
     website_url = '',
     target_age = '2～18歳',
     building = '',
-    capacity = ,
+    capacity = 40,
     provisional_capacity = NULL,
     relation_info = ''
 WHERE facility_id = 91;

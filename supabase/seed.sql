@@ -557,6 +557,64 @@ VALUES
     (83, '嚶鳴学院', '社会福祉法人  嚶鳴学院', '637-0027', '0747-22-7115', '奈良県', '五條市', '島野町745', 1976, '[]')
 ON CONFLICT (id) DO NOTHING;
 
+-- ============================================================================
+-- 和歌山県の施設データ
+-- ============================================================================
+
+INSERT INTO public.facilities (
+    id,
+    name,
+    corporation,
+    postal_code,
+    phone,
+    prefecture,
+    city,
+    address_detail,
+    established_year,
+    annex_facilities
+)
+VALUES
+    (84, '和歌山市旭学園', '社会福祉法人  和歌山社会事業協会', '640-0332', '073-479-0080', '和歌山県', ' 和歌山市', '冬野155', 1966, '[]'),
+    (85, '紀南学園', '紀南学園事務組合', '647-0081', '0735-22-3004', '和歌山県', '新宮市', '新宮8018', 1951, '[]'),
+    (86, 'くすのき', '社会福祉法人 真寿会', '646-1323', '0739-62-8600', '和歌山県', '田辺市 ', '向山395-1', 2010, '[]'),
+    (87, 'こばと学園', '社会福祉法人 和歌山県社会施設事業会', '640-8481', '0734-61-0072', '和歌山県', '和歌山市', '直川1437', 1954, '[]'),
+    (88, 'つつじが丘学舎', '社会福祉法人 虎伏学園', '640-0115', '073-480-1043', '和歌山県', '和歌山市', 'つつじが丘7丁目2-1', 1962, '[]'),
+    (89, '丹生学園', '社会福祉法人  丹生学園', '649-6523', '0736-73-5840', '和歌山県', '紀の川市', '下丹生谷101', 1954, '[]'),
+    (90, 'ひまわり寮', '社会福祉法人  和歌山県福祉事業団', '646-0217', '0739-25-3500', '和歌山県', '田辺市', '城山台5-1', 1955, '[]'),
+    (91, '六地学園', '社会福祉法人 紀北和楽会', '648-0095', '0736-37-0823', '和歌山県', '橋本市', '橋谷325', 1949, '[]')
+ON CONFLICT (id) DO NOTHING;
+
+-- ============================================================================
+-- 和歌山県の施設データ
+-- ============================================================================
+
+INSERT INTO public.facilities (
+    id,
+    name,
+    corporation,
+    postal_code,
+    phone,
+    prefecture,
+    city,
+    address_detail,
+    established_year,
+    annex_facilities
+)
+VALUES
+    (92, '青葉学園', '社会福祉法人  青葉学園', '621-0031', '0771-22-0651', '京都府', ' 亀岡市ひえ田野町', '太田高星7', 1949, '[]'),
+    (93, '京都大和の家', '社会福祉法人 盛和福祉会', '619-0243', '0774-98-3840', '京都府', ' 相楽郡精華町', '大字南稲八妻小字笛竹37', 2004, '[]'),
+    (94, 'てらす峰夢', '社会福祉法人 みねやま福祉会', '627-0012', '0772-62-1251', '京都府', '京丹後市峰山町 ', '杉谷952-8', 1955, '[]'),
+    (95, '舞鶴学園', '社会福祉法人  舞鶴学園', '625-0026', '0773-62-1315', '京都府', ' 舞鶴市 ', '大字泉源寺小字立田223', 1946, '[]'),
+    (96, '舞鶴双葉寮', '社会福祉法人 舞鶴双葉寮', '625-0060', '0773-62-0122', '京都府', '舞鶴市', '桃山町7-5', 1948, '[]'),
+    (97, '迦陵園', '社会福祉法人  迦陵園', '606-0802', '075-701-0250', '京都府', '京都市左京区', '下鴨宮崎町109', 1959, '[]'),
+    (98, '京都聖嬰会', '社会福祉法人   聖嬰会', '603-8456', '075-462-9268', '京都府', '京都市北区', '衣笠西尊上院町22', 1986, '[]'),
+    (99, '積慶園', '社会福祉法人  積慶園', '615-8145', '075-392-6351', '京都府', '京都市西京区', '樫原角田町1番地42', 1945, '[]'),
+    (100, 'つばさ園', '社会福祉法人 京都社会事業財団', '615-8256', '075-381-3650', '京都府', '京都市西京区', '山田平尾町51-28', 1946, '[]'),
+    (101, '平安徳義会養護園', '社会福祉法人 平安徳義会', '610-1132', '075-331-0007', '京都府', '京都市西京区', '大原野灰方町249', 1890, '[]'),
+    (102, '平安養育院', '社会福祉法人 平安養育院', '605-0062', '075-561-0680', '京都府', ' 京都市東山区', '林下町400-3', 1905, '[]'),
+    (103, '桃山学園', '社会福祉法人 京都府社会福祉事業団', '612-8012', '075-602-4225', '京都府', '京都市伏見区', '桃山町遠山50', 1954, '[]'),
+    (104, '和敬学園', '社会福祉法人 衆善会', '602-0898', '075-241-3320', '京都府', '京都市上京区', '烏丸通寺ノ内上る東入相国寺門前町704', 1924, '[]')
+ON CONFLICT (id) DO NOTHING;
 
 -- ============================================================================
 -- 4. 施設と施設種類の紐づけ
@@ -573,7 +631,7 @@ ON CONFLICT (facility_id, facility_type_id) DO NOTHING;
 -- 5. 施設詳細データの更新
 -- ============================================================================
 
--- アクセス情報
+-- 兵庫県の施設アクセス情報
 UPDATE public.facility_access
 SET
   location_address = '兵庫県神戸市北区道場町塩田3083番地',
@@ -1909,6 +1967,345 @@ SET
     provisional_capacity = NULL,
     relation_info = ''
 WHERE facility_id = 83;
+
+-- 和歌山県 児童養護施設 詳細データ（id:84〜91）
+UPDATE public.facility_access
+SET
+    location_address = '和歌山県和歌山市冬野155',
+    lat = 34.190039,
+    lng = 135.214798,
+    station = '',
+    description = '',
+    location_appeal = '',
+    website_url = 'https://wsj-kyoukai.or.jp/',
+    target_age = '2～18歳',
+    building = '',
+    capacity = 36,
+    provisional_capacity = NULL,
+    relation_info = ''
+WHERE facility_id = 84;
+
+UPDATE public.facility_access
+SET
+    location_address = '和歌山県新宮市新宮8018',
+    lat = 33.711317,
+    lng = 135.99707,
+    station = '',
+    description = '',
+    location_appeal = '',
+    website_url = '',
+    target_age = '2～18歳',
+    building = '',
+    capacity = 30,
+    provisional_capacity = NULL,
+    relation_info = ''
+WHERE facility_id = 85;
+
+UPDATE public.facility_access
+SET
+    location_address = '和歌山県田辺市向山395-1',
+    lat = 33.749371,
+    lng = 135.339386,
+    station = '',
+    description = '',
+    location_appeal = '',
+    website_url = '',
+    target_age = '2～18歳',
+    building = '',
+    capacity = 18,
+    provisional_capacity = NULL,
+    relation_info = ''
+WHERE facility_id = 86;
+
+UPDATE public.facility_access
+SET
+    location_address = '和歌山県和歌山市直川1437',
+    lat = 34.266812,
+    lng = 135.214879,
+    station = '',
+    description = '',
+    location_appeal = '',
+    website_url = '',
+    target_age = '2～18歳',
+    building = '',
+    capacity = 45,
+    provisional_capacity = NULL,
+    relation_info = ''
+WHERE facility_id = 87;
+
+UPDATE public.facility_access
+SET
+    location_address = '和歌山県和歌山市つつじが丘7-2-1',
+    lat = 34.265423,
+    lng = 135.09801,
+    station = '',
+    description = '',
+    location_appeal = '',
+    website_url = 'https://www.torafusugakuen.jp/',
+    target_age = '2～18歳',
+    building = '',
+    capacity = 45,
+    provisional_capacity = NULL,
+    relation_info = ''
+WHERE facility_id = 88;
+
+UPDATE public.facility_access
+SET
+    location_address = '和歌山県紀の川市下丹生谷101',
+    lat = 34.291337,
+    lng = 135.418937,
+    station = '',
+    description = '',
+    location_appeal = '',
+    website_url = 'https://nyuugakuen.jp/',
+    target_age = '2～18歳',
+    building = '',
+    capacity = 36,
+    provisional_capacity = NULL,
+    relation_info = ''
+WHERE facility_id = 89;
+
+UPDATE public.facility_access
+SET
+    location_address = '和歌山県田辺市城山台5-1',
+    lat = 33.72465,
+    lng = 135.427939,
+    station = '',
+    description = '',
+    location_appeal = '',
+    website_url = 'https://www.wfj.or.jp/facilities/275',
+    target_age = '2～18歳',
+    building = '',
+    capacity = 26,
+    provisional_capacity = NULL,
+    relation_info = ''
+WHERE facility_id = 90;
+
+UPDATE public.facility_access
+SET
+    location_address = '和歌山県橋本市橋谷325',
+    lat = 34.346461,
+    lng = 135.604719,
+    station = '',
+    description = '',
+    location_appeal = '',
+    website_url = '',
+    target_age = '2～18歳',
+    building = '',
+    capacity = 40,
+    provisional_capacity = NULL,
+    relation_info = ''
+WHERE facility_id = 91;
+
+-- 京都府 施設のアクセス情報
+UPDATE public.facility_access
+SET
+    location_address = '京都府亀岡市ひえ田野町太田高星7',
+    lat = 35.023064,
+    lng = 135.547779,
+    station = '',
+    description = '',
+    location_appeal = '',
+    website_url = '',
+    target_age = '2～18歳',
+    building = '',
+    capacity = 45,
+    provisional_capacity = NULL,
+    relation_info = ''
+WHERE facility_id = 92;
+
+UPDATE public.facility_access
+SET
+    location_address = '京都府相楽郡精華町大字南稲八妻小字笛竹37',
+    lat = 34.756272,
+    lng = 135.792052,
+    station = '',
+    description = '',
+    location_appeal = '',
+    website_url = '',
+    target_age = '2～18歳',
+    building = '',
+    capacity = 60,
+    provisional_capacity = NULL,
+    relation_info = ''
+WHERE facility_id = 93;
+
+UPDATE public.facility_access
+SET
+    location_address = '京都府京丹後市峰山町杉谷952-8',
+    lat = 35.62161,
+    lng = 135.060449,
+    station = '',
+    description = '',
+    location_appeal = '',
+    website_url = '',
+    target_age = '2～18歳',
+    building = '',
+    capacity = 25,
+    provisional_capacity = NULL,
+    relation_info = ''
+WHERE facility_id = 94;
+
+UPDATE public.facility_access
+SET
+    location_address = '京都府舞鶴市大字泉源寺小字立田223',
+    lat = 35.487317,
+    lng = 135.436513,
+    station = '',
+    description = '',
+    location_appeal = '',
+    website_url = '',
+    target_age = '2～18歳',
+    building = '',
+    capacity = 45,
+    provisional_capacity = NULL,
+    relation_info = ''
+WHERE facility_id = 95;
+
+UPDATE public.facility_access
+SET
+    location_address = '京都府舞鶴市桃山町7-5',
+    lat = 35.466269,
+    lng = 135.390018,
+    station = '',
+    description = '',
+    location_appeal = '',
+    website_url = '',
+    target_age = '2～18歳',
+    building = '',
+    capacity = 45,
+    provisional_capacity = NULL,
+    relation_info = ''
+WHERE facility_id = 96;
+
+UPDATE public.facility_access
+SET
+    location_address = '京都市左京区下鴨宮崎町109',
+    lat = 35.033872,
+    lng = 135.770259,
+    station = '',
+    description = '',
+    location_appeal = '',
+    website_url = '',
+    target_age = '2～18歳',
+    building = '',
+    capacity = 40,
+    provisional_capacity = NULL,
+    relation_info = ''
+WHERE facility_id = 97;
+
+UPDATE public.facility_access
+SET
+    location_address = '京都府京都市北区衣笠西尊上院町22',
+    lat = 35.041989,
+    lng = 135.731973,
+    station = '',
+    description = '',
+    location_appeal = '',
+    website_url = '',
+    target_age = '2～18歳',
+    building = '',
+    capacity = 55,
+    provisional_capacity = NULL,
+    relation_info = ''
+WHERE facility_id = 98;
+
+UPDATE public.facility_access
+SET
+    location_address = '京都府京都市西京区樫原角田町1番地42',
+    lat = 34.969897,
+    lng = 135.692411,
+    station = '',
+    description = '',
+    location_appeal = '',
+    website_url = '',
+    target_age = '2～18歳',
+    building = '',
+    capacity = 66,
+    provisional_capacity = NULL,
+    relation_info = ''
+WHERE facility_id = 99;
+
+UPDATE public.facility_access
+SET
+    location_address = '京都府京都市西京区山田平尾町51-28',
+    lat = 34.981798,
+    lng = 135.684939,
+    station = '',
+    description = '',
+    location_appeal = '',
+    website_url = '',
+    target_age = '2～18歳',
+    building = '',
+    capacity = 52,
+    provisional_capacity = NULL,
+    relation_info = ''
+WHERE facility_id = 100;
+
+UPDATE public.facility_access
+SET
+    location_address = '京都府京都市西京区大原野灰方町249',
+    lat = 34.949544,
+    lng = 135.668406,
+    station = '',
+    description = '',
+    location_appeal = '',
+    website_url = '',
+    target_age = '2～18歳',
+    building = '',
+    capacity = 85,
+    provisional_capacity = NULL,
+    relation_info = ''
+WHERE facility_id = 101;
+
+UPDATE public.facility_access
+SET
+    location_address = '京都府京都市東山区林下町400-3',
+    lat = 35.005534,
+    lng = 135.78366,
+    station = '',
+    description = '',
+    location_appeal = '',
+    website_url = '',
+    target_age = '2～18歳',
+    building = '',
+    capacity = 60,
+    provisional_capacity = NULL,
+    relation_info = ''
+WHERE facility_id = 102;
+
+UPDATE public.facility_access
+SET
+    location_address = '京都府京都市伏見区桃山町遠山50',
+    lat = 34.935277,
+    lng = 135.789094,
+    station = '',
+    description = '',
+    location_appeal = '',
+    website_url = '',
+    target_age = '2～18歳',
+    building = '',
+    capacity = 30,
+    provisional_capacity = NULL,
+    relation_info = ''
+WHERE facility_id = 103;
+
+UPDATE public.facility_access
+SET
+    location_address = '京都府京都市上京区烏丸通寺ノ内上る東入相国寺門前町704',
+    lat = 35.026795,
+    lng = 135.741823,
+    station = '',
+    description = '',
+    location_appeal = '',
+    website_url = '',
+    target_age = '2～18歳',
+    building = '',
+    capacity = 60,
+    provisional_capacity = NULL,
+    relation_info = ''
+WHERE facility_id = 104;
+
 
 -- ============================================================================
 -- 7. 開発用管理者ユーザー
