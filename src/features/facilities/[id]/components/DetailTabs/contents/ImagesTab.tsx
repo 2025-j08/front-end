@@ -118,7 +118,7 @@ export const ImagesTab = ({
       try {
         // WebP変換してアップロード
         const webpBlob = await convertToWebP(file, imageType);
-        const webpFile = new File([webpBlob], `${file.name.split('.')[0]}.webp`, {
+        const webpFile = new File([webpBlob], file.name.replace(/\.[^.]+$/, '.webp'), {
           type: 'image/webp',
         });
 
