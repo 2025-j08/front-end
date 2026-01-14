@@ -136,9 +136,77 @@ export const useFacilityImageUpload = (facilityId: string) => {
     }
   }, [facilityId]);
 
+  /**
+   * 画像を一括保存する（削除 -> アップロード）
+   */
+  const saveAllImages = useCallback(
+    async (
+      uploads: { file: File; type: FacilityImageType; displayOrder: number }[],
+      deleteIds: number[],
+    ) => {
+      setIsUploading(true);
+      setError(null);
+
+      try {
+        const supabase = createClient();
+        const numericFacilityId = parseInt(facilityId, 10);
+
+        if (isNaN(numericFacilityId)) {
+          throw new Error('無効な施設IDです');
+        }
+
+        // 1. 削除処理（並列実行）
+        if (deleteIds.length > 0) {
+          await Promise.all(
+            deleteIds.map(async (id) => {
+              const { imageUrl } = await deleteFacilityImageById(supabase, id);
+              if (imageUrl) {
+                try {
+                  await deleteFacilityImage(supabase, imageUrl);
+                } catch (e) {
+                  console.warn('Storageからの削除失敗 (無視):', e);
+                }
+              }
+            }),
+          );
+        }
+
+        // 2. アップロード & 登録処理（並列実行）
+        if (uploads.length > 0) {
+          await Promise.all(
+            uploads.map(async ({ file, type, displayOrder }) => {
+              const publicUrl = await uploadFacilityImage(
+                supabase,
+                numericFacilityId,
+                type,
+                file,
+                displayOrder,
+              );
+
+              await insertFacilityImage(supabase, {
+                facility_id: numericFacilityId,
+                image_type: type,
+                image_url: publicUrl,
+                display_order: displayOrder,
+              });
+            }),
+          );
+        }
+      } catch (err) {
+        const message = err instanceof Error ? err.message : '画像の保存に失敗しました';
+        setError(message);
+        throw err;
+      } finally {
+        setIsUploading(false);
+      }
+    },
+    [facilityId],
+  );
+
   return {
     uploadImage,
     deleteImage,
+    saveAllImages,
     fetchImages,
     isUploading,
     error,

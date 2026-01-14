@@ -50,14 +50,37 @@ export const ImagesTab = ({
   // (isEditMode || images)
 
   const [pendingImages, setPendingImages] = useState<PendingImage[]>([]);
+  const [deleteIds, setDeleteIds] = useState<number[]>([]);
   const [dragOver, setDragOver] = useState<FacilityImageType | null>(null);
 
   // ダイアログ管理（カスタムフック）
   const { dialogConfig, showDialog, closeDialog, showError } = useConfirmDialog();
 
-  // 既存画像を取得
-  const thumbnail = images.find((img) => img.imageType === 'thumbnail');
-  const galleryImages = images
+  // 保存ハンドラー（一括実行用）
+  // 既存の onSave (TabSaveButtonから呼ばれる) はこの内部ロジックを使用しない（Props経由で上位から呼ばれるため）
+  // ここでは上位コンポーネントがこれらのStateを受け取って処理することを想定しているが、
+  // 現在の実装では onSave は親から渡される無名関数（saveHandlers.images）である。
+  // そのため、pendingImages と deleteIds を親に渡すか、
+  // あるいはここで saveHandlers.images の中身をオーバーライドする必要がある。
+  // しかし、TabSaveButton は onSave を実行するだけ。
+
+  // NOTE: ここでは「保存ボタンが押されたとき」に実行されるアクションとして
+  // ImagesTab内部で pending 状態を解決するロジックを実装したいが、
+  // TabSaveButton は単に props.onSave を呼ぶだけである。
+  // "上位コンポーネントで一括保存" という要件であれば、上位で state を持つべきだが、
+  // 今回は "ImagesTabの保存ボタン" で完結させるため、
+  // 親から渡された onSave をラップする形にするか、
+  // あるいは useFacilityImageUpload の saveAllImages をここで直接使う形にリファクタリングする。
+
+  // しかし、ImagesTabのProps定義を変えずに実装するには、
+  // 親からの onSave が呼ばれる前に、ここでの処理を割り込ませる必要がある。
+  // TabSaveButton の onSave に、ここでの handleSave を渡せばよい。
+
+  // 既存画像を取得（削除対象を除外）
+  const validImages = images.filter((img) => !deleteIds.includes(img.id));
+
+  const thumbnail = validImages.find((img) => img.imageType === 'thumbnail');
+  const galleryImages = validImages
     .filter((img) => img.imageType === 'gallery')
     .sort((a, b) => a.displayOrder - b.displayOrder);
 

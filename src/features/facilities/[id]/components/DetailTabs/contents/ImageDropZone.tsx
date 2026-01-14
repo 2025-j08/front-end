@@ -7,11 +7,12 @@ import styles from './ImagesTab.module.scss';
 type ImageDropZoneProps = {
   isDragOver: boolean;
   onFileSelect: (files: FileList | null) => void;
-  onDragOver: (e: DragEvent) => void; // Parent should handle currying if needed
+  onDragOver: (e: DragEvent) => void;
   onDragLeave: (e: DragEvent) => void;
   onDrop: (e: DragEvent) => void;
   ariaLabel: string;
   className?: string;
+  multiple?: boolean;
 };
 
 export const ImageDropZone = ({
@@ -22,6 +23,7 @@ export const ImageDropZone = ({
   onDrop,
   ariaLabel,
   className = '',
+  multiple = false,
 }: ImageDropZoneProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -50,6 +52,7 @@ export const ImageDropZone = ({
         ref={inputRef}
         type="file"
         accept="image/jpeg,image/png"
+        multiple={multiple}
         onChange={(e: ChangeEvent<HTMLInputElement>) => onFileSelect(e.target.files)}
         className={styles.hiddenInput}
         aria-label={ariaLabel}
