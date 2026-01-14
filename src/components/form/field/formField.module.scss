@@ -35,6 +35,8 @@
       background-color 0.3s ease,
       color 0.3s ease;
     font-family: inherit;
+    min-width: 0;
+    box-sizing: border-box;
 
     &::placeholder {
       color: var(--text-muted);
@@ -70,6 +72,14 @@
     input,
     textarea {
       width: 100%;
+      max-width: 100%;
+      font-size: 16px;
+      padding: 14px 16px;
+      border-radius: 8px;
+    }
+
+    textarea {
+      min-height: 140px;
     }
   }
 }
