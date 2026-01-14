@@ -8,6 +8,74 @@
   position: relative;
 }
 
+// 郵便番号セクション
+.postalCodeSection {
+  margin-bottom: 22px;
+}
+
+.postalCodeLabel {
+  display: block;
+  font-size: 0.95rem;
+  color: colors.$dark-gray;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.required {
+  color: colors.$error-color;
+  margin-left: 4px;
+}
+
+.postalCodeInputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.postalCodeInput {
+  padding: 12px 14px;
+  border: 1.5px solid colors.$form-input-border;
+  border-radius: 8px;
+  background-color: colors.$form-input-bg;
+  font-size: 1rem;
+  color: colors.$dark-gray;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: colors.$form-primary;
+    box-shadow: 0 0 0 4px colors.$form-focus-glow;
+  }
+
+  &.inputError {
+    border-color: colors.$error-color;
+  }
+}
+
+.postalCode1 {
+  width: 80px;
+  text-align: center;
+}
+
+.postalCode2 {
+  width: 100px;
+  text-align: center;
+}
+
+.postalCodeHyphen {
+  font-size: 1.2rem;
+  color: colors.$dark-gray;
+}
+
+.postalCodeError {
+  color: colors.$error-color;
+  font-size: 0.85rem;
+  margin-top: 6px;
+  margin-bottom: 0;
+}
+
 // 住所セクション
 .addressSection {
   margin-top: 30px;
