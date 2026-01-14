@@ -41,16 +41,20 @@ function getSectionFromField<K extends keyof FacilityDetail>(field: K): TabSecti
   return 'basic'; // デフォルト
 }
 
+/** タブセクション名の配列（動的生成用） */
+export const TAB_SECTIONS = [
+  'basic',
+  'access',
+  'philosophy',
+  'specialty',
+  'staff',
+  'education',
+  'advanced',
+  'other',
+] as const;
+
 /** タブセクション名 */
-export type TabSection =
-  | 'basic'
-  | 'access'
-  | 'philosophy'
-  | 'specialty'
-  | 'staff'
-  | 'education'
-  | 'advanced'
-  | 'other';
+export type TabSection = (typeof TAB_SECTIONS)[number];
 
 /** 編集フォームの状態（タブごと） */
 type TabEditState = {
