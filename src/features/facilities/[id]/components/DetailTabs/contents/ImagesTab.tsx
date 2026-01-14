@@ -5,6 +5,7 @@ import { useState, useCallback, useRef, ChangeEvent, DragEvent } from 'react';
 
 import { FacilityImage, FacilityImageType } from '@/types/facility';
 import { validateImageFile, convertToWebP, createImagePreview } from '@/lib/imageUtils';
+import { ConfirmDialog, ConfirmDialogProps } from '@/components/ui/ConfirmDialog/ConfirmDialog';
 
 import { TabSaveButton } from './TabSaveButton';
 import styles from './TabContent.module.scss';
@@ -51,10 +52,54 @@ export const ImagesTab = ({
   isSaving = false,
   isDirty = false,
 }: ImagesTabProps) => {
+  // 画像タブには常にデータが存在する（空配列でも表示可能）ため、
+  // 他のタブと異なり条件分岐は不要ですが、一貫性のために理由を明記しています。
+  // (isEditMode || images)
+
   const [pendingImages, setPendingImages] = useState<PendingImage[]>([]);
   const [dragOver, setDragOver] = useState<FacilityImageType | null>(null);
   const thumbnailInputRef = useRef<HTMLInputElement>(null);
   const galleryInputRef = useRef<HTMLInputElement>(null);
+
+  // ダイアログ設定
+  const [dialogConfig, setDialogConfig] = useState<
+    Omit<ConfirmDialogProps, 'isOpen' | 'onConfirm' | 'onCancel'> & {
+      isOpen: boolean;
+      onConfirm?: () => void;
+      onCancel?: () => void;
+    }
+  >({
+    isOpen: false,
+    message: '',
+    title: '確認',
+    showCancel: true,
+  });
+
+  const closeDialog = useCallback(() => {
+    setDialogConfig((prev) => ({ ...prev, isOpen: false }));
+  }, []);
+
+  const showDialog = useCallback((config: Partial<typeof dialogConfig>) => {
+    setDialogConfig((prev) => ({
+      ...prev,
+      ...config,
+      isOpen: true,
+      onCancel: config.onCancel || (() => setDialogConfig((p) => ({ ...p, isOpen: false }))),
+    }));
+  }, []);
+
+  const showError = useCallback(
+    (message: string) => {
+      showDialog({
+        title: 'エラー',
+        message,
+        showCancel: false,
+        confirmLabel: '閉じる',
+        onConfirm: () => closeDialog(),
+      });
+    },
+    [showDialog, closeDialog],
+  );
 
   // 既存画像を取得
   const thumbnail = images.find((img) => img.imageType === 'thumbnail');
@@ -71,7 +116,7 @@ export const ImagesTab = ({
       const validation = validateImageFile(file);
 
       if (!validation.isValid) {
-        alert(validation.error);
+        showError(validation.error || '無効なファイルです');
         return;
       }
 
@@ -94,7 +139,7 @@ export const ImagesTab = ({
         }
 
         if (!found) {
-          alert('ギャラリー画像は最大3枚までです。');
+          showError('ギャラリー画像は最大3枚までです。');
           return;
         }
       }
@@ -166,17 +211,26 @@ export const ImagesTab = ({
 
   // 画像削除ハンドラー
   const handleDelete = useCallback(
-    async (imageId: number) => {
+    (imageId: number) => {
       if (!onDelete) return;
-      if (!confirm('この画像を削除しますか？')) return;
 
-      try {
-        await onDelete(imageId);
-      } catch (error) {
-        alert(error instanceof Error ? error.message : '削除に失敗しました');
-      }
+      showDialog({
+        title: '削除の確認',
+        message: 'この画像を削除しますか？',
+        isDanger: true,
+        confirmLabel: '削除する',
+        onConfirm: async () => {
+          try {
+            await onDelete(imageId);
+            closeDialog();
+          } catch (error) {
+            closeDialog();
+            showError(error instanceof Error ? error.message : '削除に失敗しました');
+          }
+        },
+      });
     },
-    [onDelete],
+    [onDelete, showDialog, closeDialog, showError],
   );
 
   // pending画像の削除
@@ -415,6 +469,18 @@ export const ImagesTab = ({
         </div>
       </div>
       {onSave && <TabSaveButton onSave={onSave} isSaving={isSaving} isDirty={isDirty} />}
+
+      <ConfirmDialog
+        isOpen={dialogConfig.isOpen}
+        title={dialogConfig.title}
+        message={dialogConfig.message}
+        confirmLabel={dialogConfig.confirmLabel}
+        cancelLabel={dialogConfig.cancelLabel}
+        isDanger={dialogConfig.isDanger}
+        showCancel={dialogConfig.showCancel}
+        onConfirm={() => dialogConfig.onConfirm?.()}
+        onCancel={() => dialogConfig.onCancel?.()}
+      />
     </>
   );
 };
