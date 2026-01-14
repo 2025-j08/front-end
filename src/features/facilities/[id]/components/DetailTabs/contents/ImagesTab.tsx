@@ -1,26 +1,19 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useCallback, useRef, ChangeEvent, DragEvent } from 'react';
+import { useState, useCallback, DragEvent } from 'react';
 
 import { FacilityImage, FacilityImageType } from '@/types/facility';
 import { validateImageFile, convertToWebP, createImagePreview } from '@/lib/imageUtils';
-import { ConfirmDialog, ConfirmDialogProps } from '@/components/ui/ConfirmDialog/ConfirmDialog';
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog/ConfirmDialog';
+import { useConfirmDialog } from '@/hooks/useConfirmDialog';
 
 import { TabSaveButton } from './TabSaveButton';
 import styles from './TabContent.module.scss';
 import imageStyles from './ImagesTab.module.scss';
-
-/** アップロード中の画像プレビュー */
-type PendingImage = {
-  id: string;
-  imageType: FacilityImageType;
-  displayOrder: number;
-  previewUrl: string;
-  file: File;
-  isUploading: boolean;
-  error?: string;
-};
+import { PendingImage } from './types';
+import { ImageDropZone } from './ImageDropZone';
+import { PendingImageItem } from './PendingImageItem';
 
 type ImagesTabProps = {
   /** 保存済み画像データ */
@@ -58,48 +51,9 @@ export const ImagesTab = ({
 
   const [pendingImages, setPendingImages] = useState<PendingImage[]>([]);
   const [dragOver, setDragOver] = useState<FacilityImageType | null>(null);
-  const thumbnailInputRef = useRef<HTMLInputElement>(null);
-  const galleryInputRef = useRef<HTMLInputElement>(null);
 
-  // ダイアログ設定
-  const [dialogConfig, setDialogConfig] = useState<
-    Omit<ConfirmDialogProps, 'isOpen' | 'onConfirm' | 'onCancel'> & {
-      isOpen: boolean;
-      onConfirm?: () => void;
-      onCancel?: () => void;
-    }
-  >({
-    isOpen: false,
-    message: '',
-    title: '確認',
-    showCancel: true,
-  });
-
-  const closeDialog = useCallback(() => {
-    setDialogConfig((prev) => ({ ...prev, isOpen: false }));
-  }, []);
-
-  const showDialog = useCallback((config: Partial<typeof dialogConfig>) => {
-    setDialogConfig((prev) => ({
-      ...prev,
-      ...config,
-      isOpen: true,
-      onCancel: config.onCancel || (() => setDialogConfig((p) => ({ ...p, isOpen: false }))),
-    }));
-  }, []);
-
-  const showError = useCallback(
-    (message: string) => {
-      showDialog({
-        title: 'エラー',
-        message,
-        showCancel: false,
-        confirmLabel: '閉じる',
-        onConfirm: () => closeDialog(),
-      });
-    },
-    [showDialog, closeDialog],
-  );
+  // ダイアログ管理（カスタムフック）
+  const { dialogConfig, showDialog, closeDialog, showError } = useConfirmDialog();
 
   // 既存画像を取得
   const thumbnail = images.find((img) => img.imageType === 'thumbnail');
@@ -186,7 +140,7 @@ export const ImagesTab = ({
         );
       }
     },
-    [onUpload, galleryImages, pendingImages],
+    [onUpload, galleryImages, pendingImages, showError],
   );
 
   // ドラッグ&ドロップハンドラー
@@ -307,64 +261,27 @@ export const ImagesTab = ({
                 </button>
               </div>
             ) : (
-              <div
-                className={`${imageStyles.dropZone} ${dragOver === 'thumbnail' ? imageStyles.dragOver : ''}`}
+              <ImageDropZone
+                isDragOver={dragOver === 'thumbnail'}
+                onFileSelect={(files) => handleFileSelect(files, 'thumbnail')}
                 onDragOver={(e) => handleDragOver(e, 'thumbnail')}
                 onDragLeave={handleDragLeave}
                 onDrop={(e) => handleDrop(e, 'thumbnail')}
-                onClick={() => thumbnailInputRef.current?.click()}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    thumbnailInputRef.current?.click();
-                  }
-                }}
-              >
-                <input
-                  ref={thumbnailInputRef}
-                  type="file"
-                  accept="image/jpeg,image/png"
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    handleFileSelect(e.target.files, 'thumbnail')
-                  }
-                  className={imageStyles.hiddenInput}
-                  aria-label="サムネイル画像を選択"
-                />
-                <div className={imageStyles.dropZoneContent}>
-                  <span className={imageStyles.dropIcon}>📷</span>
-                  <span>クリックまたはドラッグ&ドロップで画像を選択</span>
-                </div>
-              </div>
+                ariaLabel="サムネイル画像を選択"
+              />
             )}
 
             {/* サムネイルのpending表示 */}
             {pendingImages
               .filter((p) => p.imageType === 'thumbnail')
               .map((pending) => (
-                <div key={pending.id} className={imageStyles.pendingItem}>
-                  <div className={imageStyles.thumbnailWrapper}>
-                    <Image
-                      src={pending.previewUrl}
-                      alt="アップロード中"
-                      fill
-                      sizes="400px"
-                      className={imageStyles.thumbnailImage}
-                      unoptimized
-                    />
-                    {pending.isUploading && (
-                      <div className={imageStyles.uploadingOverlay}>アップロード中...</div>
-                    )}
-                  </div>
-                  {pending.error && (
-                    <div className={imageStyles.errorMessage}>
-                      <span>{pending.error}</span>
-                      <button type="button" onClick={() => handlePendingDelete(pending.id)}>
-                        削除
-                      </button>
-                    </div>
-                  )}
-                </div>
+                <PendingImageItem
+                  key={pending.id}
+                  pending={pending}
+                  onDelete={handlePendingDelete}
+                  wrapperClassName={imageStyles.thumbnailWrapper}
+                  imageClassName={imageStyles.thumbnailImage}
+                />
               ))}
           </section>
 
@@ -405,64 +322,28 @@ export const ImagesTab = ({
               {pendingImages
                 .filter((p) => p.imageType === 'gallery')
                 .map((pending) => (
-                  <div key={pending.id} className={imageStyles.pendingItem}>
-                    <div className={imageStyles.galleryItemWrapper}>
-                      <Image
-                        src={pending.previewUrl}
-                        alt="アップロード中"
-                        fill
-                        sizes="300px"
-                        className={imageStyles.galleryImage}
-                        unoptimized
-                      />
-                      {pending.isUploading && (
-                        <div className={imageStyles.uploadingOverlay}>アップロード中...</div>
-                      )}
-                    </div>
-                    {pending.error && (
-                      <div className={imageStyles.errorMessage}>
-                        <span>{pending.error}</span>
-                        <button type="button" onClick={() => handlePendingDelete(pending.id)}>
-                          削除
-                        </button>
-                      </div>
-                    )}
-                  </div>
+                  <PendingImageItem
+                    key={pending.id}
+                    pending={pending}
+                    onDelete={handlePendingDelete}
+                    wrapperClassName={imageStyles.galleryItemWrapper}
+                    imageClassName={imageStyles.galleryImage}
+                    sizes="300px"
+                  />
                 ))}
 
               {/* 追加ボタン（3枚未満の場合） */}
               {galleryImages.length +
                 pendingImages.filter((p) => p.imageType === 'gallery').length <
                 3 && (
-                <div
-                  className={`${imageStyles.dropZone} ${dragOver === 'gallery' ? imageStyles.dragOver : ''}`}
+                <ImageDropZone
+                  isDragOver={dragOver === 'gallery'}
+                  onFileSelect={(files) => handleFileSelect(files, 'gallery')}
                   onDragOver={(e) => handleDragOver(e, 'gallery')}
                   onDragLeave={handleDragLeave}
                   onDrop={(e) => handleDrop(e, 'gallery')}
-                  onClick={() => galleryInputRef.current?.click()}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      galleryInputRef.current?.click();
-                    }
-                  }}
-                >
-                  <input
-                    ref={galleryInputRef}
-                    type="file"
-                    accept="image/jpeg,image/png"
-                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                      handleFileSelect(e.target.files, 'gallery')
-                    }
-                    className={imageStyles.hiddenInput}
-                    aria-label="ギャラリー画像を追加"
-                  />
-                  <div className={imageStyles.dropZoneContent}>
-                    <span className={imageStyles.dropIcon}>📷</span>
-                    <span>クリックまたはドラッグ&ドロップで画像を選択</span>
-                  </div>
-                </div>
+                  ariaLabel="ギャラリー画像を追加"
+                />
               )}
             </div>
           </section>
@@ -478,8 +359,8 @@ export const ImagesTab = ({
         cancelLabel={dialogConfig.cancelLabel}
         isDanger={dialogConfig.isDanger}
         showCancel={dialogConfig.showCancel}
-        onConfirm={() => dialogConfig.onConfirm?.()}
-        onCancel={() => dialogConfig.onCancel?.()}
+        onConfirm={dialogConfig.onConfirm!}
+        onCancel={dialogConfig.onCancel || closeDialog}
       />
     </>
   );
