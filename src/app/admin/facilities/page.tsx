@@ -18,30 +18,7 @@ import { SuccessOverlay } from '@/components/form/overlay/successOverlay';
 import { UI_TIMEOUTS } from '@/const/ui';
 import { FACILITY_MESSAGES } from '@/const/messages';
 import { FACILITY_ADMIN_ROUTES } from '@/features/admin/facilities/constants';
-
-/** APIリクエスト用のヘルパー関数 */
-async function fetchApi<T>(
-  url: string,
-  options: RequestInit,
-  defaultErrorMessage: string,
-): Promise<T> {
-  const response = await fetch(url, options);
-  if (!response.ok) {
-    let errorMessage = defaultErrorMessage;
-    try {
-      const errorData = await response.json();
-      errorMessage = errorData.error || defaultErrorMessage;
-    } catch {
-      // JSONパース失敗時はデフォルトメッセージを使用
-    }
-    throw new Error(errorMessage);
-  }
-  try {
-    return await response.json();
-  } catch {
-    throw new Error(defaultErrorMessage);
-  }
-}
+import { fetchApi } from '@/lib/api/fetchApi';
 
 export default function FacilityManagementPage() {
   const router = useRouter();
