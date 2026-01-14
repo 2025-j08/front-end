@@ -7,30 +7,10 @@ import { FormField, LoadingOverlay, SuccessOverlay } from '@/components/form';
 import { FACILITY_MESSAGES } from '@/const/messages';
 import { KINKI_PREFECTURES } from '@/const/searchConditions';
 import { UI_TIMEOUTS } from '@/const/ui';
-import type { KinkiPrefecture } from '@/types/facility';
 
 import { FACILITY_ADMIN_ROUTES, FACILITY_FORM_VALIDATION } from '../constants';
+import type { AddFacilityFormData, AddFacilityFormErrors } from '../types';
 import styles from '../styles/AddFacilityForm.module.scss';
-
-interface FormData {
-  name: string;
-  corporation: string;
-  postalCode1: string;
-  postalCode2: string;
-  prefecture: KinkiPrefecture;
-  city: string;
-  addressDetail: string;
-}
-
-interface FormErrors {
-  name?: string;
-  corporation?: string;
-  postalCode1?: string;
-  postalCode2?: string;
-  prefecture?: string;
-  city?: string;
-  addressDetail?: string;
-}
 
 /**
  * 施設追加フォームコンポーネント
@@ -38,7 +18,7 @@ interface FormErrors {
 export const AddFacilityForm: React.FC = () => {
   const router = useRouter();
   const postalCode2Ref = useRef<HTMLInputElement>(null);
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<AddFacilityFormData>({
     name: '',
     corporation: '',
     postalCode1: '',
@@ -47,13 +27,13 @@ export const AddFacilityForm: React.FC = () => {
     city: '',
     addressDetail: '',
   });
-  const [errors, setErrors] = useState<FormErrors>({});
+  const [errors, setErrors] = useState<AddFacilityFormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
+    const newErrors: AddFacilityFormErrors = {};
 
     if (!formData.name.trim()) {
       newErrors.name = FACILITY_FORM_VALIDATION.NAME_REQUIRED;
@@ -88,7 +68,7 @@ export const AddFacilityForm: React.FC = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     // 入力時にエラーをクリア
-    if (errors[name as keyof FormErrors]) {
+    if (errors[name as keyof AddFacilityFormErrors]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
   };

@@ -8,23 +8,11 @@ import { KINKI_PREFECTURES } from '@/const/searchConditions';
 import { VALIDATION_PATTERNS } from '@/const/validation';
 
 import { FACILITY_ADMIN_ROUTES, FACILITY_FORM_VALIDATION } from '../constants';
+import type { FacilityTableValidationErrors, FacilityUpdateData } from '../types';
 import styles from '../styles/FacilityManagementTable.module.scss';
 
-/** バリデーションエラーの型 */
-interface ValidationErrors {
-  name?: string;
-  postalCode?: string;
-  city?: string;
-}
-
-/** 更新データの型 */
-export interface FacilityUpdateData {
-  name: string;
-  postalCode: string;
-  prefecture: string;
-  city: string;
-  addressDetail: string;
-}
+// 型を再エクスポート（既存のimportとの互換性のため）
+export type { FacilityUpdateData } from '../types';
 
 /**
  * FacilityManagementTableコンポーネントのProps
@@ -57,7 +45,7 @@ const FacilityRow = ({
   const [city, setCity] = useState(facility.city);
   const [addressDetail, setAddressDetail] = useState(facility.addressDetail);
   const [isSaving, setIsSaving] = useState(false);
-  const [errors, setErrors] = useState<ValidationErrors>({});
+  const [errors, setErrors] = useState<FacilityTableValidationErrors>({});
 
   // 変更があるかどうか判定
   const hasChanges =
@@ -69,7 +57,7 @@ const FacilityRow = ({
 
   // バリデーション
   const validate = (): boolean => {
-    const newErrors: ValidationErrors = {};
+    const newErrors: FacilityTableValidationErrors = {};
 
     if (!name.trim()) {
       newErrors.name = FACILITY_FORM_VALIDATION.NAME_REQUIRED;
