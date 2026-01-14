@@ -86,18 +86,18 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  width: fit-content;
+  width: 100%;
+  max-width: 400px;
 }
 
 // ギャラリー編集用グリッド
 .galleryEditGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
-
-  @media (max-width: 640px) {
-    grid-template-columns: 1fr;
-  }
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  /*
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+*/
 }
 
 .galleryItemWrapper {
@@ -135,10 +135,6 @@
     background-color: var(--primary-light, rgba(var(--primary-rgb), 0.1));
     border-style: solid;
   }
-}
-
-.galleryDropZone {
-  max-width: none;
 }
 
 .dropZoneContent {

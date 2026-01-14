@@ -301,7 +301,6 @@ export const ImagesTab = ({
                 <div className={imageStyles.dropZoneContent}>
                   <span className={imageStyles.dropIcon}>📷</span>
                   <span>クリックまたはドラッグ&ドロップで画像を選択</span>
-                  <span className={imageStyles.dropHint}>推奨: 400×300px</span>
                 </div>
               </div>
             )}
@@ -403,7 +402,7 @@ export const ImagesTab = ({
                 pendingImages.filter((p) => p.imageType === 'gallery').length <
                 3 && (
                 <div
-                  className={`${imageStyles.dropZone} ${imageStyles.galleryDropZone} ${dragOver === 'gallery' ? imageStyles.dragOver : ''}`}
+                  className={`${imageStyles.dropZone} ${dragOver === 'gallery' ? imageStyles.dragOver : ''}`}
                   onDragOver={(e) => handleDragOver(e, 'gallery')}
                   onDragLeave={handleDragLeave}
                   onDrop={(e) => handleDrop(e, 'gallery')}
@@ -427,8 +426,8 @@ export const ImagesTab = ({
                     aria-label="ギャラリー画像を追加"
                   />
                   <div className={imageStyles.dropZoneContent}>
-                    <span className={imageStyles.dropIcon}>+</span>
-                    <span>画像を追加</span>
+                    <span className={imageStyles.dropIcon}>📷</span>
+                    <span>クリックまたはドラッグ&ドロップで画像を選択</span>
                   </div>
                 </div>
               )}
