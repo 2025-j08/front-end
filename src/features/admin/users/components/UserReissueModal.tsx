@@ -105,6 +105,7 @@ export const UserReissueModal = ({
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           email: email.trim(),
           facilityId,
