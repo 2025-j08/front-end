@@ -93,16 +93,43 @@ export const FacilityEdit = ({ id }: Props) => {
     [updateField],
   );
 
-  // セクション別の保存ハンドラーをRecord型で動的生成（useMemoでメモ化）
-  const saveHandlers = useMemo(() => {
-    const handlers = {} as Record<TabSection, () => Promise<void>>;
-    for (const section of TAB_SECTIONS) {
-      handlers[section] = async () => {
-        await saveTab(section);
-      };
-    }
-    return handlers;
-  }, [saveTab]);
+  // セクション別の保存ハンドラーをRecord型で生成（useMemoでメモ化）
+  const saveHandlers: Record<TabSection, () => Promise<void>> = useMemo(
+    () => ({
+      basic: async () => {
+        await saveTab('basic');
+        // websiteUrlが変更されていればaccessセクションも保存
+        if (isDirty('access')) {
+          await saveTab('access');
+        }
+      },
+      access: async () => {
+        await saveTab('access');
+      },
+      philosophy: async () => {
+        await saveTab('philosophy');
+      },
+      specialty: async () => {
+        await saveTab('specialty');
+      },
+      staff: async () => {
+        await saveTab('staff');
+      },
+      education: async () => {
+        await saveTab('education');
+      },
+      advanced: async () => {
+        await saveTab('advanced');
+      },
+      images: async () => {
+        // 画像はHandleBatchImageSaveで管理されるため、ここでは何もしない
+      },
+      other: async () => {
+        await saveTab('other');
+      },
+    }),
+    [saveTab, isDirty],
+  );
 
   if (isLoading)
     return (
@@ -136,9 +163,6 @@ export const FacilityEdit = ({ id }: Props) => {
         phone={mergedData.phone}
         websiteUrl={mergedData.websiteUrl}
         isEditMode={true}
-        isSaving={isSaving}
-        isDirty={isDirty('access')}
-        onSave={saveHandlers.access}
         onUrlChange={(url) => updateField('websiteUrl', url)}
         urlError={getError('websiteUrl')}
       />
@@ -156,7 +180,7 @@ export const FacilityEdit = ({ id }: Props) => {
         getError={getError}
         onSave={saveHandlers.basic}
         isSaving={isSaving}
-        isDirty={isDirty('basic')}
+        isDirty={isDirty('basic') || isDirty('access')}
       />
 
       <DetailTabs

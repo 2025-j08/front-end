@@ -103,9 +103,9 @@ export const useFacilityTabEdit = (
   const [state, setState] = useState<TabEditState>({
     formData: initialData
       ? (() => {
-          const { images, ...rest } = initialData;
-          return rest;
-        })()
+        const { images, ...rest } = initialData;
+        return rest;
+      })()
       : {},
     dirtyMap: new Map(),
     isSaving: false,
@@ -208,11 +208,27 @@ export const useFacilityTabEdit = (
         // セクション別に更新データを構築
         const updateData = buildUpdateData(section, mergedFormData);
 
+        console.log(`[saveTab] Section: ${section}`, {
+          updateData,
+          hasData: updateData !== null,
+          dataKeys: updateData?.data ? Object.keys(updateData.data) : [],
+        });
+
         if (!updateData) {
           setState((prev) => ({
             ...prev,
             isSaving: false,
             errors: { _form: '更新するデータがありません' },
+          }));
+          return false;
+        }
+
+        if (Object.keys(updateData.data).length === 0) {
+          console.warn(`[saveTab] データが空です:`, updateData);
+          setState((prev) => ({
+            ...prev,
+            isSaving: false,
+            errors: { _form: '更新するデータが空です' },
           }));
           return false;
         }
@@ -338,4 +354,8 @@ export const useFacilityTabEdit = (
     resetSection,
     getError,
   };
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> 59e40d0 (保存までコミット)

@@ -41,6 +41,11 @@ export type BasicInfoUpdateData = {
  * アクセス情報の更新データ型
  */
 export type AccessInfoUpdateData = {
+  location_address?: string;
+  lat?: number;
+  lng?: number;
+  target_age?: string;
+  building?: string;
   station?: string;
   description?: string;
   location_appeal?: string;
