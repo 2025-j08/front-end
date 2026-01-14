@@ -3,18 +3,37 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 
-import { Facility } from '@/types/facility';
+import type { FacilityManagementItem } from '@/lib/supabase/queries/facilities';
+import type { KinkiPrefecture } from '@/types/facility';
 
 import styles from '../styles/FacilityManagementTable.module.scss';
+
+const KINKI_PREFECTURES: KinkiPrefecture[] = [
+  '大阪府',
+  '京都府',
+  '滋賀県',
+  '奈良県',
+  '兵庫県',
+  '和歌山県',
+];
+
+/** 更新データの型 */
+export interface FacilityUpdateData {
+  name: string;
+  postalCode: string;
+  prefecture: string;
+  city: string;
+  addressDetail: string;
+}
 
 /**
  * FacilityManagementTableコンポーネントのProps
  */
 interface FacilityManagementTableProps {
   /** 表示する施設のリスト */
-  facilities: Facility[];
+  facilities: FacilityManagementItem[];
   /** 保存ボタン押下時のハンドラ */
-  onSave: (id: number, name: string, address: string) => void;
+  onSave: (id: number, data: FacilityUpdateData) => Promise<void>;
   /** 削除ボタン押下時のハンドラ */
   onDelete: (id: number) => void;
 }
@@ -28,19 +47,39 @@ const FacilityRow = ({
   onSave,
   onDelete,
 }: {
-  facility: Facility;
-  onSave: (id: number, name: string, address: string) => void;
+  facility: FacilityManagementItem;
+  onSave: (id: number, data: FacilityUpdateData) => Promise<void>;
   onDelete: (id: number) => void;
 }) => {
   const [name, setName] = useState(facility.name);
-  const [address, setAddress] = useState(facility.address);
+  const [postalCode, setPostalCode] = useState(facility.postalCode);
+  const [prefecture, setPrefecture] = useState(facility.prefecture);
+  const [city, setCity] = useState(facility.city);
+  const [addressDetail, setAddressDetail] = useState(facility.addressDetail);
+  const [isSaving, setIsSaving] = useState(false);
 
   // 変更があるかどうか判定
-  const hasChanges = name !== facility.name || address !== facility.address;
+  const hasChanges =
+    name !== facility.name ||
+    postalCode !== facility.postalCode ||
+    prefecture !== facility.prefecture ||
+    city !== facility.city ||
+    addressDetail !== facility.addressDetail;
 
-  const handleSave = () => {
-    if (hasChanges) {
-      onSave(facility.id, name, address);
+  const handleSave = async () => {
+    if (!hasChanges || isSaving) return;
+
+    setIsSaving(true);
+    try {
+      await onSave(facility.id, {
+        name,
+        postalCode,
+        prefecture,
+        city,
+        addressDetail,
+      });
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -55,13 +94,48 @@ const FacilityRow = ({
           aria-label={`${facility.name}の施設名`}
         />
       </td>
-      <td className={styles.addressCol}>
+      <td className={styles.postalCodeCol}>
         <input
           type="text"
-          className={styles.addressInput}
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-          aria-label={`${facility.name}の住所`}
+          className={styles.postalCodeInput}
+          value={postalCode}
+          onChange={(e) => setPostalCode(e.target.value)}
+          placeholder="000-0000"
+          aria-label={`${facility.name}の郵便番号`}
+        />
+      </td>
+      <td className={styles.prefectureCol}>
+        <select
+          className={styles.prefectureSelect}
+          value={prefecture}
+          onChange={(e) => setPrefecture(e.target.value)}
+          aria-label={`${facility.name}の都道府県`}
+        >
+          {KINKI_PREFECTURES.map((pref) => (
+            <option key={pref} value={pref}>
+              {pref}
+            </option>
+          ))}
+        </select>
+      </td>
+      <td className={styles.cityCol}>
+        <input
+          type="text"
+          className={styles.cityInput}
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+          placeholder="市区町村"
+          aria-label={`${facility.name}の市区町村`}
+        />
+      </td>
+      <td className={styles.addressDetailCol}>
+        <input
+          type="text"
+          className={styles.addressDetailInput}
+          value={addressDetail}
+          onChange={(e) => setAddressDetail(e.target.value)}
+          placeholder="番地など"
+          aria-label={`${facility.name}の番地`}
         />
       </td>
       <td className={styles.actionCol}>
@@ -70,10 +144,10 @@ const FacilityRow = ({
             type="button"
             className={styles.saveButton}
             onClick={handleSave}
-            disabled={!hasChanges}
+            disabled={!hasChanges || isSaving}
             aria-label={`${facility.name}の変更を保存`}
           >
-            保存
+            {isSaving ? '保存中...' : '保存'}
           </button>
           <Link
             href={`/admin/facilities/${facility.id}/edit`}
@@ -98,7 +172,7 @@ const FacilityRow = ({
 
 /**
  * 施設一覧を表示するテーブルコンポーネント
- * 施設名、住所の編集機能を提供します
+ * 施設名、郵便番号、住所（都道府県・市区町村・番地）の編集機能を提供します
  */
 export const FacilityManagementTable: React.FC<FacilityManagementTableProps> = ({
   facilities,
@@ -113,8 +187,17 @@ export const FacilityManagementTable: React.FC<FacilityManagementTableProps> = (
             <th className={styles.facilityNameCol} scope="col">
               施設名
             </th>
-            <th className={styles.addressCol} scope="col">
-              住所
+            <th className={styles.postalCodeCol} scope="col">
+              郵便番号
+            </th>
+            <th className={styles.prefectureCol} scope="col">
+              都道府県
+            </th>
+            <th className={styles.cityCol} scope="col">
+              市区町村
+            </th>
+            <th className={styles.addressDetailCol} scope="col">
+              番地など
             </th>
             <th className={styles.actionCol} scope="col">
               操作
@@ -124,7 +207,7 @@ export const FacilityManagementTable: React.FC<FacilityManagementTableProps> = (
         <tbody>
           {facilities.map((facility) => (
             <FacilityRow
-              key={`${facility.id}-${facility.name}-${facility.address}`}
+              key={facility.id}
               facility={facility}
               onSave={onSave}
               onDelete={onDelete}
@@ -132,7 +215,7 @@ export const FacilityManagementTable: React.FC<FacilityManagementTableProps> = (
           ))}
           {facilities.length === 0 && (
             <tr>
-              <td colSpan={3} className={styles.emptyRow}>
+              <td colSpan={6} className={styles.emptyRow}>
                 施設データがありません
               </td>
             </tr>

@@ -109,6 +109,42 @@ export interface FacilityListResult {
   totalCount: number;
 }
 
+/** 施設管理画面用のデータ型 */
+export interface FacilityManagementItem {
+  id: number;
+  name: string;
+  postalCode: string;
+  prefecture: string;
+  city: string;
+  addressDetail: string;
+}
+
+/**
+ * 施設管理画面用の施設一覧を取得する
+ * @returns 全施設の管理用データ
+ */
+export async function getFacilityManagementList(): Promise<FacilityManagementItem[]> {
+  const supabase = createClient();
+
+  const { data, error } = await supabase
+    .from('facilities')
+    .select('id, name, postal_code, prefecture, city, address_detail')
+    .order('prefecture', { ascending: true })
+    .order('city', { ascending: true })
+    .order('name', { ascending: true });
+
+  throwIfError(error, '施設一覧の取得に失敗しました');
+
+  return (data || []).map((facility) => ({
+    id: facility.id,
+    name: facility.name,
+    postalCode: facility.postal_code,
+    prefecture: facility.prefecture,
+    city: facility.city,
+    addressDetail: facility.address_detail,
+  }));
+}
+
 /**
  * 施設一覧を取得する
  * 検索条件に基づいてフィルタリングし、県→市→施設名の五十音順でソート
