@@ -165,8 +165,8 @@ export interface FacilityDetail {
   fullAddress: string;
   /** 電話番号（必須） */
   phone: string;
-  /** 舎の区分（大舎・中舎・小舎・グループホーム・地域小規模） */
-  dormitoryType?: DormitoryType;
+  /** 舎の区分（大舎・中舎・小舎・グループホーム・地域小規模）複数選択可 */
+  dormitoryType?: DormitoryType[];
   /** 対象年齢（必須） */
   targetAge: string;
   /** アクセス情報（必須） */

@@ -33,7 +33,7 @@ interface FacilityDetailJsonItem {
   fullAddress?: string;
   phone?: string;
   establishedYear?: string;
-  dormitoryType?: string;
+  dormitoryType?: string | string[];
   accessInfo?: {
     locationAddress: string;
     lat: number;
@@ -291,13 +291,22 @@ async function seedFacilityFacilityTypes(
 
   for (const [facilityIdStr, detail] of Object.entries(facilitiesDetail)) {
     const facilityId = parseInt(facilityIdStr, 10);
-    const dormitoryType = detail.dormitoryType;
+    const dormitoryTypes = detail.dormitoryType;
 
-    if (dormitoryType && facilityTypesMap.has(dormitoryType)) {
-      associations.push({
-        facility_id: facilityId,
-        facility_type_id: facilityTypesMap.get(dormitoryType)!,
-      });
+    // dormitoryType が配列でも文字列でも対応
+    const typesArray = Array.isArray(dormitoryTypes)
+      ? dormitoryTypes
+      : dormitoryTypes
+        ? [dormitoryTypes]
+        : [];
+
+    for (const dormitoryType of typesArray) {
+      if (facilityTypesMap.has(dormitoryType)) {
+        associations.push({
+          facility_id: facilityId,
+          facility_type_id: facilityTypesMap.get(dormitoryType)!,
+        });
+      }
     }
   }
 

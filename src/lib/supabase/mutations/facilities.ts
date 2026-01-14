@@ -21,8 +21,8 @@ export type BasicInfoUpdateData = {
   corporation?: string;
   established_year?: number;
   annex_facilities?: AnnexFacility[];
-  /** 施設種類（中間テーブル経由で更新するため別処理） */
-  dormitory_type?: string;
+  /** 施設種類（中間テーブル経由で更新するため別処理）複数選択可 */
+  dormitory_type?: string[];
 };
 
 /**
@@ -138,23 +138,41 @@ async function upsertFacilityData<T extends Record<string, unknown>>(
 }
 
 /**
- * 施設種類を更新（中間テーブル経由）
+ * 施設種類を更新（中間テーブル経由）- 複数選択対応
  */
 async function updateFacilityDormitoryType(
   supabase: SupabaseClient,
   facilityId: number,
-  dormitoryType: string,
+  dormitoryTypes: string[],
 ): Promise<void> {
-  const { data: facilityType, error: typeError } = await supabase
-    .from('facility_types')
-    .select('id')
-    .eq('name', dormitoryType)
-    .single();
+  // 空配列の場合は既存の紐付けを全て削除
+  if (dormitoryTypes.length === 0) {
+    const { error: deleteError } = await supabase
+      .from('facility_facility_types')
+      .delete()
+      .eq('facility_id', facilityId);
 
-  if (typeError || !facilityType) {
-    throw new Error(`施設種類 "${dormitoryType}" が見つかりません`);
+    if (deleteError) {
+      throw new Error(`施設種類の削除に失敗しました: ${deleteError.message}`);
+    }
+    return;
   }
 
+  // 各種類のIDを取得
+  const { data: facilityTypeRecords, error: typeError } = await supabase
+    .from('facility_types')
+    .select('id, name')
+    .in('name', dormitoryTypes);
+
+  if (typeError) {
+    throw new Error(`施設種類の取得に失敗しました: ${typeError.message}`);
+  }
+
+  if (!facilityTypeRecords || facilityTypeRecords.length === 0) {
+    throw new Error(`指定された施設種類が見つかりません: ${dormitoryTypes.join(', ')}`);
+  }
+
+  // 既存の紐付けを削除
   const { error: deleteError } = await supabase
     .from('facility_facility_types')
     .delete()
@@ -164,10 +182,15 @@ async function updateFacilityDormitoryType(
     throw new Error(`施設種類の削除に失敗しました: ${deleteError.message}`);
   }
 
-  const { error: insertError } = await supabase.from('facility_facility_types').insert({
+  // 新しい紐付けを挿入
+  const associations = facilityTypeRecords.map((type) => ({
     facility_id: facilityId,
-    facility_type_id: facilityType.id,
-  });
+    facility_type_id: type.id,
+  }));
+
+  const { error: insertError } = await supabase
+    .from('facility_facility_types')
+    .insert(associations);
 
   if (insertError) {
     throw new Error(`施設種類の更新に失敗しました: ${insertError.message}`);
@@ -193,7 +216,7 @@ export async function updateFacilityBasicInfo(
     }
   }
 
-  if (dormitory_type) {
+  if (dormitory_type && dormitory_type.length > 0) {
     await updateFacilityDormitoryType(supabase, facilityId, dormitory_type);
   }
 }
