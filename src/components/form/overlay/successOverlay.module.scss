@@ -1,7 +1,6 @@
 /**
  * SuccessOverlay スタイル
  */
-@use '@/styles/colors' as colors;
 @use '@/styles/animations';
 
 .overlay {
@@ -24,12 +23,12 @@
 .icon {
   width: 60px;
   height: 60px;
-  background: linear-gradient(135deg, var(--success), colors.$success-light);
+  background: linear-gradient(135deg, var(--success), var(--success-light));
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: colors.$white;
+  color: var(--text-on-primary);
   font-size: 32px;
   font-weight: bold;
   @include animations.animation-pop-in(0.5s);
