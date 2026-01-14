@@ -7,6 +7,8 @@ import {
   EducationInfo,
   AdvancedInfo,
   OtherInfo,
+  FacilityImage,
+  FacilityImageType,
 } from '@/types/facility';
 
 import type { TabSection } from '../../edit/hooks/useFacilityTabEdit';
@@ -16,6 +18,7 @@ import { SpecialtyTab } from './contents/SpecialtyTab';
 import { StaffTab } from './contents/StaffTab';
 import { EducationTab } from './contents/EducationTab';
 import { AdvancedTab } from './contents/AdvancedTab';
+import { ImagesTab } from './contents/ImagesTab';
 import { OtherTab } from './contents/OtherTab';
 import { TabKey, Tab, TAB_LABELS } from '../../hooks/useFacilityDetail';
 import styles from './DetailTabs.module.scss';
@@ -33,6 +36,12 @@ type DetailTabsProps = {
   educationInfo?: EducationInfo;
   advancedInfo?: AdvancedInfo;
   otherInfo?: OtherInfo;
+  /** 施設画像 */
+  images?: FacilityImage[];
+  /** 画像アップロードハンドラー */
+  onImageUpload?: (imageType: FacilityImageType, file: File, displayOrder: number) => Promise<void>;
+  /** 画像削除ハンドラー */
+  onImageDelete?: (imageId: number) => Promise<void>;
   /** 編集モードかどうか */
   isEditMode?: boolean;
   /** トップレベルフィールドの更新ハンドラー */
@@ -77,6 +86,9 @@ export const DetailTabs = ({
   educationInfo,
   advancedInfo,
   otherInfo,
+  images,
+  onImageUpload,
+  onImageDelete,
   isEditMode = false,
   onFieldChange,
   onNestedFieldChange,
@@ -146,9 +158,9 @@ export const DetailTabs = ({
                 />
               ) : null;
             case 'philosophy':
-              return philosophyInfo ? (
+              return isEditMode || philosophyInfo ? (
                 <PhilosophyTab
-                  data={philosophyInfo}
+                  data={philosophyInfo || {}}
                   isEditMode={isEditMode}
                   onFieldChange={(field, value) =>
                     onNestedFieldChange?.('philosophyInfo', field, value)
@@ -160,9 +172,9 @@ export const DetailTabs = ({
                 />
               ) : null;
             case 'specialty':
-              return specialtyInfo ? (
+              return isEditMode || specialtyInfo ? (
                 <SpecialtyTab
-                  data={specialtyInfo}
+                  data={specialtyInfo || {}}
                   isEditMode={isEditMode}
                   onFieldChange={(field, value) =>
                     onNestedFieldChange?.('specialtyInfo', field, value)
@@ -174,9 +186,9 @@ export const DetailTabs = ({
                 />
               ) : null;
             case 'staff':
-              return staffInfo ? (
+              return isEditMode || staffInfo ? (
                 <StaffTab
-                  data={staffInfo}
+                  data={staffInfo || {}}
                   isEditMode={isEditMode}
                   onFieldChange={(field, value) => onNestedFieldChange?.('staffInfo', field, value)}
                   getError={getError}
@@ -186,9 +198,9 @@ export const DetailTabs = ({
                 />
               ) : null;
             case 'education':
-              return educationInfo ? (
+              return isEditMode || educationInfo ? (
                 <EducationTab
-                  data={educationInfo}
+                  data={educationInfo || {}}
                   isEditMode={isEditMode}
                   onFieldChange={(field, value) =>
                     onNestedFieldChange?.('educationInfo', field, value)
@@ -200,9 +212,9 @@ export const DetailTabs = ({
                 />
               ) : null;
             case 'advanced':
-              return advancedInfo ? (
+              return isEditMode || advancedInfo ? (
                 <AdvancedTab
-                  data={advancedInfo}
+                  data={advancedInfo || {}}
                   isEditMode={isEditMode}
                   onFieldChange={(field, value) =>
                     onNestedFieldChange?.('advancedInfo', field, value)
@@ -213,10 +225,22 @@ export const DetailTabs = ({
                   isDirty={(isDirty ?? noopIsDirty)('advanced')}
                 />
               ) : null;
+            case 'images':
+              return (
+                <ImagesTab
+                  images={images}
+                  isEditMode={isEditMode}
+                  onUpload={onImageUpload}
+                  onDelete={onImageDelete}
+                  onSave={saveHandlers?.images ?? noop}
+                  isSaving={isSaving}
+                  isDirty={(isDirty ?? noopIsDirty)('images')}
+                />
+              );
             case 'other':
-              return otherInfo ? (
+              return isEditMode || otherInfo ? (
                 <OtherTab
-                  data={otherInfo}
+                  data={otherInfo || {}}
                   isEditMode={isEditMode}
                   onFieldChange={(field, value) => onNestedFieldChange?.('otherInfo', field, value)}
                   getError={getError}

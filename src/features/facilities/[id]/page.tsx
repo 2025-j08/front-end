@@ -73,6 +73,7 @@ export const FacilityDetail = ({ id }: Props) => {
         educationInfo={facilityData.educationInfo}
         advancedInfo={facilityData.advancedInfo}
         otherInfo={facilityData.otherInfo}
+        images={facilityData.images}
         isEditMode={false}
       />
     </div>
