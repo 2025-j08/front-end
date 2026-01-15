@@ -61,14 +61,6 @@ export const FacilityHeader = ({
   const clientValidationError = getUrlValidationError(websiteUrl);
   const displayError = urlError || clientValidationError;
 
-  /**
-   * URL入力変更ハンドラー
-   * 変更時にサーバー側エラーをクリア（ユーザーが修正を試みているため）
-   */
-  const handleUrlChange = (newUrl: string) => {
-    onUrlChange?.(newUrl);
-  };
-
   return (
     <header className={styles.header}>
       <div className={styles.headerInfo}>
