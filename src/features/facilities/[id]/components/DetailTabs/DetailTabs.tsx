@@ -1,4 +1,5 @@
 import { useRef, useState, useCallback, useMemo } from 'react';
+import { Select, MenuItem, SelectChangeEvent } from '@mui/material';
 
 import { useTabKeyboardNav } from '@/hooks/useTabKeyboardNav';
 import { useConfirmDialog } from '@/hooks/useConfirmDialog';
@@ -209,21 +210,40 @@ export const DetailTabs = ({
         )}
       </div>
 
-      {/* モバイル用セレクトボックス */}
+      {/* モバイル用セレクトボックス（MUI Select） */}
       <div className={styles.tabSelectContainer}>
-        <select
+        <Select
           value={activeTab}
-          onChange={(e) => handleTabChange(e.target.value as TabKey)}
+          onChange={(e: SelectChangeEvent) => handleTabChange(e.target.value as TabKey)}
           className={styles.tabSelect}
           aria-label="表示する項目を選択"
+          variant="outlined"
+          size="small"
+          MenuProps={{
+            PaperProps: {
+              sx: {
+                maxHeight: 300, // メニューの高さを制限
+                '& .MuiMenuItem-root': {
+                  fontSize: '14px',
+                  padding: '8px 16px',
+                },
+              },
+            },
+          }}
+          sx={{
+            width: '100%',
+            backgroundColor: 'var(--background-secondary)',
+            '& .MuiSelect-select': {
+              padding: '10px 16px',
+            },
+          }}
         >
           {tabs.map((tab) => (
-            <option key={tab.key} value={tab.key}>
+            <MenuItem key={tab.key} value={tab.key}>
               {tab.label}
-            </option>
+            </MenuItem>
           ))}
-        </select>
-        {/* カスタム矢印用アイコン（CSSで実装するため要素は不要） */}
+        </Select>
       </div>
 
       {/* タブナビゲーション - role="tablist" でアクセシビリティ対応 */}
