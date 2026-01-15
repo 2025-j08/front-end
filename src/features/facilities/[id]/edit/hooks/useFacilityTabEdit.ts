@@ -103,9 +103,9 @@ export const useFacilityTabEdit = (
   const [state, setState] = useState<TabEditState>({
     formData: initialData
       ? (() => {
-          const { images, ...rest } = initialData;
-          return rest;
-        })()
+        const { images, ...rest } = initialData;
+        return rest;
+      })()
       : {},
     dirtyMap: new Map(),
     isSaving: false,
@@ -189,24 +189,30 @@ export const useFacilityTabEdit = (
         // initialDataとformDataをマージして完全なデータを構築
         const mergedFormData: Partial<FacilityDetail> = initialData
           ? {
-              ...initialData,
-              ...state.formData,
-              // ネストしたオブジェクトもマージ（mergeNestedで統一）
-              accessInfo: mergeNested(initialData.accessInfo, state.formData.accessInfo),
-              philosophyInfo: mergeNested(
-                initialData.philosophyInfo,
-                state.formData.philosophyInfo,
-              ),
-              specialtyInfo: mergeNested(initialData.specialtyInfo, state.formData.specialtyInfo),
-              staffInfo: mergeNested(initialData.staffInfo, state.formData.staffInfo),
-              educationInfo: mergeNested(initialData.educationInfo, state.formData.educationInfo),
-              advancedInfo: mergeNested(initialData.advancedInfo, state.formData.advancedInfo),
-              otherInfo: mergeNested(initialData.otherInfo, state.formData.otherInfo),
-            }
+            ...initialData,
+            ...state.formData,
+            // ネストしたオブジェクトもマージ（mergeNestedで統一）
+            accessInfo: mergeNested(initialData.accessInfo, state.formData.accessInfo),
+            philosophyInfo: mergeNested(
+              initialData.philosophyInfo,
+              state.formData.philosophyInfo,
+            ),
+            specialtyInfo: mergeNested(initialData.specialtyInfo, state.formData.specialtyInfo),
+            staffInfo: mergeNested(initialData.staffInfo, state.formData.staffInfo),
+            educationInfo: mergeNested(initialData.educationInfo, state.formData.educationInfo),
+            advancedInfo: mergeNested(initialData.advancedInfo, state.formData.advancedInfo),
+            otherInfo: mergeNested(initialData.otherInfo, state.formData.otherInfo),
+          }
           : state.formData;
 
         // セクション別に更新データを構築
         const updateData = buildUpdateData(section, mergedFormData);
+
+        console.log(`[saveTab] Section: ${section}`, {
+          updateData,
+          hasData: updateData !== null,
+          dataKeys: updateData?.data ? Object.keys(updateData.data) : [],
+        });
 
         if (!updateData) {
           setState((prev) => ({

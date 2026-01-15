@@ -41,12 +41,38 @@ export type BasicInfoUpdateData = {
  * アクセス情報の更新データ型
  */
 export type AccessInfoUpdateData = {
+  /**
+   * 所在地住所
+   * フロントエンドの `accessInfo.locationAddress` と対応するDBカラム
+   */
+  location_address?: string;
+  /** 緯度 */
+  lat?: number;
+  /** 経度 */
+  lng?: number;
+  /**
+   * 対象年齢
+   * ※DBスキーマ設計の都合上、`facility_access` テーブルに含まれるため、本カテゴリ（アクセス情報）で管理する
+   */
+  target_age?: string;
+  /**
+   * 建物の構造・階数など
+   * ※DBスキーマ設計の都合上、`facility_access` テーブルに含まれるため、本カテゴリ（アクセス情報）で管理する
+   */
+  building?: string;
+  /** 最寄り駅・交通アクセス */
   station?: string;
+  /** アクセス詳細・道順の説明 */
   description?: string;
+  /** 立地の魅力・周辺環境のアピール */
   location_appeal?: string;
+  /** 公式/関連ウェブサイトのURL */
   website_url?: string;
+  /** 定員数 */
   capacity?: number;
+  /** 計画段階などにおける暫定定員数 */
   provisional_capacity?: number;
+  /** その他の関連情報 */
   relation_info?: string;
 };
 
@@ -125,9 +151,10 @@ function removeUndefinedValues<T extends Record<string, unknown>>(obj: T): Parti
 }
 
 /**
- * 共通のupsertヘルパー関数（正規化されたスキーマ対応）
+ * 共通のupdateヘルパー関数（正規化されたスキーマ対応）
+ * 既存レコードのみを更新（新規作成は行わない）
  */
-async function upsertFacilityData<T extends Record<string, unknown>>(
+async function updateFacilityData<T extends Record<string, unknown>>(
   supabase: SupabaseClient,
   tableName: FacilityDetailTableName,
   facilityId: number,
@@ -142,7 +169,8 @@ async function upsertFacilityData<T extends Record<string, unknown>>(
 
   const { error } = await supabase
     .from(tableName)
-    .upsert({ facility_id: facilityId, ...cleanedData }, { onConflict: 'facility_id' });
+    .update(cleanedData)
+    .eq('facility_id', facilityId);
 
   if (error) {
     throw new Error(`${errorMessage}: ${error.message}`);
@@ -276,7 +304,7 @@ export async function updateFacilityBySection(
   const tableName = SECTION_TO_TABLE_MAP[update.section];
   const errorMessage = SECTION_ERROR_MAP[update.section];
 
-  await upsertFacilityData(supabase, tableName, facilityId, update.data, errorMessage);
+  await updateFacilityData(supabase, tableName, facilityId, update.data, errorMessage);
 }
 
 /**

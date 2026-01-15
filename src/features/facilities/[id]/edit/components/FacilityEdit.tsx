@@ -94,15 +94,29 @@ export const FacilityEdit = ({ id }: Props) => {
   );
 
   // セクション別の保存ハンドラーをRecord型で動的生成（useMemoでメモ化）
-  const saveHandlers = useMemo(() => {
-    const handlers = {} as Record<TabSection, () => Promise<void>>;
-    for (const section of TAB_SECTIONS) {
-      handlers[section] = async () => {
-        await saveTab(section);
-      };
-    }
-    return handlers;
-  }, [saveTab]);
+  const saveHandlers: Record<TabSection, () => Promise<void>> = useMemo(
+    () =>
+      TAB_SECTIONS.reduce(
+        (handlers, section) => {
+          handlers[section] = async () => {
+            // imagesセクションは別途handleBatchImageSaveで管理されるため、saveTabをスキップ
+            if (section === 'images') {
+              return;
+            }
+
+            await saveTab(section);
+
+            // basicセクション保存時にwebsiteUrlが変更されていればaccessセクションも保存
+            if (section === 'basic' && isDirty('access')) {
+              await saveTab('access');
+            }
+          };
+          return handlers;
+        },
+        {} as Record<TabSection, () => Promise<void>>,
+      ),
+    [saveTab, isDirty],
+  );
 
   if (isLoading)
     return (
@@ -135,9 +149,9 @@ export const FacilityEdit = ({ id }: Props) => {
         fullAddress={mergedData.fullAddress}
         phone={mergedData.phone}
         websiteUrl={mergedData.websiteUrl}
-        isEditMode={false}
-        isSaving={false}
-        isDirty={false}
+        isEditMode={true}
+        onUrlChange={(url) => updateField('websiteUrl', url)}
+        urlError={getError('websiteUrl')}
       />
 
       <BasicInfoSection
@@ -153,7 +167,7 @@ export const FacilityEdit = ({ id }: Props) => {
         getError={getError}
         onSave={saveHandlers.basic}
         isSaving={isSaving}
-        isDirty={isDirty('basic')}
+        isDirty={isDirty('basic') || isDirty('access')}
       />
 
       <DetailTabs

@@ -34,21 +34,59 @@
 
 .headerAction {
   display: flex;
+  flex-direction: column;
   gap: 12px;
-  align-items: center;
+  align-items: flex-start;
+
+  .websiteWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .urlInput {
+    padding: 10px 12px;
+    border: 1px solid colors.$form-input-border;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 300px;
+    background-color: colors.$form-input-bg;
+    color: colors.$text-primary;
+
+    &:focus {
+      outline: none;
+      border-color: colors.$primary-color;
+      box-shadow: 0 0 0 2px colors.$form-focus-glow;
+    }
+
+    &[aria-invalid='true'] {
+      border-color: colors.$error-color;
+    }
+  }
+
+  .errorText {
+    font-size: 12px;
+    color: colors.$error-color;
+  }
 
   .webButton {
     display: inline-block;
     background-color: colors.$primary-color;
-    color: colors.$white;
+    color: colors.$primary-text-color;
     padding: 12px 32px;
     border-radius: 50px;
     text-decoration: none;
     font-weight: bold;
     transition: opacity 0.2s;
 
-    &:hover {
+    &:not(:disabled):hover {
       opacity: 0.8;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
   }
 
@@ -68,14 +106,14 @@
 
     &:hover {
       background-color: colors.$primary-color;
-      color: colors.$white;
+      color: colors.$primary-text-color;
     }
   }
 
   .saveButton {
     display: inline-block;
     background-color: colors.$primary-color;
-    color: colors.$white;
+    color: colors.$primary-text-color;
     border: none;
     padding: 10px 24px;
     border-radius: 50px;
@@ -108,7 +146,7 @@
 
     &:hover:not(:disabled) {
       background-color: colors.$error-color;
-      color: colors.$white;
+      color: colors.$primary-text-color;
     }
 
     &:disabled {
