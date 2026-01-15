@@ -55,15 +55,19 @@ export const FacilityHeader = ({
   urlError,
 }: FacilityHeaderProps) => {
   const hasValidWebsite = isValidUrl(websiteUrl);
-  const showWebButton = isEditMode || hasValidWebsite;
-
-  const handleUrlChange = (newUrl: string) => {
-    onUrlChange?.(newUrl);
-  };
+  const shouldShowWebsiteSection = isEditMode || hasValidWebsite;
 
   // エラーメッセージの優先順位: サーバー側エラー > クライアント側バリデーション
   const clientValidationError = getUrlValidationError(websiteUrl);
   const displayError = urlError || clientValidationError;
+
+  /**
+   * URL入力変更ハンドラー
+   * 変更時にサーバー側エラーをクリア（ユーザーが修正を試みているため）
+   */
+  const handleUrlChange = (newUrl: string) => {
+    onUrlChange?.(newUrl);
+  };
 
   return (
     <header className={styles.header}>
@@ -76,7 +80,7 @@ export const FacilityHeader = ({
         <p className={styles.tel}>TEL {phone}</p>
       </div>
       <div className={styles.headerAction}>
-        {showWebButton &&
+        {shouldShowWebsiteSection &&
           (hasValidWebsite ? (
             <a
               href={websiteUrl ?? undefined}
@@ -101,17 +105,19 @@ export const FacilityHeader = ({
           ))}
         {isEditMode && (
           <div className={styles.websiteWrapper}>
+            <label htmlFor="facility-website-url" className={styles.urlLabel}>
+              施設のWebサイトがあればURLを入力してください
+            </label>
             <input
+              id="facility-website-url"
               type="text"
               className={styles.urlInput}
               value={websiteUrl ?? ''}
               onChange={(e) => handleUrlChange(e.target.value)}
               placeholder="https://example.com"
-              aria-label="施設WebサイトURL"
               aria-invalid={!!displayError}
               aria-describedby={displayError ? 'url-error' : undefined}
             />
-            <span className={styles.helpText}>施設のWebサイトがあればURLを入力してください</span>
             {displayError && (
               <span className={styles.errorText} id="url-error" role="alert">
                 {displayError}
