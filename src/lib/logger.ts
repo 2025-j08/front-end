@@ -24,6 +24,7 @@
 const INVALID_EMAIL_MASK = '[INVALID_EMAIL]';
 
 export const maskEmail = (email: string): string => {
+  // 空や非文字列は無効として扱う
   if (!email || typeof email !== 'string') {
     return INVALID_EMAIL_MASK;
   }
@@ -31,6 +32,7 @@ export const maskEmail = (email: string): string => {
   const trimmedEmail = email.trim();
   const atIndex = trimmedEmail.indexOf('@');
 
+  // '@' がない、先頭/末尾に '@' がある場合は無効
   if (atIndex <= 0 || atIndex === trimmedEmail.length - 1) {
     return INVALID_EMAIL_MASK;
   }
@@ -46,6 +48,7 @@ export const maskEmail = (email: string): string => {
   }
 
   const maskedDomainParts = domainParts.map((part, index) => {
+    // TLD（最後の部分）はそのまま表示
     if (index === domainParts.length - 1) {
       return part;
     }
@@ -107,6 +110,10 @@ const createLogObject = (metadata: LogMetadata): Record<string, unknown> => {
 
 /**
  * ログ出力をスキップすべきか判定
+ *
+ * 注: logDebug は isDevelopment チェック後にのみ呼び出すため、
+ * この関数での debug レベルチェックは冗長だが、
+ * 他の関数から直接 log() が呼ばれた場合の安全策として維持
  */
 const shouldSkipLog = (level: LogLevel): boolean => {
   // クライアントサイドの本番環境ではエラーのみ出力
