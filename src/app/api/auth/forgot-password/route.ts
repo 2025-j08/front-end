@@ -1,5 +1,6 @@
 import type { ForgotPasswordRequest } from '@/types/api';
 import { createServerClient } from '@/lib/supabase/server';
+import { appConfig } from '@/lib/supabase/config';
 import { validateEmail } from '@/lib/validation';
 import { HTTP_STATUS } from '@/const/httpStatus';
 import { logError, logInfo, maskEmail } from '@/lib/logger';
@@ -39,8 +40,7 @@ export async function POST(request: Request) {
 
     // リダイレクト先URL（コールバックページ）
     // type=recovery を含めることで、コールバック側でパスワードリセットフローと識別できる
-    const origin = request.headers.get('origin') ?? '';
-    const redirectTo = `${origin}/auth/callback?type=recovery`;
+    const redirectTo = `${appConfig.baseUrl}/auth/callback?type=recovery`;
 
     // パスワードリセットメール送信
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
