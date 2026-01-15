@@ -19,8 +19,7 @@ export const TabSection = ({ title, content, children }: TabSectionProps) => {
   return (
     <div className={styles.section}>
       {title && <h3 className={styles.contentTitle}>{title}</h3>}
-      {content && <p className={styles.textContent}>{content}</p>}
-      {children}
+      {children ? children : <p className={styles.textContent}>{content || '-'}</p>}
     </div>
   );
 };
