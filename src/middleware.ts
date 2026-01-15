@@ -32,7 +32,9 @@ const decodeJwtPayload = (token: string): JwtPayload | null => {
     const parts = token.split('.');
     if (parts.length !== 3) return null;
     const payload = parts[1];
-    const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+    // base64url形式はパディング(=)が省略されるため補完が必要
+    const padded = payload + '='.repeat((4 - (payload.length % 4)) % 4);
+    const decoded = atob(padded.replace(/-/g, '+').replace(/_/g, '/'));
     return JSON.parse(decoded) as JwtPayload;
   } catch {
     return null;
