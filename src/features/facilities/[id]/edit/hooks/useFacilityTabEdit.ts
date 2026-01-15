@@ -21,35 +21,31 @@ function mergeNested<T>(base: T | undefined, override: Partial<T> | undefined): 
 }
 
 /**
+ * セクションからフィールド一覧を取得するマッピング
+ * resetSection や getSectionFromField で共有することで一貫性を保証
+ */
+const SECTION_FIELDS: Record<TabSection, ReadonlyArray<keyof FacilityDetail>> = {
+  basic: ['name', 'phone', 'corporation', 'establishedYear', 'annexFacilities'],
+  access: ['accessInfo', 'websiteUrl', 'capacity', 'provisionalCapacity', 'relationInfo'],
+  philosophy: ['philosophyInfo'],
+  specialty: ['specialtyInfo'],
+  staff: ['staffInfo'],
+  education: ['educationInfo'],
+  advanced: ['advancedInfo'],
+  images: ['images'],
+  other: ['otherInfo'],
+};
+
+/**
  * フィールド名からセクション名を取得するヘルパー
- * 型安全性を保証するためのマッピング
+ * SECTION_FIELDS を逆引きして取得
  */
 function getSectionFromField<K extends keyof FacilityDetail>(field: K): TabSection {
-  const basicFields: ReadonlyArray<keyof FacilityDetail> = [
-    'name',
-    'phone',
-    'corporation',
-    'establishedYear',
-    'annexFacilities',
-  ];
-  const accessFields: ReadonlyArray<keyof FacilityDetail> = [
-    'accessInfo',
-    'websiteUrl',
-    'capacity',
-    'provisionalCapacity',
-    'relationInfo',
-  ];
-
-  if (basicFields.includes(field)) return 'basic';
-  if (accessFields.includes(field)) return 'access';
-  if (field === 'philosophyInfo') return 'philosophy';
-  if (field === 'specialtyInfo') return 'specialty';
-  if (field === 'staffInfo') return 'staff';
-  if (field === 'educationInfo') return 'education';
-  if (field === 'advancedInfo') return 'advanced';
-  if (field === 'images') return 'images';
-  if (field === 'otherInfo') return 'other';
-
+  for (const [section, fields] of Object.entries(SECTION_FIELDS)) {
+    if ((fields as ReadonlyArray<keyof FacilityDetail>).includes(field)) {
+      return section as TabSection;
+    }
+  }
   return 'basic'; // デフォルト
 }
 
@@ -287,6 +283,8 @@ export const useFacilityTabEdit = (
   const resetSection = useCallback(
     (section: TabSection) => {
       if (!initialData) return;
+      // images は ImagesTab.reset() で別管理のためスキップ
+      if (section === 'images') return;
 
       setState((prev) => {
         const newDirtyMap = new Map(prev.dirtyMap);
@@ -294,41 +292,10 @@ export const useFacilityTabEdit = (
 
         // セクションに対応するフィールドを初期値に戻す
         const newFormData = { ...prev.formData };
+        const fields = SECTION_FIELDS[section];
 
-        switch (section) {
-          case 'basic':
-            newFormData.name = initialData.name;
-            newFormData.phone = initialData.phone;
-            newFormData.corporation = initialData.corporation;
-            newFormData.establishedYear = initialData.establishedYear;
-            newFormData.annexFacilities = initialData.annexFacilities;
-            break;
-          case 'access':
-            newFormData.accessInfo = initialData.accessInfo;
-            newFormData.websiteUrl = initialData.websiteUrl;
-            newFormData.capacity = initialData.capacity;
-            newFormData.provisionalCapacity = initialData.provisionalCapacity;
-            newFormData.relationInfo = initialData.relationInfo;
-            break;
-          case 'philosophy':
-            newFormData.philosophyInfo = initialData.philosophyInfo;
-            break;
-          case 'specialty':
-            newFormData.specialtyInfo = initialData.specialtyInfo;
-            break;
-          case 'staff':
-            newFormData.staffInfo = initialData.staffInfo;
-            break;
-          case 'education':
-            newFormData.educationInfo = initialData.educationInfo;
-            break;
-          case 'advanced':
-            newFormData.advancedInfo = initialData.advancedInfo;
-            break;
-          case 'other':
-            newFormData.otherInfo = initialData.otherInfo;
-            break;
-          // imagesは別管理のためここでは処理しない
+        for (const field of fields) {
+          (newFormData as Record<string, unknown>)[field] = initialData[field];
         }
 
         return {

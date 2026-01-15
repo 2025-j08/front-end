@@ -28,8 +28,13 @@ import { TabSaveButton } from './contents/TabSaveButton';
 import { TabKey, Tab, TAB_LABELS } from '../../hooks/useFacilityDetail';
 import styles from './DetailTabs.module.scss';
 
-// コンポーネント外に定義して毎レンダリング時の再生成を防止
+// =============================================================================
+// 定数: レンダリング毎の再生成を防止するためコンポーネント外に定義
+// =============================================================================
+
+/** 閲覧モード時のデフォルト保存ハンドラー（何もしない） */
 const noop = async () => {};
+/** 閲覧モード時のデフォルト isDirty 判定（常に false） */
 const noopIsDirty = () => false;
 
 type DetailTabsProps = {
