@@ -2,7 +2,6 @@ import { EducationInfo } from '@/types/facility';
 
 import { EditField } from './EditField';
 import { EditSection } from './EditSection';
-import { TabSaveButton } from './TabSaveButton';
 import styles from './TabContent.module.scss';
 import { TabSection } from './TabSection';
 import { TabProps } from '../types/tabProps';
@@ -75,7 +74,6 @@ export const EducationTab = ({
             </EditSection>
           </div>
         </div>
-        {onSave && <TabSaveButton onSave={onSave} isSaving={isSaving} isDirty={isDirty} />}
       </>
     );
   }
