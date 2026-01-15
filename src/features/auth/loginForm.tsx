@@ -70,6 +70,10 @@ export const LoginForm = ({ initialError }: LoginFormProps) => {
 
         <FormButton label="ログイン" isLoading={isLoading} />
       </form>
+
+      <div className={styles.forgotPassword}>
+        <Link href="/auth/forgot-password">パスワードを忘れた方はこちら</Link>
+      </div>
     </div>
   );
 };
