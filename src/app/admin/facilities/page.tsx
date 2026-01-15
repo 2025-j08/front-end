@@ -155,7 +155,12 @@ export default function FacilityManagementPage() {
     return false;
   };
 
-  /** 住所が変更されたかどうかを判定 */
+  /**
+   * 住所が変更されたかどうかを判定
+   * 変更された場合はジオコーディング確認ダイアログを表示するために使用
+   * NOTE: originalが見つからない場合はfalseを返し、ダイアログをスキップして直接保存する
+   *       （通常は発生しないが、防御的なフォールバック動作として実装）
+   */
   const isAddressChanged = (id: number, data: FacilityUpdateData): boolean => {
     const original = facilities.find((f) => f.id === id);
     if (!original) return false;
@@ -187,7 +192,7 @@ export default function FacilityManagementPage() {
 
   /** ジオコーディングダイアログで「座標を更新」を選択 */
   const handleGeocodeConfirm = async () => {
-    if (!pendingUpdate) return;
+    if (!pendingUpdate || isGeocoding) return;
 
     try {
       await saveFacilityInfo(pendingUpdate.facilityId, pendingUpdate.data);
