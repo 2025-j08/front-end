@@ -113,7 +113,7 @@ export const FacilityHeader = ({
               type="text"
               className={styles.urlInput}
               value={websiteUrl ?? ''}
-              onChange={(e) => handleUrlChange(e.target.value)}
+              onChange={(e) => onUrlChange?.(e.target.value)}
               placeholder="https://example.com"
               aria-invalid={!!displayError}
               aria-describedby={displayError ? 'url-error' : undefined}
