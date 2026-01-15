@@ -131,9 +131,12 @@ export const DetailTabs = ({
   // タブ切り替え確認時のアクション保持用
   const pendingActionRef = useRef<(() => void) | null>(null);
 
+  // 現在が画像タブかどうか
+  const isImagesTab = activeTab === 'images';
+
   // 現在のタブの保存ボタンの状態を計算
   const saveButtonState = useMemo(() => {
-    if (activeTab === 'images') {
+    if (isImagesTab) {
       return {
         onSave: async () => {
           await imageTabRef.current?.save();
@@ -154,7 +157,7 @@ export const DetailTabs = ({
       isDirty: isDirty ? isDirty(section) : false,
       isSaving: isSaving,
     };
-  }, [activeTab, imageTabState, saveHandlers, isDirty, isSaving]);
+  }, [isImagesTab, activeTab, imageTabState, saveHandlers, isDirty, isSaving]);
 
   // タブ切り替え時の確認ロジック
   const handleTabChange = useCallback(
@@ -166,15 +169,13 @@ export const DetailTabs = ({
       }
       // 未保存の変更がある場合は確認ダイアログを表示
       if (saveButtonState.isDirty) {
-        // 現在のタブのセクションを特定（imagesは別扱い）
-        const currentSection = activeTab === 'images' ? 'images' : (activeTab as TabSection);
         pendingActionRef.current = () => {
           // セクションの編集内容を破棄（リセット）
-          if (activeTab === 'images') {
+          if (isImagesTab) {
             // 画像タブは専用のreset関数を使用
             imageTabRef.current?.reset();
           } else {
-            onResetSection?.(currentSection);
+            onResetSection?.(activeTab as TabSection);
           }
           onTabChange(nextTab);
         };
@@ -198,6 +199,7 @@ export const DetailTabs = ({
     [
       isEditMode,
       saveButtonState.isDirty,
+      isImagesTab,
       activeTab,
       onTabChange,
       onResetSection,
