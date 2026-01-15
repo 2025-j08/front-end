@@ -10,14 +10,6 @@ type FacilityHeaderProps = {
   websiteUrl?: string | null;
   /** 編集モードかどうか */
   isEditMode?: boolean;
-  /** 保存中かどうか */
-  isSaving?: boolean;
-  /** 未保存の変更があるか */
-  isDirty?: boolean;
-  /** 保存ハンドラー */
-  onSave?: () => void;
-  /** キャンセルハンドラー */
-  onCancel?: () => void;
   /** URL変更ハンドラー */
   onUrlChange?: (url: string) => void;
   /** URLエラーメッセージ */
@@ -39,9 +31,19 @@ const isValidUrl = (url: string | null | undefined): boolean => {
 };
 
 /**
- * 施設詳細ページのヘッダーセクション
- * 施設名、運営法人、住所、TEL、Webサイトボタン、編集ボタンを表示
+ * URL入力値をリアルタイムで検証するヘルパー関数
  */
+const getUrlValidationError = (url: string | undefined | null): string | undefined => {
+  if (!url) return undefined;
+
+  // 空でない場合は形式を検証
+  if (!isValidUrl(url)) {
+    return 'http:// または https:// で始まる有効なURLを入力してください';
+  }
+
+  return undefined;
+};
+
 export const FacilityHeader = ({
   name,
   corporation,
@@ -49,10 +51,6 @@ export const FacilityHeader = ({
   phone,
   websiteUrl,
   isEditMode = false,
-  isSaving = false,
-  isDirty = false,
-  onSave,
-  onCancel,
   onUrlChange,
   urlError,
 }: FacilityHeaderProps) => {
@@ -65,17 +63,21 @@ export const FacilityHeader = ({
     }
   };
 
+  // URL入力時のバリデーション
+  const handleUrlChange = (newUrl: string) => {
+    onUrlChange?.(newUrl);
+    // バリデーションエラーはonUrlChangeの外側で管理
+    // （親コンポーネント側でgetError('websiteUrl')で取得）
+  };
+
+  const validationError = getUrlValidationError(websiteUrl);
+
   return (
     <header className={styles.header}>
       <div className={styles.headerInfo}>
         <h1 className={styles.title}>
           {name}
           {corporation && <span className={styles.corporation}>運営法人 {corporation}</span>}
-          {isEditMode && isDirty && (
-            <span className={styles.dirtyIndicator} role="status" aria-live="polite">
-              ● 未保存の変更があります
-            </span>
-          )}
         </h1>
         <p className={styles.address}>{fullAddress}</p>
         <p className={styles.tel}>TEL {phone}</p>
@@ -101,12 +103,18 @@ export const FacilityHeader = ({
               type="text"
               className={styles.urlInput}
               value={websiteUrl ?? ''}
-              onChange={(e) => onUrlChange?.(e.target.value)}
+              onChange={(e) => handleUrlChange(e.target.value)}
               placeholder="https://example.com"
               aria-label="施設WebサイトURL"
+              aria-invalid={!!validationError}
+              aria-describedby={validationError ? 'url-error' : undefined}
             />
             <span className={styles.helpText}>施設のWebサイトがあればURLを入力してください</span>
-            {urlError && <span className={styles.errorText}>{urlError}</span>}
+            {validationError && (
+              <span className={styles.errorText} id="url-error">
+                {validationError}
+              </span>
+            )}
           </div>
         )}
       </div>
