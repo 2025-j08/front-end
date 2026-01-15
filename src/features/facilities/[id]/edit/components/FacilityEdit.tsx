@@ -146,6 +146,7 @@ export const FacilityEdit = ({ id }: Props) => {
       <FacilityHeader
         name={mergedData.name}
         corporation={mergedData.corporation}
+        postalCode={mergedData.postalCode}
         fullAddress={mergedData.fullAddress}
         phone={mergedData.phone}
         websiteUrl={mergedData.websiteUrl}
