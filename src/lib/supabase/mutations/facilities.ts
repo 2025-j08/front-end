@@ -350,3 +350,34 @@ export async function updateFacilityManagementInfo(
     throw new Error(`施設情報の更新に失敗しました: ${error.message}`);
   }
 }
+
+/**
+ * GPS座標更新用のデータ型
+ */
+export type GeocoordinatesUpdateData = {
+  lat: number;
+  lng: number;
+  location_address: string;
+};
+
+/**
+ * 施設のGPS座標を更新
+ */
+export async function updateFacilityCoordinates(
+  supabase: SupabaseClient,
+  facilityId: number,
+  data: GeocoordinatesUpdateData,
+): Promise<void> {
+  const { error } = await supabase
+    .from('facility_access')
+    .update({
+      lat: data.lat,
+      lng: data.lng,
+      location_address: data.location_address,
+    })
+    .eq('facility_id', facilityId);
+
+  if (error) {
+    throw new Error(`GPS座標の更新に失敗しました: ${error.message}`);
+  }
+}

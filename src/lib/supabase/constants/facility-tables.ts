@@ -46,7 +46,7 @@ export const SECTION_TO_TABLE_MAP: Record<FacilitySectionName, FacilityDetailTab
 
 /**
  * API で有効なセクション名の配列
- * TabUpdateData のセクション + management セクションを含む
+ * TabUpdateData のセクション + management セクション + coordinates セクションを含む
  */
 export const VALID_API_SECTIONS = [
   'basic',
@@ -58,6 +58,7 @@ export const VALID_API_SECTIONS = [
   'advanced',
   'other',
   'management',
+  'coordinates',
 ] as const;
 
 /** API で有効なセクション名の型 */
