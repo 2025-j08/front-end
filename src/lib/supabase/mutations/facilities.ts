@@ -130,7 +130,8 @@ function removeUndefinedValues<T extends Record<string, unknown>>(obj: T): Parti
 }
 
 /**
- * 共通のupsertヘルパー関数（正規化されたスキーマ対応）
+ * 共通のupdateヘルパー関数（正規化されたスキーマ対応）
+ * 既存レコードのみを更新（新規作成は行わない）
  */
 async function upsertFacilityData<T extends Record<string, unknown>>(
   supabase: SupabaseClient,
@@ -147,7 +148,8 @@ async function upsertFacilityData<T extends Record<string, unknown>>(
 
   const { error } = await supabase
     .from(tableName)
-    .upsert({ facility_id: facilityId, ...cleanedData }, { onConflict: 'facility_id' });
+    .update(cleanedData)
+    .eq('facility_id', facilityId);
 
   if (error) {
     throw new Error(`${errorMessage}: ${error.message}`);

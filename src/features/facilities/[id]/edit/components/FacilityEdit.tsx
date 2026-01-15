@@ -81,13 +81,6 @@ export const FacilityEdit = ({ id }: Props) => {
     },
     [saveAllImages],
   );
-  // 既存のWebサイトURLは初期表示時に空にする（他項目へ影響なし）
-  useEffect(() => {
-    if (displayData?.websiteUrl) {
-      updateField('websiteUrl', '' as FacilityDetailType['websiteUrl']);
-    }
-    // displayDataのfacility idが変わったときのみ実行
-  }, [displayData?.id, displayData?.websiteUrl, updateField]);
 
   // 未保存の変更がある場合の離脱警告
   useUnsavedChangesWarning(hasUnsavedChanges);
