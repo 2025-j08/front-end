@@ -29,7 +29,6 @@ export const PendingImageItem = ({
           fill
           sizes={sizes}
           className={imageClassName}
-          unoptimized={process.env.NODE_ENV === 'development'}
         />
         {pending.isUploading && <div className={styles.uploadingOverlay}>アップロード中...</div>}
       </div>
