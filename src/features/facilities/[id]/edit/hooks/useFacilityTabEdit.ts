@@ -41,12 +41,10 @@ const SECTION_FIELDS: Record<TabSection, ReadonlyArray<keyof FacilityDetail>> = 
  * SECTION_FIELDS を逆引きして取得
  */
 function getSectionFromField<K extends keyof FacilityDetail>(field: K): TabSection {
-  for (const [section, fields] of Object.entries(SECTION_FIELDS)) {
-    if ((fields as ReadonlyArray<keyof FacilityDetail>).includes(field)) {
-      return section as TabSection;
-    }
-  }
-  return 'basic'; // デフォルト
+  const section = (Object.keys(SECTION_FIELDS) as TabSection[]).find((key) =>
+    SECTION_FIELDS[key].includes(field),
+  );
+  return section || 'basic'; // デフォルト
 }
 
 /** 編集フォームの状態（タブごと） */
