@@ -28,6 +28,8 @@ const getRemotePatterns = () => {
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: getRemotePatterns(),
+    // 開発環境ではプライベートIPへのアクセスが制限されるため、画像最適化を無効化
+    unoptimized: process.env.NODE_ENV === 'development',
   },
 };
 
