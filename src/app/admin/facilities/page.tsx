@@ -338,6 +338,12 @@ export default function FacilityManagementPage() {
           {errorMessage}
         </div>
       )}
+
+      <p className={styles.attribution}>
+        <a href="https://developer.yahoo.co.jp/sitemap/" target="_blank" rel="noopener noreferrer">
+          Webサービス by Yahoo! JAPAN
+        </a>
+      </p>
     </div>
   );
 }
