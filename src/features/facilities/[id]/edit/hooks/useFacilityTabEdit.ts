@@ -223,16 +223,6 @@ export const useFacilityTabEdit = (
           return false;
         }
 
-        if (Object.keys(updateData.data).length === 0) {
-          console.warn(`[saveTab] データが空です:`, updateData);
-          setState((prev) => ({
-            ...prev,
-            isSaving: false,
-            errors: { _form: '更新するデータが空です' },
-          }));
-          return false;
-        }
-
         // APIリクエスト
         const response = await fetch(`/api/facilities/${facilityId}`, {
           method: 'PATCH',

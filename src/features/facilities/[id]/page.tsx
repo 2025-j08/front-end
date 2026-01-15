@@ -47,8 +47,6 @@ export const FacilityDetail = ({ id }: Props) => {
         phone={facilityData.phone}
         websiteUrl={facilityData.websiteUrl}
         isEditMode={false}
-        isSaving={false}
-        isDirty={false}
       />
 
       <BasicInfoSection
