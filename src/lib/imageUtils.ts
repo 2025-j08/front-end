@@ -126,7 +126,11 @@ async function canvasToWebP(canvas: HTMLCanvasElement, maxSizeBytes: number): Pr
       canvas.toBlob((b) => resolve(b), 'image/webp', quality);
     });
 
-    if (blob && blob.size <= maxSizeBytes) {
+    if (!blob) {
+      throw new Error('画像の変換処理に失敗しました (Canvas to Blob failed)');
+    }
+
+    if (blob.size <= maxSizeBytes) {
       return blob;
     }
   }

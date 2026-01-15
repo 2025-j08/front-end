@@ -20,11 +20,12 @@ type ImagesTabProps = {
   images?: FacilityImage[];
   /** 編集モードかどうか */
   isEditMode?: boolean;
-  /** 画像アップロード時のコールバック */
-  onUpload?: (imageType: FacilityImageType, file: File, displayOrder: number) => Promise<void>;
-  /** 画像削除時のコールバック */
-  onDelete?: (imageId: number) => Promise<void>;
-  /** 保存ハンドラー */
+  /** 一括保存ハンドラー（RPC使用） */
+  onBatchSave?: (
+    uploads: { file: File; type: FacilityImageType; displayOrder: number }[],
+    deleteIds: number[],
+  ) => Promise<void>;
+  /** 保存ハンドラー（親への通知用） */
   onSave?: () => Promise<void>;
   /** 保存中フラグ */
   isSaving?: boolean;
@@ -44,8 +45,7 @@ type ImagesTabProps = {
 export const ImagesTab = ({
   images = [],
   isEditMode = false,
-  onUpload,
-  onDelete,
+  onBatchSave,
   onSave,
   isSaving = false,
 }: ImagesTabProps) => {
@@ -125,7 +125,7 @@ export const ImagesTab = ({
           }
         }
 
-        const pendingId = `pending-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        const pendingId = `pending-${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
         const previewUrl = await createImagePreview(file);
 
         newPendings.push({
@@ -180,7 +180,7 @@ export const ImagesTab = ({
     setDeleteIds((prev) => prev.filter((id) => id !== imageId));
   }, []);
 
-  // 一括保存処理
+  // 一括保存処理（RPC使用）
   const handleBatchSave = useCallback(async () => {
     if (!hasChanges) {
       // 変更がなければ親のonSaveだけ呼ぶ
@@ -188,45 +188,45 @@ export const ImagesTab = ({
       return;
     }
 
+    if (!onBatchSave) {
+      showError('保存機能が利用できません');
+      return;
+    }
+
     setIsBatchSaving(true);
 
     try {
-      // 1. 削除処理
-      if (deleteIds.length > 0 && onDelete) {
-        for (const id of deleteIds) {
-          await onDelete(id);
-        }
-      }
-
-      // 2. アップロード処理
-      if (pendingImages.length > 0 && onUpload) {
-        // アップロード中表示
+      // アップロード中表示
+      if (pendingImages.length > 0) {
         setPendingImages((prev) => prev.map((p) => ({ ...p, isUploading: true })));
-
-        for (const pending of pendingImages) {
-          try {
-            // WebP変換
-            const webpBlob = await convertToWebP(pending.file, pending.imageType);
-            // ファイル名に日本語が含まれていると上流サーバー(Supabase/Proxy)で502エラーになる場合があるため、
-            // 安全なASCIIファイル名に置換する。実体はID管理されており元のファイル名は不要。
-            const safeFileName = `image_${Date.now()}.webp`;
-            const webpFile = new File([webpBlob], safeFileName, {
-              type: 'image/webp',
-            });
-
-            await onUpload(pending.imageType, webpFile, pending.displayOrder);
-          } catch (e) {
-            console.error(`Upload failed for ${pending.file.name}`, e);
-            throw e;
-          }
-        }
       }
 
-      // 3. 成功したらステートをクリア
+      // WebP変換してアップロード用データを準備
+      const uploads: { file: File; type: FacilityImageType; displayOrder: number }[] = [];
+      for (let i = 0; i < pendingImages.length; i++) {
+        const pending = pendingImages[i];
+        const webpBlob = await convertToWebP(pending.file, pending.imageType);
+        // ファイル名に日本語が含まれていると上流サーバーで502エラーになる場合があるため、
+        // 安全なASCIIファイル名に置換する。インデックスとランダム文字列で一意性を担保。
+        const safeFileName = `image_${Date.now()}_${i}_${Math.random().toString(36).substring(2, 11)}.webp`;
+        const webpFile = new File([webpBlob], safeFileName, {
+          type: 'image/webp',
+        });
+        uploads.push({
+          file: webpFile,
+          type: pending.imageType,
+          displayOrder: pending.displayOrder,
+        });
+      }
+
+      // 一括保存実行（RPC: 全成功 or 全失敗）
+      await onBatchSave(uploads, deleteIds);
+
+      // 成功したらステートをクリア
       setDeleteIds([]);
       setPendingImages([]);
 
-      // 4. 親の保存処理
+      // 親の保存処理（データ再取得など）
       if (onSave) await onSave();
     } catch (error) {
       showError(error instanceof Error ? error.message : '保存処理中にエラーが発生しました');
@@ -235,7 +235,7 @@ export const ImagesTab = ({
     } finally {
       setIsBatchSaving(false);
     }
-  }, [hasChanges, deleteIds, pendingImages, onDelete, onUpload, onSave, showError]);
+  }, [hasChanges, deleteIds, pendingImages, onBatchSave, onSave, showError]);
 
   // 閲覧モード
   if (!isEditMode) {
@@ -254,7 +254,6 @@ export const ImagesTab = ({
                       fill
                       sizes="(max-width: 768px) 100vw, 400px"
                       className={imageStyles.galleryImage}
-                      unoptimized={process.env.NODE_ENV === 'development'}
                     />
                   </div>
                 ))}
@@ -292,7 +291,6 @@ export const ImagesTab = ({
                     fill
                     sizes="(max-width: 768px) 100vw, 400px"
                     className={imageStyles.thumbnailImage}
-                    unoptimized={process.env.NODE_ENV === 'development'}
                   />
                 </div>
                 <button
@@ -344,7 +342,6 @@ export const ImagesTab = ({
                       sizes="(max-width: 768px) 100vw, 400px"
                       className={imageStyles.thumbnailImage}
                       style={{ opacity: 0.5 }}
-                      unoptimized={process.env.NODE_ENV === 'development'}
                     />
                   </div>
                   <button
@@ -378,7 +375,6 @@ export const ImagesTab = ({
                       fill
                       sizes="(max-width: 768px) 100vw, 300px"
                       className={imageStyles.galleryImage}
-                      unoptimized={process.env.NODE_ENV === 'development'}
                     />
                   </div>
                   <button
@@ -408,7 +404,6 @@ export const ImagesTab = ({
                         sizes="(max-width: 768px) 100vw, 300px"
                         className={imageStyles.galleryImage}
                         style={{ opacity: 0.5 }}
-                        unoptimized={process.env.NODE_ENV === 'development'}
                       />
                     </div>
                     <button
@@ -470,7 +465,7 @@ export const ImagesTab = ({
         cancelLabel={dialogConfig.cancelLabel}
         isDanger={dialogConfig.isDanger}
         showCancel={dialogConfig.showCancel}
-        onConfirm={dialogConfig.onConfirm!}
+        onConfirm={dialogConfig.onConfirm || (() => {})}
         onCancel={dialogConfig.onCancel || closeDialog}
       />
     </>

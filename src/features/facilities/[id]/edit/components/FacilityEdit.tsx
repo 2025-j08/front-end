@@ -5,7 +5,7 @@
  * 施設編集ページのメインコンポーネント（編集専用）です。
  * タブごとに独立して編集・保存が可能
  */
-import { useCallback, useState, useMemo } from 'react';
+import { useCallback, useState, useMemo, useRef, useEffect } from 'react';
 
 import type { FacilityDetail as FacilityDetailType, FacilityImageType } from '@/types/facility';
 
@@ -19,7 +19,6 @@ import { BasicInfoSection } from '../../components/BasicInfoSection/BasicInfoSec
 import { DetailTabs } from '../../components/DetailTabs/DetailTabs';
 import styles from './FacilityEdit.module.scss';
 
-
 type Props = {
   id: string;
 };
@@ -27,6 +26,12 @@ type Props = {
 export const FacilityEdit = ({ id }: Props) => {
   const { data: facilityData, isLoading, error } = useFacilityData(id);
   const { activeTab, setActiveTab, tabs } = useFacilityDetail();
+
+  // facilityDataをRefで保持して、非同期処理内でも最新の値にアクセスできるようにする
+  const facilityDataRef = useRef(facilityData);
+  useEffect(() => {
+    facilityDataRef.current = facilityData;
+  }, [facilityData]);
 
   // データ再取得後のコールバック（保存成功時に最新データを反映）
   const [latestData, setLatestData] = useState<FacilityDetailType | null>(null);
@@ -50,16 +55,23 @@ export const FacilityEdit = ({ id }: Props) => {
   } = useFacilityTabEdit(displayData, id, handleSaveSuccess);
 
   // 画像アップロードフック
-  const { uploadImage, deleteImage, fetchImages } = useFacilityImageUpload(id);
+  const { saveAllImages, fetchImages } = useFacilityImageUpload(id);
 
-  // 画像アップロードハンドラー
-  const handleImageUpload = useCallback(
-    async (imageType: FacilityImageType, file: File, displayOrder: number) => {
-      await uploadImage(file, imageType, displayOrder);
+  // 画像一括保存ハンドラー（RPC使用）
+  const handleBatchImageSave = useCallback(
+    async (
+      uploads: {
+        file: File;
+        type: import('@/types/facility').FacilityImageType;
+        displayOrder: number;
+      }[],
+      deleteIds: number[],
+    ) => {
+      await saveAllImages(uploads, deleteIds);
       // 画像リストを再取得して表示を更新
       const newImages = await fetchImages();
       setLatestData((prev) => {
-        const baseData = prev || facilityData;
+        const baseData = prev || facilityDataRef.current;
         if (!baseData) return null;
         return {
           ...baseData,
@@ -67,25 +79,7 @@ export const FacilityEdit = ({ id }: Props) => {
         };
       });
     },
-    [uploadImage, fetchImages, facilityData],
-  );
-
-  // 画像削除ハンドラー
-  const handleImageDelete = useCallback(
-    async (imageId: number) => {
-      await deleteImage(imageId);
-      // 画像リストを再取得して表示を更新
-      const newImages = await fetchImages();
-      setLatestData((prev) => {
-        const baseData = prev || facilityData;
-        if (!baseData) return null;
-        return {
-          ...baseData,
-          images: newImages,
-        };
-      });
-    },
-    [deleteImage, fetchImages, facilityData],
+    [saveAllImages, fetchImages],
   );
 
   // 未保存の変更がある場合の離脱警告
@@ -109,7 +103,6 @@ export const FacilityEdit = ({ id }: Props) => {
     }
     return handlers;
   }, [saveTab]);
-
 
   if (isLoading)
     return (
@@ -177,8 +170,7 @@ export const FacilityEdit = ({ id }: Props) => {
         advancedInfo={mergedData.advancedInfo}
         otherInfo={mergedData.otherInfo}
         images={mergedData.images}
-        onImageUpload={handleImageUpload}
-        onImageDelete={handleImageDelete}
+        onBatchImageSave={handleBatchImageSave}
         isEditMode={true}
         onFieldChange={updateField}
         onNestedFieldChange={updateNestedField}

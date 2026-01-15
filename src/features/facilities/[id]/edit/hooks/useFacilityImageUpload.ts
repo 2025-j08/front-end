@@ -5,14 +5,11 @@ import { useCallback, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import {
   insertFacilityImage,
-  deleteFacilityImageById,
   getFacilityImages,
+  manageFacilityImages,
+  type NewImageInput,
 } from '@/lib/supabase/mutations/facilities';
-import {
-  uploadFacilityImage,
-  deleteFacilityImage,
-  cleanupOrphanedImages,
-} from '@/lib/supabase/storage';
+import { uploadFacilityImage, deleteFacilityImage } from '@/lib/supabase/storage';
 import type { FacilityImage, FacilityImageType } from '@/types/facility';
 
 /**
@@ -23,23 +20,24 @@ export const useFacilityImageUpload = (facilityId: string) => {
   const [error, setError] = useState<string | null>(null);
 
   /**
-   * 画像をアップロードしてDBに登録する
+   * 画像をアップロードしてDBに登録する（単一画像用）
    */
   const uploadImage = useCallback(
     async (file: File, imageType: FacilityImageType, displayOrder: number) => {
       setIsUploading(true);
       setError(null);
 
-      try {
-        const supabase = createClient();
-        const numericFacilityId = parseInt(facilityId, 10);
+      let uploadedPublicUrl: string | null = null;
+      const supabase = createClient();
 
+      try {
+        const numericFacilityId = parseInt(facilityId, 10);
         if (isNaN(numericFacilityId)) {
           throw new Error('無効な施設IDです');
         }
 
-        // 1. Storageにアップロード
-        const publicUrl = await uploadFacilityImage(
+        // Storageにアップロード
+        uploadedPublicUrl = await uploadFacilityImage(
           supabase,
           numericFacilityId,
           imageType,
@@ -47,29 +45,22 @@ export const useFacilityImageUpload = (facilityId: string) => {
           displayOrder,
         );
 
-        // 2. DBに登録
+        // DBに登録
         await insertFacilityImage(supabase, {
           facility_id: numericFacilityId,
           image_type: imageType,
-          image_url: publicUrl,
+          image_url: uploadedPublicUrl,
           display_order: displayOrder,
         });
-
-        // 3. 孤立ファイルのクリーンアップ（バックグラウンドで実行）
-        // アップロード成功後に実行することで、過去の失敗/中断によるゴミファイルを削除
-        cleanupOrphanedImages(supabase, numericFacilityId).then(({ error: cleanupError }) => {
-          if (cleanupError) {
-            console.warn('孤立ファイルのクリーンアップに失敗:', cleanupError);
-            // サーバーログにも記録
-            import('@/app/actions/system').then(({ logSystemError }) => {
-              logSystemError('孤立ファイルのクリーンアップ失敗', {
-                facilityId: numericFacilityId,
-                error: cleanupError.message,
-              });
-            });
-          }
-        });
       } catch (err) {
+        // ロールバック: アップロード済み画像を削除
+        if (uploadedPublicUrl) {
+          try {
+            await deleteFacilityImage(supabase, uploadedPublicUrl);
+          } catch (rollbackError) {
+            console.error('ロールバック失敗:', rollbackError);
+          }
+        }
         const message = err instanceof Error ? err.message : '画像のアップロードに失敗しました';
         setError(message);
         throw err;
@@ -81,36 +72,41 @@ export const useFacilityImageUpload = (facilityId: string) => {
   );
 
   /**
-   * 画像を削除する（DB削除 -> Storage削除）
+   * 画像を削除する（単一画像用、即時削除）
    */
-  const deleteImage = useCallback(async (imageId: number) => {
-    setIsUploading(true); // 削除中もローディング扱い
-    setError(null);
+  const deleteImage = useCallback(
+    async (imageId: number) => {
+      setIsUploading(true);
+      setError(null);
 
-    try {
-      const supabase = createClient();
-
-      // 1. DBから削除 (削除された画像のURLを取得)
-      const { imageUrl } = await deleteFacilityImageById(supabase, imageId);
-
-      // 2. Storageから削除 (エラーでも続行するか検討だが、ゴミデータが残るだけなので警告のみでよいかも)
-      // Storage削除は非同期で投げっぱなしにする手もあるが、awaitしておく
-      if (imageUrl) {
-        try {
-          await deleteFacilityImage(supabase, imageUrl);
-        } catch (storageError) {
-          console.warn('Storageからの削除に失敗しました:', storageError);
-          // DBからは削除されているので、ユーザーへのエラーとしては扱わない
+      try {
+        const supabase = createClient();
+        const numericFacilityId = parseInt(facilityId, 10);
+        if (isNaN(numericFacilityId)) {
+          throw new Error('無効な施設IDです');
         }
+
+        // RPCで削除（削除されたURLを取得）
+        const result = await manageFacilityImages(supabase, numericFacilityId, [imageId], []);
+
+        // Storageから削除
+        for (const url of result.deleted_urls) {
+          try {
+            await deleteFacilityImage(supabase, url);
+          } catch (storageError) {
+            console.warn('Storage削除失敗（無視）:', storageError);
+          }
+        }
+      } catch (err) {
+        const message = err instanceof Error ? err.message : '画像の削除に失敗しました';
+        setError(message);
+        throw err;
+      } finally {
+        setIsUploading(false);
       }
-    } catch (err) {
-      const message = err instanceof Error ? err.message : '画像の削除に失敗しました';
-      setError(message);
-      throw err;
-    } finally {
-      setIsUploading(false);
-    }
-  }, []);
+    },
+    [facilityId],
+  );
 
   /**
    * 最新の画像リストを取得する
@@ -119,11 +115,9 @@ export const useFacilityImageUpload = (facilityId: string) => {
     try {
       const supabase = createClient();
       const numericFacilityId = parseInt(facilityId, 10);
-
       if (isNaN(numericFacilityId)) return [];
 
       const images = await getFacilityImages(supabase, numericFacilityId);
-
       return images.map((img) => ({
         id: img.id,
         imageUrl: img.image_url,
@@ -131,13 +125,16 @@ export const useFacilityImageUpload = (facilityId: string) => {
         displayOrder: img.display_order,
       }));
     } catch (err) {
-      console.warn('画像リストの取得に失敗しました:', err);
+      console.warn('画像リストの取得に失敗:', err);
       return [];
     }
   }, [facilityId]);
 
   /**
-   * 画像を一括保存する（削除 -> アップロード）
+   * 画像を一括保存する（RPC使用）
+   * 1. 新規画像を全てStorageにアップロード
+   * 2. RPCで削除・追加を一括実行（トランザクション）
+   * 3. エラー時はアップロード済み画像を削除してロールバック
    */
   const saveAllImages = useCallback(
     async (
@@ -147,52 +144,54 @@ export const useFacilityImageUpload = (facilityId: string) => {
       setIsUploading(true);
       setError(null);
 
-      try {
-        const supabase = createClient();
-        const numericFacilityId = parseInt(facilityId, 10);
+      const uploadedUrls: string[] = [];
+      const supabase = createClient();
 
+      try {
+        const numericFacilityId = parseInt(facilityId, 10);
         if (isNaN(numericFacilityId)) {
           throw new Error('無効な施設IDです');
         }
 
-        // 1. 削除処理（並列実行）
-        if (deleteIds.length > 0) {
-          await Promise.all(
-            deleteIds.map(async (id) => {
-              const { imageUrl } = await deleteFacilityImageById(supabase, id);
-              if (imageUrl) {
-                try {
-                  await deleteFacilityImage(supabase, imageUrl);
-                } catch (e) {
-                  console.warn('Storageからの削除失敗 (無視):', e);
-                }
-              }
-            }),
+        // 1. 全画像をStorageにアップロード
+        const newImages: NewImageInput[] = [];
+        for (const { file, type, displayOrder } of uploads) {
+          const publicUrl = await uploadFacilityImage(
+            supabase,
+            numericFacilityId,
+            type,
+            file,
+            displayOrder,
           );
+          uploadedUrls.push(publicUrl);
+          newImages.push({
+            image_type: type,
+            image_url: publicUrl,
+            display_order: displayOrder,
+          });
         }
 
-        // 2. アップロード & 登録処理（並列実行）
-        if (uploads.length > 0) {
-          await Promise.all(
-            uploads.map(async ({ file, type, displayOrder }) => {
-              const publicUrl = await uploadFacilityImage(
-                supabase,
-                numericFacilityId,
-                type,
-                file,
-                displayOrder,
-              );
+        // 2. RPCで削除・追加を一括実行
+        const result = await manageFacilityImages(
+          supabase,
+          numericFacilityId,
+          deleteIds,
+          newImages,
+        );
 
-              await insertFacilityImage(supabase, {
-                facility_id: numericFacilityId,
-                image_type: type,
-                image_url: publicUrl,
-                display_order: displayOrder,
-              });
-            }),
-          );
+        // 3. 削除された画像をStorageから削除
+        for (const url of result.deleted_urls) {
+          try {
+            await deleteFacilityImage(supabase, url);
+          } catch (storageError) {
+            console.warn('Storage削除失敗（無視）:', storageError);
+          }
         }
       } catch (err) {
+        // ロールバック: アップロード済み画像を全て削除
+        if (uploadedUrls.length > 0) {
+          await Promise.allSettled(uploadedUrls.map((url) => deleteFacilityImage(supabase, url)));
+        }
         const message = err instanceof Error ? err.message : '画像の保存に失敗しました';
         setError(message);
         throw err;

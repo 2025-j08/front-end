@@ -38,10 +38,11 @@ type DetailTabsProps = {
   otherInfo?: OtherInfo;
   /** 施設画像 */
   images?: FacilityImage[];
-  /** 画像アップロードハンドラー */
-  onImageUpload?: (imageType: FacilityImageType, file: File, displayOrder: number) => Promise<void>;
-  /** 画像削除ハンドラー */
-  onImageDelete?: (imageId: number) => Promise<void>;
+  /** 画像一括保存ハンドラー（RPC使用） */
+  onBatchImageSave?: (
+    uploads: { file: File; type: FacilityImageType; displayOrder: number }[],
+    deleteIds: number[],
+  ) => Promise<void>;
   /** 編集モードかどうか */
   isEditMode?: boolean;
   /** トップレベルフィールドの更新ハンドラー */
@@ -87,8 +88,7 @@ export const DetailTabs = ({
   advancedInfo,
   otherInfo,
   images,
-  onImageUpload,
-  onImageDelete,
+  onBatchImageSave,
   isEditMode = false,
   onFieldChange,
   onNestedFieldChange,
@@ -230,8 +230,7 @@ export const DetailTabs = ({
                 <ImagesTab
                   images={images}
                   isEditMode={isEditMode}
-                  onUpload={onImageUpload}
-                  onDelete={onImageDelete}
+                  onBatchSave={onBatchImageSave}
                   onSave={saveHandlers?.images ?? noop}
                   isSaving={isSaving}
                   isDirty={(isDirty ?? noopIsDirty)('images')}
