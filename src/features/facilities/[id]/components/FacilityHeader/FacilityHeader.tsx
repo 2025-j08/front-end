@@ -14,6 +14,8 @@ type FacilityHeaderProps = {
   onPhoneChange?: (phone: string) => void;
   /** URLエラーメッセージ（サーバー側バリデーション用） */
   urlError?: string;
+  /** 電話番号エラーメッセージ */
+  phoneError?: string;
 };
 
 /**
@@ -56,6 +58,7 @@ export const FacilityHeader = ({
   onUrlChange,
   onPhoneChange,
   urlError,
+  phoneError,
 }: FacilityHeaderProps) => {
   const hasValidWebsite = isValidUrl(websiteUrl);
   const shouldShowWebsiteSection = isEditMode || hasValidWebsite;
@@ -84,7 +87,14 @@ export const FacilityHeader = ({
               value={phone || ''}
               onChange={(e) => onPhoneChange?.(e.target.value)}
               placeholder="例: 03-1234-5678"
+              aria-invalid={!!phoneError}
+              aria-describedby={phoneError ? 'phone-error' : undefined}
             />
+            {phoneError && (
+              <span className={styles.errorText} id="phone-error" role="alert">
+                {phoneError}
+              </span>
+            )}
           </div>
         ) : (
           <p className={styles.tel}>TEL {phone}</p>
