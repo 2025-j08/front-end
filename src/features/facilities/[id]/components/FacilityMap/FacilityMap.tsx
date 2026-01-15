@@ -134,11 +134,6 @@ export const FacilityMap = ({ lat, lng, name, address }: FacilityMapProps) => {
   return (
     <div className={styles.container}>
       <div className={styles.mapArea} ref={mapRef} role="region" aria-label={`${name}の地図`}></div>
-      <p className={styles.attribution}>
-        <a href="https://developer.yahoo.co.jp/sitemap/" target="_blank" rel="noopener noreferrer">
-          Webサービス by Yahoo! JAPAN
-        </a>
-      </p>
     </div>
   );
 };

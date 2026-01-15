@@ -130,23 +130,12 @@ export const MapSearch = () => {
           <p>{error}</p>
         </div>
       ) : (
-        <>
-          <div
-            className={styles.mapArea}
-            ref={mapRef}
-            role="region"
-            aria-label="施設の位置を示す地図"
-          ></div>
-          <p className={styles.attribution}>
-            <a
-              href="https://developer.yahoo.co.jp/sitemap/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Webサービス by Yahoo! JAPAN
-            </a>
-          </p>
-        </>
+        <div
+          className={styles.mapArea}
+          ref={mapRef}
+          role="region"
+          aria-label="施設の位置を示す地図"
+        ></div>
       )}
     </div>
   );
