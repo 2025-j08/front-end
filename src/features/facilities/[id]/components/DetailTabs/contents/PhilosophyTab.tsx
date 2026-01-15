@@ -2,7 +2,6 @@ import { PhilosophyInfo } from '@/types/facility';
 
 import { EditField } from './EditField';
 import { EditSection } from './EditSection';
-import { TabSaveButton } from './TabSaveButton';
 import styles from './TabContent.module.scss';
 import { TabSection } from './TabSection';
 import { TabProps } from '../types/tabProps';
@@ -14,9 +13,6 @@ export const PhilosophyTab = ({
   isEditMode = false,
   onFieldChange,
   getError = () => undefined,
-  onSave,
-  isSaving = false,
-  isDirty = false,
 }: PhilosophyTabProps) => {
   if (isEditMode) {
     return (
@@ -52,7 +48,6 @@ export const PhilosophyTab = ({
             </EditSection>
           </div>
         </div>
-        {onSave && <TabSaveButton onSave={onSave} isSaving={isSaving} isDirty={isDirty} />}
       </>
     );
   }

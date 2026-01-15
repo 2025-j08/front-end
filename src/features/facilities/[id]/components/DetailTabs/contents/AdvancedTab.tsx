@@ -2,7 +2,6 @@ import { AdvancedInfo } from '@/types/facility';
 
 import { EditField } from './EditField';
 import { EditSection } from './EditSection';
-import { TabSaveButton } from './TabSaveButton';
 import styles from './TabContent.module.scss';
 import { TabSection } from './TabSection';
 import { TabProps } from '../types/tabProps';
@@ -13,9 +12,6 @@ export const AdvancedTab = ({
   data: advancedInfo,
   isEditMode = false,
   onFieldChange,
-  onSave,
-  isSaving = false,
-  isDirty = false,
   getError = () => undefined,
 }: AdvancedTabProps) => {
   if (isEditMode) {
@@ -87,7 +83,6 @@ export const AdvancedTab = ({
             </EditSection>
           </div>
         </div>
-        {onSave && <TabSaveButton onSave={onSave} isSaving={isSaving} isDirty={isDirty} />}
       </>
     );
   }

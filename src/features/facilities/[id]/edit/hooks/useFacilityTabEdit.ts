@@ -21,38 +21,31 @@ function mergeNested<T>(base: T | undefined, override: Partial<T> | undefined): 
 }
 
 /**
+ * セクションからフィールド一覧を取得するマッピング
+ * resetSection や getSectionFromField で共有することで一貫性を保証
+ */
+const SECTION_FIELDS: Record<TabSection, ReadonlyArray<keyof FacilityDetail>> = {
+  basic: ['name', 'phone', 'corporation', 'establishedYear', 'annexFacilities'],
+  access: ['accessInfo', 'websiteUrl', 'capacity', 'provisionalCapacity', 'relationInfo'],
+  philosophy: ['philosophyInfo'],
+  specialty: ['specialtyInfo'],
+  staff: ['staffInfo'],
+  education: ['educationInfo'],
+  advanced: ['advancedInfo'],
+  images: ['images'],
+  other: ['otherInfo'],
+};
+
+/**
  * フィールド名からセクション名を取得するヘルパー
- * 型安全性を保証するためのマッピング
+ * SECTION_FIELDS を逆引きして取得
  */
 function getSectionFromField<K extends keyof FacilityDetail>(field: K): TabSection {
-  const basicFields: ReadonlyArray<keyof FacilityDetail> = [
-    'name',
-    'phone',
-    'corporation',
-    'establishedYear',
-    'annexFacilities',
-  ];
-  const accessFields: ReadonlyArray<keyof FacilityDetail> = [
-    'accessInfo',
-    'websiteUrl',
-    'capacity',
-    'provisionalCapacity',
-    'relationInfo',
-  ];
-
-  if (basicFields.includes(field)) return 'basic';
-  if (accessFields.includes(field)) return 'access';
-  if (field === 'philosophyInfo') return 'philosophy';
-  if (field === 'specialtyInfo') return 'specialty';
-  if (field === 'staffInfo') return 'staff';
-  if (field === 'educationInfo') return 'education';
-  if (field === 'advancedInfo') return 'advanced';
-  if (field === 'images') return 'images';
-  if (field === 'otherInfo') return 'other';
-
-  return 'basic'; // デフォルト
+  const section = (Object.keys(SECTION_FIELDS) as TabSection[]).find((key) =>
+    SECTION_FIELDS[key].includes(field),
+  );
+  return section || 'basic'; // デフォルト
 }
-
 
 /** 編集フォームの状態（タブごと） */
 type TabEditState = {
@@ -90,6 +83,8 @@ type UseFacilityTabEditReturn = {
   saveTab: (section: TabSection) => Promise<boolean>;
   /** フォームをリセット */
   resetForm: () => void;
+  /** 特定セクションをリセット */
+  resetSection: (section: TabSection) => void;
   /** エラー取得 */
   getError: (field: string) => string | undefined;
 };
@@ -194,20 +189,20 @@ export const useFacilityTabEdit = (
         // initialDataとformDataをマージして完全なデータを構築
         const mergedFormData: Partial<FacilityDetail> = initialData
           ? {
-            ...initialData,
-            ...state.formData,
-            // ネストしたオブジェクトもマージ（mergeNestedで統一）
-            accessInfo: mergeNested(initialData.accessInfo, state.formData.accessInfo),
-            philosophyInfo: mergeNested(
-              initialData.philosophyInfo,
-              state.formData.philosophyInfo,
-            ),
-            specialtyInfo: mergeNested(initialData.specialtyInfo, state.formData.specialtyInfo),
-            staffInfo: mergeNested(initialData.staffInfo, state.formData.staffInfo),
-            educationInfo: mergeNested(initialData.educationInfo, state.formData.educationInfo),
-            advancedInfo: mergeNested(initialData.advancedInfo, state.formData.advancedInfo),
-            otherInfo: mergeNested(initialData.otherInfo, state.formData.otherInfo),
-          }
+              ...initialData,
+              ...state.formData,
+              // ネストしたオブジェクトもマージ（mergeNestedで統一）
+              accessInfo: mergeNested(initialData.accessInfo, state.formData.accessInfo),
+              philosophyInfo: mergeNested(
+                initialData.philosophyInfo,
+                state.formData.philosophyInfo,
+              ),
+              specialtyInfo: mergeNested(initialData.specialtyInfo, state.formData.specialtyInfo),
+              staffInfo: mergeNested(initialData.staffInfo, state.formData.staffInfo),
+              educationInfo: mergeNested(initialData.educationInfo, state.formData.educationInfo),
+              advancedInfo: mergeNested(initialData.advancedInfo, state.formData.advancedInfo),
+              otherInfo: mergeNested(initialData.otherInfo, state.formData.otherInfo),
+            }
           : state.formData;
 
         // セクション別に更新データを構築
@@ -282,6 +277,35 @@ export const useFacilityTabEdit = (
     }
   }, [initialData]);
 
+  /** 特定セクションをリセット */
+  const resetSection = useCallback(
+    (section: TabSection) => {
+      if (!initialData) return;
+      // images は ImagesTab.reset() で別管理のためスキップ
+      if (section === 'images') return;
+
+      setState((prev) => {
+        const newDirtyMap = new Map(prev.dirtyMap);
+        newDirtyMap.set(section, false);
+
+        // セクションに対応するフィールドを初期値に戻す
+        const newFormData = { ...prev.formData };
+        const fields = SECTION_FIELDS[section];
+
+        for (const field of fields) {
+          (newFormData as Record<string, unknown>)[field] = initialData[field];
+        }
+
+        return {
+          ...prev,
+          formData: newFormData,
+          dirtyMap: newDirtyMap,
+        };
+      });
+    },
+    [initialData],
+  );
+
   /** エラー取得 */
   const getError = useCallback(
     (field: string): string | undefined => {
@@ -311,7 +335,7 @@ export const useFacilityTabEdit = (
     updateNestedField,
     saveTab,
     resetForm,
+    resetSection,
     getError,
   };
 };
-

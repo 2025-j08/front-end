@@ -3,7 +3,6 @@ import dynamic from 'next/dynamic';
 import { AccessInfo } from '@/types/facility';
 
 import { EditField } from './EditField';
-import { TabSaveButton } from './TabSaveButton';
 import styles from './TabContent.module.scss';
 import { TabProps } from '../types/tabProps';
 
@@ -30,9 +29,6 @@ export const AccessTab = ({
   isEditMode = false,
   onFieldChange,
   getError = () => undefined,
-  onSave,
-  isSaving = false,
-  isDirty = false,
 }: AccessTabProps) => {
   if (isEditMode) {
     return (
@@ -141,7 +137,6 @@ export const AccessTab = ({
             />
           </div>
         </div>
-        {onSave && <TabSaveButton onSave={onSave} isSaving={isSaving} isDirty={isDirty} />}
       </>
     );
   }
