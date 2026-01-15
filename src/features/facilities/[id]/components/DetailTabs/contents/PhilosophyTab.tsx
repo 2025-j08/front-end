@@ -24,11 +24,11 @@ export const PhilosophyTab = ({
               <EditField
                 type="textarea"
                 id="message"
-                label="理念メッセージ"
+                label="理念"
                 value={philosophyInfo.message}
                 onChange={(v) => onFieldChange?.('message', v)}
                 rows={3}
-                placeholder="施設の理念メッセージを入力してください"
+                placeholder="施設の理念を入力してください"
                 error={getError('philosophyInfo.message')}
               />
             </EditSection>
@@ -54,11 +54,9 @@ export const PhilosophyTab = ({
 
   return (
     <div className={styles.philosophyTabContainer}>
-      {philosophyInfo.message && (
-        <div className={styles.textSection}>
-          <TabSection title="理念" content={philosophyInfo.message} />
-        </div>
-      )}
+      <div className={styles.textSection}>
+        <TabSection title="理念" content={philosophyInfo.message} />
+      </div>
       <div className={styles.textSection}>
         <TabSection title="日々の支援の中で重視している視点" content={philosophyInfo.description} />
       </div>

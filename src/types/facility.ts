@@ -53,9 +53,7 @@ export interface AccessInfo {
   locationAddress: string;
   lat: number;
   lng: number;
-  /** 最寄り駅・バス停名（オプショナル） */
-  station?: string;
-  /** 駅からのアクセス方法（オプショナル） */
+  /** 交通アクセス（オプショナル） */
   description?: string;
   /** 立地のアピールポイント（オプショナル） */
   locationAppeal?: string;
@@ -117,8 +115,6 @@ export interface EducationInfo {
 
 /** 高機能化・多機能化への取り組み */
 export interface AdvancedInfo {
-  /** タイトル */
-  title?: string;
   /** 実施している多機能化の取り組み */
   description?: string;
   /** 実現に向けた経緯と背景 */

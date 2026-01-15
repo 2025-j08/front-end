@@ -53,23 +53,14 @@ export const AccessTab = ({
               {/* アクセスセクション: 表示画面と同じ構造 */}
               <div className={styles.infoSection}>
                 <EditField
-                  type="text"
-                  id="station"
-                  label="アクセス - 最寄り駅"
-                  value={accessInfo.station}
-                  onChange={(v) => onFieldChange?.('station', v)}
-                  error={getError('accessInfo.station')}
-                  placeholder="最寄り駅名を入力"
-                />
-                <EditField
                   type="textarea"
                   id="description"
-                  label="駅からのアクセス方法"
+                  label="交通アクセス"
                   value={accessInfo.description}
                   onChange={(v) => onFieldChange?.('description', v)}
                   rows={2}
                   error={getError('accessInfo.description')}
-                  placeholder="駅からの行き方を入力"
+                  placeholder="施設へのアクセス方法を入力"
                 />
               </div>
 
@@ -150,21 +141,15 @@ export const AccessTab = ({
             <p className={styles.accessText}>{accessInfo.locationAddress}</p>
           </div>
 
-          {accessInfo.station && (
-            <div className={styles.infoSection}>
-              <h3 className={styles.sectionTitle}>アクセス</h3>
-              <p className={styles.accessText}>{accessInfo.station}</p>
-              {accessInfo.description && (
-                <p className={styles.accessDescription}>{accessInfo.description}</p>
-              )}
-            </div>
-          )}
+          <div className={styles.infoSection}>
+            <h3 className={styles.sectionTitle}>交通アクセス</h3>
+            <p className={styles.accessText}>{accessInfo.description || '-'}</p>
+          </div>
 
-          {accessInfo.locationAppeal && (
-            <div className={styles.infoSection}>
-              <p className={styles.accessText}>{accessInfo.locationAppeal}</p>
-            </div>
-          )}
+          <div className={styles.infoSection}>
+            <h3 className={styles.sectionTitle}>立地のアピールポイント</h3>
+            <p className={styles.accessText}>{accessInfo.locationAppeal || '-'}</p>
+          </div>
         </div>
         <div className={styles.mapWrapper}>
           <FacilityMap
@@ -176,12 +161,10 @@ export const AccessTab = ({
         </div>
       </div>
 
-      {relationInfo && (
-        <div className={styles.relationSection}>
-          <h3 className={styles.relationTitle}>地域社会との関係や連携状況</h3>
-          <p className={styles.relationText}>{relationInfo}</p>
-        </div>
-      )}
+      <div className={styles.relationSection}>
+        <h3 className={styles.relationTitle}>地域社会との関係や連携状況</h3>
+        <p className={styles.relationText}>{relationInfo || '-'}</p>
+      </div>
     </div>
   );
 };

@@ -19,19 +19,8 @@ export const AdvancedTab = ({
       <>
         <div className={styles.tabContentWrapper}>
           <div className={styles.textSection}>
-            {/* タイトルフィールド */}
-            <EditField
-              type="text"
-              id="advancedTitle"
-              label="タイトル"
-              value={advancedInfo.title}
-              onChange={(v) => onFieldChange?.('title', v)}
-              placeholder="例: 多機能化への取り組み"
-              error={getError('advancedInfo.title')}
-            />
-
-            {/* 実施している多機能化への取り組み - 表示画面のタイトルと統一 */}
-            <EditSection title={advancedInfo.title || '実施している多機能化への取り組み'}>
+            {/* 実施している多機能化への取り組み */}
+            <EditSection title="実施している多機能化への取り組み">
               <EditField
                 type="textarea"
                 id="description"
@@ -90,10 +79,7 @@ export const AdvancedTab = ({
   return (
     <div className={styles.tabContentWrapper}>
       <div className={styles.textSection}>
-        <TabSection
-          title={advancedInfo.title || '実施している多機能化への取り組み'}
-          content={advancedInfo.description}
-        />
+        <TabSection title="実施している多機能化への取り組み" content={advancedInfo.description} />
 
         <TabSection title="実現に向けた経緯と背景" content={advancedInfo.background} />
 

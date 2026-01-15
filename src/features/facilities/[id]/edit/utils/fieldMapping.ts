@@ -97,7 +97,6 @@ const SECTION_FIELD_CONFIGS: Record<TabSection, FieldConfig[]> = {
     { source: 'accessInfo.lng', target: 'lng' },
     { source: 'targetAge', target: 'target_age' },
     { source: 'building', target: 'building' },
-    { source: 'accessInfo.station', target: 'station' },
     { source: 'accessInfo.description', target: 'description' },
     { source: 'accessInfo.locationAppeal', target: 'location_appeal' },
     { source: 'websiteUrl', target: 'website_url' },
@@ -133,7 +132,6 @@ const SECTION_FIELD_CONFIGS: Record<TabSection, FieldConfig[]> = {
     { source: 'educationInfo.careerSupport', target: 'career_support' },
   ],
   advanced: [
-    { source: 'advancedInfo.title', target: 'title' },
     { source: 'advancedInfo.description', target: 'description' },
     { source: 'advancedInfo.background', target: 'background' },
     { source: 'advancedInfo.challenges', target: 'challenges' },
