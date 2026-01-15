@@ -93,41 +93,28 @@ export const FacilityEdit = ({ id }: Props) => {
     [updateField],
   );
 
-  // セクション別の保存ハンドラーをRecord型で生成（useMemoでメモ化）
+  // セクション別の保存ハンドラーをRecord型で動的生成（useMemoでメモ化）
   const saveHandlers: Record<TabSection, () => Promise<void>> = useMemo(
-    () => ({
-      basic: async () => {
-        await saveTab('basic');
-        // websiteUrlが変更されていればaccessセクションも保存
-        if (isDirty('access')) {
-          await saveTab('access');
-        }
-      },
-      access: async () => {
-        await saveTab('access');
-      },
-      philosophy: async () => {
-        await saveTab('philosophy');
-      },
-      specialty: async () => {
-        await saveTab('specialty');
-      },
-      staff: async () => {
-        await saveTab('staff');
-      },
-      education: async () => {
-        await saveTab('education');
-      },
-      advanced: async () => {
-        await saveTab('advanced');
-      },
-      images: async () => {
-        // 画像はHandleBatchImageSaveで管理されるため、ここでは何もしない
-      },
-      other: async () => {
-        await saveTab('other');
-      },
-    }),
+    () =>
+      TAB_SECTIONS.reduce(
+        (handlers, section) => {
+          handlers[section] = async () => {
+            // imagesセクションは別途handleBatchImageSaveで管理されるため、saveTabをスキップ
+            if (section === 'images') {
+              return;
+            }
+
+            await saveTab(section);
+
+            // basicセクション保存時にwebsiteUrlが変更されていればaccessセクションも保存
+            if (section === 'basic' && isDirty('access')) {
+              await saveTab('access');
+            }
+          };
+          return handlers;
+        },
+        {} as Record<TabSection, () => Promise<void>>,
+      ),
     [saveTab, isDirty],
   );
 
