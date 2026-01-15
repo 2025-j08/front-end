@@ -189,20 +189,20 @@ export const useFacilityTabEdit = (
         // initialDataとformDataをマージして完全なデータを構築
         const mergedFormData: Partial<FacilityDetail> = initialData
           ? {
-              ...initialData,
-              ...state.formData,
-              // ネストしたオブジェクトもマージ（mergeNestedで統一）
-              accessInfo: mergeNested(initialData.accessInfo, state.formData.accessInfo),
-              philosophyInfo: mergeNested(
-                initialData.philosophyInfo,
-                state.formData.philosophyInfo,
-              ),
-              specialtyInfo: mergeNested(initialData.specialtyInfo, state.formData.specialtyInfo),
-              staffInfo: mergeNested(initialData.staffInfo, state.formData.staffInfo),
-              educationInfo: mergeNested(initialData.educationInfo, state.formData.educationInfo),
-              advancedInfo: mergeNested(initialData.advancedInfo, state.formData.advancedInfo),
-              otherInfo: mergeNested(initialData.otherInfo, state.formData.otherInfo),
-            }
+            ...initialData,
+            ...state.formData,
+            // ネストしたオブジェクトもマージ（mergeNestedで統一）
+            accessInfo: mergeNested(initialData.accessInfo, state.formData.accessInfo),
+            philosophyInfo: mergeNested(
+              initialData.philosophyInfo,
+              state.formData.philosophyInfo,
+            ),
+            specialtyInfo: mergeNested(initialData.specialtyInfo, state.formData.specialtyInfo),
+            staffInfo: mergeNested(initialData.staffInfo, state.formData.staffInfo),
+            educationInfo: mergeNested(initialData.educationInfo, state.formData.educationInfo),
+            advancedInfo: mergeNested(initialData.advancedInfo, state.formData.advancedInfo),
+            otherInfo: mergeNested(initialData.otherInfo, state.formData.otherInfo),
+          }
           : state.formData;
 
         // セクション別に更新データを構築
@@ -354,8 +354,4 @@ export const useFacilityTabEdit = (
     resetSection,
     getError,
   };
-<<<<<<< HEAD
 };
-=======
-};
->>>>>>> 59e40d0 (保存までコミット)
