@@ -93,7 +93,7 @@
     &:focus {
       outline: none;
       border-color: var(--primary); // アクセントカラーを使用
-      box-shadow: 0 0 0 2px var(--focus-glow); // エフェクト変数があれば使用、なければrgba(アクセント, 0.2)
+      box-shadow: 0 0 0 2px var(--focus-glow, #{colors.$form-focus-glow}); // エフェクト変数があれば使用、なければ定義済カラー
     }
   }
 }
