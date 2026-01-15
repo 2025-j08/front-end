@@ -207,7 +207,10 @@ export const ImagesTab = ({
           try {
             // WebP変換
             const webpBlob = await convertToWebP(pending.file, pending.imageType);
-            const webpFile = new File([webpBlob], pending.file.name.replace(/\.[^.]+$/, '.webp'), {
+            // ファイル名に日本語が含まれていると上流サーバー(Supabase/Proxy)で502エラーになる場合があるため、
+            // 安全なASCIIファイル名に置換する。実体はID管理されており元のファイル名は不要。
+            const safeFileName = `image_${Date.now()}.webp`;
+            const webpFile = new File([webpBlob], safeFileName, {
               type: 'image/webp',
             });
 
