@@ -133,7 +133,7 @@ function removeUndefinedValues<T extends Record<string, unknown>>(obj: T): Parti
  * 共通のupdateヘルパー関数（正規化されたスキーマ対応）
  * 既存レコードのみを更新（新規作成は行わない）
  */
-async function upsertFacilityData<T extends Record<string, unknown>>(
+async function updateFacilityData<T extends Record<string, unknown>>(
   supabase: SupabaseClient,
   tableName: FacilityDetailTableName,
   facilityId: number,
@@ -283,7 +283,7 @@ export async function updateFacilityBySection(
   const tableName = SECTION_TO_TABLE_MAP[update.section];
   const errorMessage = SECTION_ERROR_MAP[update.section];
 
-  await upsertFacilityData(supabase, tableName, facilityId, update.data, errorMessage);
+  await updateFacilityData(supabase, tableName, facilityId, update.data, errorMessage);
 }
 
 /**
