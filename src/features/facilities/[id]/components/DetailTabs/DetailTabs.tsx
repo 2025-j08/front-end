@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback, useMemo } from 'react';
-import { Select, MenuItem, SelectChangeEvent } from '@mui/material';
+import { Select, MenuItem, SelectChangeEvent, FormControl, InputLabel } from '@mui/material';
 
 import { useTabKeyboardNav } from '@/hooks/useTabKeyboardNav';
 import { useConfirmDialog } from '@/hooks/useConfirmDialog';
@@ -212,31 +212,62 @@ export const DetailTabs = ({
 
       {/* モバイル用セレクトボックス（MUI Select） */}
       <div className={styles.tabSelectContainer}>
-        <Select
-          value={activeTab}
-          onChange={(e: SelectChangeEvent) => handleTabChange(e.target.value as TabKey)}
-          className={styles.tabSelect}
-          aria-label="表示する項目を選択"
-          variant="outlined"
-          size="small"
-          MenuProps={{
-            PaperProps: {
-              sx: {
-                maxHeight: 300,
-                '& .MuiMenuItem-root': {
-                  fontSize: '16px', // .tabItem と統一
-                  padding: '12px 10px', // .tabItem と統一
+        <FormControl fullWidth size="small">
+          {/* スクリーンリーダー用ラベル（視覚的には非表示） */}
+          <InputLabel
+            id="tab-select-label"
+            sx={{
+              // MUIの組み込みsrOnlyスタイルを適用
+              position: 'absolute',
+              width: '1px',
+              height: '1px',
+              padding: 0,
+              margin: '-1px',
+              overflow: 'hidden',
+              clip: 'rect(0, 0, 0, 0)',
+              whiteSpace: 'nowrap',
+              border: 0,
+            }}
+          >
+            表示する項目を選択
+          </InputLabel>
+          <Select
+            labelId="tab-select-label"
+            value={activeTab}
+            onChange={(e: SelectChangeEvent) => handleTabChange(e.target.value as TabKey)}
+            className={styles.tabSelect}
+            variant="outlined"
+            sx={{
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderColor: 'var(--border-color)',
+              },
+              '&:hover .MuiOutlinedInput-notchedOutline': {
+                borderColor: 'var(--border-color)',
+              },
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: 'var(--primary)',
+                boxShadow: '0 0 0 2px var(--focus-glow)',
+              },
+            }}
+            MenuProps={{
+              PaperProps: {
+                sx: {
+                  maxHeight: 300,
+                  '& .MuiMenuItem-root': {
+                    fontSize: '16px', // .tabItem と統一
+                    padding: '12px 10px', // .tabItem と統一
+                  },
                 },
               },
-            },
-          }}
-        >
-          {tabs.map((tab) => (
-            <MenuItem key={tab.key} value={tab.key}>
-              {tab.label}
-            </MenuItem>
-          ))}
-        </Select>
+            }}
+          >
+            {tabs.map((tab) => (
+              <MenuItem key={tab.key} value={tab.key}>
+                {tab.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </div>
 
       {/* タブナビゲーション - role="tablist" でアクセシビリティ対応 */}
