@@ -103,3 +103,17 @@ export const FACILITY_MESSAGES = {
 } as const;
 
 export type FacilityMessageKey = keyof typeof FACILITY_MESSAGES;
+
+/**
+ * パスワードリセット関連のメッセージ定数
+ */
+export const PASSWORD_RESET_MESSAGES = {
+  EMAIL_SENT:
+    'パスワード再設定用のメールを送信しました。メールに記載されたリンクから再設定を行ってください。',
+  RESET_SUCCESS: 'パスワードを再設定しました。新しいパスワードでログインしてください。',
+  RESET_FAILED: 'パスワードの再設定に失敗しました。もう一度お試しください。',
+  INVALID_TOKEN:
+    'リセットリンクが無効または期限切れです。再度パスワードリセットを申請してください。',
+} as const;
+
+export type PasswordResetMessageKey = keyof typeof PASSWORD_RESET_MESSAGES;

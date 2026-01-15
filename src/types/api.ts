@@ -163,3 +163,21 @@ export interface UserOperationResponseError {
  * success フィールドの値によって型が自動的に絞り込まれる
  */
 export type UserOperationResponse = UserOperationResponseSuccess | UserOperationResponseError;
+
+/**
+ * POST /api/auth/forgot-password のリクエスト型
+ * パスワードリセットメール送信
+ */
+export interface ForgotPasswordRequest {
+  /** ユーザーのメールアドレス */
+  email: string;
+}
+
+/**
+ * POST /api/auth/reset-password のリクエスト型
+ * パスワード再設定
+ */
+export interface ResetPasswordRequest {
+  /** 新しいパスワード */
+  password: string;
+}

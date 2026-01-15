@@ -23,6 +23,12 @@ export const API_ENDPOINTS = {
 
     /** ユーザー登録API */
     REGISTER: '/api/auth/register',
+
+    /** パスワードリセットメール送信API */
+    FORGOT_PASSWORD: '/api/auth/forgot-password',
+
+    /** パスワード再設定API */
+    RESET_PASSWORD: '/api/auth/reset-password',
   },
 } as const;
 
