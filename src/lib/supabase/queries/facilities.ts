@@ -594,7 +594,6 @@ export async function getFacilityDetail(id: number): Promise<FacilityDetail | nu
     locationAddress: access?.location_address || fullAddress,
     lat: access?.lat || 0,
     lng: access?.lng || 0,
-    station: access?.station,
     description: access?.description,
     locationAppeal: access?.location_appeal,
   };
@@ -653,7 +652,6 @@ export async function getFacilityDetail(id: number): Promise<FacilityDetail | nu
       : undefined,
     advancedInfo: advanced
       ? {
-          title: advanced.title || undefined,
           description: advanced.description,
           background: advanced.background || undefined,
           challenges: advanced.challenges || undefined,
