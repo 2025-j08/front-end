@@ -79,12 +79,10 @@ export const EducationTab = ({
     <div className={styles.tabContentWrapper}>
       <div className={styles.textSection}>
         <TabSection title="進学率と支援体制">
-          {educationInfo.graduationRatePercentage && (
-            <p className={styles.textContent}>進学率：{educationInfo.graduationRatePercentage}</p>
-          )}
-          {educationInfo.graduationRate && (
-            <p className={styles.textContent}>{educationInfo.graduationRate}</p>
-          )}
+          <p className={styles.textContent}>
+            進学率：{educationInfo.graduationRatePercentage || '-'}
+          </p>
+          <p className={styles.textContent}>{educationInfo.graduationRate || '-'}</p>
         </TabSection>
 
         <TabSection title="学習支援の工夫や外部連携" content={educationInfo.learningSupport} />
