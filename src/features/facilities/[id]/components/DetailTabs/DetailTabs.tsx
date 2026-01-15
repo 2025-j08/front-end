@@ -222,19 +222,12 @@ export const DetailTabs = ({
           MenuProps={{
             PaperProps: {
               sx: {
-                maxHeight: 300, // メニューの高さを制限
+                maxHeight: 300,
                 '& .MuiMenuItem-root': {
-                  fontSize: '14px',
-                  padding: '8px 16px',
+                  fontSize: '16px', // .tabItem と統一
+                  padding: '12px 10px', // .tabItem と統一
                 },
               },
-            },
-          }}
-          sx={{
-            width: '100%',
-            backgroundColor: 'var(--background-secondary)',
-            '& .MuiSelect-select': {
-              padding: '10px 16px',
             },
           }}
         >
