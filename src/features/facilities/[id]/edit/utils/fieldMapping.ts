@@ -15,8 +15,10 @@ export const TAB_SECTIONS = [
   'staff',
   'education',
   'advanced',
+  'images',
   'other',
 ] as const;
+
 
 /** タブセクション名 */
 export type TabSection = (typeof TAB_SECTIONS)[number];
@@ -133,6 +135,8 @@ const SECTION_FIELD_CONFIGS: Record<TabSection, FieldConfig[]> = {
     { source: 'advancedInfo.challenges', target: 'challenges' },
     { source: 'advancedInfo.solutions', target: 'solutions' },
   ],
+  // 画像は別途アップロード処理されるため、フィールドマッピングは不要
+  images: [],
   other: [
     { source: 'otherInfo.title', target: 'title' },
     { source: 'otherInfo.description', target: 'description' },
@@ -141,6 +145,7 @@ const SECTION_FIELD_CONFIGS: Record<TabSection, FieldConfig[]> = {
     { source: 'otherInfo.freeText', target: 'free_text' },
   ],
 };
+
 
 /**
  * ネストしたセクションかどうかを判定

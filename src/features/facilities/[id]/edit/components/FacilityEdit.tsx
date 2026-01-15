@@ -5,13 +5,14 @@
  * 施設編集ページのメインコンポーネント（編集専用）です。
  * タブごとに独立して編集・保存が可能
  */
-import { useCallback, useState, useMemo } from 'react';
+import { useCallback, useState, useMemo, useRef, useEffect } from 'react';
 
-import type { FacilityDetail as FacilityDetailType } from '@/types/facility';
+import type { FacilityDetail as FacilityDetailType, FacilityImageType } from '@/types/facility';
 
 import { useFacilityData } from '../../hooks/useFacilityData';
 import { useFacilityDetail } from '../../hooks/useFacilityDetail';
 import { useFacilityTabEdit, TAB_SECTIONS, type TabSection } from '../hooks/useFacilityTabEdit';
+import { useFacilityImageUpload } from '../hooks/useFacilityImageUpload';
 import { useUnsavedChangesWarning } from '../hooks/useUnsavedChangesWarning';
 import { FacilityHeader } from '../../components/FacilityHeader/FacilityHeader';
 import { BasicInfoSection } from '../../components/BasicInfoSection/BasicInfoSection';
@@ -25,6 +26,12 @@ type Props = {
 export const FacilityEdit = ({ id }: Props) => {
   const { data: facilityData, isLoading, error } = useFacilityData(id);
   const { activeTab, setActiveTab, tabs } = useFacilityDetail();
+
+  // facilityDataをRefで保持して、非同期処理内でも最新の値にアクセスできるようにする
+  const facilityDataRef = useRef(facilityData);
+  useEffect(() => {
+    facilityDataRef.current = facilityData;
+  }, [facilityData]);
 
   // データ再取得後のコールバック（保存成功時に最新データを反映）
   const [latestData, setLatestData] = useState<FacilityDetailType | null>(null);
@@ -46,6 +53,33 @@ export const FacilityEdit = ({ id }: Props) => {
     errors,
     getError,
   } = useFacilityTabEdit(displayData, id, handleSaveSuccess);
+
+  // 画像アップロードフック
+  const { saveAllImages } = useFacilityImageUpload(id);
+
+  // 画像一括保存ハンドラー（RPC使用）
+  const handleBatchImageSave = useCallback(
+    async (
+      uploads: {
+        file: File;
+        type: import('@/types/facility').FacilityImageType;
+        displayOrder: number;
+      }[],
+      deleteIds: number[],
+    ) => {
+      // saveAllImagesは処理完了後に最新画像リストを返す
+      const newImages = await saveAllImages(uploads, deleteIds);
+      setLatestData((prev) => {
+        const baseData = prev || facilityDataRef.current;
+        if (!baseData) return null;
+        return {
+          ...baseData,
+          images: newImages,
+        };
+      });
+    },
+    [saveAllImages],
+  );
 
   // 未保存の変更がある場合の離脱警告
   useUnsavedChangesWarning(hasUnsavedChanges);
@@ -89,6 +123,7 @@ export const FacilityEdit = ({ id }: Props) => {
     );
 
   // 編集中のデータとマージ
+  // 注意: images は formData ではなく displayData から取得（画像は別途管理されるため）
   const mergedData = { ...displayData, ...formData };
 
   return (
@@ -133,6 +168,8 @@ export const FacilityEdit = ({ id }: Props) => {
         educationInfo={mergedData.educationInfo}
         advancedInfo={mergedData.advancedInfo}
         otherInfo={mergedData.otherInfo}
+        images={mergedData.images}
+        onBatchImageSave={handleBatchImageSave}
         isEditMode={true}
         onFieldChange={updateField}
         onNestedFieldChange={updateNestedField}

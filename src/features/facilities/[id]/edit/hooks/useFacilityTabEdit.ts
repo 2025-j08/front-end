@@ -47,10 +47,12 @@ function getSectionFromField<K extends keyof FacilityDetail>(field: K): TabSecti
   if (field === 'staffInfo') return 'staff';
   if (field === 'educationInfo') return 'education';
   if (field === 'advancedInfo') return 'advanced';
+  if (field === 'images') return 'images';
   if (field === 'otherInfo') return 'other';
 
   return 'basic'; // デフォルト
 }
+
 
 /** 編集フォームの状態（タブごと） */
 type TabEditState = {
@@ -104,7 +106,12 @@ export const useFacilityTabEdit = (
   onSaveSuccess?: (updatedData: FacilityDetail) => void,
 ): UseFacilityTabEditReturn => {
   const [state, setState] = useState<TabEditState>({
-    formData: initialData ? { ...initialData } : {},
+    formData: initialData
+      ? (() => {
+          const { images, ...rest } = initialData;
+          return rest;
+        })()
+      : {},
     dirtyMap: new Map(),
     isSaving: false,
     errors: {},
@@ -114,7 +121,10 @@ export const useFacilityTabEdit = (
   useEffect(() => {
     if (initialData) {
       setState({
-        formData: { ...initialData },
+        formData: (() => {
+          const { images, ...rest } = initialData;
+          return rest;
+        })(),
         dirtyMap: new Map(),
         isSaving: false,
         errors: {},
@@ -184,20 +194,20 @@ export const useFacilityTabEdit = (
         // initialDataとformDataをマージして完全なデータを構築
         const mergedFormData: Partial<FacilityDetail> = initialData
           ? {
-              ...initialData,
-              ...state.formData,
-              // ネストしたオブジェクトもマージ（mergeNestedで統一）
-              accessInfo: mergeNested(initialData.accessInfo, state.formData.accessInfo),
-              philosophyInfo: mergeNested(
-                initialData.philosophyInfo,
-                state.formData.philosophyInfo,
-              ),
-              specialtyInfo: mergeNested(initialData.specialtyInfo, state.formData.specialtyInfo),
-              staffInfo: mergeNested(initialData.staffInfo, state.formData.staffInfo),
-              educationInfo: mergeNested(initialData.educationInfo, state.formData.educationInfo),
-              advancedInfo: mergeNested(initialData.advancedInfo, state.formData.advancedInfo),
-              otherInfo: mergeNested(initialData.otherInfo, state.formData.otherInfo),
-            }
+            ...initialData,
+            ...state.formData,
+            // ネストしたオブジェクトもマージ（mergeNestedで統一）
+            accessInfo: mergeNested(initialData.accessInfo, state.formData.accessInfo),
+            philosophyInfo: mergeNested(
+              initialData.philosophyInfo,
+              state.formData.philosophyInfo,
+            ),
+            specialtyInfo: mergeNested(initialData.specialtyInfo, state.formData.specialtyInfo),
+            staffInfo: mergeNested(initialData.staffInfo, state.formData.staffInfo),
+            educationInfo: mergeNested(initialData.educationInfo, state.formData.educationInfo),
+            advancedInfo: mergeNested(initialData.advancedInfo, state.formData.advancedInfo),
+            otherInfo: mergeNested(initialData.otherInfo, state.formData.otherInfo),
+          }
           : state.formData;
 
         // セクション別に更新データを構築
@@ -304,3 +314,4 @@ export const useFacilityTabEdit = (
     getError,
   };
 };
+

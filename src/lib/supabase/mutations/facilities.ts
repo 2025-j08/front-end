@@ -256,6 +256,7 @@ const SECTION_ERROR_MAP: Record<FacilitySectionName, string> = {
   staff: '職員情報の更新に失敗しました',
   education: '教育情報の更新に失敗しました',
   advanced: '多機能化情報の更新に失敗しました',
+  images: '画像情報の更新に失敗しました',
   other: 'その他情報の更新に失敗しました',
 } as const;
 
@@ -380,4 +381,93 @@ export async function updateFacilityCoordinates(
   if (error) {
     throw new Error(`GPS座標の更新に失敗しました: ${error.message}`);
   }
+}
+
+// =============================================================================
+// 画像関連の操作
+// =============================================================================
+
+/** 画像データの型 */
+export type FacilityImageData = {
+  facility_id: number;
+  image_type: 'thumbnail' | 'gallery';
+  image_url: string;
+  display_order: number;
+};
+
+/**
+ * 施設画像をデータベースに登録
+ */
+export async function insertFacilityImage(
+  supabase: SupabaseClient,
+  data: FacilityImageData,
+): Promise<{ id: number }> {
+  const { data: result, error } = await supabase
+    .from('facility_images')
+    .insert(data)
+    .select('id')
+    .single();
+
+  if (error) {
+    throw new Error(`画像情報の登録に失敗しました: ${error.message}`);
+  }
+
+  return { id: result.id };
+}
+
+/**
+ * 施設の画像一覧を取得
+ */
+export async function getFacilityImages(
+  supabase: SupabaseClient,
+  facilityId: number,
+): Promise<(FacilityImageData & { id: number })[]> {
+  const { data, error } = await supabase
+    .from('facility_images')
+    .select('id, facility_id, image_type, image_url, display_order')
+    .eq('facility_id', facilityId)
+    .order('image_type')
+    .order('display_order');
+
+  if (error) {
+    throw new Error(`画像一覧の取得に失敗しました: ${error.message}`);
+  }
+
+  return data || [];
+}
+
+/** 新規画像データ（RPC用） */
+export type NewImageInput = {
+  image_type: 'thumbnail' | 'gallery';
+  image_url: string;
+  display_order: number;
+};
+
+/** RPC結果 */
+type ManageFacilityImagesResult = {
+  deleted_urls: string[];
+  inserted_ids: number[];
+};
+
+/**
+ * 施設画像の一括更新（削除・追加）をRPCで実行
+ * DBトランザクション内でアトミックに処理し、ユニーク制約違反を回避
+ */
+export async function manageFacilityImages(
+  supabase: SupabaseClient,
+  facilityId: number,
+  deleteIds: number[],
+  newImages: NewImageInput[],
+): Promise<ManageFacilityImagesResult> {
+  const { data, error } = await supabase.rpc('manage_facility_images', {
+    p_facility_id: facilityId,
+    p_delete_ids: deleteIds,
+    p_new_images: newImages,
+  });
+
+  if (error) {
+    throw new Error(`画像の一括更新に失敗しました: ${error.message}`);
+  }
+
+  return data as ManageFacilityImagesResult;
 }

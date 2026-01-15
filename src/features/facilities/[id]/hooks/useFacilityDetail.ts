@@ -7,6 +7,7 @@ export const TAB_KEYS = [
   'staff',
   'education',
   'advanced',
+  'images',
   'other',
 ] as const;
 
@@ -25,6 +26,7 @@ export const TAB_LABELS: Record<TabKey, string> = {
   staff: '職員',
   education: '教育・進路支援',
   advanced: '多機能化',
+  images: '画像',
   other: 'その他',
 };
 

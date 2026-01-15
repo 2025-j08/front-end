@@ -1,0 +1,260 @@
+@use '@/styles/colors' as colors;
+
+// -----------------------------------------------------------------------------
+// 画像タブ専用スタイル
+// -----------------------------------------------------------------------------
+
+.imagesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  width: 100%;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.helpText {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
+// サムネイル画像ラッパー
+.thumbnailWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--background-secondary);
+  transition: background-color 0.3s ease;
+}
+
+.thumbnailImage {
+  object-fit: cover;
+}
+
+// ギャラリー表示（閲覧モード）
+.galleryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.galleryItem {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--background-secondary);
+  transition: background-color 0.3s ease;
+}
+
+.galleryImage {
+  object-fit: cover;
+}
+
+// 画像なし表示
+.noImage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 4 / 3;
+  background-color: var(--background-secondary);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+// -----------------------------------------------------------------------------
+// 編集モード用スタイル
+// -----------------------------------------------------------------------------
+
+// アップロード済み画像アイテム
+.uploadedItem {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 400px;
+}
+
+// ギャラリー編集用グリッド
+.galleryEditGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.galleryItemWrapper {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--background-secondary);
+}
+
+// ドロップゾーン
+.dropZone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 4 / 3;
+  border: 2px dashed var(--border-color);
+  border-radius: 8px;
+  background-color: var(--background-secondary);
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+
+  &:hover,
+  &:focus {
+    border-color: var(--primary);
+    background-color: var(--primary-light, rgba(var(--primary-rgb), 0.05));
+  }
+
+  &.dragOver {
+    border-color: var(--primary);
+    background-color: var(--primary-light, rgba(var(--primary-rgb), 0.1));
+    border-style: solid;
+  }
+}
+
+.dropZoneContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  text-align: center;
+  padding: 16px;
+  transition: color 0.3s ease;
+}
+
+.dropIcon {
+  font-size: 32px;
+}
+
+.dropHint {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+// 削除ボタン
+.deleteButton {
+  padding: 8px 16px;
+  background-color: transparent;
+  color: var(--error);
+  border: 1px solid var(--error);
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+
+  &:hover {
+    background-color: var(--error);
+    color: colors.$white;
+  }
+
+  &:focus {
+    outline: 2px solid var(--error);
+    outline-offset: 2px;
+  }
+}
+
+// pending（アップロード中）画像
+.pendingItem {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: fit-content;
+  opacity: 0.8;
+}
+
+.uploadingOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: colors.$white;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.errorMessage {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background-color: var(--error-bg);
+  border-radius: 4px;
+  color: var(--error);
+  font-size: 13px;
+
+  button {
+    padding: 4px 8px;
+    background-color: transparent;
+    color: var(--error);
+    border: 1px solid var(--error);
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--error);
+      color: colors.$white;
+    }
+  }
+}
+
+// 削除予約中の画像
+.deletePending {
+  opacity: 0.6;
+}
+
+// 復元ボタン
+.restoreButton {
+  padding: 8px 16px;
+  background-color: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+
+  &:hover {
+    background-color: var(--primary);
+    color: colors.$white;
+  }
+
+  &:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
