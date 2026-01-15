@@ -12,9 +12,6 @@ export const OtherTab = ({
   data: otherInfo,
   isEditMode = false,
   onFieldChange,
-  onSave,
-  isSaving = false,
-  isDirty = false,
   getError = () => undefined,
 }: OtherTabProps) => {
   if (isEditMode) {

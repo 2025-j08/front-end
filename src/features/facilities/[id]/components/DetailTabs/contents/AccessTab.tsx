@@ -29,9 +29,6 @@ export const AccessTab = ({
   isEditMode = false,
   onFieldChange,
   getError = () => undefined,
-  onSave,
-  isSaving = false,
-  isDirty = false,
 }: AccessTabProps) => {
   if (isEditMode) {
     return (

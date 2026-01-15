@@ -12,9 +12,6 @@ export const EducationTab = ({
   data: educationInfo,
   isEditMode = false,
   onFieldChange,
-  onSave,
-  isSaving = false,
-  isDirty = false,
   getError = () => undefined,
 }: EducationTabProps) => {
   if (isEditMode) {

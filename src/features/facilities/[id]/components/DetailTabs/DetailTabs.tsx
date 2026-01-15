@@ -28,15 +28,6 @@ import { TabSaveButton } from './contents/TabSaveButton';
 import { TabKey, Tab, TAB_LABELS } from '../../hooks/useFacilityDetail';
 import styles from './DetailTabs.module.scss';
 
-// =============================================================================
-// 定数: レンダリング毎の再生成を防止するためコンポーネント外に定義
-// =============================================================================
-
-/** 閲覧モード時のデフォルト保存ハンドラー（何もしない） */
-const noop = async () => {};
-/** 閲覧モード時のデフォルト isDirty 判定（常に false） */
-const noopIsDirty = () => false;
-
 type DetailTabsProps = {
   tabs: Tab[];
   activeTab: TabKey;
@@ -121,15 +112,8 @@ export const DetailTabs = ({
   const imageTabRef = useRef<ImagesTabHandle>(null);
   const [imageTabState, setImageTabState] = useState({ isDirty: false, isSaving: false });
 
-  // 画像タブの状態変更ハンドラー
-  const handleImageStateChange = useCallback((state: { isDirty: boolean; isSaving: boolean }) => {
-    setImageTabState(state);
-  }, []);
-
   // 確認ダイアログ制御
   const { dialogConfig, showDialog, closeDialog } = useConfirmDialog();
-  // タブ切り替え確認時のアクション保持用
-  const pendingActionRef = useRef<(() => void) | null>(null);
 
   // 現在が画像タブかどうか
   const isImagesTab = activeTab === 'images';
@@ -153,7 +137,7 @@ export const DetailTabs = ({
     const handler = saveHandlers?.[section];
 
     return {
-      onSave: handler || noop,
+      onSave: handler || (async () => {}),
       isDirty: isDirty ? isDirty(section) : false,
       isSaving: isSaving,
     };
@@ -169,16 +153,6 @@ export const DetailTabs = ({
       }
       // 未保存の変更がある場合は確認ダイアログを表示
       if (saveButtonState.isDirty) {
-        pendingActionRef.current = () => {
-          // セクションの編集内容を破棄（リセット）
-          if (isImagesTab) {
-            // 画像タブは専用のreset関数を使用
-            imageTabRef.current?.reset();
-          } else {
-            onResetSection?.(activeTab as TabSection);
-          }
-          onTabChange(nextTab);
-        };
         showDialog({
           title: '編集内容の破棄',
           message:
@@ -187,8 +161,13 @@ export const DetailTabs = ({
           cancelLabel: '編集を続ける',
           isDanger: true,
           onConfirm: () => {
-            pendingActionRef.current?.();
-            pendingActionRef.current = null;
+            // セクションの編集内容を破棄（リセット）
+            if (isImagesTab) {
+              imageTabRef.current?.reset();
+            } else {
+              onResetSection?.(activeTab as TabSection);
+            }
+            onTabChange(nextTab);
             closeDialog();
           },
         });
@@ -287,9 +266,6 @@ export const DetailTabs = ({
                     onNestedFieldChange?.('accessInfo', field, value)
                   }
                   getError={getError}
-                  onSave={saveHandlers?.access ?? noop}
-                  isSaving={isSaving}
-                  isDirty={(isDirty ?? noopIsDirty)('access')}
                 />
               ) : null;
             case 'philosophy':
@@ -301,9 +277,6 @@ export const DetailTabs = ({
                     onNestedFieldChange?.('philosophyInfo', field, value)
                   }
                   getError={getError}
-                  onSave={saveHandlers?.philosophy ?? noop}
-                  isSaving={isSaving}
-                  isDirty={(isDirty ?? noopIsDirty)('philosophy')}
                 />
               ) : null;
             case 'specialty':
@@ -315,9 +288,6 @@ export const DetailTabs = ({
                     onNestedFieldChange?.('specialtyInfo', field, value)
                   }
                   getError={getError}
-                  onSave={saveHandlers?.specialty ?? noop}
-                  isSaving={isSaving}
-                  isDirty={(isDirty ?? noopIsDirty)('specialty')}
                 />
               ) : null;
             case 'staff':
@@ -327,9 +297,6 @@ export const DetailTabs = ({
                   isEditMode={isEditMode}
                   onFieldChange={(field, value) => onNestedFieldChange?.('staffInfo', field, value)}
                   getError={getError}
-                  onSave={saveHandlers?.staff ?? noop}
-                  isSaving={isSaving}
-                  isDirty={(isDirty ?? noopIsDirty)('staff')}
                 />
               ) : null;
             case 'education':
@@ -341,9 +308,6 @@ export const DetailTabs = ({
                     onNestedFieldChange?.('educationInfo', field, value)
                   }
                   getError={getError}
-                  onSave={saveHandlers?.education ?? noop}
-                  isSaving={isSaving}
-                  isDirty={(isDirty ?? noopIsDirty)('education')}
                 />
               ) : null;
             case 'advanced':
@@ -355,9 +319,6 @@ export const DetailTabs = ({
                     onNestedFieldChange?.('advancedInfo', field, value)
                   }
                   getError={getError}
-                  onSave={saveHandlers?.advanced ?? noop}
-                  isSaving={isSaving}
-                  isDirty={(isDirty ?? noopIsDirty)('advanced')}
                 />
               ) : null;
             case 'images':
@@ -377,9 +338,6 @@ export const DetailTabs = ({
                   isEditMode={isEditMode}
                   onFieldChange={(field, value) => onNestedFieldChange?.('otherInfo', field, value)}
                   getError={getError}
-                  onSave={saveHandlers?.other ?? noop}
-                  isSaving={isSaving}
-                  isDirty={(isDirty ?? noopIsDirty)('other')}
                 />
               ) : null;
             default:

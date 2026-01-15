@@ -13,9 +13,6 @@ export const SpecialtyTab = ({
   isEditMode = false,
   onFieldChange,
   getError = () => undefined,
-  onSave,
-  isSaving = false,
-  isDirty = false,
 }: SpecialtyTabProps) => {
   if (isEditMode) {
     return (

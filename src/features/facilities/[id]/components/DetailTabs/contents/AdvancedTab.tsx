@@ -12,9 +12,6 @@ export const AdvancedTab = ({
   data: advancedInfo,
   isEditMode = false,
   onFieldChange,
-  onSave,
-  isSaving = false,
-  isDirty = false,
   getError = () => undefined,
 }: AdvancedTabProps) => {
   if (isEditMode) {

@@ -12,9 +12,6 @@ export const StaffTab = ({
   data: staffInfo,
   isEditMode = false,
   onFieldChange,
-  onSave,
-  isSaving = false,
-  isDirty = false,
   getError = () => undefined,
 }: StaffTabProps) => {
   /**

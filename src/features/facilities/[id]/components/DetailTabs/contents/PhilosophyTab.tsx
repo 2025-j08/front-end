@@ -13,9 +13,6 @@ export const PhilosophyTab = ({
   isEditMode = false,
   onFieldChange,
   getError = () => undefined,
-  onSave,
-  isSaving = false,
-  isDirty = false,
 }: PhilosophyTabProps) => {
   if (isEditMode) {
     return (
