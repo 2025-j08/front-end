@@ -1,4 +1,8 @@
+import { useRef, useState, useCallback, useMemo } from 'react';
+
 import { useTabKeyboardNav } from '@/hooks/useTabKeyboardNav';
+import { useConfirmDialog } from '@/hooks/useConfirmDialog';
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog/ConfirmDialog';
 import {
   AccessInfo,
   PhilosophyInfo,
@@ -18,8 +22,9 @@ import { SpecialtyTab } from './contents/SpecialtyTab';
 import { StaffTab } from './contents/StaffTab';
 import { EducationTab } from './contents/EducationTab';
 import { AdvancedTab } from './contents/AdvancedTab';
-import { ImagesTab } from './contents/ImagesTab';
+import { ImagesTab, ImagesTabHandle } from './contents/ImagesTab';
 import { OtherTab } from './contents/OtherTab';
+import { TabSaveButton } from './contents/TabSaveButton';
 import { TabKey, Tab, TAB_LABELS } from '../../hooks/useFacilityDetail';
 import styles from './DetailTabs.module.scss';
 
@@ -66,6 +71,8 @@ type DetailTabsProps = {
   isSaving?: boolean;
   /** セクション別の変更状態を取得する関数 */
   isDirty?: (section: TabSection) => boolean;
+  /** セクションの編集内容をリセットする関数 */
+  onResetSection?: (section: TabSection) => void;
 };
 
 /**
@@ -96,21 +103,137 @@ export const DetailTabs = ({
   saveHandlers,
   isSaving = false,
   isDirty,
+  onResetSection,
 }: DetailTabsProps) => {
   // タブIDの配列を生成
   const tabIds = tabs.map((tab) => tab.key);
-
-  // キーボードナビゲーションフックを使用
-  const { handleKeyDown } = useTabKeyboardNav(tabIds, onTabChange);
 
   // 編集モードでない場合のデフォルトハンドラー
   const noop = async () => {};
   const noopIsDirty = () => false;
 
+  // 画像タブのRefと制御用ステート
+  const imageTabRef = useRef<ImagesTabHandle>(null);
+  const [imageTabState, setImageTabState] = useState({ isDirty: false, isSaving: false });
+
+  // 画像タブの状態変更ハンドラー
+  const handleImageStateChange = useCallback((state: { isDirty: boolean; isSaving: boolean }) => {
+    setImageTabState(state);
+  }, []);
+
+  // 確認ダイアログ制御
+  const { dialogConfig, showDialog, closeDialog } = useConfirmDialog();
+  // 「確認して移動する」際のコールバック保持用（ブラウザバック対応）
+  const pendingActionRef = useRef<(() => void) | null>(null);
+
+  // 現在のタブの保存ボタンの状態を計算
+  const saveButtonState = useMemo(() => {
+    if (activeTab === 'images') {
+      return {
+        onSave: async () => {
+          await imageTabRef.current?.save();
+        },
+        isDirty: imageTabState.isDirty,
+        isSaving: imageTabState.isSaving,
+      };
+    }
+
+    // saveHandlers のキーは TabSection型 ('access', 'philosophy' etc.)だが
+    // activeTab は TabKey型 ('images'含む)
+    // images以外は共通処理
+    const section = activeTab as TabSection;
+    const handler = saveHandlers?.[section];
+
+    return {
+      onSave: handler || noop,
+      isDirty: isDirty ? isDirty(section) : false,
+      isSaving: isSaving,
+    };
+  }, [activeTab, imageTabState, saveHandlers, isDirty, isSaving]);
+
+  // タブ切り替え時の確認ロジック
+  const handleTabChange = useCallback(
+    (nextTab: TabKey) => {
+      // 編集モードでなければ直接切り替え
+      if (!isEditMode) {
+        onTabChange(nextTab);
+        return;
+      }
+      // 未保存の変更がある場合は確認ダイアログを表示
+      if (saveButtonState.isDirty) {
+        // 現在のタブのセクションを特定（imagesは別扱い）
+        const currentSection = activeTab === 'images' ? 'images' : (activeTab as TabSection);
+        pendingActionRef.current = () => {
+          // セクションの編集内容を破棄（リセット）
+          onResetSection?.(currentSection);
+          onTabChange(nextTab);
+        };
+        showDialog({
+          title: '編集内容の破棄',
+          message:
+            '編集中のデータは保存されていません。移動すると入力内容は破棄されますがよろしいですか？',
+          confirmLabel: '破棄して移動',
+          cancelLabel: '編集を続ける',
+          isDanger: true,
+          onConfirm: () => {
+            pendingActionRef.current?.();
+            pendingActionRef.current = null;
+            closeDialog();
+          },
+        });
+      } else {
+        onTabChange(nextTab);
+      }
+    },
+    [
+      isEditMode,
+      saveButtonState.isDirty,
+      activeTab,
+      onTabChange,
+      onResetSection,
+      showDialog,
+      closeDialog,
+    ],
+  );
+
+  // キーボードナビゲーション（インターセプト版）
+  const { handleKeyDown } = useTabKeyboardNav(tabIds, handleTabChange);
+
   return (
     <section className={styles.detailSection}>
-      <h2 className={styles.sectionTitle}>施設の詳細情報</h2>
-      <p className={styles.tabInstruction}>各項目をクリックして切り替える</p>
+      <div className={styles.headerWrapper}>
+        <div className={styles.headerTitleArea}>
+          <h2 className={styles.sectionTitle}>施設の詳細情報</h2>
+          <p className={styles.tabInstruction}>各項目をクリックして切り替える</p>
+        </div>
+
+        {isEditMode && (
+          <div className={styles.headerActionArea}>
+            <TabSaveButton
+              onSave={saveButtonState.onSave}
+              isDirty={saveButtonState.isDirty}
+              isSaving={saveButtonState.isSaving}
+            />
+          </div>
+        )}
+      </div>
+
+      {/* モバイル用セレクトボックス */}
+      <div className={styles.tabSelectContainer}>
+        <select
+          value={activeTab}
+          onChange={(e) => handleTabChange(e.target.value as TabKey)}
+          className={styles.tabSelect}
+          aria-label="表示する項目を選択"
+        >
+          {tabs.map((tab) => (
+            <option key={tab.key} value={tab.key}>
+              {tab.label}
+            </option>
+          ))}
+        </select>
+        {/* カスタム矢印用アイコン（CSSで実装するため要素は不要） */}
+      </div>
 
       {/* タブナビゲーション - role="tablist" でアクセシビリティ対応 */}
       <div role="tablist" className={styles.tabNav} aria-label="施設詳細タブ">
@@ -123,7 +246,7 @@ export const DetailTabs = ({
             aria-controls={`tabpanel-${tab.key}`}
             tabIndex={activeTab === tab.key ? 0 : -1}
             className={styles.tabItem}
-            onClick={() => onTabChange(tab.key)}
+            onClick={() => handleTabChange(tab.key)}
             onKeyDown={(e) => handleKeyDown(e, index)}
           >
             {tab.label}
@@ -228,13 +351,17 @@ export const DetailTabs = ({
             case 'images':
               return (
                 <ImagesTab
+                  ref={imageTabRef}
                   images={images}
                   isEditMode={isEditMode}
                   onBatchSave={onBatchImageSave}
                   // 画像保存はRPCで完結しているため、API経由のsaveTabは呼び出さない
                   onSave={noop}
+                  onStateChange={setImageTabState}
                   isSaving={isSaving}
-                  isDirty={(isDirty ?? noopIsDirty)('images')}
+                  // isDirty は onStateChange で親に通知するため propsとしては不要だが
+                  // 既存互換性のため渡すなら hasChanges を渡すべきだが、
+                  // ImagesTab内部で管理しているので不要 (型定義で optional になっているはず)
                 />
               );
             case 'other':
@@ -260,6 +387,19 @@ export const DetailTabs = ({
       </div>
 
       {/* 地域連携セクション削除 (AccessTab内に移動) */}
+
+      {/* 未保存変更確認ダイアログ */}
+      <ConfirmDialog
+        isOpen={dialogConfig.isOpen}
+        title={dialogConfig.title}
+        message={dialogConfig.message}
+        confirmLabel={dialogConfig.confirmLabel}
+        cancelLabel={dialogConfig.cancelLabel}
+        isDanger={dialogConfig.isDanger}
+        showCancel={dialogConfig.showCancel}
+        onConfirm={dialogConfig.onConfirm ?? closeDialog}
+        onCancel={dialogConfig.onCancel ?? closeDialog}
+      />
     </section>
   );
 };

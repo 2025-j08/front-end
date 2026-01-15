@@ -53,7 +53,6 @@ function getSectionFromField<K extends keyof FacilityDetail>(field: K): TabSecti
   return 'basic'; // デフォルト
 }
 
-
 /** 編集フォームの状態（タブごと） */
 type TabEditState = {
   /** 編集中のデータ */
@@ -90,6 +89,8 @@ type UseFacilityTabEditReturn = {
   saveTab: (section: TabSection) => Promise<boolean>;
   /** フォームをリセット */
   resetForm: () => void;
+  /** 特定セクションをリセット */
+  resetSection: (section: TabSection) => void;
   /** エラー取得 */
   getError: (field: string) => string | undefined;
 };
@@ -194,20 +195,20 @@ export const useFacilityTabEdit = (
         // initialDataとformDataをマージして完全なデータを構築
         const mergedFormData: Partial<FacilityDetail> = initialData
           ? {
-            ...initialData,
-            ...state.formData,
-            // ネストしたオブジェクトもマージ（mergeNestedで統一）
-            accessInfo: mergeNested(initialData.accessInfo, state.formData.accessInfo),
-            philosophyInfo: mergeNested(
-              initialData.philosophyInfo,
-              state.formData.philosophyInfo,
-            ),
-            specialtyInfo: mergeNested(initialData.specialtyInfo, state.formData.specialtyInfo),
-            staffInfo: mergeNested(initialData.staffInfo, state.formData.staffInfo),
-            educationInfo: mergeNested(initialData.educationInfo, state.formData.educationInfo),
-            advancedInfo: mergeNested(initialData.advancedInfo, state.formData.advancedInfo),
-            otherInfo: mergeNested(initialData.otherInfo, state.formData.otherInfo),
-          }
+              ...initialData,
+              ...state.formData,
+              // ネストしたオブジェクトもマージ（mergeNestedで統一）
+              accessInfo: mergeNested(initialData.accessInfo, state.formData.accessInfo),
+              philosophyInfo: mergeNested(
+                initialData.philosophyInfo,
+                state.formData.philosophyInfo,
+              ),
+              specialtyInfo: mergeNested(initialData.specialtyInfo, state.formData.specialtyInfo),
+              staffInfo: mergeNested(initialData.staffInfo, state.formData.staffInfo),
+              educationInfo: mergeNested(initialData.educationInfo, state.formData.educationInfo),
+              advancedInfo: mergeNested(initialData.advancedInfo, state.formData.advancedInfo),
+              otherInfo: mergeNested(initialData.otherInfo, state.formData.otherInfo),
+            }
           : state.formData;
 
         // セクション別に更新データを構築
@@ -282,6 +283,64 @@ export const useFacilityTabEdit = (
     }
   }, [initialData]);
 
+  /** 特定セクションをリセット */
+  const resetSection = useCallback(
+    (section: TabSection) => {
+      if (!initialData) return;
+
+      setState((prev) => {
+        const newDirtyMap = new Map(prev.dirtyMap);
+        newDirtyMap.set(section, false);
+
+        // セクションに対応するフィールドを初期値に戻す
+        const newFormData = { ...prev.formData };
+
+        switch (section) {
+          case 'basic':
+            newFormData.name = initialData.name;
+            newFormData.phone = initialData.phone;
+            newFormData.corporation = initialData.corporation;
+            newFormData.establishedYear = initialData.establishedYear;
+            newFormData.annexFacilities = initialData.annexFacilities;
+            break;
+          case 'access':
+            newFormData.accessInfo = initialData.accessInfo;
+            newFormData.websiteUrl = initialData.websiteUrl;
+            newFormData.capacity = initialData.capacity;
+            newFormData.provisionalCapacity = initialData.provisionalCapacity;
+            newFormData.relationInfo = initialData.relationInfo;
+            break;
+          case 'philosophy':
+            newFormData.philosophyInfo = initialData.philosophyInfo;
+            break;
+          case 'specialty':
+            newFormData.specialtyInfo = initialData.specialtyInfo;
+            break;
+          case 'staff':
+            newFormData.staffInfo = initialData.staffInfo;
+            break;
+          case 'education':
+            newFormData.educationInfo = initialData.educationInfo;
+            break;
+          case 'advanced':
+            newFormData.advancedInfo = initialData.advancedInfo;
+            break;
+          case 'other':
+            newFormData.otherInfo = initialData.otherInfo;
+            break;
+          // imagesは別管理のためここでは処理しない
+        }
+
+        return {
+          ...prev,
+          formData: newFormData,
+          dirtyMap: newDirtyMap,
+        };
+      });
+    },
+    [initialData],
+  );
+
   /** エラー取得 */
   const getError = useCallback(
     (field: string): string | undefined => {
@@ -311,7 +370,7 @@ export const useFacilityTabEdit = (
     updateNestedField,
     saveTab,
     resetForm,
+    resetSection,
     getError,
   };
 };
-

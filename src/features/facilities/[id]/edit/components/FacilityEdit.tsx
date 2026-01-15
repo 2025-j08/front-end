@@ -50,6 +50,7 @@ export const FacilityEdit = ({ id }: Props) => {
     updateField,
     updateNestedField,
     saveTab,
+    resetSection,
     errors,
     getError,
   } = useFacilityTabEdit(displayData, id, handleSaveSuccess);
@@ -178,6 +179,7 @@ export const FacilityEdit = ({ id }: Props) => {
         saveHandlers={saveHandlers}
         isSaving={isSaving}
         isDirty={isDirty}
+        onResetSection={resetSection}
       />
     </div>
   );
