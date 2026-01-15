@@ -31,8 +31,6 @@ type ImagesTabProps = {
     uploads: { file: File; type: FacilityImageType; displayOrder: number }[],
     deleteIds: number[],
   ) => Promise<void>;
-  /** 保存ハンドラー（親への通知用） */
-  onSave?: () => Promise<void>;
   /** 保存中フラグ */
   isSaving?: boolean;
   /** 状態変更通知 */
@@ -41,6 +39,8 @@ type ImagesTabProps = {
 
 export type ImagesTabHandle = {
   save: () => Promise<void>;
+  /** 未保存の変更を破棄して初期状態に戻す */
+  reset: () => void;
 };
 
 /**
@@ -53,7 +53,7 @@ export type ImagesTabHandle = {
  * - 保存ボタン: 一括でアップロード・削除を実行
  */
 export const ImagesTab = forwardRef<ImagesTabHandle, ImagesTabProps>(
-  ({ images = [], isEditMode = false, onBatchSave, onSave, onStateChange }, ref) => {
+  ({ images = [], isEditMode = false, onBatchSave, onStateChange }, ref) => {
     // 画像タブには常にデータが存在する（空配列でも表示可能）ため、
     // 他のタブと異なり条件分岐は不要
 
@@ -193,8 +193,7 @@ export const ImagesTab = forwardRef<ImagesTabHandle, ImagesTabProps>(
     // 一括保存処理（RPC使用）
     const handleBatchSave = useCallback(async () => {
       if (!hasChanges) {
-        // 変更がなければ親のonSaveだけ呼ぶ
-        if (onSave) await onSave();
+        // 変更がなければ何もしない
         return;
       }
 
@@ -235,9 +234,6 @@ export const ImagesTab = forwardRef<ImagesTabHandle, ImagesTabProps>(
         // 成功したらステートをクリア
         setDeleteIds([]);
         setPendingImages([]);
-
-        // 親の保存処理（データ再取得など）
-        if (onSave) await onSave();
       } catch (error) {
         showError(error instanceof Error ? error.message : '保存処理中にエラーが発生しました');
         // エラー時はアップロード中フラグを戻す
@@ -245,11 +241,15 @@ export const ImagesTab = forwardRef<ImagesTabHandle, ImagesTabProps>(
       } finally {
         setIsBatchSaving(false);
       }
-    }, [hasChanges, deleteIds, pendingImages, onBatchSave, onSave, showError]);
+    }, [hasChanges, deleteIds, pendingImages, onBatchSave, showError]);
 
-    // 親コンポーネントから save を呼び出せるようにする
+    // 親コンポーネントから save / reset を呼び出せるようにする
     useImperativeHandle(ref, () => ({
       save: handleBatchSave,
+      reset: () => {
+        setPendingImages([]);
+        setDeleteIds([]);
+      },
     }));
 
     // 閲覧モード

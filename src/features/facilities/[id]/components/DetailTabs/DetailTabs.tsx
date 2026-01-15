@@ -28,6 +28,10 @@ import { TabSaveButton } from './contents/TabSaveButton';
 import { TabKey, Tab, TAB_LABELS } from '../../hooks/useFacilityDetail';
 import styles from './DetailTabs.module.scss';
 
+// コンポーネント外に定義して毎レンダリング時の再生成を防止
+const noop = async () => {};
+const noopIsDirty = () => false;
+
 type DetailTabsProps = {
   tabs: Tab[];
   activeTab: TabKey;
@@ -108,10 +112,6 @@ export const DetailTabs = ({
   // タブIDの配列を生成
   const tabIds = tabs.map((tab) => tab.key);
 
-  // 編集モードでない場合のデフォルトハンドラー
-  const noop = async () => {};
-  const noopIsDirty = () => false;
-
   // 画像タブのRefと制御用ステート
   const imageTabRef = useRef<ImagesTabHandle>(null);
   const [imageTabState, setImageTabState] = useState({ isDirty: false, isSaving: false });
@@ -123,7 +123,7 @@ export const DetailTabs = ({
 
   // 確認ダイアログ制御
   const { dialogConfig, showDialog, closeDialog } = useConfirmDialog();
-  // 「確認して移動する」際のコールバック保持用（ブラウザバック対応）
+  // タブ切り替え確認時のアクション保持用
   const pendingActionRef = useRef<(() => void) | null>(null);
 
   // 現在のタブの保存ボタンの状態を計算
@@ -165,7 +165,12 @@ export const DetailTabs = ({
         const currentSection = activeTab === 'images' ? 'images' : (activeTab as TabSection);
         pendingActionRef.current = () => {
           // セクションの編集内容を破棄（リセット）
-          onResetSection?.(currentSection);
+          if (activeTab === 'images') {
+            // 画像タブは専用のreset関数を使用
+            imageTabRef.current?.reset();
+          } else {
+            onResetSection?.(currentSection);
+          }
           onTabChange(nextTab);
         };
         showDialog({
@@ -355,13 +360,7 @@ export const DetailTabs = ({
                   images={images}
                   isEditMode={isEditMode}
                   onBatchSave={onBatchImageSave}
-                  // 画像保存はRPCで完結しているため、API経由のsaveTabは呼び出さない
-                  onSave={noop}
                   onStateChange={setImageTabState}
-                  isSaving={isSaving}
-                  // isDirty は onStateChange で親に通知するため propsとしては不要だが
-                  // 既存互換性のため渡すなら hasChanges を渡すべきだが、
-                  // ImagesTab内部で管理しているので不要 (型定義で optional になっているはず)
                 />
               );
             case 'other':
