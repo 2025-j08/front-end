@@ -1,130 +1,119 @@
-# front-end
+# 児童養護施設情報検索システム（フロントエンド）
 
-## サーバー起動手順
+Next.js + Supabase で構築された児童養護施設の情報検索・管理システムです。
 
-1. `node -v`
-   - Node.js の確認
-     - `v00.00.0`みたいにバージョンが表示されているとOK
-     - nodeが入ってなかった場合は下記の「nodeが入ってない場合」に記載された内容を実施してください
-1. `npm install`
-   - 依存パッケージインストール
-1. `npm run prepare`
-   - lintの自動実行を有効化
-1. `npm run dev`
-   - サーバー起動コマンド
-   - 起動時にlocalhostのURLが表示される
-1. ブラウザでローカルホストにアクセス
-   - URLはサーバー起動時のログを参照
+## 技術スタック
 
-### nodeが入ってない場合
+- **フレームワーク**: Next.js 16 (App Router)
+- **言語**: TypeScript
+- **UI**: MUI (Material-UI) v7 + Emotion
+- **データベース**: Supabase (PostgreSQL)
+- **地図**: Leaflet
+- **コード品質**: ESLint, Prettier, Husky
 
-1. `nvm -v`
-   - node.jsのバージョン管理ツールであるnvmがインストール済みかチェック
-     - インストール済みの場合は5番までスキップ
-1. `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash`
-   - nvmのインストールコマンド
-1. `source ~/.bashrc`
-   - インストール後にターミナルを再読み込み
-1. `nvm -v`
-   - インストール確認(確認できなければ要相談)
-1. `nvm install --lts`
-   - nodeの最新安定版をインストール
-1. `node -v`と`npm -v`
-   - nodeとnpmのインストール確認
-   - 確認できたら`npm install`に進む
+## セットアップ
 
-## ローカルsupabase起動手順
+### 前提条件
 
-- ※dockerインストール&起動済み前提
+- Node.js (v20 以上推奨)
+- npm
+- Docker (ローカル Supabase を使用する場合)
 
-### 初回セットアップ
-
-環境に応じてポート番号を調整（オプション）
-
-- Windows環境など、デフォルトポート（54321番台）が予約済みの場合は、`.env` のポート番号を適宜変更してください
-- デフォルトでは 56321番台のポートを使用する設定になっています
-
-### Supabase CLIのインストール
-
-1. `cd /tmp`
-   - バイナリファイルをダウンロードするためtmpに移動
-1. `curl -L https://github.com/supabase/cli/releases/latest/download/supabase_linux_amd64.tar.gz \`
-   - curlでsupabaseCLIのバイナリファイルをダウンロード
-1. `sudo mv supabase /usr/local/bin/`
-   - ダウンロードしたファイルを再配置
-1. `supabase --version`
-   - 無事バージョン確認できたら`プロジェクトのルートディレクトリ`に戻る
-
-### 起動
-
-1. `supabase start`
-   - docker上でsupabaseを起動するコマンド
-   - 主なアクセスポイント（デフォルト設定の場合）:
-     1. API Gateway: http://127.0.0.1:56321
-        - Next.jsアプリからの接続先（`NEXT_PUBLIC_SUPABASE_URL` で指定）
-     1. Studio (Web UI): http://127.0.0.1:56323
-        - GUIの管理ページ（テーブル状態等を確認可能）
-     1. Database: http://127.0.0.1:56322
-        - PostgreSQLへの直接接続
-
-> **注意**: ポート番号は `.env` の設定に依存します。環境変数を変更した場合は、それに応じたポート番号でアクセスしてください。
-
-## 環境変数の設定
-
-`.env.local` ファイルをプロジェクトルートに作成し、以下の環境変数を設定してください。
-
-### 必須の環境変数
-
-| 環境変数名                      | 説明                                          | 取得方法                                                                                                  |
-| ------------------------------- | --------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| `NEXT_PUBLIC_SUPABASE_URL`      | Supabase プロジェクトの API URL               | Supabase ダッシュボードの Settings > API から取得                                                         |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase の匿名キー                           | Supabase ダッシュボードの Settings > API から取得                                                         |
-| `NEXT_PUBLIC_APP_URL`           | アプリケーションの公開 URL                    | 開発環境: `http://localhost:3000`                                                                         |
-| `YAHOO_GEOCODING_APP_ID`        | Yahoo Geocoder API V2 用のアプリケーション ID | [Yahoo! JAPAN デベロッパーネットワーク](https://e.developer.yahoo.co.jp/)でアプリケーションを登録して取得 |
-
-### オプションの環境変数
-
-| 環境変数名                  | 説明                           | 用途                                                                  |
-| --------------------------- | ------------------------------ | --------------------------------------------------------------------- |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase のサービスロールキー  | シードデータ投入などの管理者操作に使用                                |
-| `SEED_ADMIN_EMAIL`          | 管理者ユーザーのメールアドレス | 開発用管理者アカウント作成時に使用（デフォルト: `admin@example.com`） |
-| `SEED_ADMIN_PASSWORD`       | 管理者ユーザーのパスワード     | 開発用管理者アカウント作成時に使用（デフォルト: `password12345`）     |
-| `SEED_ADMIN_NAME`           | 管理者ユーザーの名前           | 開発用管理者アカウント作成時に使用（デフォルト: `Administrator`）     |
-| `SEED_ADMIN_FACILITY_ID`    | 管理者ユーザーの所属施設ID     | 開発用管理者アカウント作成時に使用                                    |
-
-### 設定例
+### インストール
 
 ```bash
-# .env.local
+# 依存パッケージのインストール
+npm install
+
+# Git hooks の有効化
+npm run prepare
+```
+
+### 環境変数の設定
+
+`.env.local` ファイルをプロジェクトルートに作成してください。
+テンプレートは `.env.example` を参照してください。
+
+```bash
+# 必須
 NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:56321
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key_here
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 YAHOO_GEOCODING_APP_ID=your_yahoo_app_id_here
+
+# オプション（シードデータ投入用）
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+SEED_ADMIN_EMAIL=admin@example.com
+SEED_ADMIN_PASSWORD=password12345
 ```
 
-## ディレクトリ解説
+### 開発サーバーの起動
 
-### ルートディレクトリ
+```bash
+npm run dev
+```
 
-| ディレクトリ名  | 説明                                                         |
-| --------------- | ------------------------------------------------------------ |
-| `src/`          | アプリケーションのソースコード全体を格納するディレクトリ     |
-| `public/`       | 画像やフォントなどの静的ファイルを配置するディレクトリ       |
-| `.husky/`       | Git コミット時の自動チェック（lint等）を管理するディレクトリ |
-| `.vscode/`      | VS Code の設定ファイルを格納するディレクトリ                 |
-| `.next/`        | Next.js のビルド結果が自動生成されるディレクトリ             |
-| `node_modules/` | npm でインストールしたパッケージが格納されるディレクトリ     |
+ブラウザで http://localhost:3000 にアクセスしてください。
 
-### src ディレクトリの構成
+## ローカル Supabase の起動
 
-| ディレクトリ名    | 説明                                                             | 配置するファイルの例                            |
-| ----------------- | ---------------------------------------------------------------- | ----------------------------------------------- |
-| `src/app/`        | Next.js のページやレイアウトを配置するディレクトリ（App Router） | `page.tsx`, `layout.tsx`, `loading.tsx`         |
-| `src/components/` | 複数のページで共通利用するUIコンポーネントを配置                 | `Button.tsx`, `Header.tsx`, `Modal.tsx`         |
-| `src/features/`   | 機能ごとにまとめたコンポーネントやロジックを配置                 | `auth/LoginForm.tsx`, `contact/ContactForm.tsx` |
-| `src/hooks/`      | カスタムフック（ロジックの再利用）を配置                         | `useAuth.ts`, `useForm.ts`                      |
-| `src/types/`      | TypeScript の型定義ファイルを配置                                | `user.ts`, `api.ts`                             |
-| `src/lib/`        | ライブラリやユーティリティ関数を配置                             | `api.ts`, `utils.ts`, `validation.ts`           |
-| `src/styles/`     | CSS や スタイル関連のファイルを配置                              | `globals.css`, `theme.ts`                       |
-| `src/const/`      | アプリケーション全体で使う定数を配置                             | `routes.ts`, `config.ts`                        |
-| `src/dummy_data/` | 開発時に使うダミーデータを配置                                   | `users.json`, `sample.ts`                       |
+Docker が起動している状態で実行してください。
+
+### Supabase CLI のインストール (Linux)
+
+```bash
+cd /tmp
+curl -L https://github.com/supabase/cli/releases/latest/download/supabase_linux_amd64.tar.gz | tar xz
+sudo mv supabase /usr/local/bin/
+supabase --version
+```
+
+### 起動
+
+```bash
+supabase start
+```
+
+**アクセスポイント** (デフォルト設定):
+
+| サービス        | URL                    |
+| --------------- | ---------------------- |
+| API Gateway     | http://127.0.0.1:56321 |
+| Studio (管理UI) | http://127.0.0.1:56323 |
+| Database        | http://127.0.0.1:56322 |
+
+> ポート番号は `.env` の設定に依存します。
+
+## 利用可能なスクリプト
+
+| コマンド          | 説明                         |
+| ----------------- | ---------------------------- |
+| `npm run dev`     | 開発サーバーを起動           |
+| `npm run build`   | プロダクションビルドを作成   |
+| `npm run start`   | プロダクションサーバーを起動 |
+| `npm run lint`    | ESLint によるコードチェック  |
+| `npm run prepare` | Husky (Git hooks) を有効化   |
+
+## ディレクトリ構成
+
+```
+front-end/
+├── src/
+│   ├── app/          # ページ・レイアウト (App Router)
+│   ├── components/   # 共通UIコンポーネント
+│   ├── features/     # 機能ごとのコンポーネント・ロジック
+│   ├── hooks/        # カスタムフック
+│   ├── lib/          # ユーティリティ・ライブラリ
+│   ├── types/        # TypeScript 型定義
+│   ├── styles/       # CSS・スタイル
+│   ├── const/        # 定数定義
+│   └── dummy_data/   # 開発用ダミーデータ
+├── public/           # 静的ファイル
+├── supabase/         # Supabase 設定・マイグレーション
+└── .husky/           # Git hooks 設定
+```
+
+## 関連ドキュメント
+
+- [Supabase データベース管理](supabase/README.md)
+- [シードデータスクリプト](src/lib/supabase/test/README.md)
