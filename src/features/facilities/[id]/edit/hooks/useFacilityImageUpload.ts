@@ -4,7 +4,6 @@ import { useCallback, useState } from 'react';
 
 import { createClient } from '@/lib/supabase/client';
 import {
-  insertFacilityImage,
   getFacilityImages,
   manageFacilityImages,
   type NewImageInput,
@@ -14,99 +13,11 @@ import type { FacilityImage, FacilityImageType } from '@/types/facility';
 
 /**
  * 施設画像アップロード・削除用フック
+ * RPC を使用した一括保存に対応
  */
 export const useFacilityImageUpload = (facilityId: string) => {
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  /**
-   * 画像をアップロードしてDBに登録する（単一画像用）
-   */
-  const uploadImage = useCallback(
-    async (file: File, imageType: FacilityImageType, displayOrder: number) => {
-      setIsUploading(true);
-      setError(null);
-
-      let uploadedPublicUrl: string | null = null;
-      const supabase = createClient();
-
-      try {
-        const numericFacilityId = parseInt(facilityId, 10);
-        if (isNaN(numericFacilityId)) {
-          throw new Error('無効な施設IDです');
-        }
-
-        // Storageにアップロード
-        uploadedPublicUrl = await uploadFacilityImage(
-          supabase,
-          numericFacilityId,
-          imageType,
-          file,
-          displayOrder,
-        );
-
-        // DBに登録
-        await insertFacilityImage(supabase, {
-          facility_id: numericFacilityId,
-          image_type: imageType,
-          image_url: uploadedPublicUrl,
-          display_order: displayOrder,
-        });
-      } catch (err) {
-        // ロールバック: アップロード済み画像を削除
-        if (uploadedPublicUrl) {
-          try {
-            await deleteFacilityImage(supabase, uploadedPublicUrl);
-          } catch (rollbackError) {
-            console.error('ロールバック失敗:', rollbackError);
-          }
-        }
-        const message = err instanceof Error ? err.message : '画像のアップロードに失敗しました';
-        setError(message);
-        throw err;
-      } finally {
-        setIsUploading(false);
-      }
-    },
-    [facilityId],
-  );
-
-  /**
-   * 画像を削除する（単一画像用、即時削除）
-   */
-  const deleteImage = useCallback(
-    async (imageId: number) => {
-      setIsUploading(true);
-      setError(null);
-
-      try {
-        const supabase = createClient();
-        const numericFacilityId = parseInt(facilityId, 10);
-        if (isNaN(numericFacilityId)) {
-          throw new Error('無効な施設IDです');
-        }
-
-        // RPCで削除（削除されたURLを取得）
-        const result = await manageFacilityImages(supabase, numericFacilityId, [imageId], []);
-
-        // Storageから削除
-        for (const url of result.deleted_urls) {
-          try {
-            await deleteFacilityImage(supabase, url);
-          } catch (storageError) {
-            console.warn('Storage削除失敗（無視）:', storageError);
-          }
-        }
-      } catch (err) {
-        const message = err instanceof Error ? err.message : '画像の削除に失敗しました';
-        setError(message);
-        throw err;
-      } finally {
-        setIsUploading(false);
-      }
-    },
-    [facilityId],
-  );
 
   /**
    * 最新の画像リストを取得する
@@ -135,12 +46,13 @@ export const useFacilityImageUpload = (facilityId: string) => {
    * 1. 新規画像を全てStorageにアップロード
    * 2. RPCで削除・追加を一括実行（トランザクション）
    * 3. エラー時はアップロード済み画像を削除してロールバック
+   * 4. 成功時は最新の画像リストを返す
    */
   const saveAllImages = useCallback(
     async (
       uploads: { file: File; type: FacilityImageType; displayOrder: number }[],
       deleteIds: number[],
-    ) => {
+    ): Promise<FacilityImage[]> => {
       setIsUploading(true);
       setError(null);
 
@@ -187,6 +99,9 @@ export const useFacilityImageUpload = (facilityId: string) => {
             console.warn('Storage削除失敗（無視）:', storageError);
           }
         }
+
+        // 4. 最新の画像リストを取得して返す
+        return await fetchImages();
       } catch (err) {
         // ロールバック: アップロード済み画像を全て削除
         if (uploadedUrls.length > 0) {
@@ -199,12 +114,10 @@ export const useFacilityImageUpload = (facilityId: string) => {
         setIsUploading(false);
       }
     },
-    [facilityId],
+    [facilityId, fetchImages],
   );
 
   return {
-    uploadImage,
-    deleteImage,
     saveAllImages,
     fetchImages,
     isUploading,

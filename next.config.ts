@@ -6,9 +6,14 @@ const getRemotePatterns = () => {
   if (!supabaseUrl) return [];
   try {
     const url = new URL(supabaseUrl);
+    const protocol = url.protocol.replace(':', '');
+    if (protocol !== 'http' && protocol !== 'https') {
+      console.error(`Invalid protocol in NEXT_PUBLIC_SUPABASE_URL: ${protocol}`);
+      return [];
+    }
     return [
       {
-        protocol: url.protocol.replace(':', '') as 'http' | 'https',
+        protocol: protocol as 'http' | 'https',
         hostname: url.hostname,
         port: url.port || undefined,
         pathname: '/storage/v1/object/public/**',

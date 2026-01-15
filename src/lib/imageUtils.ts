@@ -138,7 +138,7 @@ async function canvasToWebP(canvas: HTMLCanvasElement, maxSizeBytes: number): Pr
   throw new Error(
     `画像を${Math.round(
       maxSizeBytes / 1024 / 1024,
-    )}MB以内に圧縮できませんでした。\nより小さい解像度の画像か、別のアスペクト比の画像を試してください。`,
+    )}MB以内に圧縮できませんでした。\nより小さい解像度の画像をお試しください。`,
   );
 }
 

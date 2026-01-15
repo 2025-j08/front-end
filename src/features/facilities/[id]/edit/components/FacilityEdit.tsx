@@ -55,7 +55,7 @@ export const FacilityEdit = ({ id }: Props) => {
   } = useFacilityTabEdit(displayData, id, handleSaveSuccess);
 
   // 画像アップロードフック
-  const { saveAllImages, fetchImages } = useFacilityImageUpload(id);
+  const { saveAllImages } = useFacilityImageUpload(id);
 
   // 画像一括保存ハンドラー（RPC使用）
   const handleBatchImageSave = useCallback(
@@ -67,9 +67,8 @@ export const FacilityEdit = ({ id }: Props) => {
       }[],
       deleteIds: number[],
     ) => {
-      await saveAllImages(uploads, deleteIds);
-      // 画像リストを再取得して表示を更新
-      const newImages = await fetchImages();
+      // saveAllImagesは処理完了後に最新画像リストを返す
+      const newImages = await saveAllImages(uploads, deleteIds);
       setLatestData((prev) => {
         const baseData = prev || facilityDataRef.current;
         if (!baseData) return null;
@@ -79,7 +78,7 @@ export const FacilityEdit = ({ id }: Props) => {
         };
       });
     },
-    [saveAllImages, fetchImages],
+    [saveAllImages],
   );
 
   // 未保存の変更がある場合の離脱警告
