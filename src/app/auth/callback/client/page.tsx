@@ -6,13 +6,14 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { logError } from '@/lib/logger';
 
-// 招待リンクのハッシュを安全にパースする関数
+// 認証リンクのハッシュを安全にパースする関数
 const parseHashParams = (
   hash: string,
 ): {
   accessToken?: string;
   refreshToken?: string;
   expiresAt?: number;
+  type?: string;
 } => {
   if (!hash || !hash.startsWith('#')) return {};
   const params = new URLSearchParams(hash.slice(1));
@@ -20,29 +21,35 @@ const parseHashParams = (
   const refreshToken = params.get('refresh_token') ?? undefined;
   const expires = params.get('expires_at');
   const expiresAt = expires ? Number(expires) : undefined;
-  return { accessToken, refreshToken, expiresAt };
+  const type = params.get('type') ?? undefined;
+  return { accessToken, refreshToken, expiresAt, type };
 };
 
-export default function AuthCallbackPage() {
+/**
+ * クライアントサイド認証コールバック
+ * ハッシュベースの招待フロー用
+ */
+export default function AuthCallbackClientPage() {
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
 
   useEffect(() => {
     // コンポーネントのマウント状態を追跡
     let isMounted = true;
-    const { accessToken, refreshToken, expiresAt } = parseHashParams(window.location.hash);
+
+    // ハッシュからトークンを取得
+    const { accessToken, refreshToken, expiresAt, type } = parseHashParams(window.location.hash);
 
     // signOutSafely関数をuseEffect内で定義（isMountedにアクセスするため）
     const signOutSafely = async (reason: string, redirectPath: string) => {
       const { error } = await supabase.auth.signOut();
       if (error) {
         logError('サインアウトに失敗しました', {
-          context: 'auth/callback',
+          context: 'auth/callback/client',
           reason,
           error: error.message,
         });
       }
-      // isMountedチェックを追加してレースコンディションを防ぐ
       if (!isMounted) return;
       router.replace(redirectPath);
     };
@@ -60,7 +67,6 @@ export default function AuthCallbackPage() {
     }
 
     // セッションを確立
-    // ブラウザ側でCookieが設定され、この後のRLSクエリおよびページ遷移が有効になる
     (async () => {
       try {
         await supabase.auth.setSession({ access_token: accessToken, refresh_token: refreshToken });
@@ -69,6 +75,13 @@ export default function AuthCallbackPage() {
         const { data: userData, error: userError } = await supabase.auth.getUser();
         if (userError || !userData?.user) {
           if (isMounted) router.replace('/features/auth?error=auth_failed');
+          return;
+        }
+
+        // パスワードリセットフローはサーバーサイド（callback/route.ts）で処理されるため、
+        // ここには到達しない。万が一到達した場合はログイン画面へリダイレクト
+        if (type === 'recovery') {
+          if (isMounted) router.replace('/features/auth');
           return;
         }
 
@@ -82,13 +95,11 @@ export default function AuthCallbackPage() {
           .maybeSingle();
 
         if (invitationError || !invitation) {
-          // セッション破棄してログインへ
           if (isMounted) await signOutSafely('no_invitation', '/features/auth?error=no_invitation');
           return;
         }
 
         // 期限チェック
-        // 複数の日付比較で一貫性を保つため、現在時刻を一度だけ取得
         const now = new Date();
         const expires = new Date(invitation.expires_at);
         if (!Number.isFinite(expires.getTime())) {
@@ -98,7 +109,7 @@ export default function AuthCallbackPage() {
         }
 
         if (expires < now) {
-          // 期限切れ招待を削除試行（失敗時もフロー継続）
+          // 期限切れ招待を削除試行
           try {
             const { error: deleteError } = await supabase
               .from('invitations')
@@ -106,17 +117,16 @@ export default function AuthCallbackPage() {
               .eq('user_id', userId);
             if (deleteError) {
               logError('期限切れ招待レコードの削除に失敗しました', {
-                context: 'auth/callback',
+                context: 'auth/callback/client',
                 userId,
                 supabaseError: deleteError.message,
               });
             }
           } catch (e) {
             logError('期限切れ招待レコードの削除中に予期しないエラーが発生しました', {
-              context: 'auth/callback',
+              context: 'auth/callback/client',
               userId,
               error: e instanceof Error ? e.message : String(e),
-              stack: e instanceof Error ? e.stack : undefined,
             });
           }
 
@@ -128,23 +138,19 @@ export default function AuthCallbackPage() {
         // 正常：初期登録画面へ遷移
         if (isMounted) router.replace('/registration');
       } catch (e) {
-        // 予期しないエラー時は安全側へ遷移
         logError('認証コールバック処理で予期しないエラーが発生しました', {
-          context: 'auth/callback',
+          context: 'auth/callback/client',
           error: e instanceof Error ? e.message : String(e),
-          stack: e instanceof Error ? e.stack : undefined,
         });
         if (isMounted) router.replace('/features/auth?error=auth_failed');
       }
     })();
 
-    // Cleanup関数: コンポーネントのアンマウント時にフラグを更新
     return () => {
       isMounted = false;
     };
   }, [router, supabase]);
 
-  // シンプルなステータス表示（アクセシビリティ対応）
   return (
     <div role="status" aria-live="polite" aria-busy="true" style={{ padding: 24 }}>
       認証処理中です。しばらくお待ちください…
