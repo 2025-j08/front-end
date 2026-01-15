@@ -44,12 +44,12 @@ export async function geocodeAddress(address: string): Promise<Coordinates> {
     output: 'json',
   });
 
-  const response = await fetch(`${YAHOO_GEOCODE_API_URL}?${params.toString()}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  let response: Response;
+  try {
+    response = await fetch(`${YAHOO_GEOCODE_API_URL}?${params.toString()}`);
+  } catch {
+    throw new Error(GEOCODING_ERROR_MESSAGES.NETWORK_ERROR);
+  }
 
   if (!response.ok) {
     throw new Error(GEOCODING_ERROR_MESSAGES.API_ERROR);
