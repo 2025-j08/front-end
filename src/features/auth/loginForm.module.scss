@@ -23,3 +23,23 @@
 .formArea {
   composes: formContent from '@/components/form/layout/formLayout.module.scss';
 }
+
+.errorMessage {
+  composes: formErrorBanner from '@/components/form/layout/formLayout.module.scss';
+}
+
+.forgotPassword {
+  text-align: center;
+  margin-top: 24px;
+
+  a {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

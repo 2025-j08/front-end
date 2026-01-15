@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
@@ -11,6 +12,12 @@ import { useClickOutside } from '@/hooks/useClickOutside';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 
 import styles from './header.module.scss';
+
+/**
+ * 認証UI（ログイン/ログアウトボタン、管理メニュー）を非表示にするパス
+ * パスワード再設定ページなど、セッションは確立されているがログイン状態を表示したくない場合に使用
+ */
+const AUTH_HIDDEN_PATHS = ['/auth/reset-password'];
 
 // 管理メニュー項目の定義
 type AdminMenuItem = {
@@ -47,9 +54,13 @@ export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null); // トリガーボタンへの参照
+  const pathname = usePathname();
 
   // ユーザー情報を取得
   const { isLoggedIn, role, facilityId, isLoading, signOut } = useCurrentUser();
+
+  // 認証UIを非表示にするかどうか
+  const hideAuthUI = AUTH_HIDDEN_PATHS.some((path) => pathname.startsWith(path));
 
   // 権限に応じた管理メニュー項目をフィルタリング
   // facilityIdが必要な項目は、facilityIdがある場合のみ表示
@@ -64,7 +75,8 @@ export const Header = () => {
 
   // 管理メニューを表示するかどうか
   // ローディング中は非表示にしてちらつきを防止
-  const showAdminMenu = !isLoading && isLoggedIn && filteredMenuItems.length > 0;
+  // 認証UIを非表示にするパスでは表示しない
+  const showAdminMenu = !hideAuthUI && !isLoading && isLoggedIn && filteredMenuItems.length > 0;
 
   // カスタムフックを使用してメニュー外クリックを検知して閉じる
   // NOTE: menuRefはトリガーボタンを含むラッパー要素に設定しています。
@@ -170,7 +182,9 @@ export const Header = () => {
           {/* 右側：ナビゲーション */}
           <nav className={styles.nav}>
             {/* 認証状態に応じてログイン/ログアウトを切り替え */}
-            {!isLoading &&
+            {/* 認証UIを非表示にするパスでは表示しない */}
+            {!hideAuthUI &&
+              !isLoading &&
               (isLoggedIn ? (
                 <button
                   type="button"
