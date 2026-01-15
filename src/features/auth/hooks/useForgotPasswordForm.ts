@@ -6,7 +6,6 @@ import type { ChangeEvent, FormEvent } from 'react';
 import type { ForgotPasswordRequest } from '@/types/api';
 import { validateEmail } from '@/lib/validation';
 import { API_ENDPOINTS } from '@/const/api';
-import { PASSWORD_RESET_MESSAGES } from '@/const/messages';
 import { logError } from '@/lib/logger';
 
 /**
