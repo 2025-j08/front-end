@@ -41,17 +41,38 @@ export type BasicInfoUpdateData = {
  * アクセス情報の更新データ型
  */
 export type AccessInfoUpdateData = {
+  /**
+   * 所在地住所
+   * フロントエンドの `accessInfo.locationAddress` と対応するDBカラム
+   */
   location_address?: string;
+  /** 緯度 */
   lat?: number;
+  /** 経度 */
   lng?: number;
+  /**
+   * 対象年齢
+   * ※DBスキーマ設計の都合上、`facility_access` テーブルに含まれるため、本カテゴリ（アクセス情報）で管理する
+   */
   target_age?: string;
+  /**
+   * 建物の構造・階数など
+   * ※DBスキーマ設計の都合上、`facility_access` テーブルに含まれるため、本カテゴリ（アクセス情報）で管理する
+   */
   building?: string;
+  /** 最寄り駅・交通アクセス */
   station?: string;
+  /** アクセス詳細・道順の説明 */
   description?: string;
+  /** 立地の魅力・周辺環境のアピール */
   location_appeal?: string;
+  /** 公式/関連ウェブサイトのURL */
   website_url?: string;
+  /** 定員数 */
   capacity?: number;
+  /** 計画段階などにおける暫定定員数 */
   provisional_capacity?: number;
+  /** その他の関連情報 */
   relation_info?: string;
 };
 
