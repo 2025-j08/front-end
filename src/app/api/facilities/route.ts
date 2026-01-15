@@ -6,7 +6,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { createServerClient } from '@/lib/supabase/server';
-import { createFacility, type CreateFacilityData } from '@/lib/supabase/mutations/facilities';
+import {
+  createFacility,
+  updateFacilityCoordinates,
+  type CreateFacilityData,
+} from '@/lib/supabase/mutations/facilities';
+import { geocodeAddress } from '@/lib/geocoding/yahoo';
 import { KINKI_PREFECTURES } from '@/const/searchConditions';
 import type { KinkiPrefecture } from '@/types/facility';
 
@@ -130,10 +135,29 @@ export async function POST(request: NextRequest) {
     // 施設を作成
     const facilityId = await createFacility(supabase, validation.data);
 
+    // 住所からGPS座標を自動取得して更新
+    const fullAddress = `${validation.data.prefecture}${validation.data.city}${validation.data.address_detail}`;
+    let geocodeSuccess = false;
+
+    try {
+      const coords = await geocodeAddress(fullAddress);
+      await updateFacilityCoordinates(supabase, facilityId, {
+        lat: coords.lat,
+        lng: coords.lng,
+        location_address: fullAddress,
+      });
+      geocodeSuccess = true;
+    } catch (geocodeError) {
+      // ジオコーディング失敗時もログのみで施設作成は成功扱い
+      console.warn('GPS座標の自動取得に失敗しました:', geocodeError);
+    }
+
     return NextResponse.json(
       {
         success: true,
-        message: '施設を作成しました',
+        message: geocodeSuccess
+          ? '施設を作成しました'
+          : '施設を作成しました（GPS座標の自動取得に失敗しました）',
         data: { id: facilityId },
       },
       { status: 201 },
