@@ -416,33 +416,6 @@ export async function insertFacilityImage(
 }
 
 /**
- * 施設画像をデータベースから削除
- */
-export async function deleteFacilityImageById(
-  supabase: SupabaseClient,
-  imageId: number,
-): Promise<{ imageUrl: string }> {
-  // 削除前にURLを取得（Storage削除用）
-  const { data: imageData, error: fetchError } = await supabase
-    .from('facility_images')
-    .select('image_url')
-    .eq('id', imageId)
-    .single();
-
-  if (fetchError) {
-    throw new Error(`画像情報の取得に失敗しました: ${fetchError.message}`);
-  }
-
-  const { error: deleteError } = await supabase.from('facility_images').delete().eq('id', imageId);
-
-  if (deleteError) {
-    throw new Error(`画像情報の削除に失敗しました: ${deleteError.message}`);
-  }
-
-  return { imageUrl: imageData.image_url };
-}
-
-/**
  * 施設の画像一覧を取得
  */
 export async function getFacilityImages(
@@ -461,4 +434,40 @@ export async function getFacilityImages(
   }
 
   return data || [];
+}
+
+/** 新規画像データ（RPC用） */
+export type NewImageInput = {
+  image_type: 'thumbnail' | 'gallery';
+  image_url: string;
+  display_order: number;
+};
+
+/** RPC結果 */
+type ManageFacilityImagesResult = {
+  deleted_urls: string[];
+  inserted_ids: number[];
+};
+
+/**
+ * 施設画像の一括更新（削除・追加）をRPCで実行
+ * DBトランザクション内でアトミックに処理し、ユニーク制約違反を回避
+ */
+export async function manageFacilityImages(
+  supabase: SupabaseClient,
+  facilityId: number,
+  deleteIds: number[],
+  newImages: NewImageInput[],
+): Promise<ManageFacilityImagesResult> {
+  const { data, error } = await supabase.rpc('manage_facility_images', {
+    p_facility_id: facilityId,
+    p_delete_ids: deleteIds,
+    p_new_images: newImages,
+  });
+
+  if (error) {
+    throw new Error(`画像の一括更新に失敗しました: ${error.message}`);
+  }
+
+  return data as ManageFacilityImagesResult;
 }
