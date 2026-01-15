@@ -1,3 +1,5 @@
+import { MouseEvent } from 'react';
+
 import styles from './FacilityHeader.module.scss';
 
 type FacilityHeaderProps = {
@@ -55,6 +57,13 @@ export const FacilityHeader = ({
   urlError,
 }: FacilityHeaderProps) => {
   const hasValidWebsite = isValidUrl(websiteUrl);
+  const showWebButton = isEditMode || hasValidWebsite;
+
+  const handleWebClick = (e: MouseEvent<HTMLAnchorElement>) => {
+    if (!hasValidWebsite) {
+      e.preventDefault();
+    }
+  };
 
   return (
     <header className={styles.header}>
@@ -72,15 +81,20 @@ export const FacilityHeader = ({
         <p className={styles.tel}>TEL {phone}</p>
       </div>
       <div className={styles.headerAction}>
-        <a
-          href={websiteUrl ?? undefined}
-          className={styles.webButton}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="施設Webサイトを新しいタブで開く"
-        >
-          施設Webサイト
-        </a>
+        {showWebButton && (
+          <a
+            href={hasValidWebsite ? (websiteUrl ?? undefined) : undefined}
+            className={styles.webButton}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="施設Webサイトを新しいタブで開く"
+            aria-disabled={!hasValidWebsite}
+            tabIndex={hasValidWebsite ? undefined : -1}
+            onClick={handleWebClick}
+          >
+            施設Webサイト
+          </a>
+        )}
         {isEditMode && (
           <div className={styles.websiteWrapper}>
             <input
@@ -91,6 +105,7 @@ export const FacilityHeader = ({
               placeholder="https://example.com"
               aria-label="施設WebサイトURL"
             />
+            <span className={styles.helpText}>施設のWebサイトがあればURLを入力してください</span>
             {urlError && <span className={styles.errorText}>{urlError}</span>}
           </div>
         )}

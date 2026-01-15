@@ -66,6 +66,11 @@
     color: colors.$error-color;
   }
 
+  .helpText {
+    font-size: 12px;
+    color: colors.$text-secondary;
+  }
+
   .webButton {
     display: inline-block;
     background-color: colors.$primary-color;
