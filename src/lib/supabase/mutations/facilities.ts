@@ -10,7 +10,19 @@ import {
   type FacilityDetailTableName,
   type FacilitySectionName,
 } from '@/lib/supabase/constants/facility-tables';
-import type { AnnexFacility } from '@/types/facility';
+import type { AnnexFacility, KinkiPrefecture } from '@/types/facility';
+
+/**
+ * 施設作成データ型
+ */
+export type CreateFacilityData = {
+  name: string;
+  corporation: string;
+  postal_code: string;
+  prefecture: KinkiPrefecture;
+  city: string;
+  address_detail: string;
+};
 
 /**
  * 基本情報の更新データ型
@@ -264,4 +276,77 @@ export async function updateFacilityBySection(
   const errorMessage = SECTION_ERROR_MAP[update.section];
 
   await upsertFacilityData(supabase, tableName, facilityId, update.data, errorMessage);
+}
+
+/**
+ * 新規施設を作成
+ * @returns 作成された施設のID
+ */
+export async function createFacility(
+  supabase: SupabaseClient,
+  data: CreateFacilityData,
+): Promise<number> {
+  const { data: facility, error } = await supabase
+    .from('facilities')
+    .insert({
+      name: data.name,
+      corporation: data.corporation,
+      postal_code: data.postal_code,
+      prefecture: data.prefecture,
+      city: data.city,
+      address_detail: data.address_detail,
+      annex_facilities: [],
+    })
+    .select('id')
+    .single();
+
+  if (error) {
+    throw new Error(`施設の作成に失敗しました: ${error.message}`);
+  }
+
+  return facility.id;
+}
+
+/**
+ * 施設を削除
+ * 関連する詳細テーブルはCASCADE削除される想定
+ */
+export async function deleteFacility(supabase: SupabaseClient, facilityId: number): Promise<void> {
+  const { error } = await supabase.from('facilities').delete().eq('id', facilityId);
+
+  if (error) {
+    throw new Error(`施設の削除に失敗しました: ${error.message}`);
+  }
+}
+
+/**
+ * 施設管理画面用の更新データ型（住所分割対応）
+ */
+export type FacilityManagementUpdateData = {
+  name?: string;
+  postal_code?: string;
+  prefecture?: string;
+  city?: string;
+  address_detail?: string;
+};
+
+/**
+ * 施設管理画面から施設の基本情報を更新（住所分割対応）
+ */
+export async function updateFacilityManagementInfo(
+  supabase: SupabaseClient,
+  facilityId: number,
+  data: FacilityManagementUpdateData,
+): Promise<void> {
+  const cleanedData = removeUndefinedValues(data);
+
+  if (Object.keys(cleanedData).length === 0) {
+    return;
+  }
+
+  const { error } = await supabase.from('facilities').update(cleanedData).eq('id', facilityId);
+
+  if (error) {
+    throw new Error(`施設情報の更新に失敗しました: ${error.message}`);
+  }
 }

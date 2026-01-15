@@ -9,12 +9,12 @@
 .table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 800px;
+  min-width: 1100px;
 
   th,
   td {
     border: 1px solid colors.$text-secondary;
-    padding: 0.75rem;
+    padding: 0.5rem;
     vertical-align: middle;
   }
 
@@ -23,6 +23,7 @@
     font-weight: normal;
     text-align: center;
     border-bottom: 2px solid colors.$black;
+    font-size: 0.85rem;
   }
 
   td {
@@ -31,19 +32,32 @@
 }
 
 .facilityNameCol {
-  width: 35%;
+  width: 20%;
   text-align: left;
-  padding-left: 2rem;
 }
 
-.addressCol {
-  width: 35%;
+.postalCodeCol {
+  width: 10%;
+  text-align: center;
+}
+
+.prefectureCol {
+  width: 10%;
+  text-align: center;
+}
+
+.cityCol {
+  width: 15%;
   text-align: left;
-  padding-left: 2rem;
+}
+
+.addressDetailCol {
+  width: 20%;
+  text-align: left;
 }
 
 .actionCol {
-  width: 30%;
+  width: 25%;
   text-align: center;
 }
 
@@ -62,13 +76,13 @@
   background-color: $bg-color;
   color: $text-color;
   border: 1px solid $border-color;
-  border-radius: 999px; // 丸みのあるボタン
-  padding: 0.25rem 1rem;
-  font-size: 0.9rem;
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.85rem;
   cursor: pointer;
-  white-space: nowrap; // 折り返し防止
-  display: inline-block; // Linkコンポーネント用
-  text-decoration: none; // リンクの下線除去
+  white-space: nowrap;
+  display: inline-block;
+  text-decoration: none;
   text-align: center;
   transition: opacity 0.2s ease;
 
@@ -84,10 +98,10 @@
 
 .inputField {
   width: 100%;
-  padding: 8px;
+  padding: 6px 8px;
   border: 1px solid colors.$input-border;
   border-radius: 4px;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   box-sizing: border-box;
   transition:
     border-color 0.2s ease,
@@ -99,14 +113,33 @@
   }
 }
 
-.nameInput,
-.addressInput {
+.nameInput {
+  @extend .inputField;
+}
+
+.postalCodeInput {
+  @extend .inputField;
+  width: 100%;
+  text-align: center;
+}
+
+.prefectureSelect {
+  @extend .inputField;
+  width: 100%;
+  cursor: pointer;
+}
+
+.cityInput {
+  @extend .inputField;
+}
+
+.addressDetailInput {
   @extend .inputField;
 }
 
 .saveButton {
   @include action-button(colors.$bg-light-gray, colors.$text-secondary, colors.$border-gray);
-  min-width: 80px;
+  min-width: 70px;
 
   &:not(:disabled) {
     background-color: colors.$primary-color;
@@ -122,7 +155,7 @@
 
 .deleteButton {
   @include action-button(colors.$action-delete, colors.$white);
-  min-width: 80px;
+  min-width: 60px;
 }
 
 .detailButton {
@@ -134,4 +167,20 @@
 .emptyRow {
   text-align: center;
   padding: 2rem;
+}
+
+.inputError {
+  border-color: colors.$action-delete;
+
+  &:focus {
+    outline-color: colors.$action-delete;
+    border-color: colors.$action-delete;
+  }
+}
+
+.errorMessage {
+  display: block;
+  color: colors.$action-delete;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
 }

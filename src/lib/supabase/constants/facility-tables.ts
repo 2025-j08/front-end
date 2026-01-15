@@ -43,3 +43,22 @@ export const SECTION_TO_TABLE_MAP: Record<FacilitySectionName, FacilityDetailTab
   advanced: 'facility_advanced',
   other: 'facility_other',
 } as const;
+
+/**
+ * API で有効なセクション名の配列
+ * TabUpdateData のセクション + management セクションを含む
+ */
+export const VALID_API_SECTIONS = [
+  'basic',
+  'access',
+  'philosophy',
+  'specialty',
+  'staff',
+  'education',
+  'advanced',
+  'other',
+  'management',
+] as const;
+
+/** API で有効なセクション名の型 */
+export type ValidApiSection = (typeof VALID_API_SECTIONS)[number];

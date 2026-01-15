@@ -1,4 +1,5 @@
 import type { AnnexFacility, DormitoryType } from '@/types/facility';
+import { FACILITY_TYPE_OPTIONS } from '@/const/searchConditions';
 
 import { formatCapacity } from '../../utils/formatters';
 import { InfoCard } from './InfoCard';
@@ -7,16 +8,6 @@ import { CapacityInput } from './CapacityInput';
 import { AnnexFacilityEditor } from './AnnexFacilityEditor';
 import styles from './BasicInfoSection.module.scss';
 
-/** 施設の種類の選択肢 */
-const DORMITORY_TYPE_OPTIONS = [
-  { value: '', label: '選択してください' },
-  { value: '大舎', label: '大舎' },
-  { value: '中舎', label: '中舎' },
-  { value: '小舎', label: '小舎' },
-  { value: 'グループホーム', label: 'グループホーム' },
-  { value: '地域小規模', label: '地域小規模' },
-] as const;
-
 type BasicInfoSectionProps = {
   dormitoryType?: DormitoryType[];
   establishedYear?: string;
@@ -24,6 +15,7 @@ type BasicInfoSectionProps = {
   provisionalCapacity?: number;
   annexFacilities?: AnnexFacility[];
   phone?: string;
+  corporation?: string;
   /** 編集モードかどうか */
   isEditMode?: boolean;
   /** フィールド更新ハンドラー */
@@ -50,6 +42,7 @@ export const BasicInfoSection = ({
   provisionalCapacity,
   annexFacilities,
   phone,
+  corporation,
   isEditMode = false,
   onFieldChange,
   getError = () => undefined,
@@ -92,7 +85,7 @@ export const BasicInfoSection = ({
           <div className={styles.infoCard}>
             <span className={styles.label}>施設の種類</span>
             <div className={styles.checkboxGroup} role="group" aria-label="施設の種類">
-              {DORMITORY_TYPE_OPTIONS.filter((opt) => opt.value !== '').map((option) => {
+              {FACILITY_TYPE_OPTIONS.map((option) => {
                 const isChecked = dormitoryType?.includes(option.value as DormitoryType) || false;
                 const checkboxId = `dormitoryType-${option.value}`;
                 return (
@@ -175,6 +168,22 @@ export const BasicInfoSection = ({
               value={phone || ''}
               onChange={(e) => onFieldChange?.('phone', e.target.value)}
               placeholder="例: 03-1234-5678"
+            />
+          </div>
+        )}
+
+        {isEditMode && (
+          <div className={styles.infoCard}>
+            <label className={styles.label} htmlFor="corporation">
+              法人名
+            </label>
+            <input
+              type="text"
+              id="corporation"
+              className={styles.editInput}
+              value={corporation || ''}
+              onChange={(e) => onFieldChange?.('corporation', e.target.value)}
+              placeholder="例: 社会福祉法人○○会"
             />
           </div>
         )}

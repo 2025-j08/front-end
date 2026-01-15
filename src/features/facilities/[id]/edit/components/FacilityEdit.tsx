@@ -11,7 +11,7 @@ import type { FacilityDetail as FacilityDetailType } from '@/types/facility';
 
 import { useFacilityData } from '../../hooks/useFacilityData';
 import { useFacilityDetail } from '../../hooks/useFacilityDetail';
-import { useFacilityTabEdit, type TabSection } from '../hooks/useFacilityTabEdit';
+import { useFacilityTabEdit, TAB_SECTIONS, type TabSection } from '../hooks/useFacilityTabEdit';
 import { useUnsavedChangesWarning } from '../hooks/useUnsavedChangesWarning';
 import { FacilityHeader } from '../../components/FacilityHeader/FacilityHeader';
 import { BasicInfoSection } from '../../components/BasicInfoSection/BasicInfoSection';
@@ -58,36 +58,16 @@ export const FacilityEdit = ({ id }: Props) => {
     [updateField],
   );
 
-  // セクション別の保存ハンドラーをRecord型で生成（useMemoでメモ化）
-  const saveHandlers: Record<TabSection, () => Promise<void>> = useMemo(
-    () => ({
-      basic: async () => {
-        await saveTab('basic');
-      },
-      access: async () => {
-        await saveTab('access');
-      },
-      philosophy: async () => {
-        await saveTab('philosophy');
-      },
-      specialty: async () => {
-        await saveTab('specialty');
-      },
-      staff: async () => {
-        await saveTab('staff');
-      },
-      education: async () => {
-        await saveTab('education');
-      },
-      advanced: async () => {
-        await saveTab('advanced');
-      },
-      other: async () => {
-        await saveTab('other');
-      },
-    }),
-    [saveTab],
-  );
+  // セクション別の保存ハンドラーをRecord型で動的生成（useMemoでメモ化）
+  const saveHandlers = useMemo(() => {
+    const handlers = {} as Record<TabSection, () => Promise<void>>;
+    for (const section of TAB_SECTIONS) {
+      handlers[section] = async () => {
+        await saveTab(section);
+      };
+    }
+    return handlers;
+  }, [saveTab]);
 
   if (isLoading)
     return (
@@ -131,6 +111,7 @@ export const FacilityEdit = ({ id }: Props) => {
         provisionalCapacity={mergedData.provisionalCapacity}
         annexFacilities={mergedData.annexFacilities}
         phone={mergedData.phone}
+        corporation={mergedData.corporation}
         isEditMode={true}
         onFieldChange={handleFieldChange}
         getError={getError}

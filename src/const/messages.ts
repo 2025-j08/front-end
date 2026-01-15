@@ -84,3 +84,22 @@ export const USER_MANAGEMENT_MESSAGES = {
 } as const;
 
 export type UserManagementMessageKey = keyof typeof USER_MANAGEMENT_MESSAGES;
+
+/**
+ * 施設管理関連のメッセージ定数
+ */
+export const FACILITY_MESSAGES = {
+  /** 取得 */
+  FETCH_FAILED: '施設一覧の取得に失敗しました',
+  /** 更新 */
+  UPDATE_SUCCESS: '施設情報を更新しました',
+  UPDATE_FAILED: '更新に失敗しました',
+  /** 削除 */
+  DELETE_SUCCESS: '施設を削除しました',
+  DELETE_FAILED: '削除に失敗しました',
+  /** 追加 */
+  ADD_SUCCESS: '施設を追加しました',
+  ADD_FAILED: '施設の追加に失敗しました',
+} as const;
+
+export type FacilityMessageKey = keyof typeof FACILITY_MESSAGES;
