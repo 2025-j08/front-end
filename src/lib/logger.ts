@@ -1,7 +1,7 @@
 /**
- * 構造化ログユーティリティ
+ * 統合ログユーティリティ
  *
- * アプリケーション全体で統一されたログフォーマットを提供します。
+ * サーバーサイドとクライアントサイドの両方で使用可能な統一されたログフォーマットを提供します。
  * - timestamp: ISO 8601形式のタイムスタンプ
  * - userId: ユーザーID（該当する場合）
  * - context: その他の関連情報
@@ -32,7 +32,7 @@ export const maskEmail = (email: string): string => {
   const trimmedEmail = email.trim();
   const atIndex = trimmedEmail.indexOf('@');
 
-  // '@' がない、先頭/末尾に '@' があるなどの無効入力は明示的に示す
+  // '@' がない、先頭/末尾に '@' がある場合は無効
   if (atIndex <= 0 || atIndex === trimmedEmail.length - 1) {
     return INVALID_EMAIL_MASK;
   }
@@ -40,21 +40,18 @@ export const maskEmail = (email: string): string => {
   const localPart = trimmedEmail.substring(0, atIndex);
   const domainPart = trimmedEmail.substring(atIndex + 1);
 
-  // ローカル部分のマスク化（最初の1文字のみ表示）
   const maskedLocal = localPart.length > 0 ? `${localPart[0]}***` : '***';
 
-  // ドメイン部分のマスク化（最初の1文字とTLDのみ表示）
   const domainParts = domainPart.split('.');
   if (domainParts.length === 0) {
     return `${maskedLocal}@***`;
   }
 
   const maskedDomainParts = domainParts.map((part, index) => {
-    // 最後の部分（TLD）はそのまま表示
+    // TLD（最後の部分）はそのまま表示
     if (index === domainParts.length - 1) {
       return part;
     }
-    // それ以外は最初の1文字と'***'
     return part.length > 0 ? `${part[0]}***` : '***';
   });
 
@@ -72,6 +69,8 @@ export const maskEmail = (email: string): string => {
 type LogMetadata = {
   userId?: string;
   email?: string;
+  component?: string;
+  action?: string;
   error?: string | Error;
   stack?: string;
   [key: string]: unknown;
@@ -83,9 +82,14 @@ type LogMetadata = {
 type LogLevel = 'info' | 'warn' | 'error' | 'debug';
 
 /**
+ * 実行環境の判定
+ */
+const isServer = typeof window === 'undefined';
+const isDevelopment = process.env.NODE_ENV === 'development';
+const isProduction = process.env.NODE_ENV === 'production';
+
+/**
  * 構造化ログオブジェクトを生成
- * @param metadata - ログに含めるメタデータ
- * @returns タイムスタンプ付きのログオブジェクト
  */
 const createLogObject = (metadata: LogMetadata): Record<string, unknown> => {
   const logObject: Record<string, unknown> = {
@@ -93,22 +97,40 @@ const createLogObject = (metadata: LogMetadata): Record<string, unknown> => {
     ...metadata,
   };
 
-  // Error オブジェクトの場合はメッセージとスタックを展開
   if (metadata.error instanceof Error) {
     logObject.error = metadata.error.message;
-    logObject.stack = metadata.error.stack;
+    // サーバーサイドまたは開発環境ではスタックを含める
+    if (isServer || isDevelopment) {
+      logObject.stack = metadata.error.stack;
+    }
   }
 
   return logObject;
 };
 
 /**
+ * ログ出力をスキップすべきか判定
+ *
+ * 注: logDebug は isDevelopment チェック後にのみ呼び出すため、
+ * この関数での debug レベルチェックは冗長だが、
+ * 他の関数から直接 log() が呼ばれた場合の安全策として維持
+ */
+const shouldSkipLog = (level: LogLevel): boolean => {
+  // クライアントサイドの本番環境ではエラーのみ出力
+  if (!isServer && isProduction && level !== 'error') {
+    return true;
+  }
+  return false;
+};
+
+/**
  * 構造化ログ出力の基本関数
- * @param level - ログレベル
- * @param message - ログメッセージ
- * @param metadata - 追加のメタデータ
  */
 const log = (level: LogLevel, message: string, metadata?: LogMetadata): void => {
+  if (shouldSkipLog(level)) {
+    return;
+  }
+
   const logObject = metadata ? createLogObject(metadata) : { timestamp: new Date().toISOString() };
 
   switch (level) {
@@ -129,8 +151,6 @@ const log = (level: LogLevel, message: string, metadata?: LogMetadata): void => 
 
 /**
  * 情報ログを出力
- * @param message - ログメッセージ
- * @param metadata - 追加のメタデータ
  */
 export const logInfo = (message: string, metadata?: LogMetadata): void => {
   log('info', message, metadata);
@@ -138,8 +158,6 @@ export const logInfo = (message: string, metadata?: LogMetadata): void => {
 
 /**
  * 警告ログを出力
- * @param message - ログメッセージ
- * @param metadata - 追加のメタデータ
  */
 export const logWarn = (message: string, metadata?: LogMetadata): void => {
   log('warn', message, metadata);
@@ -147,8 +165,6 @@ export const logWarn = (message: string, metadata?: LogMetadata): void => {
 
 /**
  * エラーログを出力
- * @param message - ログメッセージ
- * @param metadata - 追加のメタデータ
  */
 export const logError = (message: string, metadata?: LogMetadata): void => {
   log('error', message, metadata);
@@ -156,19 +172,15 @@ export const logError = (message: string, metadata?: LogMetadata): void => {
 
 /**
  * デバッグログを出力（開発環境のみ）
- * @param message - ログメッセージ
- * @param metadata - 追加のメタデータ
  */
 export const logDebug = (message: string, metadata?: LogMetadata): void => {
-  if (process.env.NODE_ENV === 'development') {
+  if (isDevelopment) {
     log('debug', message, metadata);
   }
 };
 
 /**
  * FATAL エラーログを出力（ロールバック失敗など、手動対応が必要な重大なエラー）
- * @param message - ログメッセージ
- * @param metadata - 追加のメタデータ
  */
 export const logFatal = (message: string, metadata?: LogMetadata): void => {
   log('error', `FATAL: ${message}`, metadata);

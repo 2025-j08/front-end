@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 import type { User, UserOperationResponse } from '@/types/api';
 import { API_ENDPOINTS } from '@/const/api';
 import { USER_MANAGEMENT_MESSAGES } from '@/const/messages';
-import { logError } from '@/lib/clientLogger';
+import { logError } from '@/lib/logger';
 
 /**
  * API成功レスポンスの型

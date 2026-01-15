@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { API_ENDPOINTS } from '@/const/api';
-import { logError } from '@/lib/clientLogger';
+import { logError } from '@/lib/logger';
 import { createClient } from '@/lib/supabase/client';
 
 const VALID_ROLES = ['admin', 'staff'] as const;
