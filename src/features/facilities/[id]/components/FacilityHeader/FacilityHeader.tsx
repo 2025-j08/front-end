@@ -10,6 +10,8 @@ type FacilityHeaderProps = {
   isEditMode?: boolean;
   /** URL変更ハンドラー */
   onUrlChange?: (url: string) => void;
+  /** 電話番号変更ハンドラー */
+  onPhoneChange?: (phone: string) => void;
   /** URLエラーメッセージ（サーバー側バリデーション用） */
   urlError?: string;
 };
@@ -52,6 +54,7 @@ export const FacilityHeader = ({
   websiteUrl,
   isEditMode = false,
   onUrlChange,
+  onPhoneChange,
   urlError,
 }: FacilityHeaderProps) => {
   const hasValidWebsite = isValidUrl(websiteUrl);
@@ -69,7 +72,23 @@ export const FacilityHeader = ({
           {corporation && <span className={styles.corporation}>運営法人 {corporation}</span>}
         </h1>
         <p className={styles.address}>{fullAddress}</p>
-        <p className={styles.tel}>TEL {phone}</p>
+        {isEditMode ? (
+          <div className={styles.telEditWrapper}>
+            <label htmlFor="facility-phone" className={styles.telLabel}>
+              TEL
+            </label>
+            <input
+              id="facility-phone"
+              type="tel"
+              className={styles.telInput}
+              value={phone || ''}
+              onChange={(e) => onPhoneChange?.(e.target.value)}
+              placeholder="例: 03-1234-5678"
+            />
+          </div>
+        ) : (
+          <p className={styles.tel}>TEL {phone}</p>
+        )}
       </div>
       <div className={styles.headerAction}>
         {shouldShowWebsiteSection &&

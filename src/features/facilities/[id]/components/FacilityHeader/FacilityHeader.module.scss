@@ -30,6 +30,34 @@
     margin-bottom: 8px;
     line-height: 1.5;
   }
+
+  .telEditWrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .telLabel {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .telInput {
+    padding: 6px 10px;
+    border: 1px solid colors.$form-input-border;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 200px;
+    background-color: colors.$form-input-bg;
+    color: colors.$text-primary;
+
+    &:focus {
+      outline: none;
+      border-color: colors.$primary-color;
+      box-shadow: 0 0 0 2px colors.$form-focus-glow;
+    }
+  }
 }
 
 .headerAction {
