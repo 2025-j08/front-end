@@ -19,7 +19,6 @@ export const TAB_SECTIONS = [
   'other',
 ] as const;
 
-
 /** タブセクション名 */
 export type TabSection = (typeof TAB_SECTIONS)[number];
 
@@ -93,6 +92,11 @@ const SECTION_FIELD_CONFIGS: Record<TabSection, FieldConfig[]> = {
     { source: 'dormitoryType', target: 'dormitory_type' },
   ],
   access: [
+    { source: 'accessInfo.locationAddress', target: 'location_address' },
+    { source: 'accessInfo.lat', target: 'lat' },
+    { source: 'accessInfo.lng', target: 'lng' },
+    { source: 'accessInfo.targetAge', target: 'target_age' },
+    { source: 'accessInfo.building', target: 'building' },
     { source: 'accessInfo.station', target: 'station' },
     { source: 'accessInfo.description', target: 'description' },
     { source: 'accessInfo.locationAppeal', target: 'location_appeal' },
@@ -145,7 +149,6 @@ const SECTION_FIELD_CONFIGS: Record<TabSection, FieldConfig[]> = {
     { source: 'otherInfo.freeText', target: 'free_text' },
   ],
 };
-
 
 /**
  * ネストしたセクションかどうかを判定
