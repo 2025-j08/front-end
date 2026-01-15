@@ -231,7 +231,8 @@ export const DetailTabs = ({
                   images={images}
                   isEditMode={isEditMode}
                   onBatchSave={onBatchImageSave}
-                  onSave={saveHandlers?.images ?? noop}
+                  // 画像保存はRPCで完結しているため、API経由のsaveTabは呼び出さない
+                  onSave={noop}
                   isSaving={isSaving}
                   isDirty={(isDirty ?? noopIsDirty)('images')}
                 />

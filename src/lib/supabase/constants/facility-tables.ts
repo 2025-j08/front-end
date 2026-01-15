@@ -60,6 +60,7 @@ export const VALID_API_SECTIONS = [
   'staff',
   'education',
   'advanced',
+  'images',
   'other',
   'management',
   'coordinates',
