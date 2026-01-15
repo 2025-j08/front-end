@@ -75,7 +75,7 @@ export interface YahooGeocodeApiResponse {
   };
   Feature?: Array<{
     Geometry: {
-      /** "緯度,経度" 形式の文字列 */
+      /** "経度,緯度" 形式の文字列 */
       Coordinates: string;
     };
     Property: {
