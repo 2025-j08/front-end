@@ -14,7 +14,7 @@ import {
 } from '@/lib/validation';
 import { VALIDATION_MESSAGES, API_MESSAGES } from '@/const/messages';
 import { API_ENDPOINTS } from '@/const/api';
-import { logError } from '@/lib/clientLogger';
+import { logError } from '@/lib/logger';
 
 /**
  * 初期登録フォームのデータ型

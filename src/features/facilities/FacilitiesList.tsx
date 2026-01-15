@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
 import { FacilityListItem } from '@/types/facility';
-import { logError } from '@/lib/clientLogger';
+import { logError } from '@/lib/logger';
 import { parseSearchParams } from '@/lib/search-params';
 import { getFacilityList, type FacilitySearchConditions } from '@/lib/supabase/queries/facilities';
 

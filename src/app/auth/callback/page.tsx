@@ -4,7 +4,7 @@ import { useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { createClient } from '@/lib/supabase/client';
-import { logError } from '@/lib/clientLogger';
+import { logError } from '@/lib/logger';
 
 // 招待リンクのハッシュを安全にパースする関数
 const parseHashParams = (

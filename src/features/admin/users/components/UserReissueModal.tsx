@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from 'react';
 import type { InviteUserResponse } from '@/types/api';
 import { validateEmail } from '@/lib/validation';
 import { API_ENDPOINTS } from '@/const/api';
-import { logError } from '@/lib/clientLogger';
+import { logError } from '@/lib/logger';
 import { FormField, LoadingOverlay, SuccessOverlay } from '@/components/form';
 
 import styles from '../users.module.scss';

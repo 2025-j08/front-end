@@ -9,7 +9,7 @@ import {
   FACILITY_TYPES,
   PREFECTURE_TO_CSS_CLASS,
 } from '@/const/searchConditions';
-import { logError } from '@/lib/clientLogger';
+import { logError } from '@/lib/logger';
 import { useArrayToggle } from '@/lib/hooks/useArrayToggle';
 import { buildFacilitiesListUrl } from '@/lib/search-params';
 import { getPrefectureCities, type PrefectureCitiesMap } from '@/lib/supabase/queries/facilities';

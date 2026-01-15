@@ -5,7 +5,7 @@ import type { FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { API_MESSAGES } from '@/const/messages';
-import { logError } from '@/lib/clientLogger';
+import { logError } from '@/lib/logger';
 import { useFormState } from '@/lib/hooks/useFormState';
 import { createClient } from '@/lib/supabase/client';
 
