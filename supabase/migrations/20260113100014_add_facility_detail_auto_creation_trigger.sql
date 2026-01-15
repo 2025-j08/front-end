@@ -9,14 +9,12 @@ BEGIN
     facility_id,
     location_address,
     lat,
-    lng,
-    target_age
+    lng
   ) VALUES (
     NEW.id,
     NEW.prefecture || NEW.city || NEW.address_detail, -- 完全住所を生成
     0, -- 緯度のデフォルト値
-    0, -- 経度のデフォルト値
-    '0～18歳' -- 対象年齢のデフォルト値
+    0 -- 経度のデフォルト値
   );
 
   -- facility_philosophy: 空の説明文で初期化
