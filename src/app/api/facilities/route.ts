@@ -158,7 +158,7 @@ export async function POST(request: NextRequest) {
         message: geocodeSuccess
           ? '施設を作成しました'
           : '施設を作成しました（GPS座標の自動取得に失敗しました）',
-        data: { id: facilityId },
+        data: { id: facilityId, geocoded: geocodeSuccess },
       },
       { status: 201 },
     );
