@@ -9,7 +9,6 @@ CREATE TABLE public.facility_access (
     description TEXT,
     location_appeal TEXT,
     website_url TEXT,
-    target_age TEXT NOT NULL,
     building TEXT,
     capacity INTEGER,
     provisional_capacity INTEGER,
@@ -119,7 +118,6 @@ COMMENT ON COLUMN public.facility_access.station IS '最寄り駅・バス停名
 COMMENT ON COLUMN public.facility_access.description IS '駅からのアクセス方法';
 COMMENT ON COLUMN public.facility_access.location_appeal IS '立地のアピールポイント';
 COMMENT ON COLUMN public.facility_access.website_url IS '施設のウェブサイトURL';
-COMMENT ON COLUMN public.facility_access.target_age IS '対象年齢';
 COMMENT ON COLUMN public.facility_access.building IS '建物情報';
 COMMENT ON COLUMN public.facility_access.capacity IS '施設の定員';
 COMMENT ON COLUMN public.facility_access.provisional_capacity IS '暫定定員';
