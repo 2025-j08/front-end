@@ -37,7 +37,7 @@ function generateFilePath(
  * @param supabase Supabase クライアント
  * @param facilityId 施設ID
  * @param imageType 画像タイプ
- * @param blob 画像Blob（WebP形式）
+ * @param fileOrBlob 画像ファイルまたはBlob（WebP形式）
  * @param displayOrder 表示順序（ギャラリーのみ）
  * @returns アップロードされた画像のパブリックURL
  */
@@ -45,15 +45,17 @@ export async function uploadFacilityImage(
   supabase: SupabaseClient,
   facilityId: number,
   imageType: 'thumbnail' | 'gallery',
-  blob: Blob,
+  fileOrBlob: File | Blob,
   displayOrder: number = 0,
 ): Promise<string> {
   const filePath = generateFilePath(facilityId, imageType, displayOrder);
 
-  const { error: uploadError } = await supabase.storage.from(BUCKET_NAME).upload(filePath, blob, {
-    contentType: 'image/webp',
-    upsert: false,
-  });
+  const { error: uploadError } = await supabase.storage
+    .from(BUCKET_NAME)
+    .upload(filePath, fileOrBlob, {
+      contentType: 'image/webp',
+      upsert: false,
+    });
 
   if (uploadError) {
     throw new Error(`画像のアップロードに失敗しました: ${uploadError.message}`);
