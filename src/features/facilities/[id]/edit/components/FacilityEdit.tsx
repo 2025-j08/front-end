@@ -151,7 +151,9 @@ export const FacilityEdit = ({ id }: Props) => {
         websiteUrl={mergedData.websiteUrl}
         isEditMode={true}
         onUrlChange={(url) => updateField('websiteUrl', url)}
+        onPhoneChange={(phone) => updateField('phone', phone)}
         urlError={getError('websiteUrl')}
+        phoneError={getError('phone')}
       />
 
       <BasicInfoSection

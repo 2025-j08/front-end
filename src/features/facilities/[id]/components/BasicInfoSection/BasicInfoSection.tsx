@@ -156,38 +156,6 @@ export const BasicInfoSection = ({
           <InfoCard label="施設定員" value={capacityText} />
         )}
 
-        {isEditMode && (
-          <div className={styles.infoCard}>
-            <label className={styles.label} htmlFor="phone">
-              電話番号
-            </label>
-            <input
-              type="tel"
-              id="phone"
-              className={styles.editInput}
-              value={phone || ''}
-              onChange={(e) => onFieldChange?.('phone', e.target.value)}
-              placeholder="例: 03-1234-5678"
-            />
-          </div>
-        )}
-
-        {isEditMode && (
-          <div className={styles.infoCard}>
-            <label className={styles.label} htmlFor="corporation">
-              法人名
-            </label>
-            <input
-              type="text"
-              id="corporation"
-              className={styles.editInput}
-              value={corporation || ''}
-              onChange={(e) => onFieldChange?.('corporation', e.target.value)}
-              placeholder="例: 社会福祉法人○○会"
-            />
-          </div>
-        )}
-
         {isEditMode ? (
           <div className={`${styles.infoCard} ${styles.annexCard}`}>
             <div className={styles.annexHeader}>
