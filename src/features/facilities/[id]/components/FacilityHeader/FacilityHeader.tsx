@@ -3,6 +3,7 @@ import styles from './FacilityHeader.module.scss';
 type FacilityHeaderProps = {
   name: string;
   corporation?: string;
+  postalCode: string;
   fullAddress: string;
   phone: string;
   websiteUrl?: string | null;
@@ -51,6 +52,7 @@ const getUrlValidationError = (url: string | undefined | null): string | undefin
 export const FacilityHeader = ({
   name,
   corporation,
+  postalCode,
   fullAddress,
   phone,
   websiteUrl,
@@ -74,6 +76,7 @@ export const FacilityHeader = ({
           {name}
           {corporation && <span className={styles.corporation}>運営法人 {corporation}</span>}
         </h1>
+        <p className={styles.postalCode}>〒{postalCode}</p>
         <p className={styles.address}>{fullAddress}</p>
         {isEditMode ? (
           <div className={styles.telEditWrapper}>

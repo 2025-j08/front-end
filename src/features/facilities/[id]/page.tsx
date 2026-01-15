@@ -43,6 +43,7 @@ export const FacilityDetail = ({ id }: Props) => {
       <FacilityHeader
         name={facilityData.name}
         corporation={facilityData.corporation}
+        postalCode={facilityData.postalCode}
         fullAddress={facilityData.fullAddress}
         phone={facilityData.phone}
         websiteUrl={facilityData.websiteUrl}

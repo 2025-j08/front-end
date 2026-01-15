@@ -602,6 +602,7 @@ export async function getFacilityDetail(id: number): Promise<FacilityDetail | nu
   const facilityDetail: FacilityDetail = {
     id: facility.id,
     name: facility.name,
+    postalCode: facility.postal_code,
     fullAddress,
     phone: facility.phone,
     dormitoryType,

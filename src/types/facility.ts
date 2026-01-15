@@ -172,6 +172,8 @@ export interface FacilityDetail {
   id: number;
   /** 施設名（必須） */
   name: string;
+  /** 郵便番号（必須） */
+  postalCode: string;
   /** 完全住所（必須） */
   fullAddress: string;
   /** 電話番号（必須） */
