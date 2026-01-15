@@ -10,9 +10,11 @@ import { createServerClient } from '@/lib/supabase/server';
 import {
   updateFacilityBySection,
   updateFacilityManagementInfo,
+  updateFacilityCoordinates,
   deleteFacility,
   type TabUpdateData,
   type FacilityManagementUpdateData,
+  type GeocoordinatesUpdateData,
 } from '@/lib/supabase/mutations/facilities';
 import { VALID_API_SECTIONS, type ValidApiSection } from '@/lib/supabase/constants/facility-tables';
 import { getFacilityDetail } from '@/lib/supabase/queries/facilities';
@@ -22,7 +24,8 @@ import { getFacilityDetail } from '@/lib/supabase/queries/facilities';
  */
 type UpdateFacilityRequest =
   | TabUpdateData
-  | { section: 'management'; data: FacilityManagementUpdateData };
+  | { section: 'management'; data: FacilityManagementUpdateData }
+  | { section: 'coordinates'; data: GeocoordinatesUpdateData };
 
 /**
  * 施設情報を部分更新する
@@ -78,6 +81,8 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     // データを更新
     if (body.section === 'management') {
       await updateFacilityManagementInfo(supabase, facilityId, body.data);
+    } else if (body.section === 'coordinates') {
+      await updateFacilityCoordinates(supabase, facilityId, body.data);
     } else {
       await updateFacilityBySection(supabase, facilityId, body as TabUpdateData);
     }

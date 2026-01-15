@@ -69,6 +69,39 @@
 
 > **注意**: ポート番号は `.env` の設定に依存します。環境変数を変更した場合は、それに応じたポート番号でアクセスしてください。
 
+## 環境変数の設定
+
+`.env.local` ファイルをプロジェクトルートに作成し、以下の環境変数を設定してください。
+
+### 必須の環境変数
+
+| 環境変数名                      | 説明                                          | 取得方法                                                                                                  |
+| ------------------------------- | --------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`      | Supabase プロジェクトの API URL               | Supabase ダッシュボードの Settings > API から取得                                                         |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase の匿名キー                           | Supabase ダッシュボードの Settings > API から取得                                                         |
+| `NEXT_PUBLIC_APP_URL`           | アプリケーションの公開 URL                    | 開発環境: `http://localhost:3000`                                                                         |
+| `YAHOO_GEOCODING_APP_ID`        | Yahoo Geocoder API V2 用のアプリケーション ID | [Yahoo! JAPAN デベロッパーネットワーク](https://e.developer.yahoo.co.jp/)でアプリケーションを登録して取得 |
+
+### オプションの環境変数
+
+| 環境変数名                  | 説明                           | 用途                                                                  |
+| --------------------------- | ------------------------------ | --------------------------------------------------------------------- |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase のサービスロールキー  | シードデータ投入などの管理者操作に使用                                |
+| `SEED_ADMIN_EMAIL`          | 管理者ユーザーのメールアドレス | 開発用管理者アカウント作成時に使用（デフォルト: `admin@example.com`） |
+| `SEED_ADMIN_PASSWORD`       | 管理者ユーザーのパスワード     | 開発用管理者アカウント作成時に使用（デフォルト: `password12345`）     |
+| `SEED_ADMIN_NAME`           | 管理者ユーザーの名前           | 開発用管理者アカウント作成時に使用（デフォルト: `Administrator`）     |
+| `SEED_ADMIN_FACILITY_ID`    | 管理者ユーザーの所属施設ID     | 開発用管理者アカウント作成時に使用                                    |
+
+### 設定例
+
+```bash
+# .env.local
+NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:56321
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key_here
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+YAHOO_GEOCODING_APP_ID=your_yahoo_app_id_here
+```
+
 ## ディレクトリ解説
 
 ### ルートディレクトリ
