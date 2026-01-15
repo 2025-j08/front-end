@@ -1,5 +1,3 @@
-import { MouseEvent } from 'react';
-
 import styles from './FacilityHeader.module.scss';
 
 type FacilityHeaderProps = {
@@ -12,7 +10,7 @@ type FacilityHeaderProps = {
   isEditMode?: boolean;
   /** URL変更ハンドラー */
   onUrlChange?: (url: string) => void;
-  /** URLエラーメッセージ */
+  /** URLエラーメッセージ（サーバー側バリデーション用） */
   urlError?: string;
 };
 
@@ -32,18 +30,20 @@ const isValidUrl = (url: string | null | undefined): boolean => {
 
 /**
  * URL入力値をリアルタイムで検証するヘルパー関数
+ * 空文字列の場合はエラーなし（オプショナルフィールド）
  */
 const getUrlValidationError = (url: string | undefined | null): string | undefined => {
-  if (!url) return undefined;
-
-  // 空でない場合は形式を検証
+  if (!url || url.trim() === '') return undefined;
   if (!isValidUrl(url)) {
     return 'http:// または https:// で始まる有効なURLを入力してください';
   }
-
   return undefined;
 };
 
+/**
+ * 施設詳細ページのヘッダーセクション
+ * 施設名、運営法人、住所、TEL、Webサイトボタンを表示
+ */
 export const FacilityHeader = ({
   name,
   corporation,
@@ -57,20 +57,13 @@ export const FacilityHeader = ({
   const hasValidWebsite = isValidUrl(websiteUrl);
   const showWebButton = isEditMode || hasValidWebsite;
 
-  const handleWebClick = (e: MouseEvent<HTMLAnchorElement>) => {
-    if (!hasValidWebsite) {
-      e.preventDefault();
-    }
-  };
-
-  // URL入力時のバリデーション
   const handleUrlChange = (newUrl: string) => {
     onUrlChange?.(newUrl);
-    // バリデーションエラーはonUrlChangeの外側で管理
-    // （親コンポーネント側でgetError('websiteUrl')で取得）
   };
 
-  const validationError = getUrlValidationError(websiteUrl);
+  // エラーメッセージの優先順位: サーバー側エラー > クライアント側バリデーション
+  const clientValidationError = getUrlValidationError(websiteUrl);
+  const displayError = urlError || clientValidationError;
 
   return (
     <header className={styles.header}>
@@ -83,20 +76,29 @@ export const FacilityHeader = ({
         <p className={styles.tel}>TEL {phone}</p>
       </div>
       <div className={styles.headerAction}>
-        {showWebButton && (
-          <a
-            href={hasValidWebsite ? (websiteUrl ?? undefined) : undefined}
-            className={styles.webButton}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="施設Webサイトを新しいタブで開く"
-            aria-disabled={!hasValidWebsite}
-            tabIndex={hasValidWebsite ? undefined : -1}
-            onClick={handleWebClick}
-          >
-            施設Webサイト
-          </a>
-        )}
+        {showWebButton &&
+          (hasValidWebsite ? (
+            <a
+              href={websiteUrl ?? undefined}
+              className={styles.webButton}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="施設Webサイトを新しいタブで開く"
+            >
+              施設Webサイト
+            </a>
+          ) : (
+            isEditMode && (
+              <button
+                type="button"
+                className={styles.webButton}
+                disabled
+                aria-label="施設Webサイトは未設定です"
+              >
+                施設Webサイト
+              </button>
+            )
+          ))}
         {isEditMode && (
           <div className={styles.websiteWrapper}>
             <input
@@ -106,13 +108,13 @@ export const FacilityHeader = ({
               onChange={(e) => handleUrlChange(e.target.value)}
               placeholder="https://example.com"
               aria-label="施設WebサイトURL"
-              aria-invalid={!!validationError}
-              aria-describedby={validationError ? 'url-error' : undefined}
+              aria-invalid={!!displayError}
+              aria-describedby={displayError ? 'url-error' : undefined}
             />
             <span className={styles.helpText}>施設のWebサイトがあればURLを入力してください</span>
-            {validationError && (
-              <span className={styles.errorText} id="url-error">
-                {validationError}
+            {displayError && (
+              <span className={styles.errorText} id="url-error" role="alert">
+                {displayError}
               </span>
             )}
           </div>

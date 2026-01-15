@@ -85,11 +85,11 @@
     font-weight: bold;
     transition: opacity 0.2s;
 
-    &:hover {
+    &:not(:disabled):hover {
       opacity: 0.8;
     }
 
-    &[aria-disabled='true'] {
+    &:disabled {
       opacity: 0.5;
       cursor: not-allowed;
     }
