@@ -12,10 +12,7 @@
 .tabSaveButtonContainer {
   display: flex;
   justify-content: flex-end;
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border-color);
-  transition: border-color 0.3s ease;
+  // margin-top, padding-top, border-top removed
 }
 
 // タブ保存ボタン
