@@ -5,6 +5,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 
 import { createServerClient } from '@/lib/supabase/server';
 import {
@@ -89,6 +90,12 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 
     // 更新後のデータを取得
     const updatedFacility = await getFacilityDetail(facilityId);
+    // ISR/キャッシュ保管されている可能性があるため、該当パスを再検証
+    try {
+      revalidatePath(`/features/facilities/${facilityId}`);
+    } catch (e) {
+      // ignore
+    }
 
     return NextResponse.json(
       {

@@ -1,8 +1,11 @@
+'use client';
+
 /**
  * タブ別施設編集用カスタムフック
  * 各タブが独立して編集・保存できるように状態を管理
  */
 import { useState, useCallback, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 import type { FacilityDetail } from '@/types/facility';
 
@@ -114,6 +117,7 @@ export const useFacilityTabEdit = (
   facilityId: string,
   onSaveSuccess?: (updatedData: FacilityDetail) => void,
 ): UseFacilityTabEditReturn => {
+  const router = useRouter();
   const [state, setState] = useState<TabEditState>({
     formData: initialData
       ? (() => {
@@ -304,12 +308,32 @@ export const useFacilityTabEdit = (
           };
 
           // 全セクションの設定を走査して、APIレスポンスに含まれるキーを formData にコピー
+          // APIがsnake_case(flat)を返す場合と、getFacilityDetailのようにcamelCase(nested)を返す場合の両方に対応する。
+          const getNestedFromApi = (obj: Record<string, unknown>, path: string) => {
+            const keys = path.split('.');
+            let cur: unknown = obj;
+            for (const k of keys) {
+              if (cur === null || cur === undefined) return undefined;
+              if (typeof cur !== 'object') return undefined;
+              cur = (cur as Record<string, unknown>)[k];
+            }
+            return cur;
+          };
+
           (Object.keys(SECTION_FIELD_CONFIGS) as TabSection[]).forEach((sec) => {
             const configs = SECTION_FIELD_CONFIGS[sec] || [];
             for (const cfg of configs) {
+              // 1) APIがsnake_caseでフラットなオブジェクトを返す場合（cfg.target）
               if (Object.prototype.hasOwnProperty.call(apiData, cfg.target)) {
                 const v = apiData[cfg.target];
                 setNested(newFormData as Record<string, unknown>, cfg.source, v);
+                continue;
+              }
+
+              // 2) APIがcamelCaseでネストしたFacilityDetailを返す場合（cfg.sourceパス）
+              const camelVal = getNestedFromApi(apiData, cfg.source);
+              if (camelVal !== undefined) {
+                setNested(newFormData as Record<string, unknown>, cfg.source, camelVal);
               }
             }
           });
@@ -328,6 +352,14 @@ export const useFacilityTabEdit = (
         // コールバック実行
         if (onSaveSuccess && result.data) {
           onSaveSuccess(result.data);
+        }
+
+        // クライアント側で表示中のページが古いデータを保持している可能性があるため、
+        // 保存成功後にルーターをリフレッシュして最新データを反映させる。
+        try {
+          router.refresh();
+        } catch (e) {
+          // noop
         }
 
         return true;
