@@ -74,7 +74,7 @@ type FieldConfig = {
 /**
  * セクション別のフィールド設定
  */
-const SECTION_FIELD_CONFIGS: Record<TabSection, FieldConfig[]> = {
+export const SECTION_FIELD_CONFIGS: Record<TabSection, FieldConfig[]> = {
   basic: [
     { source: 'name', target: 'name' },
     { source: 'phone', target: 'phone' },
@@ -88,6 +88,9 @@ const SECTION_FIELD_CONFIGS: Record<TabSection, FieldConfig[]> = {
         return isNaN(parsed) ? undefined : parsed;
       },
     },
+    { source: 'websiteUrl', target: 'website_url' },
+    { source: 'capacity', target: 'capacity' },
+    { source: 'provisionalCapacity', target: 'provisional_capacity' },
     { source: 'annexFacilities', target: 'annex_facilities' },
     { source: 'dormitoryType', target: 'dormitory_type' },
   ],
@@ -95,13 +98,9 @@ const SECTION_FIELD_CONFIGS: Record<TabSection, FieldConfig[]> = {
     { source: 'accessInfo.locationAddress', target: 'location_address' },
     { source: 'accessInfo.lat', target: 'lat' },
     { source: 'accessInfo.lng', target: 'lng' },
-    { source: 'targetAge', target: 'target_age' },
-    { source: 'building', target: 'building' },
+    { source: 'accessInfo.station', target: 'station' },
     { source: 'accessInfo.description', target: 'description' },
     { source: 'accessInfo.locationAppeal', target: 'location_appeal' },
-    { source: 'websiteUrl', target: 'website_url' },
-    { source: 'capacity', target: 'capacity' },
-    { source: 'provisionalCapacity', target: 'provisional_capacity' },
     { source: 'relationInfo', target: 'relation_info' },
   ],
   philosophy: [
