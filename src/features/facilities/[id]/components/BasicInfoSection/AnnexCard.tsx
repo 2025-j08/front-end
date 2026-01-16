@@ -102,6 +102,20 @@ export const AnnexCard = (props: AnnexCardProps) => {
     );
   }
 
+  // スマホ閲覧モード: データなしの場合はアコーディオンにせず、静的に表示（開閉不可）
+  if (!annexFacilities?.length) {
+    return (
+      <div className={`${styles.infoCard} ${styles.annexCard} ${styles.annexAccordion}`}>
+        <div className={styles.annexToggle} style={{ cursor: 'default' }}>
+          <span className={styles.annexToggleText}>
+            <span className={styles.label}>併設施設</span>
+            <span className={styles.subStatus}>{statusText}</span>
+          </span>
+        </div>
+      </div>
+    );
+  }
+
   // スマホ閲覧モード: アコーディオン形式（開閉可能）
   return (
     <div className={`${styles.infoCard} ${styles.annexCard} ${styles.annexAccordion}`}>
