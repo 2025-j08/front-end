@@ -100,7 +100,6 @@ export const AnnexCard = (props: AnnexCardProps) => {
             <span className={styles.label}>併設施設</span>
             <span className={styles.subStatus}>{statusText}</span>
           </span>
-          <ChevronIcon isExpanded={true} />
         </div>
         <div className={styles.annexContent}>{content}</div>
       </div>
