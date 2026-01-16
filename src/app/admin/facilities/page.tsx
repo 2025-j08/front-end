@@ -8,10 +8,8 @@ import {
   type FacilityUpdateData,
 } from '@/features/admin/facilities/components/FacilityManagementTable';
 import { AddFacilityButton } from '@/features/admin/facilities/components/AddFacilityButton';
-import {
-  getFacilityManagementList,
-  type FacilityManagementItem,
-} from '@/lib/supabase/queries/facilities';
+import { getFacilityManagementList } from '@/lib/supabase/queries/facilities';
+import type { FacilityAdminListItem } from '@/types/facility';
 import styles from '@/features/admin/facilities/styles/FacilityManagementPage.module.scss';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog/ConfirmDialog';
 import { SuccessOverlay } from '@/components/form/overlay/successOverlay';
@@ -30,7 +28,7 @@ interface PendingAddressUpdate {
 
 export default function FacilityManagementPage() {
   const router = useRouter();
-  const [facilities, setFacilities] = useState<FacilityManagementItem[]>([]);
+  const [facilities, setFacilities] = useState<FacilityAdminListItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
