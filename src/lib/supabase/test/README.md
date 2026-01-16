@@ -1,140 +1,94 @@
-# Supabase シードデータスクリプト
+# シードデータスクリプト
 
-このディレクトリには、Supabaseデータベースに初期データを投入するためのスクリプトが含まれています。
+Supabase データベースに初期データを投入するための TypeScript スクリプトです。
 
 ## スクリプト一覧
 
-### 1. seed_adminuser.ts
+| ファイル                   | 説明                           |
+| -------------------------- | ------------------------------ |
+| `seed_adminuser.ts`        | 管理者ユーザーを作成           |
+| `seed_facility.ts`         | 施設基本情報を投入             |
+| `seed_facility_details.ts` | 施設詳細情報と関連データを投入 |
 
-管理者ユーザーを作成します。
+## 前提条件
 
-### 2. seed_facility.ts
+- Supabase プロジェクトが作成済み
+- マイグレーションが実行済み
+- 環境変数が設定済み
 
-施設の基本情報を投入します。
+## 環境変数
 
-- `facilities`テーブルに施設データを挿入
-- `facilities_list.json`と`facilities_detail.json`から自動的にデータを取得・変換
+```bash
+# 必須
+NEXT_PUBLIC_SUPABASE_URL=<your-supabase-url>
+SUPABASE_SERVICE_ROLE_KEY=<your-service-role-key>
 
-### 3. seed_facility_details.ts (NEW)
-
-施設の詳細情報と関連データを投入します。
-
-- `facility_types`テーブルに施設種類(大舎・中舎・小舎等)を挿入
-- `facility_facility_types`テーブルに施設と施設種類の紐づけを挿入
-- 7つの施設詳細テーブル(`facility_access`, `facility_philosophy`, etc.)にデータを挿入
+# オプション（seed_adminuser.ts 用）
+SEED_ADMIN_EMAIL=admin@example.com
+SEED_ADMIN_PASSWORD=password12345
+SEED_ADMIN_NAME=Administrator
+SEED_ADMIN_FACILITY_ID=1
+```
 
 ## 実行方法
 
-### 前提条件
-
-- Supabaseプロジェクトが作成されていること
-- マイグレーションが実行済みであること
-- 環境変数が設定されていること
-
-### 環境変数
-
-以下の環境変数が必要です:
-
 ```bash
-NEXT_PUBLIC_SUPABASE_URL=<your-supabase-url>
-SUPABASE_SERVICE_ROLE_KEY=<your-service-role-key>
+# 施設詳細情報を投入（推奨）
+node --env-file=.env.local --import tsx src/lib/supabase/test/seed_facility_details.ts
+
+# 管理者ユーザーを作成
+node --env-file=.env.local --import tsx src/lib/supabase/test/seed_adminuser.ts
 ```
 
-### 実行順序（推奨）
+## seed_facility_details.ts
 
-```bash
-# 1. 管理者ユーザーを作成
-NEXT_PUBLIC_SUPABASE_URL=<url> SUPABASE_SERVICE_ROLE_KEY=<key> tsx src/lib/supabase/test/seed_adminuser.ts
+施設の詳細情報を一括投入するメインスクリプトです。
 
-# 2. 施設基本情報を投入
-NEXT_PUBLIC_SUPABASE_URL=<url> SUPABASE_SERVICE_ROLE_KEY=<key> tsx src/lib/supabase/test/seed_facility.ts
+**投入されるデータ:**
 
-# 3. 施設詳細情報を投入（NEW）
-NEXT_PUBLIC_SUPABASE_URL=<url> SUPABASE_SERVICE_ROLE_KEY=<key> tsx src/lib/supabase/test/seed_facility_details.ts
-```
+1. **施設種類マスタ** (`facility_types`)
+   - 大舎、中舎、小舎、グループホーム、地域小規模
 
-### ワンライナー実行（全て実行）
+2. **施設と施設種類の紐づけ** (`facility_facility_types`)
 
-```bash
-# 環境変数を設定
-export NEXT_PUBLIC_SUPABASE_URL=<url>
-export SUPABASE_SERVICE_ROLE_KEY=<key>
+3. **施設詳細7テーブル**
+   - `facility_access` - アクセス情報
+   - `facility_philosophy` - 理念・メッセージ
+   - `facility_specialty` - 特化領域
+   - `facility_staff` - 職員情報
+   - `facility_education` - 教育・進路支援
+   - `facility_advanced` - 高機能化・多機能化
+   - `facility_other` - その他情報
 
-# 順番に実行
-tsx src/lib/supabase/test/seed_adminuser.ts && \
-tsx src/lib/supabase/test/seed_facility.ts && \
-tsx src/lib/supabase/test/seed_facility_details.ts
-```
+**データソース:**
 
-## seed_facility_details.ts の詳細
-
-### 投入されるデータ
-
-1. **施設種類マスタ (facility_types)**
-   - 大舎
-   - 中舎
-   - 小舎
-   - グループホーム
-   - 地域小規模
-
-2. **施設と施設種類の紐づけ (facility_facility_types)**
-   - `facilities_detail.json`の`dormitoryType`を元に自動的に紐づけ
-
-type FacilityDetailItem = {
-id: number;
-name: string;
-dormitoryType?: string;
-accessInfo?: unknown;
-relationInfo?: string;
-philosophyInfo?: unknown;
-specialtyInfo?: unknown;
-staffInfo?: unknown;
-educationInfo?: unknown;
-advancedInfo?: unknown;
-otherInfo?: unknown;
-[key: string]: unknown;
-};
-
-type FacilityInsertRow = {
-facility_id: number;
-data: unknown;
-};
-
-type FacilityTypeAssociation = {
-facility_id: number;
-facility_type_id: number;
-};
-
-### データソース
-
-全てのデータは`src/dummy_data/facilities_detail.json`から取得されます。
-
-### エラーハンドリング
-
-- データが存在しないテーブルはスキップされます（警告ログが出力されます）
-- 施設種類が見つからない場合は紐づけがスキップされます
-- 実行中にエラーが発生した場合、詳細なエラーメッセージが表示されます
+- `src/dummy_data/facilities_list.json`
+- `src/dummy_data/facilities_detail.json`
 
 ## トラブルシューティング
 
-### エラー: "環境変数が設定されていません"
+### 環境変数エラー
 
-→ 環境変数`NEXT_PUBLIC_SUPABASE_URL`と`SUPABASE_SERVICE_ROLE_KEY`を正しく設定してください。
+```
+環境変数が設定されていません
+```
 
-### エラー: "外部キー制約違反"
+→ `NEXT_PUBLIC_SUPABASE_URL` と `SUPABASE_SERVICE_ROLE_KEY` を確認してください。
 
-→ `seed_facility.ts`を先に実行して、施設基本情報を投入してください。
+### 外部キー制約違反
 
-### エラー: "データが挿入できません"
+→ `seed_facility.ts` を先に実行して施設基本情報を投入してください。
+
+### データ挿入エラー
 
 → マイグレーションが正しく実行されているか確認してください:
 
 ```bash
-supabase db reset  # ローカル環境の場合
+supabase db reset
 ```
 
 ## 注意事項
 
-- **Service Role Key**を使用するため、本番環境では慎重に扱ってください
-- 既にデータが存在する場合、重複エラーが発生する可能性があります
-- データをリセットする場合は`supabase db reset`を使用してください
+- Service Role Key を使用するため、本番環境では慎重に扱ってください
+- スクリプトは冪等性があり、複数回実行可能です（upsert）
+- データをリセットする場合は `supabase db reset` を使用してください
