@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useId } from 'react';
 
 import type { AnnexFacility } from '@/types/facility';
 import { useIsMobile } from '@/hooks/useIsMobile';
@@ -39,6 +39,7 @@ type AnnexCardProps = {
 export const AnnexCard = ({ annexFacilities, annexText }: AnnexCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const isMobile = useIsMobile();
+  const contentId = useId();
 
   // データがない場合は非表示
   if (!annexFacilities?.length) return null;
@@ -66,7 +67,7 @@ export const AnnexCard = ({ annexFacilities, annexText }: AnnexCardProps) => {
         className={styles.annexToggle}
         onClick={() => setIsExpanded(!isExpanded)}
         aria-expanded={isExpanded}
-        aria-controls="annex-content"
+        aria-controls={contentId}
         aria-label="併設施設の詳細を表示"
       >
         <span className={styles.annexToggleText}>
@@ -76,7 +77,7 @@ export const AnnexCard = ({ annexFacilities, annexText }: AnnexCardProps) => {
         <ChevronIcon isExpanded={isExpanded} />
       </button>
       {isExpanded && (
-        <div id="annex-content" className={styles.annexContent}>
+        <div id={contentId} className={styles.annexContent}>
           <span className={styles.value}>{annexText}</span>
         </div>
       )}
