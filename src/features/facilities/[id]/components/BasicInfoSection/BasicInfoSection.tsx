@@ -157,13 +157,9 @@ export const BasicInfoSection = ({
         )}
 
         {isEditMode ? (
-          <div className={`${styles.infoCard} ${styles.annexCard}`}>
-            <div className={styles.annexHeader}>
-              <span className={styles.label}>併設施設</span>
-              <span className={styles.subStatus}>{annexFacilities?.length ? 'あり' : 'なし'}</span>
-            </div>
+          <AnnexCard annexFacilities={annexFacilities} annexText={annexText} isEditing={true}>
             <AnnexFacilityEditor annexFacilities={annexFacilities} onFieldChange={onFieldChange} />
-          </div>
+          </AnnexCard>
         ) : (
           <AnnexCard annexFacilities={annexFacilities} annexText={annexText} />
         )}
