@@ -3,9 +3,9 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 
-import type { FacilityManagementItem } from '@/lib/supabase/queries/facilities';
 import { KINKI_PREFECTURES } from '@/const/searchConditions';
 import { VALIDATION_PATTERNS } from '@/const/validation';
+import type { FacilityAdminListItem } from '@/types/facility';
 
 import { FACILITY_ADMIN_ROUTES, FACILITY_FORM_VALIDATION } from '../constants';
 import type { FacilityTableValidationErrors, FacilityUpdateData } from '../types';
@@ -19,7 +19,7 @@ export type { FacilityUpdateData } from '../types';
  */
 interface FacilityManagementTableProps {
   /** 表示する施設のリスト */
-  facilities: FacilityManagementItem[];
+  facilities: FacilityAdminListItem[];
   /** 保存ボタン押下時のハンドラ */
   onSave: (id: number, data: FacilityUpdateData) => Promise<void>;
   /** 削除ボタン押下時のハンドラ */
@@ -35,7 +35,7 @@ const FacilityRow = ({
   onSave,
   onDelete,
 }: {
-  facility: FacilityManagementItem;
+  facility: FacilityAdminListItem;
   onSave: (id: number, data: FacilityUpdateData) => Promise<void>;
   onDelete: (id: number) => void;
 }) => {

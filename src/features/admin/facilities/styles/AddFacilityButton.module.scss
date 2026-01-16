@@ -7,7 +7,7 @@
 
 .button {
   background-color: colors.$action-add;
-  color: colors.$black;
+  color: colors.$white;
   border: 1px solid colors.$black;
   border-radius: 999px;
   padding: 0.5rem 2rem;
@@ -15,6 +15,7 @@
   font-weight: bold;
   cursor: pointer;
   box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+  white-space: nowrap;
 
   &:hover {
     opacity: 0.8;

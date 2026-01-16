@@ -16,6 +16,7 @@ import type {
   FacilityDetail,
   AnnexFacility,
   FacilityListItem,
+  FacilityAdminListItem,
   DormitoryType,
   FacilityImage,
 } from '@/types/facility';
@@ -139,21 +140,11 @@ export interface FacilityListResult {
   totalCount: number;
 }
 
-/** 施設管理画面用のデータ型 */
-export interface FacilityManagementItem {
-  id: number;
-  name: string;
-  postalCode: string;
-  prefecture: string;
-  city: string;
-  addressDetail: string;
-}
-
 /**
  * 施設管理画面用の施設一覧を取得する
  * @returns 全施設の管理用データ
  */
-export async function getFacilityManagementList(): Promise<FacilityManagementItem[]> {
+export async function getFacilityManagementList(): Promise<FacilityAdminListItem[]> {
   const supabase = createClient();
 
   const { data, error } = await supabase

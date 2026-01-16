@@ -33,6 +33,8 @@ export type BasicInfoUpdateData = {
   corporation?: string;
   established_year?: number;
   annex_facilities?: AnnexFacility[];
+  /** 住所詳細（番地・建物名など） */
+  address_detail?: string;
   /** 施設種類（中間テーブル経由で更新するため別処理）複数選択可 */
   dormitory_type?: string[];
 };
