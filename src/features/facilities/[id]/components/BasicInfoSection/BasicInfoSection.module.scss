@@ -1,4 +1,5 @@
 @use '@/styles/colors' as colors;
+@use '@/styles/breakpoints' as *;
 
 .basicInfoSection {
   margin-bottom: 60px;
@@ -63,7 +64,7 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 
-  @media (max-width: 768px) {
+  @media (max-width: $breakpoint-mobile) {
     grid-template-columns: 1fr;
   }
 }
@@ -151,9 +152,9 @@
   padding: 0;
   overflow: hidden;
 
-  @media (max-width: 768px) {
+  @media (max-width: $breakpoint-mobile) {
     flex-direction: column;
-    padding: 24px;
+    padding: 12px;
 
     .annexHeader {
       width: 100%;
@@ -198,6 +199,77 @@
     .value {
       text-align: left;
     }
+  }
+}
+
+// 併設施設アコーディオン用スタイル
+.annexAccordion {
+  flex-direction: column;
+}
+
+.annexToggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px 24px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+
+  &:hover {
+    // タップ時のハイライトを防ぐため opacity のみを変更
+    opacity: 0.8;
+  }
+
+  &:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+  }
+}
+
+.annexToggleText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+
+  .label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  .subStatus {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+}
+
+.chevronIcon {
+  color: var(--text-secondary);
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.chevronExpanded {
+  transform: rotate(180deg);
+}
+
+// アコーディオン時のコンテンツスタイル
+.annexAccordion .annexContent {
+  padding: 12px;
+  border-top: 1px solid var(--border-color);
+  justify-content: center;
+  text-align: center;
+
+  .value {
+    font-weight: normal;
+    font-size: 16px;
   }
 }
 
