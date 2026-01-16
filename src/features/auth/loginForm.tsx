@@ -45,11 +45,11 @@ export const LoginForm = ({ initialError }: LoginFormProps) => {
 
       <form onSubmit={handleSubmit} className={styles.formArea}>
         <FormField
-          label="ID"
+          label="メールアドレス"
           type="text"
           id="userid"
           name="userid"
-          placeholder="example_ID"
+          placeholder="example@email.com"
           autoComplete="username"
           required
           value={formData.userid}
