@@ -137,21 +137,6 @@
   @extend .inputField;
 }
 
-.addressWrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.prefectureCity {
-  font-size: 0.85rem;
-  color: colors.$text-secondary;
-}
-
-.addressDetailInput {
-  @extend .inputField;
-}
-
 .saveButton {
   @include action-button(colors.$bg-light-gray, colors.$text-secondary, colors.$border-gray);
   min-width: 70px;
