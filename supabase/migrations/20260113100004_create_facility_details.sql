@@ -22,18 +22,12 @@ CREATE TABLE public.facility_access (
     lng NUMERIC(10, 7) NOT NULL,
     description TEXT,
     location_appeal TEXT,
-    website_url TEXT,
-    building TEXT,
-    capacity INTEGER,
-    provisional_capacity INTEGER,
     relation_info TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
 
     CONSTRAINT chk_access_lat_range CHECK (lat BETWEEN -90 AND 90),
-    CONSTRAINT chk_access_lng_range CHECK (lng BETWEEN -180 AND 180),
-    CONSTRAINT chk_access_capacity_positive CHECK (capacity > 0),
-    CONSTRAINT chk_access_provisional_capacity_positive CHECK (provisional_capacity > 0)
+    CONSTRAINT chk_access_lng_range CHECK (lng BETWEEN -180 AND 180)
 );
 
 ALTER TABLE public.facility_access ENABLE ROW LEVEL SECURITY;
@@ -114,10 +108,6 @@ COMMENT ON COLUMN public.facility_access.lat IS '緯度';
 COMMENT ON COLUMN public.facility_access.lng IS '経度';
 COMMENT ON COLUMN public.facility_access.description IS '交通アクセス';
 COMMENT ON COLUMN public.facility_access.location_appeal IS '立地のアピールポイント';
-COMMENT ON COLUMN public.facility_access.website_url IS '施設のウェブサイトURL';
-COMMENT ON COLUMN public.facility_access.building IS '建物情報';
-COMMENT ON COLUMN public.facility_access.capacity IS '施設の定員';
-COMMENT ON COLUMN public.facility_access.provisional_capacity IS '暫定定員';
 COMMENT ON COLUMN public.facility_access.relation_info IS '地域連携情報';
 
 -- -----------------------------------------------------------------------------
