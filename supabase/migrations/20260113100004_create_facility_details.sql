@@ -20,7 +20,7 @@ CREATE TABLE public.facility_access (
     location_address TEXT NOT NULL,
     lat NUMERIC(10, 7) NOT NULL,
     lng NUMERIC(10, 7) NOT NULL,
-    description TEXT,  -- 交通アクセス
+    description TEXT,
     location_appeal TEXT,
     website_url TEXT,
     building TEXT,
