@@ -6,15 +6,15 @@
 }
 
 .button {
-  background-color: colors.$action-add;
-  color: colors.$white;
-  border: 1px solid colors.$black;
+  background-color: var(--primary);
+  color: var(--text-on-primary);
+  border: 1px solid var(--border-dark);
   border-radius: 999px;
   padding: 0.5rem 2rem;
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
-  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 2px 2px 0px var(--shadow-color);
   white-space: nowrap;
 
   &:hover {

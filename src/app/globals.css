@@ -68,6 +68,10 @@
   --shadow-color: rgba(0, 0, 0, 0.1);
   --shadow-medium: rgba(0, 0, 0, 0.15);
 
+  /* オーバーレイ */
+  --overlay-background: rgba(0, 0, 0, 0.5);
+  --overlay-light: rgba(0, 0, 0, 0.3);
+
   /* ステータス */
   --error: #d32f2f;
   --error-bg: rgba(211, 47, 47, 0.1);
@@ -129,6 +133,10 @@
     /* シャドウ */
     --shadow-color: rgba(0, 0, 0, 0.3);
     --shadow-medium: rgba(0, 0, 0, 0.4);
+
+    /* オーバーレイ */
+    --overlay-background: rgba(0, 0, 0, 0.7);
+    --overlay-light: rgba(0, 0, 0, 0.5);
 
     /* ステータス */
     --error: #ef5350;

@@ -6,7 +6,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--overlay-background);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,12 +16,12 @@
 }
 
 .modal {
-  background-color: colors.$white;
+  background-color: var(--card-background);
   width: 90%;
   max-width: 600px;
   max-height: 80vh;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 20px var(--shadow-medium);
   display: flex;
   flex-direction: column;
   transform: scale(0.95);
@@ -30,7 +30,7 @@
 
 .header {
   padding: 16px 20px;
-  border-bottom: 1px solid colors.$bg-gray;
+  border-bottom: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -38,7 +38,7 @@
   h3 {
     margin: 0;
     font-size: 1.2rem;
-    color: colors.$text-primary;
+    color: var(--text-primary);
   }
 }
 
@@ -47,11 +47,11 @@
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  color: colors.$text-secondary;
+  color: var(--text-secondary);
   padding: 0 8px;
 
   &:hover {
-    color: colors.$text-primary;
+    color: var(--text-primary);
   }
 }
 
@@ -66,7 +66,7 @@
   gap: 16px;
   margin-bottom: 16px;
   padding-bottom: 12px;
-  border-bottom: 1px solid colors.$bg-gray;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .selectAllButton {
@@ -75,22 +75,22 @@
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
-  border: 1px solid colors.$primary-color;
-  background-color: colors.$white;
-  color: colors.$primary-color;
+  border: 1px solid var(--primary);
+  background-color: var(--card-background);
+  color: var(--primary);
   transition:
     background-color 0.2s,
     color 0.2s;
 
   &:hover {
-    background-color: colors.$primary-color;
-    color: colors.$white;
+    background-color: var(--primary);
+    color: var(--text-on-primary);
   }
 }
 
 .selectionCount {
   font-size: 0.85rem;
-  color: colors.$text-secondary;
+  color: var(--text-secondary);
 }
 
 .cityGrid {
@@ -109,25 +109,25 @@
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: colors.$bg-light-green;
+    background-color: var(--background-tertiary);
   }
 
   input[type='checkbox'] {
     width: 18px;
     height: 18px;
     cursor: pointer;
-    accent-color: colors.$form-primary;
+    accent-color: var(--primary);
   }
 
   span {
     font-size: 0.95rem;
-    color: colors.$text-primary;
+    color: var(--text-primary);
   }
 }
 
 .footer {
   padding: 16px 20px;
-  border-top: 1px solid colors.$bg-gray;
+  border-top: 1px solid var(--border-color);
   display: flex;
   justify-content: flex-end;
   gap: 12px;
@@ -141,8 +141,8 @@
   border: none;
 
   &.confirm {
-    background-color: colors.$primary-color;
-    color: colors.$white;
+    background-color: var(--primary);
+    color: var(--text-on-primary);
 
     &:hover {
       opacity: 0.9;

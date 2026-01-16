@@ -62,7 +62,7 @@
   width: 20px;
   height: 20px;
   border: 2.5px solid rgba(255, 255, 255, 0.3);
-  border-top-color: colors.$white;
+  border-top-color: var(--text-on-primary);
   border-radius: 50%;
   @include animations.animation-spin(0.8s);
   margin-right: 10px;
