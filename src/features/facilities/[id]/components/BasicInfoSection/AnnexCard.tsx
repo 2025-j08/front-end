@@ -7,8 +7,13 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 
 import styles from './BasicInfoSection.module.scss';
 
+/** シェブロンアイコンのProps */
+type ChevronIconProps = {
+  isExpanded: boolean;
+};
+
 /** シェブロンアイコン（展開/折りたたみ用） */
-const ChevronIcon = ({ isExpanded }: { isExpanded: boolean }) => (
+const ChevronIcon = ({ isExpanded }: ChevronIconProps) => (
   <svg
     className={`${styles.chevronIcon} ${isExpanded ? styles.chevronExpanded : ''}`}
     width="16"
@@ -62,6 +67,7 @@ export const AnnexCard = ({ annexFacilities, annexText }: AnnexCardProps) => {
         onClick={() => setIsExpanded(!isExpanded)}
         aria-expanded={isExpanded}
         aria-controls="annex-content"
+        aria-label="併設施設の詳細を表示"
       >
         <span className={styles.annexToggleText}>
           <span className={styles.label}>併設施設</span>
