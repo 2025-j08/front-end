@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useId } from 'react';
+import { useState, useId, type ReactNode } from 'react';
 
 import type { AnnexFacility } from '@/types/facility';
 import { useIsMobile } from '@/hooks/useIsMobile';
@@ -30,36 +30,83 @@ const ChevronIcon = ({ isExpanded }: ChevronIconProps) => (
   </svg>
 );
 
-/** 併設施設カード（PC: 従来表示 / スマホ: アコーディオン形式） */
-type AnnexCardProps = {
+/** 共通プロパティ */
+type BaseProps = {
   annexFacilities: AnnexFacility[] | undefined;
-  annexText: string;
 };
 
-export const AnnexCard = ({ annexFacilities, annexText }: AnnexCardProps) => {
+/** 閲覧モード用Props */
+type ViewModeProps = BaseProps & {
+  isEditing?: false;
+  annexText: string;
+  children?: never;
+};
+
+/** 編集モード用Props */
+type EditModeProps = BaseProps & {
+  isEditing: true;
+  annexText?: never;
+  children: ReactNode;
+};
+
+/** 併設施設カードのProps（Discriminated Union） */
+type AnnexCardProps = ViewModeProps | EditModeProps;
+
+/**
+ * 併設施設カード
+ * - PC: 常に展開表示
+ * - スマホ閲覧: アコーディオン形式（開閉可能）
+ * - スマホ編集: 常に展開表示（閉じられない）
+ */
+export const AnnexCard = (props: AnnexCardProps) => {
+  const { annexFacilities, isEditing = false } = props;
   const [isExpanded, setIsExpanded] = useState(false);
   const isMobile = useIsMobile();
   const contentId = useId();
 
-  // データがない場合は非表示
-  if (!annexFacilities?.length) return null;
+  // 閲覧モード: データがない場合は非表示
+  // 編集モード: 常に表示（追加ボタンを表示するため）
+  if (!isEditing && !annexFacilities?.length) return null;
 
-  // PC表示: 従来のカードレイアウト
+  // ステータステキスト
+  const statusText = annexFacilities?.length ? 'あり' : 'なし';
+
+  // コンテンツ（編集 or 閲覧用）
+  const content = isEditing ? (
+    props.children
+  ) : (
+    <span className={styles.value}>{props.annexText}</span>
+  );
+
+  // PC表示: 常に展開
   if (!isMobile) {
     return (
       <div className={`${styles.infoCard} ${styles.annexCard}`}>
         <div className={styles.annexHeader}>
           <span className={styles.label}>併設施設</span>
-          <span className={styles.subStatus}>あり</span>
+          <span className={styles.subStatus}>{statusText}</span>
         </div>
-        <div className={styles.annexContent}>
-          <span className={styles.value}>{annexText}</span>
-        </div>
+        <div className={styles.annexContent}>{content}</div>
       </div>
     );
   }
 
-  // スマホ表示: アコーディオン形式
+  // スマホ編集モード: アコーディオンの見た目を維持、常に展開（トグル不可）
+  if (isEditing) {
+    return (
+      <div className={`${styles.infoCard} ${styles.annexCard} ${styles.annexAccordion}`}>
+        <div className={styles.annexToggle} aria-expanded="true">
+          <span className={styles.annexToggleText}>
+            <span className={styles.label}>併設施設</span>
+            <span className={styles.subStatus}>{statusText}</span>
+          </span>
+        </div>
+        <div className={styles.annexContent}>{content}</div>
+      </div>
+    );
+  }
+
+  // スマホ閲覧モード: アコーディオン形式（開閉可能）
   return (
     <div className={`${styles.infoCard} ${styles.annexCard} ${styles.annexAccordion}`}>
       <button
@@ -68,19 +115,17 @@ export const AnnexCard = ({ annexFacilities, annexText }: AnnexCardProps) => {
         onClick={() => setIsExpanded(!isExpanded)}
         aria-expanded={isExpanded}
         aria-controls={contentId}
-        aria-label="併設施設の詳細を表示"
+        aria-label={`併設施設の詳細を${isExpanded ? '閉じる' : '開く'}`}
       >
         <span className={styles.annexToggleText}>
           <span className={styles.label}>併設施設</span>
-          <span className={styles.subStatus}>あり</span>
+          <span className={styles.subStatus}>{statusText}</span>
         </span>
         <ChevronIcon isExpanded={isExpanded} />
       </button>
-      {isExpanded && (
-        <div id={contentId} className={styles.annexContent}>
-          <span className={styles.value}>{annexText}</span>
-        </div>
-      )}
+      <div id={contentId} className={styles.annexContent} hidden={!isExpanded}>
+        {content}
+      </div>
     </div>
   );
 };
