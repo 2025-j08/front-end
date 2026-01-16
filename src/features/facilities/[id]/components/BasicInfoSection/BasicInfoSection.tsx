@@ -157,7 +157,7 @@ export const BasicInfoSection = ({
         )}
 
         {isEditMode ? (
-          <AnnexCard annexFacilities={annexFacilities} annexText={annexText} isEditing={true}>
+          <AnnexCard annexFacilities={annexFacilities} isEditing={true}>
             <AnnexFacilityEditor annexFacilities={annexFacilities} onFieldChange={onFieldChange} />
           </AnnexCard>
         ) : (
