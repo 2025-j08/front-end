@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useSyncExternalStore } from 'react';
+import { useSyncExternalStore } from 'react';
 
 import { MOBILE_MEDIA_QUERY } from '@/const/breakpoints';
 

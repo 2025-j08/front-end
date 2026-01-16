@@ -218,6 +218,7 @@
   border: none;
   cursor: pointer;
   transition: opacity 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
 
   &:hover {
     // タップ時のハイライトを防ぐため opacity のみを変更
