@@ -154,7 +154,7 @@
 
   @media (max-width: $breakpoint-mobile) {
     flex-direction: column;
-    padding: 24px;
+    padding: 12px;
 
     .annexHeader {
       width: 100%;
@@ -261,7 +261,7 @@
 
 // アコーディオン時のコンテンツスタイル
 .annexAccordion .annexContent {
-  padding: 16px 24px 20px;
+  padding: 12px;
   border-top: 1px solid var(--border-color);
   justify-content: center;
   text-align: center;
