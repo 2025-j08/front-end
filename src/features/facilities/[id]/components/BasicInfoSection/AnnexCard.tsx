@@ -64,10 +64,6 @@ export const AnnexCard = (props: AnnexCardProps) => {
   const isMobile = useIsMobile();
   const contentId = useId();
 
-  // 閲覧モード: データがない場合は非表示
-  // 編集モード: 常に表示（追加ボタンを表示するため）
-  if (!isEditing && !annexFacilities?.length) return null;
-
   // ステータステキスト
   const statusText = annexFacilities?.length ? 'あり' : 'なし';
 
