@@ -22,6 +22,13 @@ import {
 // JSONファイルのパス
 const FACILITIES_DETAIL_PATH = join(__dirname, '../../../dummy_data/facilities_detail.json');
 
+// NOTE:
+// `src/dummy_data/facilities_detail.json` には過去のスキーマで使用していた
+// `targetAge` フィールドが残存しています。
+// ダミーデータおよびこのシードスクリプトは将来的に削除する予定のため、
+// 現時点では JSON 本体は修正していません（参照や型注記のみを残します）。
+// この注記は保守性向上のために追加しているだけで、実行時の挙動には影響しません。
+
 // ============================================
 // JSONデータ用の型定義
 // ============================================
@@ -86,6 +93,12 @@ interface FacilityDetailJsonItem {
     freeText?: string;
   };
   websiteUrl?: string;
+  /**
+   * Legacy field present in dummy JSON.
+   * NOTE: `targetAge` はダミーデータに残存している過去のフィールドです。
+   * ダミー/シードは後で削除予定のため、ここでは型注記として残していますが
+   * 実際のシード挿入ロジックでは使用しません。
+   */
   targetAge?: string;
   building?: string;
   capacity?: number;
@@ -122,8 +135,6 @@ interface AccessInsertData {
   description?: string;
   location_appeal?: string;
   website_url?: string;
-  target_age: string;
-  building?: string;
   capacity?: number;
   provisional_capacity?: number;
   relation_info?: string;
@@ -360,8 +371,6 @@ async function seedFacilityDetailTables(
         description: detail.accessInfo.description,
         location_appeal: detail.accessInfo.locationAppeal,
         website_url: detail.websiteUrl,
-        target_age: detail.targetAge || '0～18歳',
-        building: detail.building,
         capacity: detail.capacity,
         provisional_capacity: detail.provisionalCapacity,
         relation_info: detail.relationInfo,

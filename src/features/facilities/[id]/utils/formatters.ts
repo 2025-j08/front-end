@@ -50,24 +50,6 @@ export const formatPhone = (phone?: string): string => {
 };
 
 /**
- * 対象年齢をフォーマット
- * @param targetAge - 対象年齢文字列
- * @returns フォーマット済み対象年齢、未定義の場合は "-"
- */
-export const formatTargetAge = (targetAge?: string): string => {
-  return targetAge || '-';
-};
-
-/**
- * 建物情報をフォーマット
- * @param building - 建物情報文字列
- * @returns フォーマット済み建物情報、未定義の場合は "-"
- */
-export const formatBuilding = (building?: string): string => {
-  return building || '-';
-};
-
-/**
  * 汎用的な文字列値フォーマッター（未定義の場合に "-" を返す）
  * @param value - 任意の文字列値
  * @returns 値が存在する場合はそのまま、未定義の場合は "-"

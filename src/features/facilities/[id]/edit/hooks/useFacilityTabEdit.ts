@@ -6,7 +6,12 @@ import { useState, useCallback, useEffect } from 'react';
 
 import type { FacilityDetail } from '@/types/facility';
 
-import { buildUpdateData, TAB_SECTIONS, type TabSection } from '../utils/fieldMapping';
+import {
+  buildUpdateData,
+  TAB_SECTIONS,
+  type TabSection,
+  SECTION_FIELD_CONFIGS,
+} from '../utils/fieldMapping';
 
 // 型とTAB_SECTIONSを再エクスポート
 export { TAB_SECTIONS, type TabSection };
@@ -25,8 +30,17 @@ function mergeNested<T>(base: T | undefined, override: Partial<T> | undefined): 
  * resetSection や getSectionFromField で共有することで一貫性を保証
  */
 const SECTION_FIELDS: Record<TabSection, ReadonlyArray<keyof FacilityDetail>> = {
-  basic: ['name', 'phone', 'corporation', 'establishedYear', 'annexFacilities'],
-  access: ['accessInfo', 'websiteUrl', 'capacity', 'provisionalCapacity', 'relationInfo'],
+  basic: [
+    'name',
+    'phone',
+    'corporation',
+    'establishedYear',
+    'websiteUrl',
+    'capacity',
+    'provisionalCapacity',
+    'annexFacilities',
+  ],
+  access: ['accessInfo', 'relationInfo'],
   philosophy: ['philosophyInfo'],
   specialty: ['specialtyInfo'],
   staff: ['staffInfo'],
@@ -103,9 +117,9 @@ export const useFacilityTabEdit = (
   const [state, setState] = useState<TabEditState>({
     formData: initialData
       ? (() => {
-        const { images, ...rest } = initialData;
-        return rest;
-      })()
+          const { images, ...rest } = initialData;
+          return rest;
+        })()
       : {},
     dirtyMap: new Map(),
     isSaving: false,
@@ -114,19 +128,38 @@ export const useFacilityTabEdit = (
 
   // initialDataが変わったらstateを更新（useEffectで副作用として処理）
   useEffect(() => {
-    if (initialData) {
-      setState({
-        formData: (() => {
-          const { images, ...rest } = initialData;
-          return rest;
-        })(),
-        dirtyMap: new Map(),
+    if (!initialData) return;
+
+    // 初期データが切り替わったとき、すべて上書きするのではなく
+    // 各セクションが未編集（dirtyでない）であればそのセクション分だけ値を更新する。
+    // images は別管理のためスキップする。
+    setState((prev) => {
+      const newFormData: Partial<FacilityDetail> = { ...prev.formData };
+      const newDirtyMap = new Map(prev.dirtyMap);
+
+      (Object.keys(SECTION_FIELDS) as TabSection[]).forEach((section) => {
+        if (section === 'images') return;
+        const isSectionDirty = prev.dirtyMap.get(section) ?? false;
+        // 編集中でなければ initialData の値で上書き
+        if (!isSectionDirty) {
+          const fields = SECTION_FIELDS[section];
+          for (const field of fields) {
+            (newFormData as Record<string, unknown>)[field] = initialData[field];
+          }
+          newDirtyMap.set(section, false);
+        }
+      });
+
+      return {
+        ...prev,
+        formData: newFormData,
+        dirtyMap: newDirtyMap,
         isSaving: false,
         errors: {},
-      });
-    }
+      };
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialData?.id]); // idが変わった時のみ更新（initialData全体を含めると無限ループになる）
+  }, [initialData?.id]);
 
   /** 単一フィールドの更新 */
   const updateField = useCallback(
@@ -189,20 +222,20 @@ export const useFacilityTabEdit = (
         // initialDataとformDataをマージして完全なデータを構築
         const mergedFormData: Partial<FacilityDetail> = initialData
           ? {
-            ...initialData,
-            ...state.formData,
-            // ネストしたオブジェクトもマージ（mergeNestedで統一）
-            accessInfo: mergeNested(initialData.accessInfo, state.formData.accessInfo),
-            philosophyInfo: mergeNested(
-              initialData.philosophyInfo,
-              state.formData.philosophyInfo,
-            ),
-            specialtyInfo: mergeNested(initialData.specialtyInfo, state.formData.specialtyInfo),
-            staffInfo: mergeNested(initialData.staffInfo, state.formData.staffInfo),
-            educationInfo: mergeNested(initialData.educationInfo, state.formData.educationInfo),
-            advancedInfo: mergeNested(initialData.advancedInfo, state.formData.advancedInfo),
-            otherInfo: mergeNested(initialData.otherInfo, state.formData.otherInfo),
-          }
+              ...initialData,
+              ...state.formData,
+              // ネストしたオブジェクトもマージ（mergeNestedで統一）
+              accessInfo: mergeNested(initialData.accessInfo, state.formData.accessInfo),
+              philosophyInfo: mergeNested(
+                initialData.philosophyInfo,
+                state.formData.philosophyInfo,
+              ),
+              specialtyInfo: mergeNested(initialData.specialtyInfo, state.formData.specialtyInfo),
+              staffInfo: mergeNested(initialData.staffInfo, state.formData.staffInfo),
+              educationInfo: mergeNested(initialData.educationInfo, state.formData.educationInfo),
+              advancedInfo: mergeNested(initialData.advancedInfo, state.formData.advancedInfo),
+              otherInfo: mergeNested(initialData.otherInfo, state.formData.otherInfo),
+            }
           : state.formData;
 
         // セクション別に更新データを構築
@@ -242,11 +275,53 @@ export const useFacilityTabEdit = (
         setState((prev) => {
           const newDirtyMap = new Map(prev.dirtyMap);
           newDirtyMap.set(section, false);
+
+          // APIから返ってくるデータはsnake_caseが中心なので、
+          // SECTION_FIELD_CONFIGS を使って camelCase の formData にマッピングして反映する。
+          const apiData = result.data as Record<string, unknown> | undefined;
+          if (!apiData) {
+            return {
+              ...prev,
+              isSaving: false,
+              dirtyMap: newDirtyMap,
+            };
+          }
+
+          const newFormData: Partial<FacilityDetail> = { ...prev.formData };
+
+          // ドット記法で値をセットするヘルパー
+          const setNested = (obj: Record<string, unknown>, path: string, value: unknown) => {
+            const keys = path.split('.');
+            let cur: Record<string, unknown> = obj;
+            for (let i = 0; i < keys.length - 1; i++) {
+              const k = keys[i];
+              if (cur[k] === undefined || cur[k] === null || typeof cur[k] !== 'object') {
+                cur[k] = {};
+              }
+              cur = cur[k] as Record<string, unknown>;
+            }
+            cur[keys[keys.length - 1]] = value;
+          };
+
+          // 全セクションの設定を走査して、APIレスポンスに含まれるキーを formData にコピー
+          (Object.keys(SECTION_FIELD_CONFIGS) as TabSection[]).forEach((sec) => {
+            const configs = SECTION_FIELD_CONFIGS[sec] || [];
+            for (const cfg of configs) {
+              if (Object.prototype.hasOwnProperty.call(apiData, cfg.target)) {
+                const v = apiData[cfg.target];
+                setNested(newFormData as Record<string, unknown>, cfg.source, v);
+              }
+            }
+          });
+
+          // images は別管理のため反映しない（これまでの挙動に合わせる）
+          delete (newFormData as Record<string, unknown>).images;
+
           return {
             ...prev,
             isSaving: false,
             dirtyMap: newDirtyMap,
-            formData: result.data || prev.formData,
+            formData: newFormData,
           };
         });
 
@@ -274,8 +349,9 @@ export const useFacilityTabEdit = (
   /** フォームをリセット */
   const resetForm = useCallback(() => {
     if (initialData) {
+      const { images, ...rest } = initialData;
       setState({
-        formData: { ...initialData },
+        formData: { ...rest },
         dirtyMap: new Map(),
         isSaving: false,
         errors: {},

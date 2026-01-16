@@ -32,6 +32,13 @@ export type BasicInfoUpdateData = {
   phone?: string;
   corporation?: string;
   established_year?: number;
+  /** 公式/関連ウェブサイトのURL */
+  website_url?: string;
+  /** 定員数 */
+  capacity?: number;
+  /** 計画段階などにおける暫定定員数 */
+  provisional_capacity?: number;
+  /** 併設施設（JSONB配列） */
   annex_facilities?: AnnexFacility[];
   /** 住所詳細（番地・建物名など） */
   address_detail?: string;
@@ -52,28 +59,12 @@ export type AccessInfoUpdateData = {
   lat?: number;
   /** 経度 */
   lng?: number;
-  /**
-   * 対象年齢
-   * ※DBスキーマ設計の都合上、`facility_access` テーブルに含まれるため、本カテゴリ（アクセス情報）で管理する
-   */
-  target_age?: string;
-  /**
-   * 建物の構造・階数など
-   * ※DBスキーマ設計の都合上、`facility_access` テーブルに含まれるため、本カテゴリ（アクセス情報）で管理する
-   */
-  building?: string;
   /** 最寄り駅・交通アクセス */
   station?: string;
   /** アクセス詳細・道順の説明 */
   description?: string;
   /** 立地の魅力・周辺環境のアピール */
   location_appeal?: string;
-  /** 公式/関連ウェブサイトのURL */
-  website_url?: string;
-  /** 定員数 */
-  capacity?: number;
-  /** 計画段階などにおける暫定定員数 */
-  provisional_capacity?: number;
   /** その他の関連情報 */
   relation_info?: string;
 };

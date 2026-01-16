@@ -194,8 +194,6 @@ export interface FacilityDetail {
   phone: string;
   /** 舎の区分（大舎・中舎・小舎・グループホーム・地域小規模）複数選択可 */
   dormitoryType?: DormitoryType[];
-  /** 対象年齢（必須） */
-  targetAge: string;
   /** アクセス情報（必須） */
   accessInfo: AccessInfo;
 
@@ -207,9 +205,6 @@ export interface FacilityDetail {
   websiteUrl?: string;
   /** 設立年 */
   establishedYear?: string;
-  /** 建物情報 */
-  building?: string;
-
   /** 施設の定員 */
   capacity?: number;
   /** 暫定定員 */
