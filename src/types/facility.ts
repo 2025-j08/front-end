@@ -41,6 +41,8 @@ export interface FacilityListItem extends Facility {
 export interface FacilityAdminListItem {
   id: number;
   name: string;
+  /** 郵便番号 */
+  postalCode: string;
   /** 都道府県（読み取り専用） */
   prefecture: string;
   /** 市区町村（読み取り専用） */
