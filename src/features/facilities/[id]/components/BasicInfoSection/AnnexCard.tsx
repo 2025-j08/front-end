@@ -64,10 +64,6 @@ export const AnnexCard = (props: AnnexCardProps) => {
   const isMobile = useIsMobile();
   const contentId = useId();
 
-  // 閲覧モード: データがない場合は非表示
-  // 編集モード: 常に表示（追加ボタンを表示するため）
-  if (!isEditing && !annexFacilities?.length) return null;
-
   // ステータステキスト
   const statusText = annexFacilities?.length ? 'あり' : 'なし';
 
@@ -102,6 +98,20 @@ export const AnnexCard = (props: AnnexCardProps) => {
           </span>
         </div>
         <div className={styles.annexContent}>{content}</div>
+      </div>
+    );
+  }
+
+  // スマホ閲覧モード: データなしの場合はアコーディオンにせず、静的に表示（開閉不可）
+  if (!annexFacilities?.length) {
+    return (
+      <div className={`${styles.infoCard} ${styles.annexCard} ${styles.annexAccordion}`}>
+        <div className={styles.annexToggle} style={{ cursor: 'default' }}>
+          <span className={styles.annexToggleText}>
+            <span className={styles.label}>併設施設</span>
+            <span className={styles.subStatus}>{statusText}</span>
+          </span>
+        </div>
       </div>
     );
   }
