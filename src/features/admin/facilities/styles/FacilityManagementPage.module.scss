@@ -10,9 +10,10 @@
   font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 2rem;
-  border-bottom: 2px solid colors.$black;
+  border-bottom: 2px solid var(--border-dark);
   padding-bottom: 0.5rem;
   width: 100%;
+  color: var(--text-primary);
 }
 
 .toolbar {
@@ -42,11 +43,11 @@
   flex: 1;
   max-width: 400px;
   padding: 10px 16px;
-  border: 1px solid colors.$border-gray;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   font-size: 0.9rem;
-  color: colors.$text-primary;
-  background-color: colors.$bg-white;
+  color: var(--text-primary);
+  background-color: var(--input-background);
   transition: border-color 0.2s ease;
 
   @media (max-width: 768px) {
@@ -54,18 +55,18 @@
   }
 
   &::placeholder {
-    color: colors.$text-secondary;
+    color: var(--text-muted);
   }
 
   &:focus {
     outline: none;
-    border-color: colors.$primary-color;
+    border-color: var(--primary);
   }
 }
 
 .searchResult {
   font-size: 0.875rem;
-  color: colors.$text-secondary;
+  color: var(--text-secondary);
   white-space: nowrap;
 }
 
@@ -74,12 +75,12 @@
   bottom: 24px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: #dc2626;
-  color: white;
+  background-color: var(--error);
+  color: var(--text-on-primary);
   padding: 12px 24px;
   border-radius: 8px;
   font-size: 0.9rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px var(--shadow-medium);
   z-index: 1000;
   animation: slideUp 0.3s ease;
 }
@@ -99,11 +100,11 @@
 .attribution {
   margin-top: 24px;
   font-size: 0.75rem;
-  color: colors.$text-secondary;
+  color: var(--text-secondary);
   text-align: right;
 
   a {
-    color: colors.$text-secondary;
+    color: var(--text-secondary);
     text-decoration: none;
 
     &:hover {

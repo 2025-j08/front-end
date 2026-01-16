@@ -16,13 +16,13 @@
 .postalCodeLabel {
   display: block;
   font-size: 0.95rem;
-  color: colors.$dark-gray;
+  color: var(--text-primary);
   font-weight: 500;
   margin-bottom: 8px;
 }
 
 .required {
-  color: colors.$error-color;
+  color: var(--error);
   margin-left: 4px;
 }
 
@@ -34,23 +34,23 @@
 
 .postalCodeInput {
   padding: 12px 14px;
-  border: 1.5px solid colors.$form-input-border;
+  border: 1.5px solid var(--input-border);
   border-radius: 8px;
-  background-color: colors.$form-input-bg;
+  background-color: var(--input-background);
   font-size: 1rem;
-  color: colors.$dark-gray;
+  color: var(--text-primary);
   transition:
     border-color 0.3s ease,
     box-shadow 0.3s ease;
 
   &:focus {
     outline: none;
-    border-color: colors.$form-primary;
-    box-shadow: 0 0 0 4px colors.$form-focus-glow;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px var(--focus-glow);
   }
 
   &.inputError {
-    border-color: colors.$error-color;
+    border-color: var(--error);
   }
 }
 
@@ -66,11 +66,11 @@
 
 .postalCodeHyphen {
   font-size: 1.2rem;
-  color: colors.$dark-gray;
+  color: var(--text-primary);
 }
 
 .postalCodeError {
-  color: colors.$error-color;
+  color: var(--error);
   font-size: 0.85rem;
   margin-top: 6px;
   margin-bottom: 0;
@@ -81,15 +81,15 @@
   margin-top: 30px;
   margin-bottom: 22px;
   padding: 20px;
-  background-color: colors.$bg-light-green;
+  background-color: var(--background-tertiary);
   border-radius: 8px;
-  border: 1px solid colors.$border-light-green;
+  border: 1px solid var(--border-color);
 }
 
 .addressLabel {
   font-size: 1rem;
   font-weight: 600;
-  color: colors.$text-primary;
+  color: var(--text-primary);
   margin: 0 0 20px 0;
 }
 
@@ -102,7 +102,7 @@
   label {
     width: 150px;
     font-size: 0.95rem;
-    color: colors.$dark-gray;
+    color: var(--text-primary);
     font-weight: 500;
     flex-shrink: 0;
     padding-top: 14px;
@@ -116,11 +116,11 @@
 .select {
   width: 100%;
   padding: 12px 14px;
-  border: 1.5px solid colors.$form-input-border;
+  border: 1.5px solid var(--input-border);
   border-radius: 8px;
-  background-color: colors.$form-input-bg;
+  background-color: var(--input-background);
   font-size: 1rem;
-  color: colors.$dark-gray;
+  color: var(--text-primary);
   cursor: pointer;
   transition:
     border-color 0.3s ease,
@@ -128,15 +128,15 @@
 
   &:focus {
     outline: none;
-    border-color: colors.$form-primary;
-    box-shadow: 0 0 0 4px colors.$form-focus-glow;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px var(--focus-glow);
   }
 }
 
 // 送信エラーメッセージ
 .submitErrorMessage {
-  color: colors.$error-color;
-  background-color: colors.$error-bg-light;
+  color: var(--error);
+  background-color: var(--error-bg);
   padding: 10px;
   border-radius: 4px;
   margin-bottom: 20px;
@@ -155,10 +155,10 @@
 
 .cancelButton {
   padding: 14px 50px;
-  border: 1.5px solid colors.$border-gray;
+  border: 1.5px solid var(--border-color);
   border-radius: 12px;
-  background-color: colors.$white;
-  color: colors.$text-secondary;
+  background-color: var(--card-background);
+  color: var(--text-secondary);
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
@@ -168,8 +168,8 @@
     transform 0.2s ease;
 
   &:hover:not(:disabled) {
-    background-color: colors.$bg-light-gray;
-    border-color: colors.$border-dark;
+    background-color: var(--background-secondary);
+    border-color: var(--border-dark);
   }
 
   &:disabled {
@@ -180,14 +180,13 @@
 
 .submitButton {
   padding: 14px 50px;
-  border: 1px solid colors.$border-green;
+  border: 1px solid var(--primary);
   border-radius: 12px;
-  background: colors.$border-green;
-  color: colors.$white;
+  background: var(--primary);
+  color: var(--text-on-primary);
   font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
-  text-shadow: 0 1px 2px colors.$text-shadow-subtle;
   transition:
     opacity 0.3s ease,
     transform 0.2s ease;

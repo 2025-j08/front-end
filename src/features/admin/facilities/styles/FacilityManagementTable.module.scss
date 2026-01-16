@@ -13,21 +13,23 @@
 
   th,
   td {
-    border: 1px solid colors.$text-secondary;
+    border: 1px solid var(--border-color);
     padding: 0.5rem;
     vertical-align: middle;
   }
 
   th {
-    background-color: colors.$white;
+    background-color: var(--background-tertiary);
     font-weight: normal;
     text-align: center;
-    border-bottom: 2px solid colors.$black;
+    border-bottom: 2px solid var(--border-dark);
     font-size: 0.85rem;
+    color: var(--text-primary);
   }
 
   td {
-    background-color: colors.$white;
+    background-color: var(--card-background);
+    color: var(--text-primary);
   }
 }
 
@@ -69,10 +71,14 @@
 }
 
 .greyText {
-  color: colors.$text-secondary;
+  color: var(--text-secondary);
 }
 
-@mixin action-button($bg-color, $text-color: colors.$black, $border-color: colors.$black) {
+@mixin action-button(
+  $bg-color,
+  $text-color: var(--text-primary),
+  $border-color: var(--border-dark)
+) {
   background-color: $bg-color;
   color: $text-color;
   border: 1px solid $border-color;
@@ -99,17 +105,19 @@
 .inputField {
   width: 100%;
   padding: 6px 8px;
-  border: 1px solid colors.$input-border;
+  border: 1px solid var(--input-border);
   border-radius: 4px;
   font-size: 0.9rem;
   box-sizing: border-box;
+  background-color: var(--input-background);
+  color: var(--text-primary);
   transition:
     border-color 0.2s ease,
     outline 0.2s ease;
 
   &:focus {
-    outline: 2px solid colors.$primary-color;
-    border-color: colors.$primary-color;
+    outline: 2px solid var(--primary);
+    border-color: var(--primary);
   }
 }
 
@@ -138,12 +146,12 @@
 }
 
 .saveButton {
-  @include action-button(colors.$bg-light-gray, colors.$text-secondary, colors.$border-gray);
+  @include action-button(var(--background-secondary), var(--text-secondary), var(--border-color));
   min-width: 70px;
 
   &:not(:disabled) {
-    background-color: colors.$primary-color;
-    color: colors.$white;
+    background-color: var(--primary);
+    color: var(--text-on-primary);
     border: none;
     opacity: 1;
 
@@ -154,12 +162,12 @@
 }
 
 .deleteButton {
-  @include action-button(colors.$action-delete, colors.$white);
+  @include action-button(var(--error), var(--text-on-primary));
   min-width: 60px;
 }
 
 .detailButton {
-  @include action-button(colors.$action-detail, colors.$white, transparent);
+  @include action-button(var(--primary), var(--text-on-primary), transparent);
   width: auto;
   border-radius: 25px;
 }
@@ -170,17 +178,17 @@
 }
 
 .inputError {
-  border-color: colors.$action-delete;
+  border-color: var(--error);
 
   &:focus {
-    outline-color: colors.$action-delete;
-    border-color: colors.$action-delete;
+    outline-color: var(--error);
+    border-color: var(--error);
   }
 }
 
 .errorMessage {
   display: block;
-  color: colors.$action-delete;
+  color: var(--error);
   font-size: 0.75rem;
   margin-top: 0.25rem;
 }

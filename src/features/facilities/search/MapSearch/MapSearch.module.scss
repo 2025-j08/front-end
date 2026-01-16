@@ -1,8 +1,8 @@
 @use '@/styles/colors' as colors;
 
 .container {
-  background-color: colors.$condition-search-bg;
-  border: 2px solid colors.$condition-search-border;
+  background-color: var(--background-tertiary);
+  border: 2px solid var(--primary-light);
   border-radius: 20px;
   padding: 40px 20px 20px;
   position: relative;
@@ -11,21 +11,28 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .badge {
   position: absolute;
   top: -15px;
   left: 20px;
-  background-color: colors.$border-green;
-  border: 2px solid colors.$border-black;
+  background-color: var(--primary-light);
+  border: 2px solid var(--border-dark);
   border-radius: 20px;
   padding: 8px 24px;
   font-weight: bold;
   font-size: 16px;
-  box-shadow: 3px 3px 0px colors.$border-black;
+  box-shadow: 3px 3px 0px var(--border-dark);
   z-index: 1000;
-  color: colors.$white;
+  color: var(--text-on-primary);
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .mapArea {
@@ -47,18 +54,20 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: colors.$bg-gray;
+  background-color: var(--background-secondary);
   border-radius: 10px;
+  transition: background-color 0.3s ease;
 
   p {
-    color: colors.$text-secondary;
+    color: var(--text-secondary);
     font-size: 0.95rem;
+    transition: color 0.3s ease;
   }
 }
 
 .errorArea {
   p {
-    color: colors.$error-color;
+    color: var(--error);
   }
 }
 
@@ -72,11 +81,11 @@
 }
 
 .popupLink {
-  color: colors.$link-color;
+  color: var(--primary);
   text-decoration: none;
 
   &:hover {
-    color: colors.$link-hover-color;
+    color: var(--primary-dark);
     text-decoration: underline;
   }
 }
