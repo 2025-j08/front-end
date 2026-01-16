@@ -599,10 +599,10 @@ export async function getFacilityDetail(id: number): Promise<FacilityDetail | nu
     dormitoryType,
     accessInfo,
     corporation: facility.corporation,
-    websiteUrl: access?.website_url,
+    websiteUrl: facility.website_url || access?.website_url,
     establishedYear: facility.established_year?.toString(),
-    capacity: access?.capacity || undefined,
-    provisionalCapacity: access?.provisional_capacity || undefined,
+    capacity: facility.capacity ?? access?.capacity ?? undefined,
+    provisionalCapacity: facility.provisional_capacity ?? access?.provisional_capacity ?? undefined,
     annexFacilities,
     relationInfo: access?.relation_info,
     philosophyInfo: philosophy
