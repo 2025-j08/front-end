@@ -1,4 +1,5 @@
 @use '@/styles/colors' as colors;
+@use '@/styles/breakpoints' as *;
 
 .header {
   display: flex;
@@ -17,6 +18,12 @@
     display: flex;
     align-items: center;
     gap: 16px;
+
+    @media (max-width: $breakpoint-mobile) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+    }
   }
 
   .corporation {
@@ -72,11 +79,28 @@
   gap: 12px;
   align-items: flex-start;
 
+  @media (max-width: $breakpoint-mobile) {
+    width: 90%;
+  }
+
   .websiteWrapper {
     display: flex;
     flex-direction: column;
     gap: 8px;
     align-items: flex-start;
+
+    @media (max-width: $breakpoint-mobile) {
+      width: 100%;
+    }
+
+    .urlLabel {
+      font-size: 14px;
+
+      @media (max-width: $breakpoint-mobile) {
+        font-size: 10px;
+        white-space: nowrap;
+      }
+    }
   }
 
   .urlInput {
@@ -87,6 +111,10 @@
     width: 300px;
     background-color: var(--input-background);
     color: var(--text-primary);
+
+    @media (max-width: $breakpoint-mobile) {
+      width: 100%;
+    }
 
     &:focus {
       outline: none;
