@@ -9,15 +9,8 @@ import { logError } from '@/lib/logger';
  * ユーザー発行に必要な入力フォーム {@link UserIssuanceForm} を `<main>` コンテナ内に描画します。
  *
  * データベースから施設一覧を取得し、UserIssuanceFormに渡します。
- * ISR（Incremental Static Regeneration）により、24時間ごとに自動的に再生成されます。
  * データ取得に失敗した場合は、JSONファイルをフォールバックとして使用します。
- *
- * NOTE: 施設一覧の取得には認証が不要（RLSのselect_publicポリシー）のため、
- * createAdminClientを使用してStatic Generationを可能にしています。
  */
-
-// ISR: 24時間ごとに再生成（施設の更新頻度が低いため）
-export const revalidate = 86400;
 
 export default async function AdminUserIssuancePage() {
   let facilities: { id: number; name: string }[] = [];
