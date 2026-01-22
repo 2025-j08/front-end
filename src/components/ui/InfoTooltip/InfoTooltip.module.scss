@@ -30,15 +30,15 @@
 
 .dialogContent {
   position: relative;
-  padding: 24px 20px;
+  padding: 20px;
   background-color: colors.$white;
   border-radius: 16px;
 }
 
 .closeButton {
   position: absolute !important;
-  right: 8px;
-  top: 8px;
+  right: 12px;
+  top: 12px;
   color: colors.$text-secondary !important;
 
   &:hover {

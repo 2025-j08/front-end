@@ -77,11 +77,15 @@ export const InfoTooltip = ({
         >
           <Box className={styles.dialogContent}>
             {/* 閉じるボタン */}
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
-              <IconButton onClick={handleClose} size="small" aria-label="閉じる">
-                <CloseIcon fontSize="small" />
-              </IconButton>
-            </Box>
+            {/* 閉じるボタン */}
+            <IconButton
+              onClick={handleClose}
+              size="small"
+              aria-label="閉じる"
+              className={styles.closeButton}
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
             {/* コンテンツ */}
             {content}
           </Box>
