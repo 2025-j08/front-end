@@ -1,9 +1,8 @@
-@use '../../../styles/colors' as colors;
-@use '../../../styles/breakpoints' as breakpoints;
+@use '@/styles/colors' as colors;
 
 .tooltip {
   background-color: colors.$white !important;
-  color: rgba(0, 0, 0, 0.87) !important;
+  color: colors.$text-primary !important;
   font-size: 0.875rem !important;
   padding: 12px 16px !important;
   max-width: 500px !important;
@@ -16,5 +15,33 @@
 
   &::before {
     border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  }
+}
+
+.dialogPaper {
+  border-top-left-radius: 16px !important;
+  border-top-right-radius: 16px !important;
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  margin: 16px !important;
+  max-width: 600px !important;
+  width: calc(100% - 32px) !important;
+  border-radius: 16px !important;
+}
+
+.dialogContent {
+  position: relative;
+  padding: 24px 20px;
+  background-color: colors.$white;
+  border-radius: 16px;
+}
+
+.closeButton {
+  position: absolute !important;
+  right: 8px;
+  top: 8px;
+  color: colors.$text-secondary !important;
+
+  &:hover {
+    background-color: colors.$bg-hover-light !important;
   }
 }

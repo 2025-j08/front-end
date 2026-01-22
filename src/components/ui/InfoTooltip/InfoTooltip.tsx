@@ -72,21 +72,10 @@ export const InfoTooltip = ({
           open={open}
           onClose={handleClose}
           PaperProps={{
-            sx: {
-              borderRadius: '16px',
-              margin: 2,
-              width: 'calc(100% - 32px)',
-              maxWidth: '500px',
-            },
+            className: styles.dialogPaper,
           }}
         >
-          <Box
-            sx={{
-              p: 2,
-              backgroundColor: '#fff',
-              color: 'rgba(0, 0, 0, 0.87)',
-            }}
-          >
+          <Box className={styles.dialogContent}>
             {/* 閉じるボタン */}
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 1 }}>
               <IconButton onClick={handleClose} size="small" aria-label="閉じる">

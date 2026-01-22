@@ -10,14 +10,14 @@ import { join } from 'path';
 
 import { SupabaseClient } from '@supabase/supabase-js';
 
-import { logInfo, logWarn } from '@/lib/logger';
+import { logInfo, logWarn } from '../../logger';
 import {
   createSeedClient,
   parseFullAddress,
   parseEstablishedYear,
   resetFacilitySequences,
   runSeedScript,
-} from '@/lib/supabase/utils/seed';
+} from '../utils/seed';
 
 // JSONファイルのパス
 const FACILITIES_DETAIL_PATH = join(__dirname, '../../../dummy_data/facilities_detail.json');
@@ -248,7 +248,6 @@ async function seedFacilityTypes(supabase: SupabaseClient): Promise<FacilityType
     { name: '中舎' },
     { name: '小舎' },
     { name: 'グループホーム' },
-    { name: '地域小規模' },
   ];
 
   // 既存のデータを取得

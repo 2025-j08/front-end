@@ -1,8 +1,8 @@
 import type { AnnexFacility, DormitoryType } from '@/types/facility';
 import { FACILITY_TYPE_OPTIONS } from '@/const/searchConditions';
 import { InfoTooltip, FacilityDescription } from '@/components/ui/InfoTooltip';
+import { formatCapacity } from '@/features/facilities/[id]/utils/formatters';
 
-import { formatCapacity } from '../../utils/formatters';
 import { InfoCard } from './InfoCard';
 import { AnnexCard } from './AnnexCard';
 import { CapacityInput } from './CapacityInput';
