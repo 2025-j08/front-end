@@ -13,7 +13,7 @@ import { logError } from '@/lib/logger';
 import { useArrayToggle } from '@/lib/hooks/useArrayToggle';
 import { buildFacilitiesListUrl } from '@/lib/search-params';
 import { getPrefectureCities, type PrefectureCitiesMap } from '@/lib/supabase/queries/facilities';
-import { InfoTooltip } from '@/components/ui/InfoTooltip';
+import { InfoTooltip, FacilityDescription } from '@/components/ui/InfoTooltip';
 
 import { CitySelectModal } from './CitySelectModal';
 import styles from './ConditionSearch.module.scss';
@@ -127,67 +127,7 @@ export const ConditionSearch = () => {
         <h3 className={styles.sectionTitle}>
           形態
           <InfoTooltip
-            content={
-              <div style={{ padding: '4px 0' }}>
-                <p style={{ marginBottom: '12px', fontWeight: 'bold' }}>施設の運営形態による区分</p>
-
-                <div style={{ marginBottom: '10px' }}>
-                  <strong>・大舎（1舎20人以上）</strong>
-                  <p
-                    style={{
-                      margin: '4px 0 0 1em',
-                      fontSize: '0.85em',
-                      lineHeight: '1.5',
-                      color: '#666',
-                    }}
-                  >
-                    多くの児童が生活する伝統的な形態です。集団生活が中心となります。
-                  </p>
-                </div>
-
-                <div style={{ marginBottom: '10px' }}>
-                  <strong>・中舎（1舎13〜19人）</strong>
-                  <p
-                    style={{
-                      margin: '4px 0 0 1em',
-                      fontSize: '0.85em',
-                      lineHeight: '1.5',
-                      color: '#666',
-                    }}
-                  >
-                    大舎より小規模で、区画ごとの生活集団により家庭的な雰囲気を重視しています。
-                  </p>
-                </div>
-
-                <div style={{ marginBottom: '10px' }}>
-                  <strong>・小舎（1舎12人以下）</strong>
-                  <p
-                    style={{
-                      margin: '4px 0 0 1em',
-                      fontSize: '0.85em',
-                      lineHeight: '1.5',
-                      color: '#666',
-                    }}
-                  >
-                    少人数単位での生活により、職員との愛着形成やきめ細かい個別ケアがしやすい環境です。
-                  </p>
-                </div>
-
-                <div>
-                  <strong>・グループホーム（6人程度）</strong>
-                  <p
-                    style={{
-                      margin: '4px 0 0 1em',
-                      fontSize: '0.85em',
-                      lineHeight: '1.5',
-                      color: '#666',
-                    }}
-                  >
-                    地域の一般住宅などを利用した小規模な形態です。最も家庭に近い環境で生活できます。
-                  </p>
-                </div>
-              </div>
-            }
+            content={<FacilityDescription />}
             ariaLabel="形態についての詳細情報"
             placement="right"
           />
