@@ -31,6 +31,7 @@ export default function RootLayout({
   return (
     <AppRouterCacheProvider>
       <html lang="ja">
+        {/* Google Tag Manager (script) */}
         {GTM_ID && (
           <Script
             id="gtm-script"
@@ -55,6 +56,7 @@ export default function RootLayout({
                 height="0"
                 width="0"
                 style={{ display: 'none', visibility: 'hidden' }}
+                title="Google Tag Manager"
               />
             </noscript>
           )}
