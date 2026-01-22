@@ -6,6 +6,7 @@ import './globals.css';
 
 import { Header } from '@/components/header/header';
 import { Footer } from '@/components/footer/footer';
+import { siteMetadata } from '@/lib/metadata';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -17,11 +18,7 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-export const metadata: Metadata = {
-  title: '近畿児童養護施設一覧',
-  description:
-    '近畿地方（大阪・京都・兵庫・奈良・滋賀・和歌山）の児童養護施設情報をまとめたポータルサイトです。所在地や連絡先などの基本情報に加え、各施設の特色やこだわりも掲載しています。',
-};
+export const metadata: Metadata = siteMetadata;
 
 export default function RootLayout({
   children,
@@ -30,7 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <AppRouterCacheProvider>
-      <html lang="en">
+      <html lang="ja">
         <body className={`${geistSans.variable} ${geistMono.variable}`}>
           {/* ヘッダー 一番上固定 */}
           <Header />
