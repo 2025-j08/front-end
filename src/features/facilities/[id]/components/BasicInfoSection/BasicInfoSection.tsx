@@ -1,7 +1,8 @@
 import type { AnnexFacility, DormitoryType } from '@/types/facility';
 import { FACILITY_TYPE_OPTIONS } from '@/const/searchConditions';
+import { InfoTooltip, FacilityDescription } from '@/components/ui/InfoTooltip';
+import { formatCapacity } from '@/features/facilities/[id]/utils/formatters';
 
-import { formatCapacity } from '../../utils/formatters';
 import { InfoCard } from './InfoCard';
 import { AnnexCard } from './AnnexCard';
 import { CapacityInput } from './CapacityInput';
@@ -65,6 +66,14 @@ export const BasicInfoSection = ({
     }
   };
 
+  // 施設種類の共通ラベル定義
+  const facilityTypeLabel = (
+    <span className={styles.label}>
+      施設の種類
+      <InfoTooltip content={<FacilityDescription />} ariaLabel="施設の種類についての詳細情報" />
+    </span>
+  );
+
   return (
     <section className={styles.basicInfoSection}>
       {isEditMode && (
@@ -83,7 +92,7 @@ export const BasicInfoSection = ({
       <div className={styles.gridContainer}>
         {isEditMode ? (
           <div className={styles.infoCard}>
-            <span className={styles.label}>施設の種類</span>
+            {facilityTypeLabel}
             <div className={styles.checkboxGroup} role="group" aria-label="施設の種類">
               {FACILITY_TYPE_OPTIONS.map((option) => {
                 const isChecked = dormitoryType?.includes(option.value as DormitoryType) || false;
@@ -112,7 +121,7 @@ export const BasicInfoSection = ({
           </div>
         ) : (
           <div className={styles.infoCard}>
-            <span className={styles.label}>施設の種類</span>
+            {facilityTypeLabel}
             {dormitoryType && dormitoryType.length > 0 ? (
               <ul className={styles.dormitoryTypeList}>
                 {dormitoryType.map((type) => (

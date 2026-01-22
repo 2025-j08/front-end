@@ -464,7 +464,7 @@ async function getFacilityTypes(id: number): Promise<DormitoryType[] | undefined
   }
 
   // 有効なDormitoryTypeの値
-  const validTypes: DormitoryType[] = ['大舎', '中舎', '小舎', 'グループホーム', '地域小規模'];
+  const validTypes: DormitoryType[] = ['大舎', '中舎', '小舎', 'グループホーム'];
 
   // 全ての施設種類を抽出
   const types = facilityTypes
@@ -607,55 +607,55 @@ export async function getFacilityDetail(id: number): Promise<FacilityDetail | nu
     relationInfo: access?.relation_info,
     philosophyInfo: philosophy
       ? {
-          message: philosophy.message || undefined,
-          description: philosophy.description,
-        }
+        message: philosophy.message || undefined,
+        description: philosophy.description,
+      }
       : undefined,
     specialtyInfo: specialty
       ? {
-          features: specialty.features || undefined,
-          programs: specialty.programs || undefined,
-        }
+        features: specialty.features || undefined,
+        programs: specialty.programs || undefined,
+      }
       : undefined,
     staffInfo: staff
       ? {
-          fullTimeStaffCount: staff.full_time_staff_count || undefined,
-          partTimeStaffCount: staff.part_time_staff_count || undefined,
-          specialties: staff.specialties || undefined,
-          averageTenure: staff.average_tenure || undefined,
-          ageDistribution: staff.age_distribution || undefined,
-          workStyle: staff.work_style || undefined,
-          hasUniversityLecturer: staff.has_university_lecturer || undefined,
-          lectureSubjects: staff.lecture_subjects || undefined,
-          externalActivities: staff.external_activities || undefined,
-          qualificationsAndSkills: staff.qualifications_and_skills || undefined,
-          internshipDetails: staff.internship_details || undefined,
-        }
+        fullTimeStaffCount: staff.full_time_staff_count || undefined,
+        partTimeStaffCount: staff.part_time_staff_count || undefined,
+        specialties: staff.specialties || undefined,
+        averageTenure: staff.average_tenure || undefined,
+        ageDistribution: staff.age_distribution || undefined,
+        workStyle: staff.work_style || undefined,
+        hasUniversityLecturer: staff.has_university_lecturer || undefined,
+        lectureSubjects: staff.lecture_subjects || undefined,
+        externalActivities: staff.external_activities || undefined,
+        qualificationsAndSkills: staff.qualifications_and_skills || undefined,
+        internshipDetails: staff.internship_details || undefined,
+      }
       : undefined,
     educationInfo: education
       ? {
-          graduationRate: education.graduation_rate || undefined,
-          graduationRatePercentage: education.graduation_rate_percentage || undefined,
-          learningSupport: education.learning_support || undefined,
-          careerSupport: education.career_support || undefined,
-        }
+        graduationRate: education.graduation_rate || undefined,
+        graduationRatePercentage: education.graduation_rate_percentage || undefined,
+        learningSupport: education.learning_support || undefined,
+        careerSupport: education.career_support || undefined,
+      }
       : undefined,
     advancedInfo: advanced
       ? {
-          description: advanced.description,
-          background: advanced.background || undefined,
-          challenges: advanced.challenges || undefined,
-          solutions: advanced.solutions || undefined,
-        }
+        description: advanced.description,
+        background: advanced.background || undefined,
+        challenges: advanced.challenges || undefined,
+        solutions: advanced.solutions || undefined,
+      }
       : undefined,
     otherInfo: other
       ? {
-          title: other.title || undefined,
-          description: other.description || undefined,
-          networks: other.networks || undefined,
-          futureOutlook: other.future_outlook || undefined,
-          freeText: other.free_text || undefined,
-        }
+        title: other.title || undefined,
+        description: other.description || undefined,
+        networks: other.networks || undefined,
+        futureOutlook: other.future_outlook || undefined,
+        freeText: other.free_text || undefined,
+      }
       : undefined,
     images: images.length > 0 ? images : undefined,
   };

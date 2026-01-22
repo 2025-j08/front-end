@@ -1,0 +1,21 @@
+@use '@/styles/colors' as colors;
+
+.root {
+  padding: 4px 0;
+}
+
+.title {
+  margin-bottom: 12px;
+  font-weight: bold;
+}
+
+.item {
+  margin-bottom: 10px;
+}
+
+.description {
+  margin: 4px 0 0 1em;
+  font-size: 0.85em;
+  line-height: 1.5;
+  color: colors.$text-secondary; // #666
+}

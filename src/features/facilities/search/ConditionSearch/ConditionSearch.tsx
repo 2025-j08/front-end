@@ -13,6 +13,7 @@ import { logError } from '@/lib/logger';
 import { useArrayToggle } from '@/lib/hooks/useArrayToggle';
 import { buildFacilitiesListUrl } from '@/lib/search-params';
 import { getPrefectureCities, type PrefectureCitiesMap } from '@/lib/supabase/queries/facilities';
+import { InfoTooltip, FacilityDescription } from '@/components/ui/InfoTooltip';
 
 import { CitySelectModal } from './CitySelectModal';
 import styles from './ConditionSearch.module.scss';
@@ -123,7 +124,14 @@ export const ConditionSearch = () => {
 
       {/* 形態セクション */}
       <div className={styles.section}>
-        <h3 className={styles.sectionTitle}>形態</h3>
+        <h3 className={styles.sectionTitle}>
+          形態
+          <InfoTooltip
+            content={<FacilityDescription />}
+            ariaLabel="形態についての詳細情報"
+            placement="right"
+          />
+        </h3>
         <div className={styles.typeGrid}>
           {FACILITY_TYPES.map((type) => {
             const isSelected = selectedTypes.includes(type);
