@@ -33,7 +33,7 @@ export interface FacilityListItem extends Facility {
   prefecture: string;
   /** 市区町村 */
   city: string;
-  /** 施設形態（大舎・中舎・小舎・グループホーム・地域小規模） */
+  /** 施設形態（大舎・中舎・小舎・グループホーム） */
   facilityType?: string;
 }
 
@@ -192,7 +192,7 @@ export interface FacilityDetail {
   fullAddress: string;
   /** 電話番号（必須） */
   phone: string;
-  /** 舎の区分（大舎・中舎・小舎・グループホーム・地域小規模）複数選択可 */
+  /** 舎の区分（大舎・中舎・小舎・グループホーム）複数選択可 */
   dormitoryType?: DormitoryType[];
   /** アクセス情報（必須） */
   accessInfo: AccessInfo;
