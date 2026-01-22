@@ -19,7 +19,7 @@ export const PREFECTURE_TO_CSS_CLASS: Record<string, string> = {
 };
 
 /** 施設形態の一覧 */
-export const FACILITY_TYPES = ['大舎', '中舎', '小舎', 'グループホーム', '地域小規模'] as const;
+export const FACILITY_TYPES = ['大舎', '中舎', '小舎', 'グループホーム'] as const;
 
 /** 施設形態の選択肢（フォーム用） */
 export const FACILITY_TYPE_OPTIONS = FACILITY_TYPES.map((type) => ({
