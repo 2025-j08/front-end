@@ -29,19 +29,19 @@
   /* 背景・前景 */
   --background: #ffffff;
   --foreground: #171717;
-  --background-secondary: #f5faf7;
-  --background-tertiary: #e8f5e9;
+  --background-secondary: #f5f9fc;
+  --background-tertiary: #e3f2fd;
 
-  /* プライマリカラー（グリーン系） */
-  --primary: #4a9f7e;
-  --primary-light: #6db899;
-  --primary-lighter: #80d5b5;
-  --primary-dark: #357a5e;
+  /* プライマリカラー（ブルー系） */
+  --primary: #399dda;
+  --primary-light: #5bb5e8;
+  --primary-lighter: #8ccef2;
+  --primary-dark: #2a7ab0;
 
-  /* アクセントカラー（オレンジ） */
-  --accent: #eb8b4f;
-  --accent-light: #f4a673;
-  --accent-dark: #d47540;
+  /* アクセントカラー */
+  --accent: #2a7ab0;
+  --accent-light: #5bb5e8;
+  --accent-dark: #1a5480;
 
   /* テキスト */
   --text-primary: #333333;
@@ -50,8 +50,8 @@
   --text-on-primary: #ffffff;
 
   /* ボーダー */
-  --border-color: #b8d4c4;
-  --border-light: #d4e8dc;
+  --border-color: #b8d4e8;
+  --border-light: #d4e8f5;
   --border-dark: #333333;
 
   /* カード・サーフェス */
@@ -59,10 +59,10 @@
   --card-border: #e0e0e0;
 
   /* フォーム */
-  --input-background: #f5faf7;
-  --input-border: #b8d4c4;
-  --input-focus-border: #4a9f7e;
-  --focus-glow: rgba(74, 159, 126, 0.2);
+  --input-background: #f5f9fc;
+  --input-border: #b8d4e8;
+  --input-focus-border: #399dda;
+  --focus-glow: rgba(57, 157, 218, 0.2);
 
   /* シャドウ */
   --shadow-color: rgba(0, 0, 0, 0.1);
@@ -82,7 +82,7 @@
   --warning-bg: #fffbe6;
 
   /* フッター */
-  --footer-background: #357a5e;
+  --footer-background: #2a7ab0;
   --footer-text: #ffffff;
 
   /* ヘッダー */
