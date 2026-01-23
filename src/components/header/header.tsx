@@ -252,11 +252,10 @@ export const Header = () => {
       {/* 下部：ヒーロー画像エリア */}
       <div className={styles.heroArea}>
         <Image
-          src="/images/herotest.webp"
+          src="/images/herotest.jpg"
           alt="メインビジュアル"
-          width={2800}
-          height={1000}
-          style={{ width: '100%', height: 'auto' }}
+          fill
+          style={{ objectFit: 'contain' }}
           priority
           sizes="100vw"
         />
