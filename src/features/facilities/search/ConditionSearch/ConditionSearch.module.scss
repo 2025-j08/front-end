@@ -76,13 +76,16 @@
   cursor: pointer;
   box-shadow: 4px 4px 0px var(--border-dark);
   transition:
-    transform 0.1s,
-    box-shadow 0.1s,
-    border-color 0.3s ease;
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    border-color 0.3s ease,
+    background-color 0.2s ease;
 
-  &:active {
+  // 見た目の変化はクリックではなくホバーで行う。
+  // ホバー時は彩度を落として、ボタンが引っ込む（小さく/下に移動し影を縮める）ように見せる。
+  &:hover {
     transform: translate(2px, 2px);
-    box-shadow: 2px 2px 0px var(--border-dark);
+    box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.08);
   }
 
   // 右側の三角矢印アイコン
@@ -97,6 +100,27 @@
     border-right: 8px solid transparent;
     border-top: 10px solid rgba(255, 255, 255, 0.8);
   }
+}
+
+// 選択数バッジ
+.countBadge {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  background-color: #ef1d4f;
+  color: colors.$white;
+  border-radius: 999px;
+  height: 30px;
+  /* 明示的な高さ */
+  line-height: 30px;
+  /* 縦中央合わせ */
+  padding: 0 10px;
+  /* 横パディングのみ */
+  font-size: 16px;
+  min-width: 30px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+  z-index: 12;
 }
 
 // 都道府県カラー
@@ -122,6 +146,31 @@
 
 .wakayama {
   background-color: colors.$pref-wakayama;
+}
+
+// Hover: 彩度を落として押し込まれたように見せる（バッジのカラーは変更しない）
+.osaka:hover {
+  background-color: desaturate(colors.$pref-osaka, 12%);
+}
+
+.kyoto:hover {
+  background-color: desaturate(colors.$pref-kyoto, 12%);
+}
+
+.shiga:hover {
+  background-color: desaturate(colors.$pref-shiga, 12%);
+}
+
+.nara:hover {
+  background-color: desaturate(colors.$pref-nara, 12%);
+}
+
+.hyogo:hover {
+  background-color: desaturate(colors.$pref-hyogo, 12%);
+}
+
+.wakayama:hover {
+  background-color: desaturate(colors.$pref-wakayama, 12%);
 }
 
 // 選択中の市町村がある場合

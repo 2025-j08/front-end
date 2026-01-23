@@ -29,12 +29,12 @@
   /* 背景・前景 */
   --background: #ffffff;
   --foreground: #171717;
-  --background-secondary: #f5faf7;
-  --background-tertiary: #e8f5e9;
+  --background-secondary: #f5f7fe;
+  --background-tertiary: #e7f1f5;
 
   /* プライマリカラー（グリーン系） */
-  --primary: #4a9f7e;
-  --primary-light: #6db899;
+  --primary: #48749f;
+  --primary-light: #3ba5d4;
   --primary-lighter: #80d5b5;
   --primary-dark: #357a5e;
 
@@ -50,7 +50,7 @@
   --text-on-primary: #ffffff;
 
   /* ボーダー */
-  --border-color: #b8d4c4;
+  --border-color: #b8c4dd;
   --border-light: #d4e8dc;
   --border-dark: #333333;
 
@@ -59,9 +59,9 @@
   --card-border: #e0e0e0;
 
   /* フォーム */
-  --input-background: #f5faf7;
-  --input-border: #b8d4c4;
-  --input-focus-border: #4a9f7e;
+  --input-background: #f5f7fe;
+  --input-border: #b8c4dd;
+  --input-focus-border: #48749f;
   --focus-glow: rgba(74, 159, 126, 0.2);
 
   /* シャドウ */
@@ -82,7 +82,7 @@
   --warning-bg: #fffbe6;
 
   /* フッター */
-  --footer-background: #357a5e;
+  --footer-background: #34617a;
   --footer-text: #ffffff;
 
   /* ヘッダー */

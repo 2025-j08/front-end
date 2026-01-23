@@ -115,6 +115,11 @@ export const ConditionSearch = () => {
                   aria-label={ariaLabel}
                 >
                   {pref}
+                  {selectedCount > 0 && (
+                    <span className={styles.countBadge} aria-hidden="true">
+                      {selectedCount}
+                    </span>
+                  )}
                 </button>
               );
             })}

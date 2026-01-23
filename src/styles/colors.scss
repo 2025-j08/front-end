@@ -9,10 +9,10 @@ $black: #000;
 $dark-gray: #333;
 
 // ====================================
-// プライマリカラー（グリーン系）
+// プライマリカラー（ブルー系）
 // ====================================
-$primary-color: #4a9f7e;
-$primary-light: #6db899;
+$primary-color: #48749f;
+$primary-light: #3ba5d4;
 $primary-lighter: #80d5b5;
 $primary-dark: #357a5e;
 $primary-text-color: #ffffff;
@@ -37,8 +37,8 @@ $form-button-shadow-hover: rgba(74, 159, 126, 0.4);
 $form-focus-glow: rgba(74, 159, 126, 0.2);
 
 // 入力フィールド
-$form-input-bg: #f5faf7;
-$form-input-border: #b8d4c4;
+$form-input-bg: #f5fff5;
+$form-input-border: #b8c4dd;
 $form-placeholder: #999;
 
 // ====================================
@@ -63,7 +63,7 @@ $text-link: $primary-color;
 // 背景カラー（CSS変数を使用推奨）
 // ====================================
 $bg-white: #ffffff;
-$bg-light-green: #e8f5e9;
+$bg-light-green: #e7f1f5;
 $bg-light-gray: #f0f0f0;
 $bg-gray: #d3d3d3;
 $bg-active: #e0e0e0;
@@ -108,18 +108,18 @@ $hero-bg: #dcdcdc;
 // ====================================
 $search-button-bg: $primary-color;
 $condition-search-button-bg: $accent-light;
-$condition-search-bg: #e8f5e9;
+$condition-search-bg: #e7f1f5;
 $condition-search-border: $primary-light;
 
 // ====================================
 // 都道府県カラー（地域識別用）
 // ====================================
-$pref-hyogo: #e57373;
-$pref-kyoto: #4dd0e1;
-$pref-osaka: #ffd54f;
-$pref-wakayama: #4fc3f7;
-$pref-shiga: #aed581;
-$pref-nara: #9575cd;
+$pref-hyogo: #188cd4;
+$pref-kyoto: #188cd4;
+$pref-osaka: #188cd4;
+$pref-wakayama: #188cd4;
+$pref-shiga: #188cd4;
+$pref-nara: #188cd4;
 
 // ====================================
 // アクションボタンカラー（機能別）
