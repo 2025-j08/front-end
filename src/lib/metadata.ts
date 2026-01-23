@@ -9,7 +9,7 @@ export const siteMetadata: Metadata = {
   applicationName: '近畿児童養護施設一覧',
   keywords: ['児童養護施設', '近畿', '大阪', '京都', '兵庫', '奈良', '滋賀', '和歌山', '施設一覧'],
   authors: [{ name: '近畿施設ポータル' }],
-  themeColor: [{ media: '(prefers-color-scheme: light)', color: '#ffffff' }],
+  themeColor: '#ffffff',
   icons: {
     icon: '/icons/logo.webp',
     apple: '/icons/logo.webp',
