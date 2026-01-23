@@ -32,7 +32,7 @@
   --background-secondary: #f5f9fc;
   --background-tertiary: #e3f2fd;
 
-  /* プライマリカラー（グリーン系） */
+  /* プライマリカラー（ブルー系） */
   --primary: #399dda;
   --primary-light: #5bb5e8;
   --primary-lighter: #8ccef2;
@@ -75,9 +75,9 @@
   /* ステータス */
   --error: #d32f2f;
   --error-bg: rgba(211, 47, 47, 0.1);
-  --success: #399dda;
-  --success-light: #5bb5e8;
-  --success-bg: rgba(57, 157, 218, 0.1);
+  --success: #4caf50;
+  --success-light: #66bb6a;
+  --success-bg: rgba(76, 175, 80, 0.1);
   --warning: #f9a825;
   --warning-bg: #fffbe6;
 

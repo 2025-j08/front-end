@@ -107,19 +107,19 @@
   position: absolute;
   top: -12px;
   right: -12px;
-  background-color: #ef1d4f;
-  color: colors.$white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  color: var(--primary);
+  border: 2px solid var(--primary);
   border-radius: 999px;
   height: 30px;
-  /* 明示的な高さ */
-  line-height: 30px;
-  /* 縦中央合わせ */
-  padding: 0 10px;
-  /* 横パディングのみ */
-  font-size: 16px;
   min-width: 30px;
-  text-align: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+  padding: 0 8px;
+  font-size: 16px;
+  font-weight: bold;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   z-index: 12;
 }
 
