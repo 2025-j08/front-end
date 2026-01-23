@@ -15,10 +15,10 @@ $primary-color: #399dda;
 $primary-light: #5bb5e8;
 $primary-lighter: #8ccef2;
 $primary-dark: #2a7ab0;
-$primary-text-color: #ffffff;
+$primary-text-color: $white;
 
 // ====================================
-// アクセントカラー（オレンジ）
+// アクセントカラー（ブルー系）
 // ====================================
 $accent-color: #2a7ab0;
 $accent-light: #5bb5e8;
@@ -62,7 +62,7 @@ $text-link: $primary-color;
 // ====================================
 // 背景カラー（CSS変数を使用推奨）
 // ====================================
-$bg-white: #ffffff;
+$bg-white: $white;
 $bg-light-blue: #e3f2fd;
 $bg-light-gray: #f0f0f0;
 $bg-gray: #d3d3d3;
