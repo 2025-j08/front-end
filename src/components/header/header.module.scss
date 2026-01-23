@@ -207,9 +207,8 @@ $nav-label-max-width-small: 54px; // 360px以下
 .heroArea {
   max-width: $header-max-width;
   margin: 0 auto;
-  padding: 0 5%;
   aspect-ratio: 6 / 1;
-  background-color: var(--background-secondary);
+  padding: 0 5%;
   display: flex;
   justify-content: center;
   align-items: center;

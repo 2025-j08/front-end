@@ -255,7 +255,7 @@ export const Header = () => {
           src="/images/herotest.webp"
           alt="メインビジュアル"
           fill
-          style={{ objectFit: 'cover' }}
+          style={{ objectFit: 'contain' }}
           priority
           sizes="100vw"
         />
