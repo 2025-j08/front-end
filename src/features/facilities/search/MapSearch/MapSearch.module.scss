@@ -2,7 +2,7 @@
 
 .container {
   background-color: var(--background-tertiary);
-  border: 2px solid var(--primary-light);
+  border: 2px solid var(--primary);
   border-radius: 20px;
   padding: 40px 20px 20px;
   position: relative;
@@ -20,7 +20,7 @@
   position: absolute;
   top: -15px;
   left: 20px;
-  background-color: var(--primary-light);
+  background-color: var(--primary);
   border: 2px solid var(--border-dark);
   border-radius: 20px;
   padding: 8px 24px;

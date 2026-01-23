@@ -2,7 +2,7 @@
 
 .container {
   background-color: var(--background-tertiary);
-  border: 2px solid var(--primary-light);
+  border: 2px solid var(--primary);
   border-radius: 20px;
   padding: 40px 20px 20px;
   position: relative;
@@ -18,7 +18,7 @@
   position: absolute;
   top: -15px;
   left: 20px;
-  background-color: var(--primary-light);
+  background-color: var(--primary);
   border: 2px solid var(--border-dark);
   border-radius: 20px;
   padding: 8px 24px;
@@ -206,7 +206,7 @@
 
   // 選択されている状態（強調）
   &.selected {
-    background-color: var(--primary-light);
+    background-color: var(--primary);
     color: var(--text-on-primary);
     border-color: var(--border-dark);
     transform: scale(1.05);
@@ -237,7 +237,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background-color: var(--accent-light);
+  background-color: var(--primary);
   border: 2px solid var(--border-dark);
   border-radius: 30px;
   padding: 10px 30px;

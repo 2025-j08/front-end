@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import SearchIcon from '@mui/icons-material/Search';
 
 import { buildFacilitiesListUrl } from '@/lib/search-params';
 
@@ -10,10 +11,10 @@ import styles from './SearchInput.module.scss';
 /**
  * SearchInput コンポーネント
  *
- * 施設をキーワードで検索するための入力フィールドと検索ボタンを提供します。
- * ユーザーは施設名や住所の一部などを入力し、該当する施設を検索することができます。
+ * 施設をキーワードで検索するための入力パネルを提供します。
+ * 条件検索パネルと同様のデザイン（水色枠・バッジ）で構成されています。
  *
- * @returns {JSX.Element} 検索キーワード入力フォームを含むJSX要素
+ * @returns {JSX.Element} 検索キーワード入力パネルを含むJSX要素
  */
 export const SearchInput = () => {
   const router = useRouter();
@@ -29,20 +30,26 @@ export const SearchInput = () => {
   };
 
   return (
-    <form className={styles.container} onSubmit={handleSubmit}>
-      <div className={styles.inputWrapper}>
-        <input
-          type="text"
-          placeholder="キーワードを入力..."
-          className={styles.input}
-          aria-label="施設キーワード検索"
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-        />
-        <button type="submit" aria-label="検索を実行" className={styles.searchButton}>
-          検索
-        </button>
-      </div>
-    </form>
+    <div className={styles.container}>
+      {/* 左上のバッジ */}
+      <div className={styles.keywordBadge}>キーワードで探す</div>
+
+      <form className={styles.searchForm} onSubmit={handleSubmit}>
+        <div className={styles.inputWrapper}>
+          <input
+            type="text"
+            placeholder="キーワード検索…"
+            className={styles.input}
+            aria-label="施設キーワード検索"
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+          />
+          <button type="submit" className={styles.submitButton} aria-label="キーワードで検索">
+            <span>検索</span>
+            <SearchIcon className={styles.icon} />
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };

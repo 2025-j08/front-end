@@ -1,70 +1,117 @@
-@use '@/styles/colors' as colors;
-
 .container {
+  background-color: var(--background-tertiary);
+  border: 2px solid var(--primary);
+  border-radius: 20px;
+  padding: 30px 20px 15px; // 上は確保しつつ、下を削る
+  position: relative;
   width: 100%;
-  display: flex;
-  justify-content: center;
-  padding: 40px 0;
-}
-
-.inputWrapper {
-  display: flex;
-  align-items: center;
-  border: 2px solid var(--border-dark);
-  border-radius: 50px;
-  background-color: var(--card-background);
-  padding: 5px;
-  width: 100%;
-  max-width: 600px;
+  max-width: 800px;
+  margin: 30px auto 0;
+  box-sizing: border-box;
   transition:
     background-color 0.3s ease,
     border-color 0.3s ease;
 }
 
+// 左上の「キーワードから探す」バッジ
+.keywordBadge {
+  position: absolute;
+  top: -15px;
+  left: 20px;
+  background-color: var(--primary);
+  border: 2px solid var(--border-dark);
+  border-radius: 20px;
+  padding: 6px 20px;
+  font-weight: bold;
+  font-size: 14px;
+  box-shadow: 3px 3px 0px var(--border-dark);
+  z-index: 10;
+  color: var(--text-on-primary);
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.searchForm {
+  width: 100%;
+}
+
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
 .input {
-  flex: 1;
-  border: none;
-  outline: none;
+  flex: 1; // 横幅いっぱいに広げる
+  border: 2px solid var(--border-dark);
+  border-radius: 12px;
+  padding: 12px 20px;
   font-size: 16px;
-  padding: 10px 20px;
-  border-radius: 50px 0 0 50px;
+  background-color: var(--card-background);
   color: var(--text-primary);
-  background-color: transparent;
-  transition: color 0.3s ease;
+  box-sizing: border-box;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.3s ease;
 
   &::placeholder {
     color: var(--text-muted);
   }
-}
 
-.searchButton {
-  background-color: var(--primary);
-  color: var(--text-on-primary);
-  border: none;
-  border-radius: 30px;
-  padding: 10px 30px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition:
-    opacity 0.2s,
-    background-color 0.3s ease;
-  white-space: nowrap;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-  flex-shrink: 0;
-
-  &:hover {
-    opacity: 0.8;
+  &:focus {
+    outline: none;
+    border-color: var(--primary);
   }
 }
 
-@media (max-width: 480px) {
-  .searchButton {
-    font-size: 14px;
-    padding: 8px 16px;
-    border-radius: 24px;
+.submitButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background-color: var(--primary);
+  border: 2px solid var(--border-dark);
+  border-radius: 12px; // 入力欄と揃えるため少し角丸を抑えるか、あるいは30pxでもよいがバランスを見て調整
+  padding: 12px 24px;
+  font-weight: bold;
+  font-size: 16px;
+  color: var(--text-on-primary);
+  cursor: pointer;
+  box-shadow: 2px 2px 0px var(--border-dark);
+  white-space: nowrap; // ボタン内のテキストが折り返されないように
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  .icon {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 35px 15px 20px;
+  }
+
+  .inputWrapper {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .input {
+    width: 100%;
+  }
+
+  .submitButton {
+    width: auto;
   }
 }
