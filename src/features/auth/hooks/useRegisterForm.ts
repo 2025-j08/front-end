@@ -15,6 +15,7 @@ import {
 import { VALIDATION_MESSAGES, API_MESSAGES } from '@/const/messages';
 import { API_ENDPOINTS } from '@/const/api';
 import { logError } from '@/lib/logger';
+import { createClient } from '@/lib/supabase/client';
 
 /**
  * 初期登録フォームのデータ型
@@ -88,6 +89,21 @@ export const useRegisterForm = (): UseRegisterFormReturn => {
   const [successFacilityName, setSuccessFacilityName] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+
+  // コンポーネントマウント時に現在のユーザーのメールアドレスを取得
+  useEffect(() => {
+    const fetchEmail = async () => {
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user?.email) {
+        setUserEmail(user.email);
+      }
+    };
+    fetchEmail();
+  }, []);
 
   // 最新のformDataを参照するためのref（useCallback内で古い値を参照しないように）
   const formDataRef = useRef(formData);
@@ -205,12 +221,33 @@ export const useRegisterForm = (): UseRegisterFormReturn => {
           throw new Error(apiError);
         }
 
+        // ここで responseBody は RegisterResponseSuccess 型に絞り込まれる
+        const responseData = responseBody;
+
+        // クライアント側のセッションを再確立するために再ログインを行う
+        // パスワード変更により既存のセッションが無効化されるため、signInWithPassword が必要
+        if (userEmail) {
+          const supabase = createClient();
+          const { error: signInError } = await supabase.auth.signInWithPassword({
+            email: userEmail,
+            password: formData.password,
+          });
+
+          if (signInError) {
+            logError('自動再ログインに失敗しました', {
+              component: 'useRegisterForm',
+              error: signInError.message,
+            });
+            // ログインに失敗しても遷移は続行（ユーザーに手動ログインを促す形になる）
+          }
+        }
+
         // 成功時の処理
         setIsSuccess(true);
-        setSuccessFacilityName(responseBody.facilityName ?? null);
+        setSuccessFacilityName(responseData.facilityName ?? null);
 
         // 成功オーバーレイ表示後、指定されたURLまたはホーム画面に遷移
-        const redirectUrl = responseBody.redirectUrl ?? '/';
+        const redirectUrl = responseData.redirectUrl ?? '/';
         setTimeout(() => {
           router.push(redirectUrl);
         }, 1500);
