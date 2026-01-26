@@ -28,8 +28,8 @@ export const RegisterForm = () => {
 
   // 成功メッセージの生成
   const successMessage = successFacilityName
-    ? `${successFacilityName}への登録が完了しました`
-    : '登録が完了しました';
+    ? `${successFacilityName}への登録が完了しました。再度ログインしてください`
+    : '登録が完了しました。再度ログインしてください';
 
   return (
     <div className={styles.container}>
