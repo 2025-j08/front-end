@@ -15,7 +15,6 @@ import {
 import { VALIDATION_MESSAGES, API_MESSAGES } from '@/const/messages';
 import { API_ENDPOINTS } from '@/const/api';
 import { logError } from '@/lib/logger';
-import { createClient } from '@/lib/supabase/client';
 
 /**
  * 初期登録フォームのデータ型
@@ -89,21 +88,6 @@ export const useRegisterForm = (): UseRegisterFormReturn => {
   const [successFacilityName, setSuccessFacilityName] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
-  const [userEmail, setUserEmail] = useState<string | null>(null);
-
-  // コンポーネントマウント時に現在のユーザーのメールアドレスを取得
-  useEffect(() => {
-    const fetchEmail = async () => {
-      const supabase = createClient();
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (user?.email) {
-        setUserEmail(user.email);
-      }
-    };
-    fetchEmail();
-  }, []);
 
   // 最新のformDataを参照するためのref（useCallback内で古い値を参照しないように）
   const formDataRef = useRef(formData);
@@ -224,34 +208,6 @@ export const useRegisterForm = (): UseRegisterFormReturn => {
         // ここで responseBody は RegisterResponseSuccess 型に絞り込まれる
         const responseData = responseBody;
 
-        // クライアント側のセッションを再確立するために再ログインを行う
-        // パスワード変更により既存のセッションが無効化されるため、signInWithPassword が必要
-        const supabase = createClient();
-        let targetEmail = userEmail;
-
-        // 万が一 userEmail が取得できていない場合のフォールバック
-        if (!targetEmail) {
-          const {
-            data: { user },
-          } = await supabase.auth.getUser();
-          targetEmail = user?.email ?? null;
-        }
-
-        if (targetEmail) {
-          const { error: signInError } = await supabase.auth.signInWithPassword({
-            email: targetEmail,
-            password: formData.password,
-          });
-
-          if (signInError) {
-            logError('自動再ログインに失敗しました', {
-              component: 'useRegisterForm',
-              error: signInError.message,
-            });
-            // ログインに失敗しても遷移は続行（ユーザーに手動ログインを促す形になる）
-          }
-        }
-
         // 成功時の処理
         setIsSuccess(true);
         setSuccessFacilityName(responseData.facilityName ?? null);
@@ -272,7 +228,7 @@ export const useRegisterForm = (): UseRegisterFormReturn => {
         setIsLoading(false);
       }
     },
-    [formData, router, userEmail],
+    [formData, router],
   );
 
   /**
