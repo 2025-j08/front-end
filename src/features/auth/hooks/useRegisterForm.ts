@@ -205,15 +205,12 @@ export const useRegisterForm = (): UseRegisterFormReturn => {
           throw new Error(apiError);
         }
 
-        // ここで responseBody は RegisterResponseSuccess 型に絞り込まれる
-        const responseData = responseBody;
-
         // 成功時の処理
         setIsSuccess(true);
-        setSuccessFacilityName(responseData.facilityName ?? null);
+        setSuccessFacilityName(responseBody.facilityName ?? null);
 
         // 成功オーバーレイ表示後、指定されたURLまたはホーム画面に遷移
-        const redirectUrl = responseData.redirectUrl ?? '/';
+        const redirectUrl = responseBody.redirectUrl ?? '/';
         setTimeout(() => {
           router.push(redirectUrl);
         }, 1500);
