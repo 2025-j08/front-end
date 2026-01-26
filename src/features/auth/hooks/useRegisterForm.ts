@@ -226,10 +226,20 @@ export const useRegisterForm = (): UseRegisterFormReturn => {
 
         // クライアント側のセッションを再確立するために再ログインを行う
         // パスワード変更により既存のセッションが無効化されるため、signInWithPassword が必要
-        if (userEmail) {
-          const supabase = createClient();
+        const supabase = createClient();
+        let targetEmail = userEmail;
+
+        // 万が一 userEmail が取得できていない場合のフォールバック
+        if (!targetEmail) {
+          const {
+            data: { user },
+          } = await supabase.auth.getUser();
+          targetEmail = user?.email ?? null;
+        }
+
+        if (targetEmail) {
           const { error: signInError } = await supabase.auth.signInWithPassword({
-            email: userEmail,
+            email: targetEmail,
             password: formData.password,
           });
 
