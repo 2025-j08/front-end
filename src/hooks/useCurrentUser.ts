@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 import { API_ENDPOINTS } from '@/const/api';
 import { logError } from '@/lib/logger';
@@ -43,6 +43,7 @@ const INITIAL_STATE: CurrentUserState = {
 export function useCurrentUser(): CurrentUser {
   const [state, setState] = useState<CurrentUserState>(INITIAL_STATE);
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     let isMounted = true;
@@ -128,7 +129,8 @@ export function useCurrentUser(): CurrentUser {
       isMounted = false;
       subscription.unsubscribe();
     };
-  }, []);
+    // パス変更時にも再検証（登録後のリダイレクトなどでセッション状態が変わる可能性があるため）
+  }, [pathname]);
 
   // サインアウト処理（エラーハンドリング付き）
   const signOut = useCallback(async () => {
