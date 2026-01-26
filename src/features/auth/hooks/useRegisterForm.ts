@@ -262,7 +262,7 @@ export const useRegisterForm = (): UseRegisterFormReturn => {
         setIsLoading(false);
       }
     },
-    [formData, router],
+    [formData, router, userEmail],
   );
 
   /**
