@@ -50,7 +50,7 @@ const FacilityRow = ({
   const [isSaving, setIsSaving] = useState(false);
   const [errors, setErrors] = useState<FacilityTableValidationErrors>({});
 
-  const { fetchAddress } = usePostalCode();
+  const { fetchAddress, setError: setPostalError } = usePostalCode();
 
   /**
    * 郵便番号から住所を検索する
@@ -61,6 +61,18 @@ const FacilityRow = ({
 
     const address = await fetchAddress(cleanPostalCode);
     if (address) {
+      // 関西6府県に含まれているかチェック
+      const isKinki = (KINKI_PREFECTURES as readonly string[]).includes(address.prefecture);
+
+      if (!isKinki) {
+        // テーブル内の場合は、郵便番号のエラーとして表示する
+        setErrors((prev) => ({
+          ...prev,
+          postalCode: '関西6府県以外の住所は登録できません。',
+        }));
+        return;
+      }
+
       setPrefecture(address.prefecture as KinkiPrefecture);
       setCity(address.city);
       // 町域が「以下に掲載がない場合」などは空にする
@@ -143,6 +155,7 @@ const FacilityRow = ({
             type="button"
             className={styles.searchButton}
             onClick={handlePostalLookup}
+            aria-label="住所を検索"
             disabled={postalCode.replace(/[^\d]/g, '').length !== 7}
             title="住所を検索"
           >

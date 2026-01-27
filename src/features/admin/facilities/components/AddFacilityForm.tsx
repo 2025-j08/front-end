@@ -34,7 +34,12 @@ export const AddFacilityForm: React.FC = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const { fetchAddress, isLoading: isPostalLoading, error: postalError } = usePostalCode();
+  const {
+    fetchAddress,
+    isLoading: isPostalLoading,
+    error: postalError,
+    setError: setPostalError,
+  } = usePostalCode();
 
   /**
    * 郵便番号から住所を検索する
@@ -47,6 +52,14 @@ export const AddFacilityForm: React.FC = () => {
     const address = await fetchAddress(fullPostalCode);
 
     if (address) {
+      // 関西6府県に含まれているかチェック
+      const isKinki = (KINKI_PREFECTURES as readonly string[]).includes(address.prefecture);
+
+      if (!isKinki) {
+        setPostalError('関西6府県以外の住所は登録できません。');
+        return;
+      }
+
       setFormData((prev) => ({
         ...prev,
         prefecture: address.prefecture as KinkiPrefecture,
@@ -225,6 +238,7 @@ export const AddFacilityForm: React.FC = () => {
               type="button"
               className={styles.postalCodeButton}
               onClick={handlePostalLookup}
+              aria-label="住所を検索"
               disabled={
                 isPostalLoading || formData.postalCode1.length + formData.postalCode2.length !== 7
               }
@@ -232,7 +246,19 @@ export const AddFacilityForm: React.FC = () => {
               住所検索
             </button>
           </div>
-          {isPostalLoading && <p className={styles.postalCodeInfo}>住所を検索中...</p>}
+          {isPostalLoading && (
+            <p className={styles.postalCodeInfo} role="status" aria-live="polite">
+              住所を検索中...
+            </p>
+          )}
+          {/* 
+            エラー表示優先順位:
+            1. 郵便番号1のバリデーションエラー（必須、桁数）
+            2. 郵便番号2のバリデーションエラー（必須、桁数）
+            3. API/ロジックエラー（住所が見つからない、関西以外など）
+            
+            ユーザーが順を追ってエラーを解消できるように、上位のエラーを優先して表示します。
+          */}
           {(errors.postalCode1 || errors.postalCode2 || postalError) && (
             <p className={styles.postalCodeError}>
               {errors.postalCode1 || errors.postalCode2 || postalError}
