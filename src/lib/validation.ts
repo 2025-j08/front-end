@@ -174,3 +174,39 @@ export const validatePasswordMatch = (
   }
   return { isValid: true };
 };
+
+/**
+ * 郵便番号の正規表現（7桁の数字）
+ */
+export const POSTAL_CODE_REGEX = /^\d{7}$/;
+
+/**
+ * 郵便番号の形式を整える（数字以外を除去）
+ * @param postalCode - 郵便番号文字列
+ * @returns 数字のみの文字列
+ */
+export const normalizePostalCode = (postalCode: string): string => {
+  return postalCode.replace(/[^\d]/g, '');
+};
+
+/**
+ * 郵便番号のバリデーション
+ * @param postalCode - 郵便番号
+ * @returns バリデーション結果
+ */
+export const validatePostalCode = (postalCode: string): ValidationResult => {
+  const normalized = normalizePostalCode(postalCode);
+  if (!normalized) {
+    return {
+      isValid: false,
+      error: '郵便番号を入力してください',
+    };
+  }
+  if (!POSTAL_CODE_REGEX.test(normalized)) {
+    return {
+      isValid: false,
+      error: '郵便番号は7桁の数字で入力してください',
+    };
+  }
+  return { isValid: true };
+};

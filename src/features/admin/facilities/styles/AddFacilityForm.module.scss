@@ -69,8 +69,41 @@
   color: var(--text-primary);
 }
 
+.postalCodeButton {
+  margin-left: 8px;
+  padding: 8px 16px;
+  border: 1.5px solid var(--border-color);
+  border-radius: 12px;
+  background-color: var(--card-background);
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background-color: var(--background-secondary);
+    border-color: var(--border-dark);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
 .postalCodeError {
   color: var(--error);
+  font-size: 0.85rem;
+  margin-top: 6px;
+  margin-bottom: 0;
+}
+
+.postalCodeInfo {
+  color: var(--primary);
   font-size: 0.85rem;
   margin-top: 6px;
   margin-bottom: 0;
@@ -206,6 +239,25 @@
   .addressSection {
     padding: 16px;
     margin-top: 20px;
+  }
+
+  .postalCodeInputs {
+    flex-wrap: wrap;
+    gap: 12px 8px;
+  }
+
+  .postalCodeButton {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 4px;
+    padding: 12px;
+    font-size: 1rem;
+    order: 3; // モバイル表示時に、郵便番号入力フィールド（postalCode1, postalCode2）の下に検索ボタンを配置するために order: 3 を使用
+  }
+
+  .postalCode1,
+  .postalCode2 {
+    flex-grow: 1;
   }
 
   .selectWrapper {

@@ -3,10 +3,13 @@
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { FormField, LoadingOverlay, SuccessOverlay } from '@/components/form';
+import { LoadingOverlay, SuccessOverlay, FormField } from '@/components/form';
 import { FACILITY_MESSAGES } from '@/const/messages';
 import { KINKI_PREFECTURES } from '@/const/searchConditions';
+import type { KinkiPrefecture } from '@/types/facility';
 import { UI_TIMEOUTS } from '@/const/ui';
+import { usePostalCode } from '@/hooks/usePostalCode';
+import { validatePostalCode } from '@/lib/validation';
 
 import { FACILITY_ADMIN_ROUTES, FACILITY_FORM_VALIDATION } from '../constants';
 import type { AddFacilityFormData, AddFacilityFormErrors } from '../types';
@@ -31,6 +34,46 @@ export const AddFacilityForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const {
+    fetchAddress,
+    isLoading: isPostalLoading,
+    error: postalError,
+    clearError: clearPostalError,
+  } = usePostalCode();
+
+  const handlePostalLookup = async () => {
+    clearPostalError(); // 検索前に以前のフックエラーをクリア
+    setErrors((prev) => ({
+      ...prev,
+      postalCode1: undefined,
+      postalCode2: undefined,
+    }));
+
+    const fullPostalCode = `${formData.postalCode1}${formData.postalCode2}`;
+    const address = await fetchAddress(fullPostalCode);
+
+    if (address) {
+      // 関西6府県に含まれているかチェック
+      const isKinki = (KINKI_PREFECTURES as readonly string[]).includes(address.prefecture);
+
+      if (!isKinki) {
+        setErrors((prev) => ({
+          ...prev,
+          postalCode2: '関西6府県以外の住所は登録できません。',
+        }));
+        return;
+      }
+
+      setFormData((prev) => ({
+        ...prev,
+        prefecture: address.prefecture as KinkiPrefecture,
+        city: address.city,
+        // 町域が「以下に掲載がない場合」などは空にする
+        addressDetail: address.town === '以下に掲載がない場合' ? '' : address.town,
+      }));
+    }
+  };
 
   const validateForm = (): boolean => {
     const newErrors: AddFacilityFormErrors = {};
@@ -196,10 +239,40 @@ export const AddFacilityForm: React.FC = () => {
               maxLength={4}
               inputMode="numeric"
             />
+            <button
+              type="button"
+              className={styles.postalCodeButton}
+              onClick={handlePostalLookup}
+              aria-label="住所を検索"
+              disabled={
+                isPostalLoading ||
+                !validatePostalCode(formData.postalCode1 + formData.postalCode2).isValid
+              }
+            >
+              住所検索
+            </button>
           </div>
-          {(errors.postalCode1 || errors.postalCode2) && (
-            <p className={styles.postalCodeError}>{errors.postalCode1 || errors.postalCode2}</p>
+          {isPostalLoading && (
+            <p className={styles.postalCodeInfo} role="status" aria-live="polite">
+              住所を検索中...
+            </p>
           )}
+          {/* 
+            エラー表示優先順位:
+            1. 郵便番号1のバリデーションエラー（必須、桁数）
+            2. 郵便番号2のバリデーションエラー（必須、桁数）
+            3. API/ロジックエラー（住所が見つからない、関西以外など）
+            
+            ユーザーが順を追ってエラーを解消できるように、上記優先順位（左から右）で最初に見つかったエラーを表示します。
+          */}
+          {(() => {
+            const displayedPostalError = errors.postalCode1 || errors.postalCode2 || postalError;
+            return (
+              displayedPostalError && (
+                <p className={styles.postalCodeError}>{displayedPostalError}</p>
+              )
+            );
+          })()}
         </div>
 
         {/* 住所セクション */}
