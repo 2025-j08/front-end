@@ -29,10 +29,19 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ success: false, error: '認証が必要です' }, { status: 401 });
     }
 
-    // ZipCloud API 呼び出し (24時間の再検証キャッシュ)
-    const response = await fetch(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${zipcode}`, {
-      next: { revalidate: 86400 }, // 1日キャッシュ
-    });
+    // ZipCloud API 呼び出し (10秒タイムアウト設定)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+
+    let response: Response;
+    try {
+      response = await fetch(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${zipcode}`, {
+        next: { revalidate: 86400 }, // 1日キャッシュ
+        signal: controller.signal,
+      });
+    } finally {
+      clearTimeout(timeoutId);
+    }
 
     if (!response.ok) {
       throw new Error('ZipCloud APIのリクエストに失敗しました');
@@ -99,6 +108,17 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            '住所の取得に時間がかかっています。しばらく経ってから再度試すか、手動で入力してください',
+        },
+        { status: 504 },
+      );
+    }
+
     console.error('Postal code lookup error:', error);
     return NextResponse.json(
       { success: false, error: 'サーバーエラーが発生しました' },
