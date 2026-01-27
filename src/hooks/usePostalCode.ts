@@ -23,7 +23,9 @@ interface PostalCodeResponse {
 
 /**
  * 郵便番号検索のクライアントサイドキャッシュ
+ * LRU (Least Recently Used) 方式で最大20件まで保持します
  */
+const CACHE_LIMIT = 20;
 const addressCache = new Map<string, PostalAddress>();
 
 /**
@@ -41,10 +43,14 @@ export const usePostalCode = () => {
       return null;
     }
 
-    // キャッシュをチェック
+    // キャッシュをチェック (LRU: 使用されたエントリを末尾に移動)
     if (addressCache.has(cleanPostalCode)) {
+      const cachedAddress = addressCache.get(cleanPostalCode)!;
+      addressCache.delete(cleanPostalCode);
+      addressCache.set(cleanPostalCode, cachedAddress);
+
       setError(null);
-      return addressCache.get(cleanPostalCode) || null;
+      return cachedAddress;
     }
 
     setIsLoading(true);
@@ -60,6 +66,13 @@ export const usePostalCode = () => {
 
       const address = data.address || null;
       if (address) {
+        // キャッシュサイズ制限 (LRU: 古いエントリを削除)
+        if (addressCache.size >= CACHE_LIMIT) {
+          const firstKey = addressCache.keys().next().value;
+          if (firstKey) {
+            addressCache.delete(firstKey);
+          }
+        }
         addressCache.set(cleanPostalCode, address);
       }
 
