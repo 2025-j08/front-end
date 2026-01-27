@@ -1,8 +1,6 @@
-/**
- * FormField 共通コンポーネント
- * 認証フォーム共通の入力フィールド
- */
-import type { ChangeEvent } from 'react';
+import { useState, type ChangeEvent } from 'react';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 import styles from './formField.module.scss';
 
@@ -56,40 +54,65 @@ const FormField = ({
   error,
   onChange,
 }: FormFieldProps) => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
+  const isPasswordField = type === 'password';
+  const inputType = isPasswordField && showPassword ? 'text' : type;
+
+  const inputElement = isTextarea ? (
+    <textarea
+      id={id}
+      name={name}
+      placeholder={placeholder}
+      required={required}
+      value={value}
+      rows={rows}
+      minLength={minLength}
+      maxLength={maxLength}
+      className={error ? styles.inputError : undefined}
+      aria-invalid={error ? 'true' : undefined}
+      aria-describedby={error ? `${id}-error` : undefined}
+      onChange={onChange}
+    />
+  ) : (
+    <input
+      type={inputType}
+      id={id}
+      name={name}
+      placeholder={placeholder}
+      required={required}
+      value={value}
+      autoComplete={autoComplete}
+      minLength={minLength}
+      maxLength={maxLength}
+      className={`${error ? styles.inputError : ''} ${isPasswordField ? styles.passwordInput : ''}`}
+      aria-invalid={error ? 'true' : undefined}
+      aria-describedby={error ? `${id}-error` : undefined}
+      onChange={onChange}
+    />
+  );
+
   return (
     <div className={styles.formGroup}>
       <label htmlFor={id}>{label}</label>
-      {isTextarea ? (
-        <textarea
-          id={id}
-          name={name}
-          placeholder={placeholder}
-          required={required}
-          value={value}
-          rows={rows}
-          minLength={minLength}
-          maxLength={maxLength}
-          className={error ? styles.inputError : undefined}
-          aria-invalid={error ? 'true' : undefined}
-          aria-describedby={error ? `${id}-error` : undefined}
-          onChange={onChange}
-        />
+      {isPasswordField ? (
+        <div className={styles.passwordWrapper}>
+          {inputElement}
+          <button
+            type="button"
+            className={styles.toggleButton}
+            onClick={togglePasswordVisibility}
+            aria-label={showPassword ? 'パスワードを非表示にする' : 'パスワードを表示する'}
+          >
+            {showPassword ? <Visibility /> : <VisibilityOff />}
+          </button>
+        </div>
       ) : (
-        <input
-          type={type}
-          id={id}
-          name={name}
-          placeholder={placeholder}
-          required={required}
-          value={value}
-          autoComplete={autoComplete}
-          minLength={minLength}
-          maxLength={maxLength}
-          className={error ? styles.inputError : undefined}
-          aria-invalid={error ? 'true' : undefined}
-          aria-describedby={error ? `${id}-error` : undefined}
-          onChange={onChange}
-        />
+        inputElement
       )}
       {error && (
         <p id={`${id}-error`} className={styles.errorMessage} role="alert">
