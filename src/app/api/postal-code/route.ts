@@ -47,7 +47,8 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    if (!data.results) {
+    // 配列かつ要素が存在することを確認
+    if (!Array.isArray(data.results) || data.results.length === 0) {
       return NextResponse.json(
         { success: false, error: '該当する住所が見つかりませんでした' },
         { status: 404 },
@@ -55,6 +56,14 @@ export async function GET(request: NextRequest) {
     }
 
     const result = data.results[0];
+
+    // resultがオブジェクトであることを確認
+    if (!result || typeof result !== 'object') {
+      return NextResponse.json(
+        { success: false, error: '不正な形式のデータが返却されました' },
+        { status: 502 },
+      );
+    }
 
     // レスポンスデータの構造検証 (不完全なデータの混入防止)
     const requiredFields = ['address1', 'address2', 'address3', 'kana1', 'kana2', 'kana3'];
