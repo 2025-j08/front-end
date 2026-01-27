@@ -139,26 +139,24 @@
 
 .searchButton {
   padding: 4px;
-  background-color: #e3f2fd;
-  border: 1px solid #bbdefb;
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-primary);
+  color: var(--text-secondary);
   transition: all 0.2s ease;
 
   &:hover:not(:disabled) {
-    background-color: #bbdefb;
-    color: #0d47a1;
-    border-color: #90caf9;
+    background-color: var(--background-secondary);
+    border-color: var(--border-dark);
   }
 
   &:disabled {
     opacity: 0.3;
     cursor: not-allowed;
-    background-color: transparent;
     border-color: var(--border-color);
   }
 }
