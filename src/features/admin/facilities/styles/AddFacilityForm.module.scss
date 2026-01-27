@@ -252,7 +252,7 @@
     margin-top: 4px;
     padding: 12px;
     font-size: 1rem;
-    order: 3; // ハイフンの後に並ぶように（任意）
+    order: 3; // モバイル表示時に、郵便番号入力フィールド（postalCode1, postalCode2）の下に検索ボタンを配置するために order: 3 を使用
   }
 
   .postalCode1,
