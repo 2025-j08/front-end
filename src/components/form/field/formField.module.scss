@@ -86,10 +86,14 @@
   flex-grow: 1;
   position: relative;
   display: flex;
-}
 
-.passwordInput {
-  padding-right: 45px !important;
+  @media (max-width: 600px) {
+    width: 100%;
+  }
+
+  input {
+    padding-right: 45px;
+  }
 }
 
 .toggleButton {
@@ -109,7 +113,7 @@
   z-index: 1;
 
   &:hover {
-    color: var(--primary-color);
+    color: var(--primary);
   }
 
   svg {

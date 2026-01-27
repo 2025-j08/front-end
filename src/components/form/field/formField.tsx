@@ -89,7 +89,7 @@ const FormField = ({
       autoComplete={autoComplete}
       minLength={minLength}
       maxLength={maxLength}
-      className={`${error ? styles.inputError : ''} ${isPasswordField ? styles.passwordInput : ''}`}
+      className={error ? styles.inputError : undefined}
       aria-invalid={error ? 'true' : undefined}
       aria-describedby={error ? `${id}-error` : undefined}
       onChange={onChange}
@@ -107,8 +107,9 @@ const FormField = ({
             className={styles.toggleButton}
             onClick={togglePasswordVisibility}
             aria-label={showPassword ? 'パスワードを非表示にする' : 'パスワードを表示する'}
+            aria-pressed={showPassword}
           >
-            {showPassword ? <Visibility /> : <VisibilityOff />}
+            {showPassword ? <VisibilityOff /> : <Visibility />}
           </button>
         </div>
       ) : (
