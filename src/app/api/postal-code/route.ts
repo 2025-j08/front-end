@@ -96,17 +96,24 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({
-      success: true,
-      address: {
-        prefecture: result.address1,
-        city: result.address2,
-        town: result.address3,
-        prefectureKana: result.kana1,
-        cityKana: result.kana2,
-        townKana: result.kana3,
+    return NextResponse.json(
+      {
+        success: true,
+        address: {
+          prefecture: result.address1,
+          city: result.address2,
+          town: result.address3,
+          prefectureKana: result.kana1,
+          cityKana: result.kana2,
+          townKana: result.kana3,
+        },
       },
-    });
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=59',
+        },
+      },
+    );
   } catch (error) {
     if (error instanceof Error && error.name === 'AbortError') {
       return NextResponse.json(
