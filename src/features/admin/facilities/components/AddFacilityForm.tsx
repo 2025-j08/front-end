@@ -9,7 +9,7 @@ import { KINKI_PREFECTURES } from '@/const/searchConditions';
 import type { KinkiPrefecture } from '@/types/facility';
 import { UI_TIMEOUTS } from '@/const/ui';
 import { usePostalCode } from '@/hooks/usePostalCode';
-import { validatePostalCode, normalizePostalCode } from '@/lib/validation';
+import { validatePostalCode } from '@/lib/validation';
 
 import { FACILITY_ADMIN_ROUTES, FACILITY_FORM_VALIDATION } from '../constants';
 import type { AddFacilityFormData, AddFacilityFormErrors } from '../types';
@@ -84,7 +84,6 @@ export const AddFacilityForm: React.FC = () => {
     if (!formData.corporation.trim()) {
       newErrors.corporation = FACILITY_FORM_VALIDATION.CORPORATION_REQUIRED;
     }
-    const postalValidation1 = validatePostalCode(formData.postalCode1 + formData.postalCode2);
     if (!formData.postalCode1.trim()) {
       newErrors.postalCode1 = FACILITY_FORM_VALIDATION.POSTAL_CODE_FIRST_REQUIRED;
     } else if (!/^\d{3}$/.test(formData.postalCode1.trim())) {
