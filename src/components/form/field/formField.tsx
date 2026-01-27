@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * FormField 共通コンポーネント
  * 認証フォーム共通の入力フィールド
@@ -91,7 +93,7 @@ const FormField = ({
           minLength={minLength}
           maxLength={maxLength}
           error={error}
-          onChange={onChange as (e: ChangeEvent<HTMLInputElement>) => void}
+          onChange={onChange}
         />
       );
     }

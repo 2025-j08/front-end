@@ -21,7 +21,7 @@ interface PasswordFieldProps {
   minLength?: number;
   maxLength?: number;
   error?: string;
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 }
 
 export const PasswordField = ({
