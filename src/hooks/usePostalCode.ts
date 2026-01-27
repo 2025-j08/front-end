@@ -38,12 +38,16 @@ export const usePostalCode = () => {
   const [error, setError] = useState<string | null>(null);
 
   const fetchAddress = useCallback(async (postalCode: string): Promise<PostalAddress | null> => {
+    setIsLoading(true);
+    setError(null);
+
     // 形式を整えてバリデーション
     const cleanPostalCode = normalizePostalCode(postalCode);
     const validation = validatePostalCode(cleanPostalCode);
 
     if (!validation.isValid) {
       setError(validation.error || '郵便番号の形式が正しくありません');
+      setIsLoading(false);
       return null;
     }
 
@@ -53,12 +57,9 @@ export const usePostalCode = () => {
       addressCache.delete(cleanPostalCode);
       addressCache.set(cleanPostalCode, cachedAddress);
 
-      setError(null);
+      setIsLoading(false);
       return cachedAddress;
     }
-
-    setIsLoading(true);
-    setError(null);
 
     try {
       const response = await fetch(`/api/postal-code?zipcode=${cleanPostalCode}`);
@@ -90,15 +91,17 @@ export const usePostalCode = () => {
     }
   }, []);
 
+  /**
+   * エラー状態を明示的にクリアする関数
+   */
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
+
   return {
     fetchAddress,
     isLoading,
     error,
-    /**
-     * 外部からエラーを設定するための関数
-     * フック内部のバリデーション（桁数など）とは別に、
-     * 利用側のビジネスロジック（例：特定の都道府県のみ許可）でエラーとしたい場合に使用します。
-     */
-    setError,
+    clearError,
   };
 };
