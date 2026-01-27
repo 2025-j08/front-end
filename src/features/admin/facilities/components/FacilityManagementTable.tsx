@@ -3,8 +3,10 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import SearchIcon from '@mui/icons-material/Search';
+import { CircularProgress } from '@mui/material';
 
 import { usePostalCode } from '@/hooks/usePostalCode';
+import { validatePostalCode } from '@/lib/validation';
 import type { KinkiPrefecture } from '@/types/facility';
 import { KINKI_PREFECTURES } from '@/const/searchConditions';
 import { VALIDATION_PATTERNS } from '@/const/validation';
@@ -50,7 +52,7 @@ const FacilityRow = ({
   const [isSaving, setIsSaving] = useState(false);
   const [errors, setErrors] = useState<FacilityTableValidationErrors>({});
 
-  const { fetchAddress, setError: setPostalError } = usePostalCode();
+  const { fetchAddress, isLoading, setError: setPostalError } = usePostalCode();
 
   /**
    * 郵便番号から住所を検索する
@@ -146,7 +148,12 @@ const FacilityRow = ({
             type="text"
             className={`${styles.postalCodeInput} ${errors.postalCode ? styles.inputError : ''}`}
             value={postalCode}
-            onChange={(e) => setPostalCode(e.target.value)}
+            onChange={(e) => {
+              setPostalCode(e.target.value);
+              if (errors.postalCode) {
+                setErrors((prev) => ({ ...prev, postalCode: undefined }));
+              }
+            }}
             placeholder="000-0000"
             aria-label={`${facility.name}の郵便番号`}
             aria-invalid={!!errors.postalCode}
@@ -155,11 +162,15 @@ const FacilityRow = ({
             type="button"
             className={styles.searchButton}
             onClick={handlePostalLookup}
-            aria-label="住所を検索"
-            disabled={postalCode.replace(/[^\d]/g, '').length !== 7}
-            title="住所を検索"
+            aria-label={isLoading ? '住所を検索中' : '住所を検索'}
+            disabled={isLoading || !validatePostalCode(postalCode).isValid}
+            title={isLoading ? '検索中...' : '住所を検索'}
           >
-            <SearchIcon fontSize="small" />
+            {isLoading ? (
+              <CircularProgress size={20} color="inherit" />
+            ) : (
+              <SearchIcon fontSize="small" />
+            )}
           </button>
         </div>
         {errors.postalCode && <span className={styles.errorMessage}>{errors.postalCode}</span>}
