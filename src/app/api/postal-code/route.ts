@@ -50,7 +50,10 @@ export async function GET(request: NextRequest) {
     // 配列かつ要素が存在することを確認
     if (!Array.isArray(data.results) || data.results.length === 0) {
       return NextResponse.json(
-        { success: false, error: '該当する住所が見つかりませんでした' },
+        {
+          success: false,
+          error: '該当する住所が見つかりませんでした。手動で住所を入力してください',
+        },
         { status: 404 },
       );
     }
@@ -60,7 +63,10 @@ export async function GET(request: NextRequest) {
     // resultがオブジェクトであることを確認
     if (!result || typeof result !== 'object') {
       return NextResponse.json(
-        { success: false, error: '不正な形式のデータが返却されました' },
+        {
+          success: false,
+          error: '住所の取得に失敗しました。郵便番号を確認するか、手動で住所を入力してください',
+        },
         { status: 502 },
       );
     }
@@ -73,7 +79,10 @@ export async function GET(request: NextRequest) {
 
     if (hasIncompleteData) {
       return NextResponse.json(
-        { success: false, error: 'APIから不完全な住所データが返却されました' },
+        {
+          success: false,
+          error: 'この郵便番号の住所情報が見つかりませんでした。手動で住所を入力してください',
+        },
         { status: 502 },
       );
     }
