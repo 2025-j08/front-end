@@ -2,7 +2,10 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import SearchIcon from '@mui/icons-material/Search';
 
+import { usePostalCode } from '@/hooks/usePostalCode';
+import type { KinkiPrefecture } from '@/types/facility';
 import { KINKI_PREFECTURES } from '@/const/searchConditions';
 import { VALIDATION_PATTERNS } from '@/const/validation';
 import type { FacilityAdminListItem } from '@/types/facility';
@@ -46,6 +49,24 @@ const FacilityRow = ({
   const [addressDetail, setAddressDetail] = useState(facility.addressDetail);
   const [isSaving, setIsSaving] = useState(false);
   const [errors, setErrors] = useState<FacilityTableValidationErrors>({});
+
+  const { fetchAddress } = usePostalCode();
+
+  /**
+   * 郵便番号から住所を検索する
+   */
+  const handlePostalLookup = async () => {
+    const cleanPostalCode = postalCode.replace(/[^\d]/g, '');
+    if (cleanPostalCode.length !== 7) return;
+
+    const address = await fetchAddress(cleanPostalCode);
+    if (address) {
+      setPrefecture(address.prefecture as KinkiPrefecture);
+      setCity(address.city);
+      // 町域が「以下に掲載がない場合」などは空にする
+      setAddressDetail(address.town === '以下に掲載がない場合' ? '' : address.town);
+    }
+  };
 
   // 変更があるかどうか判定
   const hasChanges =
@@ -108,15 +129,26 @@ const FacilityRow = ({
         {errors.name && <span className={styles.errorMessage}>{errors.name}</span>}
       </td>
       <td className={styles.postalCodeCol}>
-        <input
-          type="text"
-          className={`${styles.postalCodeInput} ${errors.postalCode ? styles.inputError : ''}`}
-          value={postalCode}
-          onChange={(e) => setPostalCode(e.target.value)}
-          placeholder="000-0000"
-          aria-label={`${facility.name}の郵便番号`}
-          aria-invalid={!!errors.postalCode}
-        />
+        <div className={styles.postalCodeInputWrapper}>
+          <input
+            type="text"
+            className={`${styles.postalCodeInput} ${errors.postalCode ? styles.inputError : ''}`}
+            value={postalCode}
+            onChange={(e) => setPostalCode(e.target.value)}
+            placeholder="000-0000"
+            aria-label={`${facility.name}の郵便番号`}
+            aria-invalid={!!errors.postalCode}
+          />
+          <button
+            type="button"
+            className={styles.searchButton}
+            onClick={handlePostalLookup}
+            disabled={postalCode.replace(/[^\d]/g, '').length !== 7}
+            title="住所を検索"
+          >
+            <SearchIcon fontSize="small" />
+          </button>
+        </div>
         {errors.postalCode && <span className={styles.errorMessage}>{errors.postalCode}</span>}
       </td>
       <td className={styles.prefectureCol}>

@@ -69,8 +69,41 @@
   color: var(--text-primary);
 }
 
+.postalCodeButton {
+  margin-left: 8px;
+  padding: 8px 16px;
+  background-color: #e3f2fd;
+  border: 1.5px solid #bbdefb;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background-color: #bbdefb;
+    border-color: #90caf9;
+    color: #0d47a1;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: var(--background-secondary);
+    border-color: var(--border-color);
+  }
+}
+
 .postalCodeError {
   color: var(--error);
+  font-size: 0.85rem;
+  margin-top: 6px;
+  margin-bottom: 0;
+}
+
+.postalCodeInfo {
+  color: var(--primary);
   font-size: 0.85rem;
   margin-top: 6px;
   margin-bottom: 0;

@@ -3,10 +3,12 @@
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
-import { FormField, LoadingOverlay, SuccessOverlay } from '@/components/form';
+import { LoadingOverlay, SuccessOverlay, FormField } from '@/components/form';
 import { FACILITY_MESSAGES } from '@/const/messages';
 import { KINKI_PREFECTURES } from '@/const/searchConditions';
+import type { KinkiPrefecture } from '@/types/facility';
 import { UI_TIMEOUTS } from '@/const/ui';
+import { usePostalCode } from '@/hooks/usePostalCode';
 
 import { FACILITY_ADMIN_ROUTES, FACILITY_FORM_VALIDATION } from '../constants';
 import type { AddFacilityFormData, AddFacilityFormErrors } from '../types';
@@ -31,6 +33,29 @@ export const AddFacilityForm: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const { fetchAddress, isLoading: isPostalLoading, error: postalError } = usePostalCode();
+
+  /**
+   * 郵便番号から住所を検索する
+   */
+  const handlePostalLookup = async () => {
+    const fullPostalCode = `${formData.postalCode1}${formData.postalCode2}`;
+    if (fullPostalCode.length !== 7) {
+      return;
+    }
+    const address = await fetchAddress(fullPostalCode);
+
+    if (address) {
+      setFormData((prev) => ({
+        ...prev,
+        prefecture: address.prefecture as KinkiPrefecture,
+        city: address.city,
+        // 町域が「以下に掲載がない場合」などは空にする
+        addressDetail: address.town === '以下に掲載がない場合' ? '' : address.town,
+      }));
+    }
+  };
 
   const validateForm = (): boolean => {
     const newErrors: AddFacilityFormErrors = {};
@@ -196,9 +221,22 @@ export const AddFacilityForm: React.FC = () => {
               maxLength={4}
               inputMode="numeric"
             />
+            <button
+              type="button"
+              className={styles.postalCodeButton}
+              onClick={handlePostalLookup}
+              disabled={
+                isPostalLoading || formData.postalCode1.length + formData.postalCode2.length !== 7
+              }
+            >
+              住所検索
+            </button>
           </div>
-          {(errors.postalCode1 || errors.postalCode2) && (
-            <p className={styles.postalCodeError}>{errors.postalCode1 || errors.postalCode2}</p>
+          {isPostalLoading && <p className={styles.postalCodeInfo}>住所を検索中...</p>}
+          {(errors.postalCode1 || errors.postalCode2 || postalError) && (
+            <p className={styles.postalCodeError}>
+              {errors.postalCode1 || errors.postalCode2 || postalError}
+            </p>
           )}
         </div>
 

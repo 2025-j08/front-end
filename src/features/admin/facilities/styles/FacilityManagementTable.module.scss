@@ -125,10 +125,42 @@
   @extend .inputField;
 }
 
+.postalCodeInputWrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
 .postalCodeInput {
   @extend .inputField;
-  width: 100%;
+  flex-grow: 1;
   text-align: center;
+}
+
+.searchButton {
+  padding: 4px;
+  background-color: #e3f2fd;
+  border: 1px solid #bbdefb;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background-color: #bbdefb;
+    color: #0d47a1;
+    border-color: #90caf9;
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    background-color: transparent;
+    border-color: var(--border-color);
+  }
 }
 
 .prefectureSelect {
