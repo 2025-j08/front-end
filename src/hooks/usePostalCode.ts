@@ -22,6 +22,11 @@ interface PostalCodeResponse {
 }
 
 /**
+ * 郵便番号検索のクライアントサイドキャッシュ
+ */
+const addressCache = new Map<string, PostalAddress>();
+
+/**
  * 郵便番号から住所を検索するカスタムフック
  */
 export const usePostalCode = () => {
@@ -36,6 +41,12 @@ export const usePostalCode = () => {
       return null;
     }
 
+    // キャッシュをチェック
+    if (addressCache.has(cleanPostalCode)) {
+      setError(null);
+      return addressCache.get(cleanPostalCode) || null;
+    }
+
     setIsLoading(true);
     setError(null);
 
@@ -47,7 +58,12 @@ export const usePostalCode = () => {
         throw new Error(data.error || '住所の取得に失敗しました');
       }
 
-      return data.address || null;
+      const address = data.address || null;
+      if (address) {
+        addressCache.set(cleanPostalCode, address);
+      }
+
+      return address;
     } catch (err) {
       const message = err instanceof Error ? err.message : '予期せぬエラーが発生しました';
       setError(message);
@@ -61,6 +77,11 @@ export const usePostalCode = () => {
     fetchAddress,
     isLoading,
     error,
+    /**
+     * 外部からエラーを設定するための関数
+     * フック内部のバリデーション（桁数など）とは別に、
+     * 利用側のビジネスロジック（例：特定の都道府県のみ許可）でエラーとしたい場合に使用します。
+     */
     setError,
   };
 };

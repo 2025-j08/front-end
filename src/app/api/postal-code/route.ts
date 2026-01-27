@@ -29,8 +29,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ success: false, error: '認証が必要です' }, { status: 401 });
     }
 
-    // ZipCloud API 呼び出し
-    const response = await fetch(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${zipcode}`);
+    // ZipCloud API 呼び出し (24時間の再検証キャッシュ)
+    const response = await fetch(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${zipcode}`, {
+      next: { revalidate: 86400 }, // 1日キャッシュ
+    });
 
     if (!response.ok) {
       throw new Error('ZipCloud APIのリクエストに失敗しました');
@@ -53,6 +55,20 @@ export async function GET(request: NextRequest) {
     }
 
     const result = data.results[0];
+
+    // レスポンスデータの構造検証 (不完全なデータの混入防止)
+    const requiredFields = ['address1', 'address2', 'address3', 'kana1', 'kana2', 'kana3'];
+    const hasIncompleteData = requiredFields.some(
+      (field) => typeof result[field] !== 'string' || !result[field],
+    );
+
+    if (hasIncompleteData) {
+      return NextResponse.json(
+        { success: false, error: 'APIから不完全な住所データが返却されました' },
+        { status: 502 },
+      );
+    }
+
     return NextResponse.json({
       success: true,
       address: {
