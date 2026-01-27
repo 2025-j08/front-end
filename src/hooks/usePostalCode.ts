@@ -1,5 +1,7 @@
 import { useState, useCallback } from 'react';
 
+import { validatePostalCode, normalizePostalCode } from '@/lib/validation';
+
 /**
  * 住所データの型
  */
@@ -36,10 +38,12 @@ export const usePostalCode = () => {
   const [error, setError] = useState<string | null>(null);
 
   const fetchAddress = useCallback(async (postalCode: string): Promise<PostalAddress | null> => {
-    // 7桁であることを確認（ハイフン除去後）
-    const cleanPostalCode = postalCode.replace(/[^\d]/g, '');
-    if (cleanPostalCode.length !== 7) {
-      setError('郵便番号は7桁で入力してください');
+    // 形式を整えてバリデーション
+    const cleanPostalCode = normalizePostalCode(postalCode);
+    const validation = validatePostalCode(cleanPostalCode);
+
+    if (!validation.isValid) {
+      setError(validation.error || '郵便番号の形式が正しくありません');
       return null;
     }
 
