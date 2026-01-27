@@ -52,12 +52,15 @@ const FacilityRow = ({
   const [isSaving, setIsSaving] = useState(false);
   const [errors, setErrors] = useState<FacilityTableValidationErrors>({});
 
-  const { fetchAddress, isLoading, setError: setPostalError } = usePostalCode();
+  const { fetchAddress, isLoading, clearError: clearPostalError } = usePostalCode();
 
   /**
    * 郵便番号から住所を検索する
    */
   const handlePostalLookup = async () => {
+    clearPostalError(); // 検索前に以前のフックエラーをクリア
+    setErrors((prev) => ({ ...prev, postalCode: undefined }));
+
     const cleanPostalCode = postalCode.replace(/[^\d]/g, '');
     if (cleanPostalCode.length !== 7) return;
 

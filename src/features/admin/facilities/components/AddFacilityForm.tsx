@@ -39,10 +39,17 @@ export const AddFacilityForm: React.FC = () => {
     fetchAddress,
     isLoading: isPostalLoading,
     error: postalError,
-    setError: setPostalError,
+    clearError: clearPostalError,
   } = usePostalCode();
 
   const handlePostalLookup = async () => {
+    clearPostalError(); // 検索前に以前のフックエラーをクリア
+    setErrors((prev) => ({
+      ...prev,
+      postalCode1: undefined,
+      postalCode2: undefined,
+    }));
+
     const fullPostalCode = `${formData.postalCode1}${formData.postalCode2}`;
     const address = await fetchAddress(fullPostalCode);
 
@@ -51,7 +58,10 @@ export const AddFacilityForm: React.FC = () => {
       const isKinki = (KINKI_PREFECTURES as readonly string[]).includes(address.prefecture);
 
       if (!isKinki) {
-        setPostalError('関西6府県以外の住所は登録できません。');
+        setErrors((prev) => ({
+          ...prev,
+          postalCode2: '関西6府県以外の住所は登録できません。',
+        }));
         return;
       }
 
@@ -254,13 +264,16 @@ export const AddFacilityForm: React.FC = () => {
             2. 郵便番号2のバリデーションエラー（必須、桁数）
             3. API/ロジックエラー（住所が見つからない、関西以外など）
             
-            ユーザーが順を追ってエラーを解消できるように、上位のエラーを優先して表示します。
+            ユーザーが順を追ってエラーを解消できるように、上記優先順位（左から右）で最初に見つかったエラーを表示します。
           */}
-          {(errors.postalCode1 || errors.postalCode2 || postalError) && (
-            <p className={styles.postalCodeError}>
-              {errors.postalCode1 || errors.postalCode2 || postalError}
-            </p>
-          )}
+          {(() => {
+            const displayedPostalError = errors.postalCode1 || errors.postalCode2 || postalError;
+            return (
+              displayedPostalError && (
+                <p className={styles.postalCodeError}>{displayedPostalError}</p>
+              )
+            );
+          })()}
         </div>
 
         {/* 住所セクション */}
