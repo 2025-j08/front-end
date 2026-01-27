@@ -1,9 +1,12 @@
+'use client';
+
 /**
  * FormField 共通コンポーネント
  * 認証フォーム共通の入力フィールド
  */
 import type { ChangeEvent } from 'react';
 
+import { PasswordField } from './PasswordField';
 import styles from './formField.module.scss';
 
 /**
@@ -56,10 +59,11 @@ const FormField = ({
   error,
   onChange,
 }: FormFieldProps) => {
-  return (
-    <div className={styles.formGroup}>
-      <label htmlFor={id}>{label}</label>
-      {isTextarea ? (
+  const isPasswordField = type === 'password';
+
+  const renderInput = () => {
+    if (isTextarea) {
+      return (
         <textarea
           id={id}
           name={name}
@@ -74,9 +78,12 @@ const FormField = ({
           aria-describedby={error ? `${id}-error` : undefined}
           onChange={onChange}
         />
-      ) : (
-        <input
-          type={type}
+      );
+    }
+
+    if (isPasswordField) {
+      return (
+        <PasswordField
           id={id}
           name={name}
           placeholder={placeholder}
@@ -85,12 +92,35 @@ const FormField = ({
           autoComplete={autoComplete}
           minLength={minLength}
           maxLength={maxLength}
-          className={error ? styles.inputError : undefined}
-          aria-invalid={error ? 'true' : undefined}
-          aria-describedby={error ? `${id}-error` : undefined}
+          error={error}
           onChange={onChange}
         />
-      )}
+      );
+    }
+
+    return (
+      <input
+        type={type}
+        id={id}
+        name={name}
+        placeholder={placeholder}
+        required={required}
+        value={value}
+        autoComplete={autoComplete}
+        minLength={minLength}
+        maxLength={maxLength}
+        className={error ? styles.inputError : undefined}
+        aria-invalid={error ? 'true' : undefined}
+        aria-describedby={error ? `${id}-error` : undefined}
+        onChange={onChange}
+      />
+    );
+  };
+
+  return (
+    <div className={styles.formGroup}>
+      <label htmlFor={id}>{label}</label>
+      {renderInput()}
       {error && (
         <p id={`${id}-error`} className={styles.errorMessage} role="alert">
           {error}

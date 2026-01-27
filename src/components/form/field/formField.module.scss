@@ -82,6 +82,51 @@
   }
 }
 
+.passwordWrapper {
+  flex-grow: 1;
+  position: relative;
+  display: flex;
+
+  @media (max-width: 600px) {
+    width: 100%;
+  }
+
+  input {
+    padding-right: 45px;
+  }
+}
+
+.toggleButton {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: color 0.2s ease;
+  z-index: 1;
+
+  &:hover {
+    color: var(--primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary-light);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  svg {
+    font-size: 1.25rem;
+  }
+}
+
 // エラー状態の入力フィールド
 .inputError {
   border-color: var(--error) !important;
