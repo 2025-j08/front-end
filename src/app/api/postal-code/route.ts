@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { createServerClient } from '@/lib/supabase/server';
-import { escapeHTML } from '@/lib/utils';
 
 /**
  * 郵便番号検索API (ZipCloud Proxy)
@@ -100,12 +99,12 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       success: true,
       address: {
-        prefecture: escapeHTML(result.address1),
-        city: escapeHTML(result.address2),
-        town: escapeHTML(result.address3),
-        prefectureKana: escapeHTML(result.kana1),
-        cityKana: escapeHTML(result.kana2),
-        townKana: escapeHTML(result.kana3),
+        prefecture: result.address1,
+        city: result.address2,
+        town: result.address3,
+        prefectureKana: result.kana1,
+        cityKana: result.kana2,
+        townKana: result.kana3,
       },
     });
   } catch (error) {
