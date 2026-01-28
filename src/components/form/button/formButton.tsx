@@ -3,9 +3,9 @@
  * 認証フォーム共通の送信ボタン
  * 内部で共通の Button コンポーネントを使用するようにリファクタリングしました。
  */
-import styles from './formButton.module.scss';
+import { Button } from '@/components/ui';
 
-import { Button } from '@/components/ui/Button';
+import styles from './formButton.module.scss';
 
 /**
  * FormButtonコンポーネントのProps

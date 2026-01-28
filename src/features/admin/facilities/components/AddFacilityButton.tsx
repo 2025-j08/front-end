@@ -1,6 +1,6 @@
-import styles from '../styles/AddFacilityButton.module.scss';
+import { Button } from '@/components/ui';
 
-import { Button } from '@/components/ui/Button';
+import styles from '../styles/AddFacilityButton.module.scss';
 
 /**
  * 施設を追加するボタンコンポーネントに渡される Props。

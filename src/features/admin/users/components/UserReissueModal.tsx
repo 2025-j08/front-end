@@ -7,10 +7,9 @@ import { validateEmail } from '@/lib/validation';
 import { API_ENDPOINTS } from '@/const/api';
 import { logError } from '@/lib/logger';
 import { FormField, LoadingOverlay, SuccessOverlay } from '@/components/form';
+import { Button } from '@/components/ui';
 
 import styles from '../users.module.scss';
-
-import { Button } from '@/components/ui/Button';
 
 const SUCCESS_MESSAGE_DURATION = 2000;
 

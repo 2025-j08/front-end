@@ -9,12 +9,11 @@ import type { KinkiPrefecture } from '@/types/facility';
 import { KINKI_PREFECTURES } from '@/const/searchConditions';
 import { VALIDATION_PATTERNS } from '@/const/validation';
 import type { FacilityAdminListItem } from '@/types/facility';
+import { Button } from '@/components/ui';
 
 import { FACILITY_ADMIN_ROUTES, FACILITY_FORM_VALIDATION } from '../constants';
 import type { FacilityTableValidationErrors, FacilityUpdateData } from '../types';
 import styles from '../styles/FacilityManagementTable.module.scss';
-
-import { Button } from '@/components/ui/Button';
 
 // 型を再エクスポート（既存のimportとの互換性のため）
 export type { FacilityUpdateData } from '../types';
