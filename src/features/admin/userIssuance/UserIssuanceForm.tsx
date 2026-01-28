@@ -2,7 +2,8 @@
 
 import { useState, useMemo, useRef, useEffect } from 'react';
 
-import { FormField, FormButton, LoadingOverlay, SuccessOverlay } from '@/components/form';
+import { FormField, LoadingOverlay, SuccessOverlay } from '@/components/form';
+import { Button } from '@/components/ui/Button/Button';
 
 import { useUserIssuanceForm } from './hooks/useUserIssuanceForm';
 import styles from './UserIssuanceForm.module.scss';
@@ -274,7 +275,15 @@ export const UserIssuanceForm = ({ facilities }: UserIssuanceFormProps) => {
 
         {/* 送信ボタン */}
         <div className={styles.submitButton}>
-          <FormButton label="登録" isLoading={isLoading} />
+          <Button
+            variant="primary"
+            size="lg"
+            isLoading={isLoading}
+            loadingLabel="登録中..."
+            type="submit"
+          >
+            登録
+          </Button>
         </div>
       </form>
     </div>
