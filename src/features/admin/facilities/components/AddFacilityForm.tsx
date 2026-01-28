@@ -333,7 +333,13 @@ export const AddFacilityForm: React.FC = () => {
 
         {/* ボタン */}
         <div className={styles.buttonGroup}>
-          <Button variant="secondary" size="lg" onClick={handleCancel} disabled={isSubmitting}>
+          <Button
+            type="button"
+            variant="secondary"
+            size="lg"
+            onClick={handleCancel}
+            disabled={isSubmitting}
+          >
             キャンセル
           </Button>
           <Button
