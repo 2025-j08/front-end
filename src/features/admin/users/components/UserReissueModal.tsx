@@ -10,6 +10,8 @@ import { FormField, LoadingOverlay, SuccessOverlay } from '@/components/form';
 
 import styles from '../users.module.scss';
 
+import { Button } from '@/components/ui/Button';
+
 const SUCCESS_MESSAGE_DURATION = 2000;
 
 /**
@@ -178,12 +180,12 @@ export const UserReissueModal = ({
           />
 
           <div className={styles.modalActions}>
-            <button type="button" className={styles.cancelButton} onClick={handleCancel}>
+            <Button type="button" variant="secondary" onClick={handleCancel} disabled={isLoading}>
               キャンセル
-            </button>
-            <button type="submit" className={styles.modalSubmitButton} disabled={isLoading}>
-              {isLoading ? '発行中...' : '発行'}
-            </button>
+            </Button>
+            <Button type="submit" variant="primary" isLoading={isLoading} loadingLabel="発行中...">
+              発行
+            </Button>
           </div>
         </form>
       </div>

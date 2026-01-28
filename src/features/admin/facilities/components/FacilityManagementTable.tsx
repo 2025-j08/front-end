@@ -1,9 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
 import SearchIcon from '@mui/icons-material/Search';
-import { CircularProgress } from '@mui/material';
 
 import { usePostalCode } from '@/hooks/usePostalCode';
 import { validatePostalCode } from '@/lib/validation';
@@ -15,6 +13,8 @@ import type { FacilityAdminListItem } from '@/types/facility';
 import { FACILITY_ADMIN_ROUTES, FACILITY_FORM_VALIDATION } from '../constants';
 import type { FacilityTableValidationErrors, FacilityUpdateData } from '../types';
 import styles from '../styles/FacilityManagementTable.module.scss';
+
+import { Button } from '@/components/ui/Button';
 
 // 型を再エクスポート（既存のimportとの互換性のため）
 export type { FacilityUpdateData } from '../types';
@@ -161,20 +161,17 @@ const FacilityRow = ({
             aria-label={`${facility.name}の郵便番号`}
             aria-invalid={!!errors.postalCode}
           />
-          <button
+          <Button
             type="button"
-            className={styles.searchButton}
+            variant="outline"
+            size="sm"
             onClick={handlePostalLookup}
             aria-label={isLoading ? '住所を検索中' : '住所を検索'}
             disabled={isLoading || !validatePostalCode(postalCode).isValid}
+            isLoading={isLoading}
+            icon={!isLoading && <SearchIcon fontSize="small" />}
             title={isLoading ? '検索中...' : '住所を検索'}
-          >
-            {isLoading ? (
-              <CircularProgress size={20} color="inherit" />
-            ) : (
-              <SearchIcon fontSize="small" />
-            )}
-          </button>
+          ></Button>
         </div>
         {errors.postalCode && <span className={styles.errorMessage}>{errors.postalCode}</span>}
       </td>
@@ -216,30 +213,35 @@ const FacilityRow = ({
       </td>
       <td className={styles.actionCol}>
         <div className={styles.actionButtons}>
-          <button
+          <Button
             type="button"
-            className={styles.saveButton}
+            variant="primary"
+            size="sm"
             onClick={handleSave}
             disabled={!hasChanges || isSaving}
+            isLoading={isSaving}
+            loadingLabel="保存中..."
             aria-label={`${facility.name}の変更を保存`}
           >
-            {isSaving ? '保存中...' : '保存'}
-          </button>
-          <Link
+            保存
+          </Button>
+          <Button
             href={FACILITY_ADMIN_ROUTES.EDIT(facility.id)}
-            className={styles.detailButton}
+            variant="primary"
+            size="sm"
             aria-label={`${facility.name}の詳細情報を編集`}
           >
             詳細編集
-          </Link>
-          <button
+          </Button>
+          <Button
             type="button"
-            className={styles.deleteButton}
+            variant="danger"
+            size="sm"
             onClick={() => onDelete(facility.id)}
             aria-label={`${facility.name}を削除`}
           >
             削除
-          </button>
+          </Button>
         </div>
       </td>
     </tr>

@@ -1,8 +1,6 @@
-'use client';
-
-import React from 'react';
-
 import styles from '../styles/AddFacilityButton.module.scss';
+
+import { Button } from '@/components/ui/Button';
 
 /**
  * 施設を追加するボタンコンポーネントに渡される Props。
@@ -20,9 +18,9 @@ interface AddFacilityButtonProps {
 export const AddFacilityButton: React.FC<AddFacilityButtonProps> = ({ onClick }) => {
   return (
     <div className={styles.container}>
-      <button onClick={onClick} className={styles.button} aria-label="新しい施設を追加">
+      <Button onClick={onClick} variant="primary" size="md" aria-label="新しい施設を追加">
         施設追加
-      </button>
+      </Button>
     </div>
   );
 };
