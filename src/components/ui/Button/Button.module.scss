@@ -97,6 +97,13 @@
   @include animations.animation-spin(0.8s);
 }
 
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
 @media (max-width: 768px) {
   .fullWidthMobile {
     width: 100%;

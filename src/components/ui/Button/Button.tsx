@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link, { LinkProps } from 'next/link';
 import React from 'react';
 
 import styles from './Button.module.scss';
@@ -6,7 +6,7 @@ import styles from './Button.module.scss';
 export type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'outline';
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface BaseProps {
   variant?: ButtonVariant;
   size?: ButtonSize;
   isLoading?: boolean;
@@ -14,8 +14,27 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   fullWidth?: boolean;
   fullWidthMobile?: boolean;
   icon?: React.ReactNode;
-  href?: string;
+  children?: React.ReactNode;
 }
+
+/**
+ * hrefがない場合は通常のbutton要素として振る舞う型定義
+ */
+type ButtonAsButtonProps = BaseProps &
+  React.ButtonHTMLAttributes<HTMLButtonElement> & {
+    href?: never;
+  };
+
+/**
+ * hrefがある場合はNext.jsのLinkコンポーネントとして振る舞う型定義
+ */
+type ButtonAsLinkProps = BaseProps &
+  LinkProps &
+  Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, keyof LinkProps> & {
+    href: string;
+  };
+
+export type ButtonProps = ButtonAsButtonProps | ButtonAsLinkProps;
 
 /**
  * 共通ボタンコンポーネント
@@ -30,8 +49,6 @@ export const Button: React.FC<ButtonProps> = ({
   fullWidthMobile = false,
   icon,
   className = '',
-  disabled,
-  href,
   ...props
 }) => {
   const buttonClassNames = [
@@ -61,20 +78,26 @@ export const Button: React.FC<ButtonProps> = ({
     </>
   );
 
-  if (href) {
+  // Linkとしてレンダリングする場合
+  if ('href' in props && props.href) {
+    const { href, ...linkProps } = props as ButtonAsLinkProps;
     return (
-      <Link href={href} className={buttonClassNames} {...(props as any)}>
+      <Link href={href} className={buttonClassNames} {...linkProps}>
         {content}
       </Link>
     );
   }
 
+  // 通常のbuttonとしてレンダリングする場合
+  const { disabled, type = 'button', ...buttonProps } = props as ButtonAsButtonProps;
+
   return (
     <button
+      type={type}
       className={buttonClassNames}
       disabled={isLoading || disabled}
       aria-busy={isLoading}
-      {...props}
+      {...buttonProps}
     >
       {content}
     </button>

@@ -170,7 +170,7 @@ const FacilityRow = ({
             isLoading={isLoading}
             icon={!isLoading && <SearchIcon fontSize="small" />}
             title={isLoading ? '検索中...' : '住所を検索'}
-          ></Button>
+          />
         </div>
         {errors.postalCode && <span className={styles.errorMessage}>{errors.postalCode}</span>}
       </td>
