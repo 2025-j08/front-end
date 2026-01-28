@@ -74,7 +74,133 @@
   color: var(--text-secondary);
 }
 
-// .action-button mixin と各ボタンスタイルは共通 Button コンポーネントに移行
+@mixin action-button(
+  $bg-color,
+  $text-color: var(--text-primary),
+  $border-color: var(--border-dark)
+) {
+  background-color: $bg-color;
+  color: $text-color;
+  border: 1px solid $border-color;
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+.inputField {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+  background-color: var(--input-background);
+  color: var(--text-primary);
+  transition:
+    border-color 0.2s ease,
+    outline 0.2s ease;
+
+  &:focus {
+    outline: 2px solid var(--primary);
+    border-color: var(--primary);
+  }
+}
+
+.nameInput {
+  @extend .inputField;
+}
+
+.postalCodeInputWrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.postalCodeInput {
+  @extend .inputField;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.searchButton {
+  padding: 4px;
+  background-color: var(--card-background);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background-color: var(--background-secondary);
+    border-color: var(--border-dark);
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    border-color: var(--border-color);
+  }
+}
+
+.prefectureSelect {
+  @extend .inputField;
+  width: 100%;
+  cursor: pointer;
+}
+
+.cityInput {
+  @extend .inputField;
+}
+
+.addressDetailInput {
+  @extend .inputField;
+}
+
+.saveButton {
+  @include action-button(var(--background-secondary), var(--text-secondary), var(--border-color));
+  min-width: 70px;
+
+  &:not(:disabled) {
+    background-color: var(--primary);
+    color: var(--text-on-primary);
+    border: none;
+    opacity: 1;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+}
+
+.deleteButton {
+  @include action-button(var(--error), var(--text-on-primary));
+  min-width: 60px;
+}
+
+.detailButton {
+  @include action-button(var(--primary), var(--text-on-primary), transparent);
+  width: auto;
+  border-radius: 25px;
+}
 
 .emptyRow {
   text-align: center;

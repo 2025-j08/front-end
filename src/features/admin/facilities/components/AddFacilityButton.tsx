@@ -1,6 +1,6 @@
-import React from 'react';
+'use client';
 
-import { Button } from '@/components/ui';
+import React from 'react';
 
 import styles from '../styles/AddFacilityButton.module.scss';
 
@@ -20,9 +20,9 @@ interface AddFacilityButtonProps {
 export const AddFacilityButton: React.FC<AddFacilityButtonProps> = ({ onClick }) => {
   return (
     <div className={styles.container}>
-      <Button onClick={onClick} variant="primary" size="md" aria-label="新しい施設を追加">
+      <button onClick={onClick} className={styles.button} aria-label="新しい施設を追加">
         施設追加
-      </Button>
+      </button>
     </div>
   );
 };
