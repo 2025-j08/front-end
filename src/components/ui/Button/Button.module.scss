@@ -1,5 +1,5 @@
 @use '@/styles/colors' as colors;
-@use '@/styles/animations';
+@use '@/styles/animations' as animations;
 
 .button {
   display: inline-flex;
@@ -15,13 +15,20 @@
   font-size: 1rem;
   line-height: 1.5;
 
-  &:disabled {
+  &:disabled,
+  &.disabled {
     cursor: not-allowed;
     opacity: 0.5;
+    pointer-events: none;
   }
 
   &:active:not(:disabled) {
     transform: translateY(1px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
   }
 }
 

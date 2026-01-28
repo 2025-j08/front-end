@@ -7,13 +7,23 @@ export type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'outline';
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
 interface BaseProps {
+  /** ボタンのスタイルバリアント */
   variant?: ButtonVariant;
+  /** ボタンのサイズ */
   size?: ButtonSize;
+  /** 無効化状態かどうか */
+  disabled?: boolean;
+  /** ローディング状態かどうか */
   isLoading?: boolean;
+  /** ローディング中に表示するラベル（省略時は children を表示） */
   loadingLabel?: string;
+  /** 幅を 100% にするかどうか */
   fullWidth?: boolean;
+  /** モバイル表示時に幅を 100% にするかどうか */
   fullWidthMobile?: boolean;
+  /** ボタン内に表示するアイコン */
   icon?: React.ReactNode;
+  /** ボタンのラベルやコンテンツ */
   children?: React.ReactNode;
 }
 
@@ -22,6 +32,7 @@ interface BaseProps {
  */
 type ButtonAsButtonProps = BaseProps &
   React.ButtonHTMLAttributes<HTMLButtonElement> & {
+    /** 遷移先URL（buttonとして使用する場合は指定不可） */
     href?: never;
   };
 
@@ -31,6 +42,7 @@ type ButtonAsButtonProps = BaseProps &
 type ButtonAsLinkProps = BaseProps &
   LinkProps &
   Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, keyof LinkProps> & {
+    /** 遷移先URL */
     href: string;
   };
 
@@ -38,12 +50,35 @@ export type ButtonProps = ButtonAsButtonProps | ButtonAsLinkProps;
 
 /**
  * 共通ボタンコンポーネント
+ *
+ * - hrefプロパティがある場合はNext.jsのLinkコンポーネントとして動作します
+ * - hrefがない場合は通常のbuttonとして動作します
+ * - 複数のバリアント（primary, secondary, danger, outline）とサイズをサポート
+ * - ローディング状態の表示機能を内蔵
+ *
+ * 使用例:
+ * ```tsx
+ * // ボタンとして
+ * <Button variant="primary" onClick={handleClick}>送信</Button>
+ *
+ * // リンクとして
+ * <Button href="/about" variant="secondary">詳細へ</Button>
+ *
+ * // アイコン付き・ローディング状態
+ * <Button icon={<SaveIcon />} isLoading={isSubmitting}>保存</Button>
+ *
+ * // 無効化されたリンク（spanとしてレンダリングされる）
+ * <Button href="/about" disabled>詳細へ</Button>
+ * ```
+ *
+ * @component
  */
 export const Button: React.FC<ButtonProps> = ({
   children,
   variant = 'primary',
   size = 'md',
   isLoading = false,
+  disabled = false,
   loadingLabel,
   fullWidth = false,
   fullWidthMobile = false,
@@ -57,6 +92,7 @@ export const Button: React.FC<ButtonProps> = ({
     styles[size],
     fullWidth ? styles.fullWidth : '',
     fullWidthMobile ? styles.fullWidthMobile : '',
+    isLoading || disabled ? styles.disabled : '',
     className,
   ]
     .filter(Boolean)
@@ -81,6 +117,16 @@ export const Button: React.FC<ButtonProps> = ({
   // Linkとしてレンダリングする場合
   if ('href' in props && props.href) {
     const { href, ...linkProps } = props as ButtonAsLinkProps;
+
+    // 無効化時またはローディング時はspanとしてレンダリング（アクセシビリティ対応）
+    if (disabled || isLoading) {
+      return (
+        <span className={buttonClassNames} aria-disabled="true">
+          {content}
+        </span>
+      );
+    }
+
     return (
       <Link href={href} className={buttonClassNames} {...linkProps}>
         {content}
@@ -89,7 +135,7 @@ export const Button: React.FC<ButtonProps> = ({
   }
 
   // 通常のbuttonとしてレンダリングする場合
-  const { disabled, type = 'button', ...buttonProps } = props as ButtonAsButtonProps;
+  const { type = 'button', ...buttonProps } = props as ButtonAsButtonProps;
 
   return (
     <button
