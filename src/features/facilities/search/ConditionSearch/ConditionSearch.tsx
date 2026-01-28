@@ -13,7 +13,8 @@ import { logError } from '@/lib/logger';
 import { useArrayToggle } from '@/lib/hooks/useArrayToggle';
 import { buildFacilitiesListUrl } from '@/lib/search-params';
 import { getPrefectureCities, type PrefectureCitiesMap } from '@/lib/supabase/queries/facilities';
-import { InfoTooltip, FacilityDescription } from '@/components/ui/InfoTooltip';
+import { InfoTooltip } from '@/components/ui/InfoTooltip/InfoTooltip';
+import { FacilityDescription } from '@/components/ui/InfoTooltip/FacilityDescription';
 
 import { CitySelectModal } from './CitySelectModal';
 import styles from './ConditionSearch.module.scss';

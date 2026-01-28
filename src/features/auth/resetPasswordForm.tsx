@@ -6,8 +6,7 @@
  * 新しいパスワードを設定します。
  */
 
-import { LoadingOverlay, SuccessOverlay } from '@/components/form/overlay';
-import { FormField, FormButton } from '@/components/form';
+import { FormField, FormButton, LoadingOverlay, SuccessOverlay } from '@/components/form';
 import { useResetPasswordForm } from '@/features/auth/hooks/useResetPasswordForm';
 import { PASSWORD_RESET_MESSAGES } from '@/const/messages';
 

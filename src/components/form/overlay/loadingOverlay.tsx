@@ -2,7 +2,7 @@
  * LoadingOverlay 共通コンポーネント
  * フォーム送信中のオーバーレイ
  */
-import { LoadingSpinner } from '../spinner';
+import { LoadingSpinner } from '../spinner/loadingSpinner';
 import styles from './loadingOverlay.module.scss';
 
 /**
