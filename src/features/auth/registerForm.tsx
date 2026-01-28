@@ -6,8 +6,7 @@
  * 氏名、パスワードの入力を受け付けます。
  */
 
-import { LoadingOverlay, SuccessOverlay } from '@/components/form/overlay';
-import { FormField, FormButton } from '@/components/form';
+import { FormField, FormButton, LoadingOverlay, SuccessOverlay } from '@/components/form';
 import { useRegisterForm } from '@/features/auth/hooks/useRegisterForm';
 
 import styles from './registerForm.module.scss';

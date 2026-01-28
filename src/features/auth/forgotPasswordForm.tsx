@@ -7,8 +7,7 @@
  */
 import Link from 'next/link';
 
-import { LoadingOverlay, SuccessOverlay } from '@/components/form/overlay';
-import { FormField, FormButton } from '@/components/form';
+import { FormField, FormButton, LoadingOverlay, SuccessOverlay } from '@/components/form';
 import { useForgotPasswordForm } from '@/features/auth/hooks/useForgotPasswordForm';
 import { PASSWORD_RESET_MESSAGES } from '@/const/messages';
 
