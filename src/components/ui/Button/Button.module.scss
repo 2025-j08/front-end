@@ -1,0 +1,120 @@
+@use '@/styles/colors' as colors;
+@use '@/styles/animations' as animations;
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+
+  &:disabled,
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+// Variants
+.primary {
+  background-color: var(--primary);
+  color: var(--text-on-primary);
+  border: 1px solid var(--primary);
+
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+}
+
+.secondary {
+  background-color: var(--card-background);
+  color: var(--text-secondary);
+  border: 1.5px solid var(--border-color);
+
+  &:hover:not(:disabled) {
+    background-color: var(--background-secondary);
+    border-color: var(--border-dark);
+  }
+}
+
+.danger {
+  background-color: var(--error);
+  color: var(--text-on-primary);
+  border: 1px solid var(--error);
+
+  &:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+}
+
+.outline {
+  background-color: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+
+  &:hover:not(:disabled) {
+    background-color: var(--background-secondary);
+  }
+}
+
+// Sizes
+.sm {
+  padding: 0.25rem 1rem;
+  font-size: 0.85rem;
+}
+
+.md {
+  padding: 12px 24px;
+}
+
+.lg {
+  padding: 14px 50px;
+  font-size: 1.1rem;
+}
+
+// Utilities
+.fullWidth {
+  width: 100%;
+}
+
+.spinner {
+  display: inline-block;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2.5px solid rgba(255, 255, 255, 0.3);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  @include animations.animation-spin(0.8s);
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .fullWidthMobile {
+    width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}

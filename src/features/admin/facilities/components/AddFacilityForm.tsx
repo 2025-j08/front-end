@@ -4,6 +4,7 @@ import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { LoadingOverlay, SuccessOverlay, FormField } from '@/components/form';
+import { Button } from '@/components/ui/Button/Button';
 import { FACILITY_MESSAGES } from '@/const/messages';
 import { KINKI_PREFECTURES } from '@/const/searchConditions';
 import type { KinkiPrefecture } from '@/types/facility';
@@ -332,17 +333,25 @@ export const AddFacilityForm: React.FC = () => {
 
         {/* ボタン */}
         <div className={styles.buttonGroup}>
-          <button
+          <Button
             type="button"
-            className={styles.cancelButton}
+            variant="secondary"
+            size="lg"
             onClick={handleCancel}
             disabled={isSubmitting}
           >
             キャンセル
-          </button>
-          <button type="submit" className={styles.submitButton} disabled={isSubmitting}>
-            {isSubmitting ? '追加中...' : '追加する'}
-          </button>
+          </Button>
+          <Button
+            type="submit"
+            variant="primary"
+            size="lg"
+            disabled={isSubmitting}
+            isLoading={isSubmitting}
+            loadingLabel="追加中..."
+          >
+            追加する
+          </Button>
         </div>
       </form>
     </div>

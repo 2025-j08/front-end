@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use '@/styles/colors' as colors;
 
 .container {
@@ -150,27 +151,27 @@
 
 // Hover: 彩度を落として押し込まれたように見せる（バッジのカラーは変更しない）
 .osaka:hover {
-  background-color: desaturate(colors.$pref-osaka, 12%);
+  background-color: color.adjust(colors.$pref-osaka, $saturation: -12%);
 }
 
 .kyoto:hover {
-  background-color: desaturate(colors.$pref-kyoto, 12%);
+  background-color: color.adjust(colors.$pref-kyoto, $saturation: -12%);
 }
 
 .shiga:hover {
-  background-color: desaturate(colors.$pref-shiga, 12%);
+  background-color: color.adjust(colors.$pref-shiga, $saturation: -12%);
 }
 
 .nara:hover {
-  background-color: desaturate(colors.$pref-nara, 12%);
+  background-color: color.adjust(colors.$pref-nara, $saturation: -12%);
 }
 
 .hyogo:hover {
-  background-color: desaturate(colors.$pref-hyogo, 12%);
+  background-color: color.adjust(colors.$pref-hyogo, $saturation: -12%);
 }
 
 .wakayama:hover {
-  background-color: desaturate(colors.$pref-wakayama, 12%);
+  background-color: color.adjust(colors.$pref-wakayama, $saturation: -12%);
 }
 
 // 選択中の市町村がある場合

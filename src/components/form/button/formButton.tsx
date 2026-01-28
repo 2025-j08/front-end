@@ -1,7 +1,10 @@
 /**
  * FormButton 共通コンポーネント
  * 認証フォーム共通の送信ボタン
+ * 内部で共通の Button コンポーネントを使用しています。
  */
+import { Button } from '@/components/ui';
+
 import styles from './formButton.module.scss';
 
 /**
@@ -18,6 +21,8 @@ export interface FormButtonProps {
   disabled?: boolean;
   /** ボタンのタイプ */
   type?: 'submit' | 'button' | 'reset';
+  /** 追加のクラス名 */
+  className?: string;
 }
 
 const FormButton = ({
@@ -26,20 +31,22 @@ const FormButton = ({
   isLoading = false,
   disabled = false,
   type = 'submit',
+  className = '',
 }: FormButtonProps) => {
   return (
     <div className={styles.buttonContainer}>
-      <button
+      <Button
         type={type}
-        className={styles.formButton}
-        disabled={isLoading || disabled}
-        aria-busy={isLoading}
+        variant="primary"
+        size="lg"
+        isLoading={isLoading}
+        loadingLabel={loadingLabel}
+        disabled={disabled}
+        fullWidthMobile
+        className={className}
       >
-        <span className={styles.buttonContent}>
-          {isLoading && <span className={styles.spinner} />}
-          {isLoading ? loadingLabel : label}
-        </span>
-      </button>
+        {label}
+      </Button>
     </div>
   );
 };

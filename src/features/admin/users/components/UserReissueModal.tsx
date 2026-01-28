@@ -7,6 +7,7 @@ import { validateEmail } from '@/lib/validation';
 import { API_ENDPOINTS } from '@/const/api';
 import { logError } from '@/lib/logger';
 import { FormField, LoadingOverlay, SuccessOverlay } from '@/components/form';
+import { Button } from '@/components/ui';
 
 import styles from '../users.module.scss';
 
@@ -178,12 +179,12 @@ export const UserReissueModal = ({
           />
 
           <div className={styles.modalActions}>
-            <button type="button" className={styles.cancelButton} onClick={handleCancel}>
+            <Button type="button" variant="secondary" onClick={handleCancel} disabled={isLoading}>
               キャンセル
-            </button>
-            <button type="submit" className={styles.modalSubmitButton} disabled={isLoading}>
-              {isLoading ? '発行中...' : '発行'}
-            </button>
+            </Button>
+            <Button type="submit" variant="primary" isLoading={isLoading} loadingLabel="発行中...">
+              発行
+            </Button>
           </div>
         </form>
       </div>
