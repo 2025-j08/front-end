@@ -170,13 +170,14 @@ export const Header = () => {
           {/* 左側：ロゴ */}
           <Link href="/" className={styles.logoWrapper} aria-label="トップページへ">
             <Image
-              src="/icons/logo.webp"
-              alt="近畿児童養護施設一覧"
-              width={240}
-              height={50}
-              sizes="(max-width: 600px) 180px, 240px"
+              src="/icons/kinyokyo-logo.png"
+              alt="KINYOKYOロゴ"
+              width={48}
+              height={48}
+              className={styles.logoIcon}
               priority
             />
+            <span className={styles.logoText}>近畿児童養護施設一覧</span>
           </Link>
 
           {/* 右側：ナビゲーション */}
