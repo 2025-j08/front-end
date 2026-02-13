@@ -11,8 +11,8 @@ export const siteMetadata: Metadata = {
   authors: [{ name: '近畿施設ポータル' }],
   themeColor: '#ffffff',
   icons: {
-    icon: '/icons/logo.webp',
-    apple: '/icons/logo.webp',
+    icon: '/icons/kinyokyo_logo.png',
+    apple: '/icons/kinyokyo_logo.png',
   },
   openGraph: {
     title: '近畿児童養護施設一覧',
