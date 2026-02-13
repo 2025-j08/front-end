@@ -41,19 +41,11 @@ $nav-label-max-width-small: 54px; // 360px以下
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  justify-content: flex-start;
+  gap: 10px;
   flex-shrink: 0;
   transition: opacity 0.2s;
   height: 50px;
-  width: auto;
   padding: 0;
-
-  img {
-    width: auto;
-    height: 100%;
-    object-fit: contain;
-    max-width: 100%;
-  }
 
   &:hover {
     opacity: 0.8;
@@ -64,6 +56,22 @@ $nav-label-max-width-small: 54px; // 360px以下
     outline: 2px solid var(--primary);
     outline-offset: 2px;
   }
+}
+
+.logoIcon {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.logoText {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  line-height: 1.2;
+  transition: color 0.3s ease;
 }
 
 // ナビゲーション
@@ -235,10 +243,16 @@ $nav-label-max-width-small: 54px; // 360px以下
     height: 35px;
     padding: 0;
     margin-right: 8px;
+    gap: 8px;
+  }
 
-    .logoText {
-      font-size: 20px;
-    }
+  .logoIcon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .logoText {
+    font-size: 14px;
   }
 
   .nav {
@@ -297,6 +311,19 @@ $nav-label-max-width-small: 54px; // 360px以下
 
 // より狭い端末向けの微調整
 @media (max-width: 480px) {
+  .logoWrapper {
+    gap: 6px;
+  }
+
+  .logoIcon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .logoText {
+    font-size: 12px;
+  }
+
   .nav {
     gap: 8px;
   }
@@ -319,6 +346,15 @@ $nav-label-max-width-small: 54px; // 360px以下
 }
 
 @media (max-width: 360px) {
+  .logoIcon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .logoText {
+    font-size: 11px;
+  }
+
   .nav {
     gap: 6px;
   }
