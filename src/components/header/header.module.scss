@@ -61,7 +61,7 @@ $nav-label-max-width-small: 54px; // 360px以下
 .logoIcon {
   width: 48px;
   height: 48px;
-  border-radius: 6px;
+  border-radius: 50%;
   object-fit: contain;
   flex-shrink: 0;
 }

@@ -170,7 +170,7 @@ export const Header = () => {
           {/* 左側：ロゴ */}
           <Link href="/" className={styles.logoWrapper} aria-label="トップページへ">
             <Image
-              src="/icons/kinyokyo-logo.png"
+              src="/icons/kinyokyo_logo.png"
               alt="KINYOKYOロゴ"
               width={48}
               height={48}
