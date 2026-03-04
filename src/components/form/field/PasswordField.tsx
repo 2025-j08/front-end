@@ -66,7 +66,7 @@ export const PasswordField = ({
         aria-label={showPassword ? 'パスワードを非表示にする' : 'パスワードを表示する'}
         aria-pressed={showPassword}
       >
-        {showPassword ? <VisibilityOff /> : <Visibility />}
+        {showPassword ? <Visibility /> : <VisibilityOff />}
       </button>
     </div>
   );
