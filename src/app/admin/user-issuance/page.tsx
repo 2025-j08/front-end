@@ -3,6 +3,9 @@ import { UserIssuanceForm } from '@/features/admin/userIssuance/UserIssuanceForm
 import searchMapData from '@/dummy_data/searchmap_data.json';
 import { logError } from '@/lib/logger';
 
+/** 施設データのキャッシュを1時間ごとに再検証 */
+export const revalidate = 3600;
+
 /**
  * 管理者向けのユーザー発行ページコンポーネントです（Server Component）。
  * `/admin/user-issuance` に対応するページとして表示され、
