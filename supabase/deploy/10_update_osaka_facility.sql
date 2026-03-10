@@ -8,15 +8,15 @@
 UPDATE public.facility_access
 SET
     location_address = '大阪府岸和田市三田町614-1',
-    lat = 34.466919,
-    lng = 135.410301
+    lat = 34.452318,
+    lng = 135.432724
 WHERE facility_id = 34;
 
 UPDATE public.facility_access
 SET
     location_address = '大阪府岸和田市三田町810-1',
-    lat = 34.466919,
-    lng = 135.410301
+    lat = 34.450612,
+    lng = 135.430737
 WHERE facility_id = 35;
 
 UPDATE public.facility_access
@@ -50,8 +50,8 @@ WHERE facility_id = 39;
 UPDATE public.facility_access
 SET
     location_address = '大阪府岸和田市三田町911',
-    lat = 34.466919,
-    lng = 135.410301
+    lat = 34.452768,
+    lng = 135.427041
 WHERE facility_id = 40;
 
 UPDATE public.facility_access 
@@ -232,22 +232,22 @@ WHERE facility_id = 65;
 UPDATE public.facility_access
 SET
     location_address = '大阪府大阪市天王寺区城南寺町1-10',
-    lat = 34.671118,
-    lng = 135.523794
+    lat = 34.670648,
+    lng = 135.523973
 WHERE facility_id = 66;
 
 UPDATE public.facility_access
 SET
     location_address = '大阪府大阪市天王寺区逢阪2-8-41',
-    lat = 34.652763,
-    lng = 135.510623
+    lat = 34.652363,
+    lng = 135.510066
 WHERE facility_id = 67;
 
 UPDATE public.facility_access
 SET
     location_address = '大阪府大阪市天王寺区逢阪2-8-43',
-    lat = 34.652763,
-    lng = 135.510623
+    lat = 34.653353,
+    lng = 135.511218
 WHERE facility_id = 68;
 
 UPDATE public.facility_access
@@ -281,6 +281,6 @@ WHERE facility_id = 72;
 UPDATE public.facility_access
 SET
     location_address = '大阪府大阪市天王寺区城南寺町1-10',
-    lat = 34.671118,
-    lng = 135.523794
+    lat = 34.670648,
+    lng = 135.523973
 WHERE facility_id = 73;
