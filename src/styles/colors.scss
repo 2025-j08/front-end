@@ -1,5 +1,5 @@
 // カラー変数定義
-// オレンジ系メイン（#F6821Fベース）に変更 (2026-03-10)
+// オレンジ × アンバー ハイブリッド（#F6821F + #FFBF00）(2026-03-10)
 
 // ====================================
 // 基本色
@@ -9,19 +9,19 @@ $black: #000;
 $dark-gray: #333;
 
 // ====================================
-// プライマリカラー（オレンジ系）
+// プライマリカラー（オレンジ × アンバー）
 // ====================================
 $primary-color: #f6821f;
-$primary-light: #f9a054;
-$primary-lighter: #fcc38a;
+$primary-light: #ffbf00;
+$primary-lighter: #ffd54f;
 $primary-dark: #c4681a;
 $primary-text-color: $white;
 
 // ====================================
-// アクセントカラー（オレンジ系）
+// アクセントカラー（アンバー系）
 // ====================================
-$accent-color: #c4681a;
-$accent-light: #f9a054;
+$accent-color: #cc9900;
+$accent-light: #ffbf00;
 $accent-dark: #8a4910;
 
 // ====================================
@@ -37,8 +37,8 @@ $form-button-shadow-hover: rgba(246, 130, 31, 0.4);
 $form-focus-glow: rgba(246, 130, 31, 0.2);
 
 // 入力フィールド
-$form-input-bg: #fdf5ef;
-$form-input-border: #f0c09a;
+$form-input-bg: #fffbf0;
+$form-input-border: #f5d980;
 $form-placeholder: #999;
 
 // ====================================
@@ -57,13 +57,13 @@ $warning-border: #ffe58f;
 // ====================================
 $text-primary: #333;
 $text-secondary: #666;
-$text-link: $primary-color;
+$text-link: $primary-dark;
 
 // ====================================
 // 背景カラー（CSS変数を使用推奨）
 // ====================================
 $bg-white: $white;
-$bg-light-blue: #fce9d6;
+$bg-light-blue: #fff3d0;
 $bg-light-gray: #f0f0f0;
 $bg-gray: #d3d3d3;
 $bg-active: #e0e0e0;
@@ -83,14 +83,14 @@ $border-dark: #333;
 $border-gray: #999;
 $border-black: #000;
 $border-blue: $primary-light;
-$border-light-blue: #fddbb6;
-$border-blue-medium: #f9b679;
+$border-light-blue: #ffe8a0;
+$border-blue-medium: #f5d980;
 
 // ====================================
 // リンク用カラー
 // ====================================
-$link-color: $primary-color;
-$link-hover-color: $primary-dark;
+$link-color: $primary-dark;
+$link-hover-color: $accent-dark;
 
 // エイリアス（互換性のため）
 $placeholder-color: $form-placeholder;
@@ -108,18 +108,18 @@ $hero-bg: #dcdcdc;
 // ====================================
 $search-button-bg: $primary-color;
 $condition-search-button-bg: $accent-light;
-$condition-search-bg: #fce9d6;
+$condition-search-bg: #fff3d0;
 $condition-search-border: $primary-light;
 
 // ====================================
 // 都道府県カラー（地域識別用）
 // ====================================
-$pref-hyogo: #f9a054;
-$pref-kyoto: #f9a054;
-$pref-osaka: #f9a054;
-$pref-wakayama: #f9a054;
-$pref-shiga: #f9a054;
-$pref-nara: #f9a054;
+$pref-hyogo: #f6821f;
+$pref-kyoto: #f6821f;
+$pref-osaka: #f6821f;
+$pref-wakayama: #f6821f;
+$pref-shiga: #f6821f;
+$pref-nara: #f6821f;
 
 // ====================================
 // アクションボタンカラー（機能別）
