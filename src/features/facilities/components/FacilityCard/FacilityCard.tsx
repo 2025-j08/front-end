@@ -14,6 +14,7 @@ export const FacilityCard = ({ facility }: FacilityCardProps) => {
     <div className={styles.card}>
       <Link href={`/features/facilities/${facility.id}`} className={styles.link}>
         <h2 className={styles.name}>{facility.name}</h2>
+        {facility.corporation && <p className={styles.label}>運営法人 {facility.corporation}</p>}
         <div className={styles.content}>
           <div className={styles.info}>
             <p className={styles.label}>住所</p>

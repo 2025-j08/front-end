@@ -85,10 +85,18 @@ function buildCityFilterConditions(citiesMap: Record<string, string[]>): string[
   );
 }
 
+/**
+ * PostgREST の or/ilike 条件で使用するキーワードを最小限エスケープする
+ */
+function escapePostgrestLikeKeyword(keyword: string): string {
+  return keyword.replace(/[%(),]/g, (char) => `\\${char}`);
+}
+
 /** 施設一覧取得用のselect文（基本フィールド） */
 const FACILITY_LIST_BASE_FIELDS = `
   id,
   name,
+  corporation,
   postal_code,
   phone,
   prefecture,
@@ -205,9 +213,10 @@ export async function getFacilityList(
       }
     }
 
-    // キーワード検索（施設名で部分一致）
+    // キーワード検索（施設名・法人名で部分一致）
     if (conditions.keyword && conditions.keyword.trim()) {
-      query = query.ilike('name', `%${conditions.keyword.trim()}%`);
+      const escapedKeyword = escapePostgrestLikeKeyword(conditions.keyword.trim());
+      query = query.or(`name.ilike.%${escapedKeyword}%,corporation.ilike.%${escapedKeyword}%`);
     }
   }
 
@@ -242,6 +251,7 @@ export async function getFacilityList(
     return {
       id: facility.id,
       name: facility.name,
+      corporation: facility.corporation,
       postalCode: facility.postal_code,
       address: `${facility.prefecture}${facility.city}${facility.address_detail}`,
       phone: facility.phone,
@@ -340,6 +350,7 @@ export async function getFacilityLocations(): Promise<FacilityLocation[]> {
       `
       id,
       name,
+      corporation,
       postal_code,
       phone,
       prefecture,
@@ -397,6 +408,7 @@ export async function getFacilityLocations(): Promise<FacilityLocation[]> {
     .map(({ facility, accessItem }) => ({
       id: facility.id,
       name: facility.name,
+      corporation: facility.corporation,
       postalCode: facility.postal_code,
       address: `${facility.prefecture}${facility.city}${facility.address_detail}`,
       phone: facility.phone,
