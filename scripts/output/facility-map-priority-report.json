@@ -1,0 +1,450 @@
+{
+  "generatedAt": "2026-03-16T14:28:39.252Z",
+  "facilitiesSource": "live-supabase",
+  "thresholdMeters": 80,
+  "records": [
+    {
+      "canonicalName": "博愛社いずみ",
+      "matchMode": "exact-name",
+      "expectedActions": [
+        "add"
+      ],
+      "issues": [],
+      "canonicalAddress": "大阪府大阪市淀川区十三元今里3-1-72",
+      "currentRecord": {
+        "id": 105,
+        "name": "博愛社いずみ",
+        "corporation": "社会福祉法人 博愛社",
+        "postalCode": "532-0028",
+        "phone": "06-6459-9981",
+        "fullAddress": "大阪府大阪市淀川区十三元今里3-1-72",
+        "locationAddress": "大阪府大阪市淀川区十三元今里3-1-72",
+        "lat": 34.7221887,
+        "lng": 135.4762862
+      },
+      "addressCheck": {
+        "currentAddress": "大阪府大阪市淀川区十三元今里3-1-72",
+        "canonicalAddress": "大阪府大阪市淀川区十三元今里3-1-72",
+        "geocodeMatchedAddress": "大阪府大阪市淀川区十三元今里3丁目1-72",
+        "currentVsCanonical": "match",
+        "geocodeVsCanonical": "match"
+      },
+      "geocode": {
+        "status": "ok",
+        "lat": 34.72218866,
+        "lng": 135.47628624,
+        "matchedAddress": "大阪府大阪市淀川区十三元今里3丁目1-72"
+      },
+      "distanceMeters": 0.005757377701767127
+    },
+    {
+      "canonicalName": "児童養護施設 あおぞら",
+      "matchMode": "known-id",
+      "expectedActions": [
+        "rename"
+      ],
+      "issues": [],
+      "canonicalAddress": "大阪府岸和田市三田町614-1",
+      "currentRecord": {
+        "id": 34,
+        "name": "児童養護施設 あおぞら",
+        "corporation": "社会福祉法人 阪南福祉事業会",
+        "postalCode": "596-0808",
+        "phone": "072-444-0100",
+        "fullAddress": "大阪府岸和田市三田町614-1",
+        "locationAddress": "大阪府岸和田市三田町614-1",
+        "lat": 34.4524581,
+        "lng": 135.4326595
+      },
+      "addressCheck": {
+        "currentAddress": "大阪府岸和田市三田町614-1",
+        "canonicalAddress": "大阪府岸和田市三田町614-1",
+        "geocodeMatchedAddress": "大阪府岸和田市三田町614-1",
+        "currentVsCanonical": "match",
+        "geocodeVsCanonical": "match"
+      },
+      "geocode": {
+        "status": "ok",
+        "lat": 34.45245811,
+        "lng": 135.43265953,
+        "matchedAddress": "大阪府岸和田市三田町614-1"
+      },
+      "distanceMeters": 0.0029669723025712155
+    },
+    {
+      "canonicalName": "児童養護施設 あんだんて",
+      "matchMode": "known-id",
+      "expectedActions": [
+        "rename"
+      ],
+      "issues": [],
+      "canonicalAddress": "大阪府岸和田市三田町810-1",
+      "currentRecord": {
+        "id": 35,
+        "name": "児童養護施設 あんだんて",
+        "corporation": "社会福祉法人 阪南福祉事業会",
+        "postalCode": "596-0808",
+        "phone": "072-440-0300",
+        "fullAddress": "大阪府岸和田市三田町810-1",
+        "locationAddress": "大阪府岸和田市三田町810-1",
+        "lat": 34.4567576,
+        "lng": 135.430518
+      },
+      "addressCheck": {
+        "currentAddress": "大阪府岸和田市三田町810-1",
+        "canonicalAddress": "大阪府岸和田市三田町810-1",
+        "geocodeMatchedAddress": "大阪府岸和田市三田町1810-1",
+        "currentVsCanonical": "match",
+        "geocodeVsCanonical": "mismatch"
+      },
+      "geocode": {
+        "status": "ok",
+        "lat": 34.45675755,
+        "lng": 135.43051803,
+        "matchedAddress": "大阪府岸和田市三田町1810-1"
+      },
+      "distanceMeters": 0.006202942734320301
+    },
+    {
+      "canonicalName": "児童養護施設 慈教寮",
+      "matchMode": "known-id",
+      "expectedActions": [
+        "rename"
+      ],
+      "issues": [],
+      "canonicalAddress": "大阪府和泉市池上町3-6-62",
+      "currentRecord": {
+        "id": 46,
+        "name": "児童養護施設 慈教寮",
+        "corporation": "社会福祉法人 女子慈教寮",
+        "postalCode": "594-0083",
+        "phone": "0725-41-1009",
+        "fullAddress": "大阪府和泉市池上町3-6-62",
+        "locationAddress": "大阪府和泉市池上町3-6-62",
+        "lat": 34.4995828,
+        "lng": 135.4289066
+      },
+      "addressCheck": {
+        "currentAddress": "大阪府和泉市池上町3-6-62",
+        "canonicalAddress": "大阪府和泉市池上町3-6-62",
+        "geocodeMatchedAddress": "大阪府和泉市池上町3丁目6-62",
+        "currentVsCanonical": "match",
+        "geocodeVsCanonical": "match"
+      },
+      "geocode": {
+        "status": "ok",
+        "lat": 34.49958284,
+        "lng": 135.42890655,
+        "matchedAddress": "大阪府和泉市池上町3丁目6-62"
+      },
+      "distanceMeters": 0.006385704933997321
+    },
+    {
+      "canonicalName": "児童養護施設 いずみこどもの家",
+      "matchMode": "known-id",
+      "expectedActions": [
+        "rename"
+      ],
+      "issues": [],
+      "canonicalAddress": "大阪府泉大津市助松町3-8-7",
+      "currentRecord": {
+        "id": 37,
+        "name": "児童養護施設 いずみこどもの家",
+        "corporation": "社会福祉法人 和泉乳児院",
+        "postalCode": "595-0071",
+        "phone": "0725-33-2228",
+        "fullAddress": "大阪府泉大津市助松町3-8-7",
+        "locationAddress": "大阪府泉大津市助松町3-8-7",
+        "lat": 34.5138588,
+        "lng": 135.4177879
+      },
+      "addressCheck": {
+        "currentAddress": "大阪府泉大津市助松町3-8-7",
+        "canonicalAddress": "大阪府泉大津市助松町3-8-7",
+        "geocodeMatchedAddress": "大阪府泉大津市助松町3丁目8-7",
+        "currentVsCanonical": "match",
+        "geocodeVsCanonical": "match"
+      },
+      "geocode": {
+        "status": "ok",
+        "lat": 34.51385879,
+        "lng": 135.41778786,
+        "matchedAddress": "大阪府泉大津市助松町3丁目8-7"
+      },
+      "distanceMeters": 0.003829907791033413
+    },
+    {
+      "canonicalName": "遙学園",
+      "matchMode": "known-id",
+      "expectedActions": [
+        "pin-update"
+      ],
+      "issues": [],
+      "canonicalAddress": "大阪府三島郡島本町山崎5-3-18",
+      "currentRecord": {
+        "id": 55,
+        "name": "遙学園",
+        "corporation": "社会福祉法人 大阪水上隣保館",
+        "postalCode": "618-0001",
+        "phone": "075-961-0041",
+        "fullAddress": "大阪府三島郡島本町山崎5-3-18",
+        "locationAddress": "大阪府三島郡島本町山崎5-3-18",
+        "lat": 34.8942429,
+        "lng": 135.676265
+      },
+      "addressCheck": {
+        "currentAddress": "大阪府三島郡島本町山崎5-3-18",
+        "canonicalAddress": "大阪府三島郡島本町山崎5-3-18",
+        "geocodeMatchedAddress": "大阪府三島郡島本町山崎5丁目3-18",
+        "currentVsCanonical": "match",
+        "geocodeVsCanonical": "match"
+      },
+      "geocode": {
+        "status": "ok",
+        "lat": 34.89424293,
+        "lng": 135.67626503,
+        "matchedAddress": "大阪府三島郡島本町山崎5丁目3-18"
+      },
+      "distanceMeters": 0.004314404124187201
+    },
+    {
+      "canonicalName": "信愛学園",
+      "matchMode": "known-id",
+      "expectedActions": [
+        "pin-update"
+      ],
+      "issues": [],
+      "canonicalAddress": "兵庫県神戸市東灘区御影3-28-1",
+      "currentRecord": {
+        "id": 27,
+        "name": "信愛学園",
+        "corporation": "社会福祉法人 信愛学園",
+        "postalCode": "658-0047",
+        "phone": "078-851-6128",
+        "fullAddress": "兵庫県神戸市東灘区御影3-28-1",
+        "locationAddress": "兵庫県神戸市東灘区御影3-28-1",
+        "lat": 34.7225686,
+        "lng": 135.2459366
+      },
+      "addressCheck": {
+        "currentAddress": "兵庫県神戸市東灘区御影3-28-1",
+        "canonicalAddress": "兵庫県神戸市東灘区御影3-28-1",
+        "geocodeMatchedAddress": "兵庫県神戸市東灘区御影3丁目28-1",
+        "currentVsCanonical": "match",
+        "geocodeVsCanonical": "match"
+      },
+      "geocode": {
+        "status": "ok",
+        "lat": 34.72256862,
+        "lng": 135.24593655,
+        "matchedAddress": "兵庫県神戸市東灘区御影3丁目28-1"
+      },
+      "distanceMeters": 0.005082081092166441
+    },
+    {
+      "canonicalName": "神愛子供ホーム",
+      "matchMode": "known-id",
+      "expectedActions": [
+        "pin-update"
+      ],
+      "issues": [],
+      "canonicalAddress": "兵庫県神戸市東灘区住吉山手4-7-35",
+      "currentRecord": {
+        "id": 28,
+        "name": "神愛子供ホーム",
+        "corporation": "社会福祉法人 神愛子供ホーム",
+        "postalCode": "658-0063",
+        "phone": "078-811-8698",
+        "fullAddress": "兵庫県神戸市東灘区住吉山手4-7-35",
+        "locationAddress": "兵庫県神戸市東灘区住吉山手4-7-35",
+        "lat": 34.727296,
+        "lng": 135.2552884
+      },
+      "addressCheck": {
+        "currentAddress": "兵庫県神戸市東灘区住吉山手4-7-35",
+        "canonicalAddress": "兵庫県神戸市東灘区住吉山手4-7-35",
+        "geocodeMatchedAddress": "兵庫県神戸市東灘区住吉山手4丁目7-35",
+        "currentVsCanonical": "match",
+        "geocodeVsCanonical": "match"
+      },
+      "geocode": {
+        "status": "ok",
+        "lat": 34.72729601,
+        "lng": 135.2552884,
+        "matchedAddress": "兵庫県神戸市東灘区住吉山手4丁目7-35"
+      },
+      "distanceMeters": 0.001111949358448682
+    },
+    {
+      "canonicalName": "双葉学園",
+      "matchMode": "known-id",
+      "expectedActions": [
+        "pin-update"
+      ],
+      "issues": [],
+      "canonicalAddress": "兵庫県神戸市灘区鶴甲1-5-1",
+      "currentRecord": {
+        "id": 31,
+        "name": "双葉学園",
+        "corporation": "社会福祉法人 神戸協和会",
+        "postalCode": "657-0011",
+        "phone": "078-841-2792",
+        "fullAddress": "兵庫県神戸市灘区鶴甲1-5-1",
+        "locationAddress": "兵庫県神戸市灘区鶴甲1-5-1",
+        "lat": 34.732959,
+        "lng": 135.2398979
+      },
+      "addressCheck": {
+        "currentAddress": "兵庫県神戸市灘区鶴甲1-5-1",
+        "canonicalAddress": "兵庫県神戸市灘区鶴甲1-5-1",
+        "geocodeMatchedAddress": "兵庫県神戸市灘区鶴甲1丁目5-1",
+        "currentVsCanonical": "match",
+        "geocodeVsCanonical": "match"
+      },
+      "geocode": {
+        "status": "ok",
+        "lat": 34.732959,
+        "lng": 135.23989793,
+        "matchedAddress": "兵庫県神戸市灘区鶴甲1丁目5-1"
+      },
+      "distanceMeters": 0.0027414567073044604
+    },
+    {
+      "canonicalName": "神戸少年の町",
+      "matchMode": "known-id",
+      "expectedActions": [
+        "pin-update"
+      ],
+      "issues": [],
+      "canonicalAddress": "兵庫県神戸市垂水区塩屋町梅木谷720",
+      "currentRecord": {
+        "id": 25,
+        "name": "神戸少年の町",
+        "corporation": "社会福祉法人 神戸少年の町",
+        "postalCode": "655-0872",
+        "phone": "078-751-2222",
+        "fullAddress": "兵庫県神戸市垂水区塩屋町梅木谷720",
+        "locationAddress": "兵庫県神戸市垂水区塩屋町梅木谷720",
+        "lat": 34.6401227,
+        "lng": 135.0845797
+      },
+      "addressCheck": {
+        "currentAddress": "兵庫県神戸市垂水区塩屋町梅木谷720",
+        "canonicalAddress": "兵庫県神戸市垂水区塩屋町梅木谷720",
+        "geocodeMatchedAddress": "兵庫県神戸市垂水区塩屋町梅木谷（字）720",
+        "currentVsCanonical": "match",
+        "geocodeVsCanonical": "mismatch"
+      },
+      "geocode": {
+        "status": "ok",
+        "lat": 34.64012271,
+        "lng": 135.08457968,
+        "matchedAddress": "兵庫県神戸市垂水区塩屋町梅木谷（字）720"
+      },
+      "distanceMeters": 0.0021410724339059654
+    },
+    {
+      "canonicalName": "平安養育院",
+      "matchMode": "known-id",
+      "expectedActions": [
+        "pin-update"
+      ],
+      "issues": [],
+      "canonicalAddress": "京都府京都市東山区林下町400-3",
+      "currentRecord": {
+        "id": 102,
+        "name": "平安養育院",
+        "corporation": "社会福祉法人 平安養育院",
+        "postalCode": "605-0062",
+        "phone": "075-561-0680",
+        "fullAddress": "京都府京都市東山区林下町400-3",
+        "locationAddress": "京都府京都市東山区林下町400-3",
+        "lat": 35.0050615,
+        "lng": 135.7792003
+      },
+      "addressCheck": {
+        "currentAddress": "京都府京都市東山区林下町400-3",
+        "canonicalAddress": "京都府京都市東山区林下町400-3",
+        "geocodeMatchedAddress": "京都府京都市東山区林下町400-3",
+        "currentVsCanonical": "match",
+        "geocodeVsCanonical": "match"
+      },
+      "geocode": {
+        "status": "ok",
+        "lat": 35.00506148,
+        "lng": 135.77920025,
+        "matchedAddress": "京都府京都市東山区林下町400-3"
+      },
+      "distanceMeters": 0.005067998567668805
+    },
+    {
+      "canonicalName": "和敬学園",
+      "matchMode": "known-id",
+      "expectedActions": [
+        "pin-update"
+      ],
+      "issues": [],
+      "canonicalAddress": "京都府京都市上京区烏丸通寺ノ内上る東入相国寺門前町704",
+      "currentRecord": {
+        "id": 104,
+        "name": "和敬学園",
+        "corporation": "社会福祉法人 衆善会",
+        "postalCode": "602-0898",
+        "phone": "075-241-3320",
+        "fullAddress": "京都府京都市上京区烏丸通寺ノ内上る東入相国寺門前町704",
+        "locationAddress": "京都府京都市上京区烏丸通寺ノ内上る東入相国寺門前町704",
+        "lat": 35.0358501,
+        "lng": 135.7602824
+      },
+      "addressCheck": {
+        "currentAddress": "京都府京都市上京区烏丸通寺ノ内上る東入相国寺門前町704",
+        "canonicalAddress": "京都府京都市上京区烏丸通寺ノ内上る東入相国寺門前町704",
+        "geocodeMatchedAddress": "京都府京都市上京区相国寺門前町704",
+        "currentVsCanonical": "match",
+        "geocodeVsCanonical": "mismatch"
+      },
+      "geocode": {
+        "status": "ok",
+        "lat": 35.03585014,
+        "lng": 135.76028239,
+        "matchedAddress": "京都府京都市上京区相国寺門前町704"
+      },
+      "distanceMeters": 0.004540025765176882
+    },
+    {
+      "canonicalName": "和歌山市旭学園",
+      "matchMode": "known-id",
+      "expectedActions": [
+        "address-update",
+        "pin-update"
+      ],
+      "issues": [],
+      "canonicalAddress": "和歌山県和歌山市冬野654-9",
+      "currentRecord": {
+        "id": 84,
+        "name": "和歌山市旭学園",
+        "corporation": "社会福祉法人  和歌山社会事業協会",
+        "postalCode": "640-0332",
+        "phone": "073-479-0080",
+        "fullAddress": "和歌山県和歌山市冬野654-9",
+        "locationAddress": "和歌山県和歌山市冬野654-9",
+        "lat": 34.1884887,
+        "lng": 135.2086945
+      },
+      "addressCheck": {
+        "currentAddress": "和歌山県和歌山市冬野654-9",
+        "canonicalAddress": "和歌山県和歌山市冬野654-9",
+        "geocodeMatchedAddress": "和歌山県和歌山市冬野654-9",
+        "currentVsCanonical": "match",
+        "geocodeVsCanonical": "match"
+      },
+      "geocode": {
+        "status": "ok",
+        "lat": 34.18848865,
+        "lng": 135.20869453,
+        "matchedAddress": "和歌山県和歌山市冬野654-9"
+      },
+      "distanceMeters": 0.006206852977469687
+    }
+  ]
+}
