@@ -7,9 +7,9 @@
 
 UPDATE public.facility_access
 SET
-    location_address = '和歌山県和歌山市冬野654-9',
-    lat = 34.1884887,
-    lng = 135.2086945
+    location_address = '和歌山県和歌山市冬野155',
+    lat = 34.190039,
+    lng = 135.214798
 WHERE facility_id = 84;
 
 UPDATE public.facility_access

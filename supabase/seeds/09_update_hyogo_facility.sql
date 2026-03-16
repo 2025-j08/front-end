@@ -176,8 +176,8 @@ WHERE facility_id = 24;
 UPDATE public.facility_access
 SET
     location_address = '兵庫県神戸市垂水区塩屋町梅木谷720',
-    lat = 34.6401227,
-    lng = 135.0845797
+    lat = 34.641979,
+    lng = 135.078386
 WHERE facility_id = 25;
 
 UPDATE public.facility_access
@@ -190,15 +190,15 @@ WHERE facility_id = 26;
 UPDATE public.facility_access
 SET
     location_address = '兵庫県神戸市東灘区御影3-28-1',
-    lat = 34.7225686,
-    lng = 135.2459366
+    lat = 34.722539,
+    lng = 135.255417
 WHERE facility_id = 27;
 
 UPDATE public.facility_access
 SET
     location_address = '兵庫県神戸市東灘区住吉山手4-7-35',
-    lat = 34.7272960,
-    lng = 135.2552884
+    lat = 34.73532,
+    lng = 135.252935
 WHERE facility_id = 28;
 
 UPDATE public.facility_access
@@ -218,8 +218,8 @@ WHERE facility_id = 30;
 UPDATE public.facility_access
 SET
     location_address = '兵庫県神戸市灘区鶴甲1-5-1',
-    lat = 34.7329590,
-    lng = 135.2398979
+    lat = 34.738725,
+    lng = 135.235142
 WHERE facility_id = 31;
 
 UPDATE public.facility_access

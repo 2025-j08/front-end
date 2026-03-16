@@ -78,8 +78,8 @@ WHERE facility_id = 101;
 UPDATE public.facility_access
 SET
     location_address = '京都府京都市東山区林下町400-3',
-    lat = 35.0050615,
-    lng = 135.7792003
+    lat = 35.005534,
+    lng = 135.78366
 WHERE facility_id = 102;
 
 UPDATE public.facility_access
@@ -92,6 +92,6 @@ WHERE facility_id = 103;
 UPDATE public.facility_access
 SET
     location_address = '京都府京都市上京区烏丸通寺ノ内上る東入相国寺門前町704',
-    lat = 35.0358501,
-    lng = 135.7602824
+    lat = 35.026795,
+    lng = 135.741823
 WHERE facility_id = 104;

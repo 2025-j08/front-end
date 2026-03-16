@@ -8,15 +8,15 @@
 UPDATE public.facility_access
 SET
     location_address = '大阪府岸和田市三田町614-1',
-    lat = 34.4524581,
-    lng = 135.4326595
+    lat = 34.452318,
+    lng = 135.432724
 WHERE facility_id = 34;
 
 UPDATE public.facility_access
 SET
     location_address = '大阪府岸和田市三田町810-1',
-    lat = 34.4567576,
-    lng = 135.4305180
+    lat = 34.450612,
+    lng = 135.430737
 WHERE facility_id = 35;
 
 UPDATE public.facility_access
@@ -29,8 +29,8 @@ WHERE facility_id = 36;
 UPDATE public.facility_access
 SET
     location_address = '大阪府泉大津市助松町3-8-7',
-    lat = 34.5138588,
-    lng = 135.4177879
+    lat = 34.513842,
+    lng = 135.417937
 WHERE facility_id = 37;
 
 UPDATE public.facility_access
@@ -92,8 +92,8 @@ WHERE facility_id = 45;
 UPDATE public.facility_access 
 SET 
     location_address = '大阪府和泉市池上町3-6-62',
-    lat = 34.4995828,
-    lng = 135.4289066
+    lat = 34.500252,
+    lng = 135.428306
 WHERE facility_id = 46;
 
 UPDATE public.facility_access 
@@ -155,8 +155,8 @@ WHERE facility_id = 54;
 UPDATE public.facility_access 
 SET 
     location_address = '大阪府三島郡島本町山崎5-3-18',
-    lat = 34.8942429,
-    lng = 135.6762650
+    lat = 34.695298,
+    lng = 135.437962
 WHERE facility_id = 55;
 
 UPDATE public.facility_access 
@@ -285,9 +285,3 @@ SET
     lng = 135.523794
 WHERE facility_id = 73;
 
-UPDATE public.facility_access
-SET
-    location_address = '大阪府大阪市淀川区十三元今里3-1-72',
-    lat = 34.7221887,
-    lng = 135.4762862
-WHERE facility_id = 105;
