@@ -8,22 +8,22 @@
 UPDATE public.facility_access
 SET
     location_address = '大阪府岸和田市三田町614-1',
-    lat = 34.452318,
-    lng = 135.432724
+    lat = 34.466919,
+    lng = 135.410301
 WHERE facility_id = 34;
 
 UPDATE public.facility_access
 SET
     location_address = '大阪府岸和田市三田町810-1',
-    lat = 34.450612,
-    lng = 135.430737
+    lat = 34.466919,
+    lng = 135.410301
 WHERE facility_id = 35;
 
 UPDATE public.facility_access
 SET
     location_address = '大阪府東大阪市中石切町2-5-5',
-    lat = 34.68582658,
-    lng = 135.646286
+    lat = 34.685406,
+    lng = 135.645396
 WHERE facility_id = 36;
 
 UPDATE public.facility_access
@@ -43,22 +43,22 @@ WHERE facility_id = 38;
 UPDATE public.facility_access
 SET
     location_address = '大阪府東大阪市上四条町24-23',
-    lat = 34.65615515,
-    lng = 135.65241932
+    lat = 34.696859,
+    lng = 135.638237
 WHERE facility_id = 39;
 
 UPDATE public.facility_access
 SET
     location_address = '大阪府岸和田市三田町911',
-    lat = 34.4522386,
-    lng = 135.42714892
+    lat = 34.466919,
+    lng = 135.410301
 WHERE facility_id = 40;
 
 UPDATE public.facility_access 
 SET 
     location_address = '大阪府茨木市中穂積2-16-11',
-    lat = 34.8201067,
-    lng = 135.5530139
+    lat = 34.819435,
+    lng = 135.552404
 WHERE facility_id = 41;
 
 UPDATE public.facility_access 
@@ -106,15 +106,15 @@ WHERE facility_id = 47;
 UPDATE public.facility_access 
 SET 
     location_address = '大阪府羽曳野市南恵我之荘2-6-20',
-    lat = 34.57046306,
-    lng = 135.57469765
+    lat = 34.569969,
+    lng = 135.57191
 WHERE facility_id = 48;
 
 UPDATE public.facility_access 
 SET 
     location_address = '大阪府柏原市大字高井田1020-59',
-    lat = 34.57613263,
-    lng = 135.64433547
+    lat = 34.57447,
+    lng = 135.644312
 WHERE facility_id = 49;
 
 UPDATE public.facility_access 
@@ -148,8 +148,8 @@ WHERE facility_id = 53;
 UPDATE public.facility_access 
 SET 
     location_address = '大阪府羽曳野市学園前1-1-3',
-    lat = 34.54694935,
-    lng = 135.59143277
+    lat = 34.546655,
+    lng = 135.590524
 WHERE facility_id = 54;
 
 UPDATE public.facility_access 
@@ -183,8 +183,8 @@ WHERE facility_id = 58;
 UPDATE public.facility_access 
 SET 
     location_address = '大阪府堺市中区八田南之町219',
-    lat = 34.52070638,
-    lng = 135.48565941
+    lat = 34.517611,
+    lng = 135.487147
 WHERE facility_id = 59;
 
 UPDATE public.facility_access 
@@ -197,15 +197,15 @@ WHERE facility_id = 60;
 UPDATE public.facility_access 
 SET 
     location_address = '大阪府堺市北区東上野芝町2-499',
-    lat = 34.55184449,
-    lng = 135.48237032
+    lat = 34.551137,
+    lng = 135.484804
 WHERE facility_id = 61;
 
 UPDATE public.facility_access 
 SET 
     location_address = '大阪府堺市中区土塔町2028',
-    lat = 34.53435769,
-    lng = 135.50545467
+    lat = 34.534659,
+    lng = 135.504613
 WHERE facility_id = 62;
 
 UPDATE public.facility_access 
@@ -225,29 +225,29 @@ WHERE facility_id = 64;
 UPDATE public.facility_access
 SET
     location_address = '大阪府吹田市古江台6-2-1',
-    lat = 34.80778229,
-    lng = 135.51271783
+    lat = 34.814071,
+    lng = 135.506409
 WHERE facility_id = 65;
 
 UPDATE public.facility_access
 SET
     location_address = '大阪府大阪市天王寺区城南寺町1-10',
-    lat = 34.670648,
-    lng = 135.523973
+    lat = 34.671118,
+    lng = 135.523794
 WHERE facility_id = 66;
 
 UPDATE public.facility_access
 SET
     location_address = '大阪府大阪市天王寺区逢阪2-8-41',
-    lat = 34.652363,
-    lng = 135.510066
+    lat = 34.652763,
+    lng = 135.510623
 WHERE facility_id = 67;
 
 UPDATE public.facility_access
 SET
     location_address = '大阪府大阪市天王寺区逢阪2-8-43',
-    lat = 34.653353,
-    lng = 135.511218
+    lat = 34.652763,
+    lng = 135.510623
 WHERE facility_id = 68;
 
 UPDATE public.facility_access
@@ -260,8 +260,8 @@ WHERE facility_id = 69;
 UPDATE public.facility_access
 SET
     location_address = '大阪府大阪市東住吉区南田辺4-5-2',
-    lat = 34.61692379,
-    lng = 135.52096509
+    lat = 34.618204,
+    lng = 135.524293
 WHERE facility_id = 70;
 
 UPDATE public.facility_access
@@ -274,8 +274,8 @@ WHERE facility_id = 71;
 UPDATE public.facility_access
 SET
     location_address = '大阪府大阪市淀川区十三元今里3-1-72',
-    lat = 34.72218866,
-    lng = 135.47628624
+    lat = 34.741468,
+    lng = 135.482972
 WHERE facility_id = 72;
 
 UPDATE public.facility_access
@@ -284,4 +284,3 @@ SET
     lat = 34.671118,
     lng = 135.523794
 WHERE facility_id = 73;
-

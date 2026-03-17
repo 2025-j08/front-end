@@ -8,36 +8,36 @@
 UPDATE public.facility_access
 SET
     location_address = '兵庫県神戸市北区道場町塩田3083番地',
-    lat = 34.8733247,
-    lng = 135.24693722
+    lat = 34.875325,
+    lng = 135.24803
 WHERE facility_id = 1;
 
 UPDATE public.facility_access
 SET
     location_address = '兵庫県たつの市新宮町光都1-6-1',
-    lat = 34.94968355,
-    lng = 134.43880159
+    lat = 34.913292,
+    lng = 134.462623
 WHERE facility_id = 2;
 
 UPDATE public.facility_access
 SET
     location_address = '兵庫県姫路市広畑区蒲田370-1',
-    lat = 34.83554598,
-    lng = 134.64659154
+    lat = 34.834554,
+    lng = 134.647352
 WHERE facility_id = 3;
 
 UPDATE public.facility_access
 SET
     location_address = '兵庫県南あわじ市広田広田637',
-    lat = 34.32917877,
-    lng = 134.83399966
+    lat = 34.323568,
+    lng = 134.832069
 WHERE facility_id = 4;
 
 UPDATE public.facility_access
 SET
     location_address = '兵庫県川辺郡猪名川町柏梨田字イハノ谷10-9',
-    lat = 34.89990045,
-    lng = 135.37328168
+    lat = 34.899143,
+    lng = 135.37627
 WHERE facility_id = 5;
 
 UPDATE public.facility_access
@@ -50,15 +50,15 @@ WHERE facility_id = 6;
 UPDATE public.facility_access
 SET
     location_address = '兵庫県尼崎市若王寺3-16-3',
-    lat = 34.74520226,
-    lng = 135.44012768
+    lat = 34.75157,
+    lng = 135.436372
 WHERE facility_id = 7;
 
 UPDATE public.facility_access
 SET
     location_address = '兵庫県赤穂市新田1444番地',
-    lat = 34.76156829,
-    lng = 134.36361055
+    lat = 34.767328,
+    lng = 134.368998
 WHERE facility_id = 8;
 
 UPDATE public.facility_access
@@ -71,85 +71,85 @@ WHERE facility_id = 9;
 UPDATE public.facility_access
 SET
     location_address = '兵庫県姫路市八代東光寺町8-1',
-    lat = 34.84672318,
-    lng = 134.69396432
+    lat = 34.845049,
+    lng = 134.694544
 WHERE facility_id = 10;
 
 UPDATE public.facility_access
 SET
     location_address = '兵庫県淡路市志筑1542-1',
-    lat = 34.43469595,
-    lng = 134.90245251
+    lat = 34.44209,
+    lng = 134.897068
 WHERE facility_id = 11;
 
 UPDATE public.facility_access
 SET
     location_address = '兵庫県西宮市山口町船坂2128-1',
-    lat = 34.80614279,
-    lng = 135.28010678
+    lat = 34.815076,
+    lng = 135.269764
 WHERE facility_id = 12;
 
 UPDATE public.facility_access
 SET
     location_address = '兵庫県赤穂郡上郡町尾長谷536',
-    lat = 34.88766167,
-    lng = 134.37042374
+    lat = 34.890334,
+    lng = 134.374213
 WHERE facility_id = 13;
 
 UPDATE public.facility_access
 SET
     location_address = '兵庫県加古川市平岡町山之上518',
-    lat = 34.73412736,
-    lng = 134.87063553
+    lat = 34.727711,
+    lng = 134.870197
 WHERE facility_id = 14;
 
 UPDATE public.facility_access
 SET
     location_address = '兵庫県姫路市城北新町1-7-31',
-    lat = 34.85423068,
-    lng = 134.69488899
+    lat = 34.853496,
+    lng = 134.694979
 WHERE facility_id = 15;
 
 UPDATE public.facility_access
 SET
-    location_address = '兵庫県姫路市夢前町菅生澗673-1',
-    lat = 34.91410622,
-    lng = 134.63629346
+    location_address = '兵庫県姫路市夢前町管生澗673-1',
+    lat = 34.90281,
+    lng = 134.63985
 WHERE facility_id = 16;
 
 UPDATE public.facility_access
 SET
     location_address = '兵庫県丹波市青垣町文室204-2',
-    lat = 35.25258083,
-    lng = 134.96305906
+    lat = 35.144399,
+    lng = 135.043692
 WHERE facility_id = 17;
 
 UPDATE public.facility_access
 SET
     location_address = '兵庫県加古川市八幡町野村617-4',
-    lat = 34.78208917,
-    lng = 134.92466093
+    lat = 34.822093,
+    lng = 134.911898
 WHERE facility_id = 18;
 
 UPDATE public.facility_access
 SET
     location_address = '兵庫県朝来市山東町大内547-1',
-    lat = 35.32667363,
-    lng = 134.90419875
+    lat = 35.343608,
+    lng = 134.838644
 WHERE facility_id = 19;
 
 UPDATE public.facility_access
 SET
     location_address = '兵庫県高砂市阿弥陀町阿弥陀1163-1',
-    lat = 34.7969594,
-    lng = 134.78147104
+    lat = 34.799333,
+    lng = 134.775609
 WHERE facility_id = 20;
 
 UPDATE public.facility_access
 SET
     location_address = '兵庫県神戸市灘区泉通4-4-5',
-    lat = 34.71027798,
-    lng = 135.22474139
+    lat = 34.767476,
+    lng = 135.246175
 WHERE facility_id = 21;
 
 UPDATE public.facility_access
@@ -204,8 +204,8 @@ WHERE facility_id = 28;
 UPDATE public.facility_access
 SET
     location_address = '兵庫県神戸市北区淡河町神影115',
-    lat = 34.83173785,
-    lng = 135.13841039
+    lat = 34.830894,
+    lng = 135.140169
 WHERE facility_id = 29;
 
 UPDATE public.facility_access
@@ -232,6 +232,6 @@ WHERE facility_id = 32;
 UPDATE public.facility_access
 SET
     location_address = '兵庫県神戸市兵庫区夢野町4-3-13',
-    lat = 34.68374387,
-    lng = 135.15612534
+    lat = 34.684486,
+    lng = 135.157737
 WHERE facility_id = 33;

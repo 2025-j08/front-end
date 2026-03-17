@@ -29,6 +29,6 @@ WHERE facility_id = 76;
 UPDATE public.facility_access
 SET
     location_address = '滋賀県大津市平津2-4-9',
-    lat = 34.9512393,
-    lng = 135.90421619
+    lat = 34.952609,
+    lng = 135.90389
 WHERE facility_id = 77;

@@ -8,29 +8,29 @@
 UPDATE public.facility_access
 SET
     location_address = '京都府亀岡市ひえ田野町太田高星7',
-    lat = 35.02637067,
-    lng = 135.54198715
+    lat = 35.023064,
+    lng = 135.547779
 WHERE facility_id = 92;
 
 UPDATE public.facility_access
 SET
     location_address = '京都府相楽郡精華町大字南稲八妻小字笛竹37',
-    lat = 34.7617526,
-    lng = 135.78359947
+    lat = 34.756272,
+    lng = 135.792052
 WHERE facility_id = 93;
 
 UPDATE public.facility_access
 SET
     location_address = '京都府京丹後市峰山町杉谷952-8',
-    lat = 35.6252875,
-    lng = 135.06605175
+    lat = 35.62161,
+    lng = 135.060449
 WHERE facility_id = 94;
 
 UPDATE public.facility_access
 SET
     location_address = '京都府舞鶴市大字泉源寺小字立田223',
-    lat = 35.48187391,
-    lng = 135.41449209
+    lat = 35.487317,
+    lng = 135.436513
 WHERE facility_id = 95;
 
 UPDATE public.facility_access
@@ -42,7 +42,7 @@ WHERE facility_id = 96;
 
 UPDATE public.facility_access
 SET
-    location_address = '京都府京都市左京区下鴨宮崎町109',
+    location_address = '京都市左京区下鴨宮崎町109',
     lat = 35.033872,
     lng = 135.770259
 WHERE facility_id = 97;
@@ -71,8 +71,8 @@ WHERE facility_id = 100;
 UPDATE public.facility_access
 SET
     location_address = '京都府京都市西京区大原野灰方町249',
-    lat = 34.95058771,
-    lng = 135.66712078
+    lat = 34.949544,
+    lng = 135.668406
 WHERE facility_id = 101;
 
 UPDATE public.facility_access

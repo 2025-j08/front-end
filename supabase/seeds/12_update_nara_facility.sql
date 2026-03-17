@@ -8,8 +8,8 @@
 UPDATE public.facility_access
 SET
     location_address = '奈良県生駒市元町2-14-8',
-    lat = 34.68971551,
-    lng = 135.68946492
+    lat = 34.689125,
+    lng = 135.690348
 WHERE facility_id = 78;
 
 UPDATE public.facility_access
@@ -22,15 +22,15 @@ WHERE facility_id = 79;
 UPDATE public.facility_access
 SET
     location_address = '奈良県生駒郡斑鳩町法隆寺2-12-8',
-    lat = 34.61087849,
-    lng = 135.73829247
+    lat = 34.609803,
+    lng = 135.742641
 WHERE facility_id = 80;
 
 UPDATE public.facility_access
 SET
     location_address = '奈良県天理市別所町715-3',
-    lat = 34.61019541,
-    lng = 135.84066119
+    lat = 34.60882,
+    lng = 135.837577
 WHERE facility_id = 81;
 
 UPDATE public.facility_access
@@ -43,6 +43,6 @@ WHERE facility_id = 82;
 UPDATE public.facility_access
 SET
     location_address = '奈良県五條市島野町745',
-    lat = 34.35437201,
-    lng = 135.73341201
+    lat = 34.448278,
+    lng = 135.741104
 WHERE facility_id = 83;

@@ -43,15 +43,15 @@ WHERE facility_id = 88;
 UPDATE public.facility_access
 SET
     location_address = '和歌山県紀の川市下丹生谷101',
-    lat = 34.27581008,
-    lng = 135.42767066
+    lat = 34.291337,
+    lng = 135.418937
 WHERE facility_id = 89;
 
 UPDATE public.facility_access
 SET
     location_address = '和歌山県田辺市城山台5-1',
-    lat = 33.72802233,
-    lng = 135.42594116
+    lat = 33.72465,
+    lng = 135.427939
 WHERE facility_id = 90;
 
 UPDATE public.facility_access
