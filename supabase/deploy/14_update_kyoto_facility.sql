@@ -29,8 +29,8 @@ WHERE facility_id = 94;
 UPDATE public.facility_access
 SET
     location_address = '京都府舞鶴市大字泉源寺小字立田223',
-    lat = 35.487317,
-    lng = 135.436513
+    lat = 35.48187391,
+    lng = 135.41449209
 WHERE facility_id = 95;
 
 UPDATE public.facility_access

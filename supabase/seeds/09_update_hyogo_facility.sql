@@ -112,9 +112,9 @@ WHERE facility_id = 15;
 
 UPDATE public.facility_access
 SET
-    location_address = '兵庫県姫路市夢前町管生澗673-1',
-    lat = 34.90281,
-    lng = 134.63985
+    location_address = '兵庫県姫路市夢前町菅生澗673-1',
+    lat = 34.91410622,
+    lng = 134.63629346
 WHERE facility_id = 16;
 
 UPDATE public.facility_access
