@@ -7,7 +7,7 @@
 
 .button {
   background-color: var(--primary);
-  color: var(--text-on-primary);
+  color: colors.$white;
   border: 1px solid var(--border-dark);
   border-radius: 999px;
   padding: 0.5rem 2rem;
