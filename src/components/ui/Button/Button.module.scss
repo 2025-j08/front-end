@@ -35,7 +35,7 @@
 // Variants
 .primary {
   background-color: var(--primary);
-  color: var(--text-on-primary);
+  color: colors.$white;
   border: 1px solid var(--primary);
 
   &:hover:not(:disabled) {

@@ -135,7 +135,7 @@
   .webButton {
     display: inline-block;
     background-color: var(--primary);
-    color: var(--text-on-primary);
+    color: colors.$white;
     padding: 12px 32px;
     border-radius: 50px;
     text-decoration: none;
@@ -168,14 +168,14 @@
 
     &:hover {
       background-color: var(--primary);
-      color: var(--text-on-primary);
+      color: colors.$white;
     }
   }
 
   .saveButton {
     display: inline-block;
     background-color: var(--primary);
-    color: var(--text-on-primary);
+    color: colors.$white;
     border: none;
     padding: 10px 24px;
     border-radius: 50px;

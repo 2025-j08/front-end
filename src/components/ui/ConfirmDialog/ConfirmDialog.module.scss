@@ -95,7 +95,7 @@
 .confirmButton {
   @include button-base;
   background-color: var(--primary);
-  color: var(--text-on-primary);
+  color: colors.$white;
 
   &:hover {
     opacity: 0.9;

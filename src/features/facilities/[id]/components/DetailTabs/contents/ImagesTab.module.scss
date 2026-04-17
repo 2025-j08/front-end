@@ -250,7 +250,7 @@
 
   &:hover {
     background-color: var(--primary);
-    color: var(--text-on-primary);
+    color: colors.$white;
   }
 
   &:focus {

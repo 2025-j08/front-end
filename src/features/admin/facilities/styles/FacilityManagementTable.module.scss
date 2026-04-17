@@ -181,7 +181,7 @@
 
   &:not(:disabled) {
     background-color: var(--primary);
-    color: var(--text-on-primary);
+    color: colors.$white;
     border: none;
     opacity: 1;
 
@@ -197,7 +197,7 @@
 }
 
 .detailButton {
-  @include action-button(var(--primary), var(--text-on-primary), transparent);
+  @include action-button(var(--primary), colors.$white, transparent);
   width: auto;
   border-radius: 25px;
 }
