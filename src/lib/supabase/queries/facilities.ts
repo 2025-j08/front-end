@@ -86,10 +86,13 @@ function buildCityFilterConditions(citiesMap: Record<string, string[]>): string[
 }
 
 /**
- * PostgREST の or/ilike 条件で使用するキーワードを最小限エスケープする
+ * PostgREST の or/ilike 条件で使用するキーワードをエスケープする。
+ * - `\` はエスケープ文字自身のため最初に処理
+ * - `%`, `_` は LIKE/ILIKE のワイルドカード
+ * - `(`, `)`, `,` は PostgREST の or() 構文区切り
  */
 function escapePostgrestLikeKeyword(keyword: string): string {
-  return keyword.replace(/[%(),]/g, (char) => `\\${char}`);
+  return keyword.replace(/[\\%_(),]/g, (char) => `\\${char}`);
 }
 
 /** 施設一覧取得用のselect文（基本フィールド） */

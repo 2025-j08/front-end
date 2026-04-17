@@ -7,8 +7,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "audit:facility-map": "node --env-file=.env.local --import tsx scripts/audit-facility-map.ts",
-    "audit:facility-map-priority": "node --env-file=.env.local --import tsx scripts/audit-priority-facility-map.ts",
     "prepare": "husky"
   },
   "dependencies": {
