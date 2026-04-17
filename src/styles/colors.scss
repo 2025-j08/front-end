@@ -57,7 +57,7 @@ $warning-border: #ffe58f;
 // ====================================
 $text-primary: #333;
 $text-secondary: #666;
-$text-link: $primary-dark;
+$text-link: $accent-dark;
 
 // ====================================
 // 背景カラー（CSS変数を使用推奨）
@@ -89,8 +89,8 @@ $border-blue-medium: #f5d980;
 // ====================================
 // リンク用カラー
 // ====================================
-$link-color: $primary-dark;
-$link-hover-color: $accent-dark;
+$link-color: $accent-dark;
+$link-hover-color: $primary-dark;
 
 // エイリアス（互換性のため）
 $placeholder-color: $form-placeholder;

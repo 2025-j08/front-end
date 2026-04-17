@@ -23,6 +23,7 @@
    - --text-secondary: 補足情報、ラベル、説明文
    - --text-muted: プレースホルダー、無効状態のテキスト
    - --text-on-primary: プライマリカラー背景上のテキスト（ボタン等）
+   - --text-on-dark: エラー/オーバーレイ等の暗色背景上のテキスト
    ============================================ */
 
 :root {
@@ -47,7 +48,8 @@
   --text-primary: #333333;
   --text-secondary: #666666;
   --text-muted: #999999;
-  --text-on-primary: #ffffff;
+  --text-on-primary: #171717;
+  --text-on-dark: #ffffff;
 
   /* ボーダー */
   --border-color: #f5d980;
@@ -82,7 +84,7 @@
   --warning-bg: #fffbe6;
 
   /* フッター */
-  --footer-background: #e08520;
+  --footer-background: #b45309;
   --footer-text: #ffffff;
 
   /* ヘッダー */

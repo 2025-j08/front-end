@@ -56,7 +56,7 @@
 
 .danger {
   background-color: var(--error);
-  color: var(--text-on-primary);
+  color: var(--text-on-dark);
   border: 1px solid var(--error);
 
   &:hover:not(:disabled) {
