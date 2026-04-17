@@ -7,9 +7,9 @@
 
 UPDATE public.facility_access
 SET
-    location_address = '和歌山県和歌山市冬野155',
-    lat = 34.190039,
-    lng = 135.214798
+    location_address = '和歌山県和歌山市冬野654-9',
+    lat = 34.1884887,
+    lng = 135.2086945
 WHERE facility_id = 84;
 
 UPDATE public.facility_access
@@ -43,15 +43,15 @@ WHERE facility_id = 88;
 UPDATE public.facility_access
 SET
     location_address = '和歌山県紀の川市下丹生谷101',
-    lat = 34.291337,
-    lng = 135.418937
+    lat = 34.27581008,
+    lng = 135.42767066
 WHERE facility_id = 89;
 
 UPDATE public.facility_access
 SET
     location_address = '和歌山県田辺市城山台5-1',
-    lat = 33.72465,
-    lng = 135.427939
+    lat = 33.72802233,
+    lng = 135.42594116
 WHERE facility_id = 90;
 
 UPDATE public.facility_access

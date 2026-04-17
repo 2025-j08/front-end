@@ -32,19 +32,19 @@ export const SearchInput = () => {
   return (
     <div className={styles.container}>
       {/* 左上のバッジ */}
-      <div className={styles.keywordBadge}>施設名で探す</div>
+      <div className={styles.keywordBadge}>施設名・法人名で探す</div>
 
       <form className={styles.searchForm} onSubmit={handleSubmit}>
         <div className={styles.inputWrapper}>
           <input
             type="text"
-            placeholder="施設名で検索…"
+            placeholder="施設名・法人名で検索…"
             className={styles.input}
-            aria-label="施設名検索"
+            aria-label="施設名・法人名検索"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
           />
-          <button type="submit" className={styles.submitButton} aria-label="施設名で検索">
+          <button type="submit" className={styles.submitButton} aria-label="施設名・法人名で検索">
             <span>検索</span>
             <SearchIcon className={styles.icon} />
           </button>

@@ -20,6 +20,10 @@ function createPopupContent(data: FacilityLocation): HTMLDivElement {
   const p = document.createElement('p');
   p.appendChild(document.createTextNode(data.name));
   p.appendChild(document.createElement('br'));
+  if (data.corporation) {
+    p.appendChild(document.createTextNode(`運営法人 ${data.corporation}`));
+    p.appendChild(document.createElement('br'));
+  }
   if (data.postalCode) {
     p.appendChild(document.createTextNode(data.postalCode));
     p.appendChild(document.createElement('br'));

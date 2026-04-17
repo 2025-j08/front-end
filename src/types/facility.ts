@@ -21,6 +21,8 @@ export type KinkiPrefecture = '大阪府' | '京都府' | '滋賀県' | '奈良�
 export interface Facility {
   id: number;
   name: string;
+  /** 運営法人名（DB: TEXT NOT NULL） */
+  corporation: string;
   postalCode: string;
   address: string;
   phone: string;
