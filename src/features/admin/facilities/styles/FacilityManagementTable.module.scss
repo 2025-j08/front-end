@@ -192,7 +192,7 @@
 }
 
 .deleteButton {
-  @include action-button(var(--error), var(--text-on-primary));
+  @include action-button(var(--error), var(--text-on-dark));
   min-width: 60px;
 }
 

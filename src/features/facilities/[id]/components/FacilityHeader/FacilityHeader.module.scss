@@ -208,7 +208,7 @@
 
     &:hover:not(:disabled) {
       background-color: var(--error);
-      color: var(--text-on-primary);
+      color: var(--text-on-dark);
     }
 
     &:disabled {

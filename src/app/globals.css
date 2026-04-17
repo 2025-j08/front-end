@@ -23,35 +23,37 @@
    - --text-secondary: 補足情報、ラベル、説明文
    - --text-muted: プレースホルダー、無効状態のテキスト
    - --text-on-primary: プライマリカラー背景上のテキスト（ボタン等）
+   - --text-on-dark: エラー/オーバーレイ等の暗色背景上のテキスト
    ============================================ */
 
 :root {
   /* 背景・前景 */
   --background: #ffffff;
   --foreground: #171717;
-  --background-secondary: #f5f9fc;
-  --background-tertiary: #e3f2fd;
+  --background-secondary: #fffbf0;
+  --background-tertiary: #fff3d0;
 
-  /* プライマリカラー（ブルー系） */
-  --primary: #399dda;
-  --primary-light: #5bb5e8;
-  --primary-lighter: #8ccef2;
-  --primary-dark: #2a7ab0;
+  /* プライマリカラー（オレンジ × アンバー） */
+  --primary: #f6821f;
+  --primary-light: #ffbf00;
+  --primary-lighter: #ffd54f;
+  --primary-dark: #c4681a;
 
   /* アクセントカラー */
-  --accent: #2a7ab0;
-  --accent-light: #5bb5e8;
-  --accent-dark: #1a5480;
+  --accent: #cc9900;
+  --accent-light: #ffbf00;
+  --accent-dark: #8a4910;
 
   /* テキスト */
   --text-primary: #333333;
   --text-secondary: #666666;
   --text-muted: #999999;
-  --text-on-primary: #ffffff;
+  --text-on-primary: #171717;
+  --text-on-dark: #ffffff;
 
   /* ボーダー */
-  --border-color: #b8d4e8;
-  --border-light: #d4e8f5;
+  --border-color: #f5d980;
+  --border-light: #ffe8a0;
   --border-dark: #333333;
 
   /* カード・サーフェス */
@@ -59,10 +61,10 @@
   --card-border: #e0e0e0;
 
   /* フォーム */
-  --input-background: #f5f9fc;
-  --input-border: #b8d4e8;
-  --input-focus-border: #399dda;
-  --focus-glow: rgba(57, 157, 218, 0.2);
+  --input-background: #fffbf0;
+  --input-border: #f5d980;
+  --input-focus-border: #f6821f;
+  --focus-glow: rgba(246, 130, 31, 0.2);
 
   /* シャドウ */
   --shadow-color: rgba(0, 0, 0, 0.1);
@@ -82,7 +84,7 @@
   --warning-bg: #fffbe6;
 
   /* フッター */
-  --footer-background: #2a7ab0;
+  --footer-background: #b45309;
   --footer-text: #ffffff;
 
   /* ヘッダー */

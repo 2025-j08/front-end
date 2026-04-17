@@ -174,7 +174,7 @@
 
   &:hover {
     background-color: var(--error);
-    color: var(--text-on-primary);
+    color: var(--text-on-dark);
   }
 
   &:focus {
@@ -199,7 +199,7 @@
   align-items: center;
   justify-content: center;
   background-color: var(--overlay-background);
-  color: var(--text-on-primary);
+  color: var(--text-on-dark);
   font-size: 14px;
   font-weight: 500;
 }
@@ -225,7 +225,7 @@
 
     &:hover {
       background-color: var(--error);
-      color: var(--text-on-primary);
+      color: var(--text-on-dark);
     }
   }
 }
